@@ -1,0 +1,110 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	http://www.springframework.org/schema/mvc
+	http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/**/*" />
+			<bean class="team.unibro.commons.CrossInterceptor" />
+		</mvc:interceptor>
+	</mvc:interceptors>
+
+	<mvc:annotation-driven>
+		<mvc:message-converters register-defaults="true">
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+				<property name="supportedMediaTypes" value="text/plain;charset=UTF-8" />
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="defaultEncoding" value="UTF-8" />
+		<property name="maxUploadSize" value="2048000"></property>
+	</bean>
+	<bean id="exceptionResolver"
+		class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		<property name="exceptionMappings">
+			<props>
+				<prop
+					key="org.springframework.web.multipart.MaxUploadSizeExceededException">upload_file_error</prop>
+				<prop key="org.springframework.web.multipart.MultipartException">exception</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+	
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<ref bean="mappingJacksonHttpMessageConverter" />
+			</list>
+		</property>
+	</bean>
+	<bean id="mappingJacksonHttpMessageConverter"
+		class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+		<property name="supportedMediaTypes">
+			<list>
+				<value>application/json;charset=UTF-8</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- static resources config begin -->
+	<mvc:resources mapping="/js/webjs/**" location="/WEB-INF/js/webjs/"	cache-period="65535" />
+	<mvc:resources mapping="/js/weixinjs/**" location="/WEB-INF/js/weixinjs/" cache-period="65535" />
+	<mvc:resources mapping="/css/webcss/**" location="/WEB-INF/css/webcss/" cache-period="65535" />
+	<mvc:resources mapping="/css/weixincss/**" location="/WEB-INF/css/weixincss/" cache-period="65535" />
+	<mvc:resources mapping="/img/webimg/**" location="/WEB-INF/img/webimg/" cache-period="65535" />
+	<mvc:resources mapping="/img/weixinimg/**" location="/WEB-INF/img/weixinimg/" cache-period="65535" />
+	<mvc:resources mapping="/views/webviews/**" location="/WEB-INF/views/webviews/" cache-period="65535" />
+	<mvc:resources mapping="/views/weixinviews/**" location="/WEB-INF/views/weixinviews/" cache-period="65535" />
+	<!-- static resources config end -->	
+
+	<!-- database config begin -->
+	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver">
+		</property>
+		<property name="url"
+			value="jdbc:mysql://121.40.63.208:3306/unibro?useUnicode=true&amp;characterEncoding=UTF-8"></property>
+		<property name="username" value="root"></property>
+		<property name="password" value="Cckzcbm110"></property>
+		<property name="maxIdle" value="30"></property>
+		<property name="defaultAutoCommit" value="true"></property>
+	</bean>
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<!-- database config begin -->
+
+	<!-- weixin begin -->
+	<context:component-scan base-package="com.yw.weixin.controller" />
+	<bean id="userDao" class="team.unibro.dao.impl.UserJdbcDaoImpl" />
+	<bean id="userService" class="team.unibro.service.impl.UserServiceImpl" />
+	<bean id="contactMessageDao" class="team.unibro.dao.impl.ContactMessageJdbcDaoImpl" />
+	<bean id="contactMessageService" class="team.unibro.service.impl.ContactMessageServiceImpl" />
+	<bean id="communityInfo" class="team.unibro.dao.impl.CommunityInfoJdbcDaoImpl" />
+	<bean id="communityInfoService" class="team.unibro.service.impl.CommunityInfoServiceImpl" />
+	<bean id="commentInfo" class="team.unibro.dao.impl.CommentInfoJdbcDaoImpl" />
+	<bean id="commentInfoService" class="team.unibro.service.impl.CommentInfoServiceImpl" />
+	<bean id="billsDao" class="team.unibro.dao.impl.BillsJdbcDaoImpl" />
+	<bean id="companyUserService" class="team.unibro.service.impl.CompanyUserServiceImpl" />
+	<bean id="companyUserDao" class="team.unibro.dao.impl.CompanyUserJdbcDaoImpl" />
+	<bean id="billsService" class="team.unibro.service.impl.BillsServiceImpl" />
+	<!-- weixin end -->
+
+</beans>
