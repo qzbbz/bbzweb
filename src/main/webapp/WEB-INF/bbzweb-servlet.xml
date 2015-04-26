@@ -80,7 +80,7 @@
 		<property name="driverClassName" value="com.mysql.jdbc.Driver">
 		</property>
 		<property name="url"
-			value="jdbc:mysql://121.40.63.208:3306/unibro?useUnicode=true&amp;characterEncoding=UTF-8"></property>
+			value="jdbc:mysql://121.41.20.251:3306/bbz?useUnicode=true&amp;characterEncoding=UTF-8"></property>
 		<property name="username" value="root"></property>
 		<property name="password" value="Cckzcbm110"></property>
 		<property name="maxIdle" value="30"></property>
@@ -91,8 +91,11 @@
 	</bean>
 	<!-- database config begin -->
 
-	<!-- weixin begin -->
+	<!-- controller config begin -->
 	<context:component-scan base-package="com.yw.weixin.controller" />
+	<!-- controller config end -->
+
+	<!-- weixin begin -->
 	<bean id="userDao" class="team.unibro.dao.impl.UserJdbcDaoImpl" />
 	<bean id="userService" class="team.unibro.service.impl.UserServiceImpl" />
 	<bean id="contactMessageDao" class="team.unibro.dao.impl.ContactMessageJdbcDaoImpl" />
