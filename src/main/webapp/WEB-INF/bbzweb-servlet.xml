@@ -106,5 +106,6 @@
 	<bean id="companyUserDao" class="team.unibro.dao.impl.CompanyUserJdbcDaoImpl" />
 	<bean id="billsService" class="team.unibro.service.impl.BillsServiceImpl" />
 	<!-- weixin end -->
+	<import resource="spring-config-message.xml"/>
 
 </beans>
