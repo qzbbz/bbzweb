@@ -18,6 +18,10 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.io.xml.XppDriver;
 import com.wisdom.weixin.service.IMessageProcessService;
+import com.wisdom.weixin.utils.InputMessage;
+import com.wisdom.weixin.utils.OutputMessage;
+import com.wisdom.weixin.utils.TextOutputMessage;
+import com.wisdom.weixin.utils.WeixinMsgType;
 
 public class MessageProcessServiceIMpl implements IMessageProcessService {
 

@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -21,7 +20,7 @@ public class ExpenseAccountController {
 	
 	@RequestMapping("/checkBindCompany")
 	@ResponseBody
-	public Map<String, String> checkBindCompany(Model model,
+	public Map<String, String> checkBindCompany(
 			HttpServletRequest request) {
 		logger.info("checkBindCompany");
 		Map<String, String> result = new HashMap<>();
@@ -46,17 +45,17 @@ public class ExpenseAccountController {
 	}
 	
 	@RequestMapping("/upload_bill")
-	public ModelAndView uploadBill(Model model, HttpServletRequest request) {
+	public ModelAndView uploadBill(HttpServletRequest request) {
 		return new ModelAndView("upload_bill");
 	}
 
 	@RequestMapping("/my_bills")
-	public ModelAndView myBills(Model model, HttpServletRequest request) {
+	public ModelAndView myBills(HttpServletRequest request) {
 		return new ModelAndView("my_bills");
 	}
 
 	@RequestMapping("/my_inbox")
-	public ModelAndView myInbox(Model model, HttpServletRequest request) {
+	public ModelAndView myInbox(HttpServletRequest request) {
 		return new ModelAndView("my_inbox");
 	}
 	

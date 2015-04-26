@@ -31,7 +31,7 @@ public class WeixinTools {
 		String timestamp = createTimestamp();
 		String string1;
 		String signature = "";
-		string1 = "jsapi_ticket=" + WeixinCacheService.getJsTicket()
+		string1 = "jsapi_ticket=" + WeixinCache.getJsTicket()
 				+ "&noncestr=" + nonce_str + "&timestamp=" + timestamp
 				+ "&url=" + url;
 		logger.debug("sign url : {}", string1);
@@ -47,7 +47,7 @@ public class WeixinTools {
 			logger.warn(e.toString());
 		}
 		ret.put("url", url);
-		ret.put("jsapi_ticket", WeixinCacheService.getJsTicket());
+		ret.put("jsapi_ticket", WeixinCache.getJsTicket());
 		ret.put("nonceStr", nonce_str);
 		ret.put("timestamp", timestamp);
 		ret.put("signature", signature);

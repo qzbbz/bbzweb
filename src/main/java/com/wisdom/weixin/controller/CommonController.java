@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,8 +17,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.wisdom.weixin.service.IMessageProcessService;
 import com.wisdom.weixin.service.ITokenCheckService;
-import com.wisdom.weixin.service.impl.MessageProcessServiceIMpl;
-import com.wisdom.weixin.service.impl.TokenCheckServiceImpl;
 import com.wisdom.weixin.utils.WeixinTools;
 
 @Controller
@@ -27,9 +26,11 @@ public class CommonController {
 	private static final Logger logger = LoggerFactory
 			.getLogger(CommonController.class);
 
-	private ITokenCheckService tokenCheckService = new TokenCheckServiceImpl();
+	@Autowired
+	private ITokenCheckService tokenCheckService;
 
-	private IMessageProcessService msgProcessService = new MessageProcessServiceIMpl();
+	@Autowired
+	private IMessageProcessService msgProcessService;
 
 	@RequestMapping("/weixinRequest")
 	@ResponseBody
@@ -52,7 +53,7 @@ public class CommonController {
 		logger.debug("finish a weixin request");
 		return ret;
 	}
-	
+
 	@RequestMapping("/getJsConfigInfo")
 	@ResponseBody
 	public Map<String, String> getJsConfigInfo(Model model,
@@ -66,7 +67,7 @@ public class CommonController {
 		logger.debug("resultMap :{}", result.toString());
 		return result;
 	}
-	
+
 	@RequestMapping("/getOpenIdRedirect")
 	public ModelAndView getOpenIdRedirect(Model model,
 			HttpServletRequest request) {
@@ -74,17 +75,18 @@ public class CommonController {
 		String code = request.getParameter("code");
 		String view = request.getParameter("view");
 		String openId = "";
-		if(code == null || code.isEmpty()) {
+		if (code == null || code.isEmpty()) {
 			model.addAttribute("userOpenId", "");
 		} else {
 			openId = WeixinTools.getOpenId(code);
-			model.addAttribute("userOpenId", openId == null || openId.isEmpty() ? "" : openId);
+			model.addAttribute("userOpenId",
+					openId == null || openId.isEmpty() ? "" : openId);
 		}
 		logger.debug("finishGetOpenIdRedirect");
 		logger.debug("code :{}, openId :{}, view :{}", code, openId, view);
 		return new ModelAndView(view);
 	}
-	
+
 	@RequestMapping("/getUserOpenId")
 	@ResponseBody
 	public Map<String, String> getUserOpenId(Model model,
@@ -92,8 +94,8 @@ public class CommonController {
 		logger.debug("getUserOpenId");
 		Map<String, String> result = new HashMap<>();
 		result.put("openId", "");
-		if(model.asMap().containsKey("userOpenId")) {
-			result.put("openId", (String)model.asMap().get("userOpenId"));
+		if (model.asMap().containsKey("userOpenId")) {
+			result.put("openId", (String) model.asMap().get("userOpenId"));
 		}
 		logger.debug("finishGetUserOpenId");
 		logger.debug("resultMap :{}", result.toString());
