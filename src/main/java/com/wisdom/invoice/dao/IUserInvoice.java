@@ -4,7 +4,7 @@ import com.wisdom.common.model.UserInvoice;
 
 public interface IUserInvoice {
 
-public UserInvoice getUserInvoiceByUserId(String userId);
+	public UserInvoice getUserInvoiceByUserId(String userId);
 	
 	public UserInvoice getUserInvoiceByInvoiceId(long invoiceId);
 	

@@ -36,20 +36,30 @@ public class UserInvoiceDaoImpl implements IUserInvoice {
 
 	@Override
 	public boolean addUserInvoice(UserInvoice userInvoice) {
-		// TODO Auto-generated method stub
-		return false;
+		String sql = "insert into user_invoice (user_id, invoice_id, status, update_time, create_time)"
+				+ " values (?, ?, ?, ?, ?)";
+		int affectedRows = jdbcTemplate.update(sql, userInvoice.getUserId(),
+				userInvoice.getInvoiceId(), userInvoice.getStatus(),
+				userInvoice.getUpdateTime(), userInvoice.getCreateTime());
+		logger.debug("addUserInvoice result : {}", affectedRows);
+		return affectedRows != 0;
 	}
 
 	@Override
 	public boolean deleteUserInvoice(UserInvoice userInvoice) {
-		// TODO Auto-generated method stub
-		return false;
+		String sql = "delete from user_invoice where id = ?";
+		int affectedRows = jdbcTemplate.update(sql, userInvoice.getId());
+		logger.debug("deleteUserInvoice result : {}", affectedRows);
+		return affectedRows != 0;
 	}
 
 	@Override
 	public boolean updateUserInvoice(UserInvoice userInvoice) {
-		// TODO Auto-generated method stub
-		return false;
+		String sql = "update user_invoice set status=?, update_time=? where id=?";
+		int affectedRows = jdbcTemplate.update(sql, userInvoice.getStatus(),
+				userInvoice.getUpdateTime(), userInvoice.getId());
+		logger.debug("updateUserInvoice result : {}", affectedRows);
+		return affectedRows != 0;
 	}	
 	
 }
