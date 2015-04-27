@@ -1,0 +1,10 @@
+#filter folders
+target/
+.settings/
+
+#filter files
+*.class
+*.apk
+.tern-project
+.project
+.classpath
