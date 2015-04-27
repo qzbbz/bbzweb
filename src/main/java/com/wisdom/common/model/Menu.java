@@ -1,6 +1,6 @@
 package com.wisdom.common.model;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 public class Menu implements java.io.Serializable {
 
@@ -13,7 +13,7 @@ public class Menu implements java.io.Serializable {
 	private Long id;
 	private String name;
 	private String url;
-	private Date createTime;
+	private Timestamp createTime;
 
 	// Constructors
 
@@ -29,7 +29,7 @@ public class Menu implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public Menu(Long id, String name, String url, Date createTime) {
+	public Menu(Long id, String name, String url, Timestamp createTime) {
 		this.id = id;
 		this.name = name;
 		this.url = url;
@@ -62,11 +62,11 @@ public class Menu implements java.io.Serializable {
 		this.url = url;
 	}
 
-	public Date getCreateTime() {
+	public Timestamp getCreateTime() {
 		return this.createTime;
 	}
 
-	public void setCreateTime(Date createTime) {
+	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
 	}
 
