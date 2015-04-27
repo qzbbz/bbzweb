@@ -28,7 +28,7 @@ public class AreaDaoImpl implements IAreaDao {
 	public List<ShxArea> getAreaByCityId(String cityId) {
 		List<ShxArea> list = null;
 		try {
-			String sql = "select * from shx_area father =?";
+			String sql = "select * from shx_area where father =?";
 			list = jdbcTemplate.query(sql, new Object[]{cityId},
 					new RowMapperResultSetExtractor<ShxArea>(
 							new ShxAreaMapper()));
@@ -42,7 +42,7 @@ public class AreaDaoImpl implements IAreaDao {
 	public List<ShxCity> getCityByProvinceId(String provinceId) {
 		List<ShxCity> list = null;
 		try {
-			String sql = "select * from shx_city father =?";
+			String sql = "select * from shx_city where father =?";
 			list = jdbcTemplate.query(sql, new Object[]{provinceId},
 					new RowMapperResultSetExtractor<ShxCity>(
 							new ShxCityMapper()));

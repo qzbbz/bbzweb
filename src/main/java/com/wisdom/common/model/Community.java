@@ -16,6 +16,9 @@ public class Community implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 	private Long id;
 	private String userId;
+	private Long tagId;
+	private String title;
+	private String abstractData;
 	private String data;
 	private Timestamp createTime;
 	private Timestamp updateTime;
@@ -26,19 +29,16 @@ public class Community implements java.io.Serializable {
 	public Community() {
 	}
 
-	/** minimal constructor */
-	public Community(Long id, String userId, String data) {
-		this.id = id;
-		this.userId = userId;
-		this.data = data;
-	}
-
 	/** full constructor */
-	public Community(Long id, String userId, String data, Timestamp createTime,
+	public Community(Long id, String userId, Long tagId, String title,
+			String abstractData, String data, Timestamp createTime,
 			Timestamp updateTime) {
 		this.id = id;
 		this.userId = userId;
+		this.title = title;
+		this.abstractData = abstractData;
 		this.data = data;
+		this.tagId = tagId;
 		this.createTime = createTime;
 		this.updateTime = updateTime;
 	}
@@ -61,12 +61,36 @@ public class Community implements java.io.Serializable {
 		this.userId = userId;
 	}
 
+	public String getTitle() {
+		return this.title;
+	}
+	
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	
+	public String getAbstractData() {
+		return this.abstractData;
+	}
+	
+	public void setAbstractData(String abstractData) {
+		this.abstractData = abstractData;
+	}
+	
 	public String getData() {
 		return this.data;
 	}
 
 	public void setData(String data) {
 		this.data = data;
+	}
+
+	public Long getTagId() {
+		return this.tagId;
+	}
+
+	public void setTagId(Long tagId) {
+		this.tagId = tagId;
 	}
 
 	public Timestamp getCreateTime() {
