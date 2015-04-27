@@ -104,6 +104,6 @@ public class CommonController {
 	
 	@RequestMapping("/")
 	public String getHomeHtml(HttpServletRequest request) {
-		return "redirect:/views/home.html";
+		return "redirect:/views/webviews/home.html";
 	}
 }
