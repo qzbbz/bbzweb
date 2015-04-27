@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import com.wisdom.common.model.User;
 import com.wisdom.common.model.UserDept;
@@ -25,6 +26,7 @@ import com.wisdom.user.mapper.UserPwdMapper;
 import com.wisdom.user.mapper.UserRoleMapper;
 import com.wisdom.user.mapper.UserTypeMapper;
 
+@Repository("userQueryDao")
 public class UserQueryDaoImpl implements IUserQueryDao {
 
 	private static final Logger logger = LoggerFactory

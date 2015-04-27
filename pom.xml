@@ -9,7 +9,6 @@
 	<url>http://maven.apache.org</url>
 
 	<properties>
-		<!-- dependency -->
 		<spring.version>4.0.1.RELEASE</spring.version>
 		<jackson.version>2.5.1</jackson.version>
 		<jdk.version>1.8</jdk.version>
@@ -21,11 +20,6 @@
 		<apache.commons.version>2.0</apache.commons.version>
 		<apache.commons.fileupload.version>1.2.2</apache.commons.fileupload.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<javamail.version>1.4.1</javamail.version>
-		
-		<!-- 业务 -->
-		<javamail.smtp.host>mail.163.com</javamail.smtp.host><!-- TODO -->
-		
 	</properties>
 
 	<dependencies>
@@ -79,12 +73,6 @@
 			<artifactId>jackson-annotations</artifactId>
 			<version>${jackson.version}</version>
 		</dependency>
-		<!-- javaMail -->
- 	   <dependency>
-	        <groupId>javax.mail</groupId>
-	        <artifactId>mail</artifactId>
-	        <version>${javamail.version}</version>
-	    </dependency>  
 
 		<!-- log4j -->
 		<dependency>
@@ -125,7 +113,6 @@
 			<version>${thoughtworks.xstream.version}</version>
 		</dependency>
 
-
 	</dependencies>
 
 	<build>
@@ -133,7 +120,6 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.1</version>
 				<configuration>
 					<source>${jdk.version}</source>
 					<target>${jdk.version}</target>

@@ -4,11 +4,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import com.wisdom.common.model.Company;
 import com.wisdom.company.dao.ICompanyDao;
 import com.wisdom.company.mapper.CompanyMapper;
 
+@Repository("companyDao")
 public class CompanyDaoImpl implements ICompanyDao {
 
 	private static final Logger logger = LoggerFactory

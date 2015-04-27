@@ -7,11 +7,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapperResultSetExtractor;
+import org.springframework.stereotype.Repository;
 
 import com.wisdom.common.model.Dispatcher;
 import com.wisdom.dispatch.dao.IDispatcherDao;
 import com.wisdom.dispatch.mapper.DispatcherMapper;
 
+@Repository("dispatcherDao")
 public class DispatcherDaoImpl implements IDispatcherDao {
 
 	private static final Logger logger = LoggerFactory

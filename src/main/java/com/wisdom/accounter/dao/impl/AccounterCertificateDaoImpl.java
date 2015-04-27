@@ -7,11 +7,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapperResultSetExtractor;
+import org.springframework.stereotype.Repository;
 
 import com.wisdom.accounter.dao.IAccounterCertificateDao;
 import com.wisdom.accounter.mapper.AccounterCertificateMapper;
 import com.wisdom.common.model.AccounterCertificate;
 
+@Repository("accounterCertificateDao")
 public class AccounterCertificateDaoImpl implements IAccounterCertificateDao {
 
 	private static final Logger logger = LoggerFactory

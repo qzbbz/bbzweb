@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import com.wisdom.common.model.AuthAction;
 import com.wisdom.common.model.ObjectTypes;
@@ -17,6 +18,7 @@ import com.wisdom.user.mapper.RoleMapper;
 import com.wisdom.user.mapper.RolePermissionMapper;
 import com.wisdom.user.mapper.RolePrivateMapper;
 
+@Repository("roleAuthDao")
 public class RoleAuthDaoImpl implements IRoleAuthDao {
 
 	private static final Logger logger = LoggerFactory

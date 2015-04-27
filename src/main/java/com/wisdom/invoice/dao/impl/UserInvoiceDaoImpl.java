@@ -4,12 +4,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import com.wisdom.common.model.UserInvoice;
-import com.wisdom.invoice.dao.IUserInvoice;
+import com.wisdom.invoice.dao.IUserInvoiceDao;
 import com.wisdom.invoice.mapper.UserInvoiceMapper;
 
-public class UserInvoiceDaoImpl implements IUserInvoice {
+@Repository("userInvoiceDao")
+public class UserInvoiceDaoImpl implements IUserInvoiceDao {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(UserInvoiceDaoImpl.class);

@@ -30,7 +30,7 @@ public class CommonController {
 	private ITokenCheckService tokenCheckService;
 
 	@Autowired
-	private IMessageProcessService msgProcessService;
+	private IMessageProcessService messageProcessService;
 
 	@RequestMapping("/weixinRequest")
 	@ResponseBody
@@ -48,7 +48,7 @@ public class CommonController {
 			ret = tokenCheckService.tokenCheck(signature, echostr, timestamp,
 					nonce);
 		} else {
-			ret = msgProcessService.processWeixinMessage(request);
+			ret = messageProcessService.processWeixinMessage(request);
 		}
 		logger.debug("finish a weixin request");
 		return ret;
@@ -100,5 +100,10 @@ public class CommonController {
 		logger.debug("finishGetUserOpenId");
 		logger.debug("resultMap :{}", result.toString());
 		return result;
+	}
+	
+	@RequestMapping("/")
+	public String getHomeHtml(HttpServletRequest request) {
+		return "redirect:/views/home.html";
 	}
 }

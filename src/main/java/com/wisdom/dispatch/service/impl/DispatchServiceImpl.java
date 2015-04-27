@@ -1,5 +1,10 @@
 package com.wisdom.dispatch.service.impl;
 
-public class DispatchServiceImpl {
+import org.springframework.stereotype.Service;
+
+import com.wisdom.dispatch.service.IDispatcherService;
+
+@Service("dispatcherService")
+public class DispatchServiceImpl implements IDispatcherService {
 
 }

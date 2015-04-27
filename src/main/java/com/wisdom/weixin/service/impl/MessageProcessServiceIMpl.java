@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.core.util.QuickWriter;
@@ -23,10 +24,11 @@ import com.wisdom.weixin.utils.OutputMessage;
 import com.wisdom.weixin.utils.TextOutputMessage;
 import com.wisdom.weixin.utils.WeixinMsgType;
 
-public class MessageProcessServiceIMpl implements IMessageProcessService {
+@Service("weixinMessageProcessService")
+public class MessageProcessServiceImpl implements IMessageProcessService {
 
 	private static final Logger logger = LoggerFactory
-			.getLogger(MessageProcessServiceIMpl.class);
+			.getLogger(MessageProcessServiceImpl.class);
 	
 	@Override
 	public String processWeixinMessage(HttpServletRequest request) {
@@ -88,6 +90,8 @@ public class MessageProcessServiceIMpl implements IMessageProcessService {
 				}
 			}
 		} catch (IOException e) {
+			logger.debug(e.toString());
+		} catch (Exception e) {
 			logger.debug(e.toString());
 		}
 		logger.debug("finish in processing weixin message.");

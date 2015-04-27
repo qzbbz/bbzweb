@@ -2,8 +2,11 @@ package com.wisdom.weixin.service.impl;
 
 import java.util.Map;
 
+import org.springframework.stereotype.Service;
+
 import com.wisdom.weixin.service.IExpenseAccountService;
 
+@Service("weixinExpenseAccountService")
 public class ExpenseAccountServiceImpl implements IExpenseAccountService {
 
 	@Override

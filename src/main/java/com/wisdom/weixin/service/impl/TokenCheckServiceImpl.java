@@ -4,11 +4,13 @@ import java.util.Arrays;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import com.wisdom.weixin.service.ITokenCheckService;
 import com.wisdom.weixin.utils.WeixinConstEnum;
 import com.wisdom.weixin.utils.WeixinMessageDigestUtil;
 
+@Service("weixinTokenCheckService")
 public class TokenCheckServiceImpl implements ITokenCheckService{
 
 	private static final Logger logger = LoggerFactory

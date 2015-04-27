@@ -4,11 +4,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import com.wisdom.common.model.InvoiceApproval;
 import com.wisdom.invoice.dao.IInvoiceApprovalDao;
 import com.wisdom.invoice.mapper.InvoiceApprovalMapper;
 
+@Repository("invoiceApprovalDao")
 public class InvoiceApprovalDaoImpl implements IInvoiceApprovalDao {
 
 	private static final Logger logger = LoggerFactory

@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapperResultSetExtractor;
+import org.springframework.stereotype.Repository;
 
 import com.wisdom.area.dao.IAreaDao;
 import com.wisdom.area.mapper.ShxAreaMapper;
@@ -16,6 +17,7 @@ import com.wisdom.common.model.ShxArea;
 import com.wisdom.common.model.ShxCity;
 import com.wisdom.common.model.ShxProvince;
 
+@Repository("areaDao")
 public class AreaDaoImpl implements IAreaDao {
 
 	private static final Logger logger = LoggerFactory

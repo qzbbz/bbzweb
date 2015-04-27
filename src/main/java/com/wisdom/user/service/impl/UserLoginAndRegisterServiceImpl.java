@@ -7,6 +7,7 @@ import java.sql.Timestamp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.wisdom.common.model.User;
 import com.wisdom.common.model.UserPwd;
@@ -15,6 +16,7 @@ import com.wisdom.user.dao.IUserOperationDao;
 import com.wisdom.user.dao.IUserQueryDao;
 import com.wisdom.user.service.IUserLoginAndRegisterService;
 
+@Service("userLoginAndRegisterService")
 public class UserLoginAndRegisterServiceImpl implements
 		IUserLoginAndRegisterService {
 
@@ -25,7 +27,7 @@ public class UserLoginAndRegisterServiceImpl implements
 	private IUserQueryDao userQueryDao;
 
 	@Autowired
-	private IUserOperationDao userOpeDao;
+	private IUserOperationDao userOperationDao;
 
 	@Override
 	public boolean userLoginCheck(String userId, String userPwd) {
@@ -53,7 +55,7 @@ public class UserLoginAndRegisterServiceImpl implements
 					user.setUserId(userId);
 					user.setTypeId(uType.getId());
 					user.setCreateTime(new Timestamp(System.currentTimeMillis()));
-					userOpeDao.addUser(user);
+					userOperationDao.addUser(user);
 					checkStatus = true;
 				}
 			}

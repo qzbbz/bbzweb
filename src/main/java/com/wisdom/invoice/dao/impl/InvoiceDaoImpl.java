@@ -12,11 +12,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
 
 import com.wisdom.common.model.Invoice;
 import com.wisdom.invoice.dao.IInvoiceDao;
 import com.wisdom.invoice.mapper.InvoiceMapper;
 
+@Repository("invoiceDao")
 public class InvoiceDaoImpl implements IInvoiceDao {
 
 	private static final Logger logger = LoggerFactory
