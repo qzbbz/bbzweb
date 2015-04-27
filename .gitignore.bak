@@ -1,6 +1,0 @@
-#filter folders
-target/
-.settings/
-
-#filter files
-*.class
