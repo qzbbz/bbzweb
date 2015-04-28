@@ -1,4 +1,4 @@
-package com.wisdom.web.service.impl;
+package com.wisdom.web.api.impl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,12 +9,12 @@ import org.springframework.stereotype.Service;
 import com.wisdom.common.model.Company;
 import com.wisdom.company.service.ICompanyService;
 import com.wisdom.user.service.IUserModifyService;
-import com.wisdom.web.errorcode.ErrorCode;
-import com.wisdom.web.service.ICompanyDetailRegisterService;
+import com.wisdom.web.api.ICompanyDetailRegisterApi;
+import com.wisdom.web.utils.ErrorCode;
 
-@Service("companyDetailRegisterService")
-public class CompanyDetailRegisterServiceImpl implements
-		ICompanyDetailRegisterService {
+@Service("companyDetailRegisterApi")
+public class CompanyDetailRegisterApiImpl implements
+		ICompanyDetailRegisterApi {
 
 	@Autowired
 	private ICompanyService companyService;

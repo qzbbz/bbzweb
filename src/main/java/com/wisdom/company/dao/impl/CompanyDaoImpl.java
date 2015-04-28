@@ -47,7 +47,7 @@ public class CompanyDaoImpl implements ICompanyDao {
 	               ps.setString(1, company.getName());  
 	               ps.setLong(2, company.getParentId());  
 	               ps.setInt(3, company.getMonthExpense());
-	               ps.setTimestamp(4, company.getPerfectMoment());
+	               ps.setString(4, company.getPerfectMoment());
 	               ps.setTimestamp(5, company.getCreateTime());
 	               return ps;  
 	        }  

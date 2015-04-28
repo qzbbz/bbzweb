@@ -101,9 +101,4 @@ public class CommonController {
 		logger.debug("resultMap :{}", result.toString());
 		return result;
 	}
-	
-	@RequestMapping("/")
-	public String getHomeHtml(HttpServletRequest request) {
-		return "redirect:/views/webviews/home.html";
-	}
 }

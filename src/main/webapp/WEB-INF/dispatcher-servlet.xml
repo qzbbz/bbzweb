@@ -96,6 +96,17 @@
 	<context:component-scan base-package="com.wisdom.user.service.impl" />
 	<!-- user component-scan end-->
 	
+	<!-- company component-scan begin-->
+	<context:component-scan base-package="com.wisdom.company.dao.impl" />
+	<context:component-scan base-package="com.wisdom.company.service.impl" />
+	<!-- company component-scan end-->
+	
+	<!-- web component-scan begin-->
+	<context:component-scan base-package="com.wisdom.web.api.impl" />
+	<context:component-scan base-package="com.wisdom.web.api.controller" />
+	<context:component-scan base-package="com.wisdom.web.controller" />
+	<!-- web component-scan end-->
+	
 	<!-- weixin begin -->
 	<context:component-scan base-package="com.wisdom.weixin.controller" />
 	<context:component-scan base-package="com.wisdom.weixin.service.impl" />
