@@ -6,7 +6,7 @@ public interface ICompanyDao {
 	
 	public Company getCompanyByCompanyId(long companyId);
 	
-	public boolean addCompany(Company company);
+	public long addCompany(Company company);
 	
 	public boolean deleteCompany(Company company);
 	

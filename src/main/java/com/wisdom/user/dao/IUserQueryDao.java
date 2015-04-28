@@ -18,6 +18,8 @@ public interface IUserQueryDao {
 	
 	public UserType getUserTypeByUserId(String userId);
 	
+	public UserType getUserTypeById(long id);
+	
 	public UserInvitecode getUserInvitecodeByInviteCode(String inviteCode);
 	
 	public UserPhone getUserPhoneByUserId(String userId);

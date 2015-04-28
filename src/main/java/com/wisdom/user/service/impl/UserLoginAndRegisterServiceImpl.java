@@ -43,13 +43,13 @@ public class UserLoginAndRegisterServiceImpl implements
 
 	@Override
 	public boolean userRegisterCheck(String userId, String userPwd,
-			String userType) {
+			long userTypeId) {
 		boolean checkStatus = false;
 		User user = userQueryDao.getUserByUserId(userId);
 		if (user == null) {
 			String encPwd = getPasswordByMD5Encrypt(userPwd);
 			if (encPwd != null && !encPwd.isEmpty()) {
-				UserType uType = userQueryDao.getUserTypeByUserId(userId);
+				UserType uType = userQueryDao.getUserTypeById(userTypeId);
 				if (uType != null) {
 					user = new User();
 					user.setUserId(userId);

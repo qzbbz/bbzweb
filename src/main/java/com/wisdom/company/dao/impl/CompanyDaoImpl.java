@@ -1,9 +1,17 @@
 package com.wisdom.company.dao.impl;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.wisdom.common.model.Company;
@@ -29,14 +37,23 @@ public class CompanyDaoImpl implements ICompanyDao {
 	}
 
 	@Override
-	public boolean addCompany(Company company) {
-		String sql = "insert into company (name, parent_id, month_expense, perfect_moment, create_time)"
-				+ " values (?, ?, ?, ?, ?)";
-		int affectedRows = jdbcTemplate.update(sql, company.getName(),
-				company.getParentId(), company.getMonthExpense(),
-				company.getPerfectMoment(), company.getCreateTime());
-		logger.debug("addCompany result : {}", affectedRows);
-		return affectedRows != 0;
+	public long addCompany(Company company) {
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		long id = jdbcTemplate.update(new PreparedStatementCreator() {  
+	        public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {  
+	        	String sql = "insert into company (name, parent_id, month_expense, perfect_moment, create_time)"
+	    				+ " values (?, ?, ?, ?, ?)";
+	               PreparedStatement ps = connection.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);  
+	               ps.setString(1, company.getName());  
+	               ps.setLong(2, company.getParentId());  
+	               ps.setInt(3, company.getMonthExpense());
+	               ps.setTimestamp(4, company.getPerfectMoment());
+	               ps.setTimestamp(5, company.getCreateTime());
+	               return ps;  
+	        }  
+	    }, keyHolder);
+		logger.debug("addCompany result : {}", id);
+		return id;
 	}
 
 	@Override

@@ -116,4 +116,12 @@ public class UserQueryDaoImpl implements IUserQueryDao {
 		return userRole;
 	}
 
+	@Override
+	public UserType getUserTypeById(long id) {
+		String sql = "select * from user_type where id = ?";
+		UserType userType = jdbcTemplate.queryForObject(sql,
+				new Object[] { id }, new UserTypeMapper());
+		return userType;
+	}
+
 }
