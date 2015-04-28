@@ -1,13 +1,13 @@
 package com.wisdom.area.service;
 
-import java.util.List;
+import java.util.Map;
 
 public interface IAreaService {
 
-	public List<String> getAreaByCityId(String cityId);
+	public Map<String, String> getAreaByCityId(String cityId);
 	
-	public List<String> getCityByProvinceId(String provinceId);
+	public Map<String, String> getCityByProvinceId(String provinceId);
 	
-	public List<String> getAllProvince();
+	public Map<String, String> getAllProvince();
 	
 }
