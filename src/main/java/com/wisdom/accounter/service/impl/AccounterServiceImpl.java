@@ -78,17 +78,21 @@ public class AccounterServiceImpl implements IAccounterService {
 		if (accounter != null) {
 			accounterInfoMap.put("user_id", accounter.getUSerId());
 			accounterInfoMap.put("name", accounter.getName());
-			accounterInfoMap.put("area_id",
-					String.valueOf(accounter.getAreaId()));
+			accounterInfoMap.put("area", accounter.getArea());
+			accounterInfoMap.put("city", accounter.getCity());
+			accounterInfoMap.put("province", accounter.getProvince());
 			accounterInfoMap.put("image", accounter.getImage());
-			accounterInfoMap.put("certificate_id",
-					String.valueOf(accounter.getCertificateId()));
-			accounterInfoMap.put("industry_id",
-					String.valueOf(accounter.getIndustryId()));
-			accounterInfoMap.put("career_id",
-					String.valueOf(accounter.getCareerId()));
+			accounterInfoMap.put("certificate_id", accounter.getCertificate());
+			accounterInfoMap.put("industry_id", accounter.getIndustry());
+			accounterInfoMap.put("career_id", accounter.getCareer());
 		}
 		return accounterInfoMap;
+	}
+
+	@Override
+	public boolean updateAccounter(Accounter accounter) {
+		
+		return false;
 	}
 
 }

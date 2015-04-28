@@ -11,6 +11,8 @@ public class ErrorCode {
 	
 	public static final int COMPANY_REGISTER_ERROR_CODE = 200000;
 	public static final int COMPANY_REGISTER_INFO_EMPTY_ERROR_CODE = 200100;
+	
+	public static final int ACCOUNTER_UPDATE_INFO_ERROR_CODE = 300000;
 
 	public static final String NO_ERROR_MESSAGE = "";
 	public static final String USER_ID_ERROR_MESSAGE = "User id is wrong.";
@@ -21,4 +23,6 @@ public class ErrorCode {
 	
 	public static final String COMPANY_REGISTER_ERROR_MESSAGE = "Failed in adding a company.";
 	public static final String COMPANY_REGISTER_INFO_EMPTY_ERROR_MESSAGE = "Company register infos are empty.";
+
+	public static final String ACCOUNTER_UPDATE_INFO_ERROR_MESSAGE = "Failed in updating accounter info.";
 }
