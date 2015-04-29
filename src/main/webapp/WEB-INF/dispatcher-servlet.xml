@@ -70,8 +70,8 @@
 	<mvc:resources mapping="/css/weixincss/**" location="/WEB-INF/css/weixincss/" cache-period="65535" />
 	<mvc:resources mapping="/img/webimg/**" location="/WEB-INF/img/webimg/" cache-period="65535" />
 	<mvc:resources mapping="/img/weixinimg/**" location="/WEB-INF/img/weixinimg/" cache-period="65535" />
+	<mvc:resources mapping="/views/weixinviews/**" location="/WEB-INF/views/weixinviews/" cache-period="65535" />
 	<mvc:resources mapping="/views/webviews/**" location="/WEB-INF/views/webviews/" cache-period="65535" />
-	<mvc:resources mapping="/views/weixinviews/**" location="/WEB-INF/views/weixinviews" cache-period="65535" />
 	<!-- static resources config end -->	
 
 	<!-- database config begin -->
