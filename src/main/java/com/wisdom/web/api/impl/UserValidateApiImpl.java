@@ -16,7 +16,7 @@ import com.wisdom.user.service.IUserService;
 import com.wisdom.web.api.IUserValidateApi;
 import com.wisdom.web.utils.ErrorCode;
 
-@Service("userValidateApi")
+@Service("userValidateApiService")
 public class UserValidateApiImpl implements IUserValidateApi {
 
 	private static final Logger logger = LoggerFactory

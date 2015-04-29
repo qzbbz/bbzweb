@@ -1,5 +1,6 @@
 package com.wisdom.accounter.service.impl;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,7 +77,7 @@ public class AccounterServiceImpl implements IAccounterService {
 		Map<String, String> accounterInfoMap = new HashMap<>();
 		Accounter accounter = accounterDao.getAccounterByUserId(userId);
 		if (accounter != null) {
-			accounterInfoMap.put("user_id", accounter.getUSerId());
+			accounterInfoMap.put("user_id", accounter.getUserId());
 			accounterInfoMap.put("name", accounter.getName());
 			accounterInfoMap.put("area", accounter.getArea());
 			accounterInfoMap.put("city", accounter.getCity());
@@ -91,8 +92,14 @@ public class AccounterServiceImpl implements IAccounterService {
 
 	@Override
 	public boolean updateAccounter(Accounter accounter) {
-		
-		return false;
+		boolean updateSuccess = false;
+		if(accounterDao.isAccounterExistByUserId(accounter.getUserId())) {
+			updateSuccess = accounterDao.updateAccounter(accounter);
+		} else {
+			accounter.setCreateTime(new Timestamp(System.currentTimeMillis()));
+			updateSuccess = accounterDao.addAccounter(accounter);
+		}
+		return updateSuccess;
 	}
 
 }

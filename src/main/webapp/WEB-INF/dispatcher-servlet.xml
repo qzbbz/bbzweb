@@ -111,6 +111,11 @@
 	<context:component-scan base-package="com.wisdom.accounter.service.impl" />
 	<!-- accounter component-scan end-->
 	
+	<!-- community component-scan begin-->
+	<context:component-scan base-package="com.wisdom.community.dao.impl" />
+	<context:component-scan base-package="com.wisdom.community.service.impl" />
+	<!-- community component-scan end-->
+	
 	<!-- web component-scan begin-->
 	<context:component-scan base-package="com.wisdom.web.api.impl" />
 	<context:component-scan base-package="com.wisdom.web.api.controller" />

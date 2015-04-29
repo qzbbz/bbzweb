@@ -12,7 +12,7 @@ import com.wisdom.user.service.IUserModifyService;
 import com.wisdom.web.api.ICompanyDetailRegisterApi;
 import com.wisdom.web.utils.ErrorCode;
 
-@Service("companyDetailRegisterApi")
+@Service("companyDetailRegisterApiService")
 public class CompanyDetailRegisterApiImpl implements
 		ICompanyDetailRegisterApi {
 

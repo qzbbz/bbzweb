@@ -16,4 +16,6 @@ public interface IAccounterDao {
 	
 	public boolean updateAccounter(Accounter accounter);
 	
+	public boolean isAccounterExistByUserId(String userId);
+	
 }

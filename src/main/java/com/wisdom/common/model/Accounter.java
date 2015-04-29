@@ -61,7 +61,7 @@ public class Accounter implements java.io.Serializable {
 		this.id = id;
 	}
 
-	public String getUSerId() {
+	public String getUserId() {
 		return this.userId;
 	}
 

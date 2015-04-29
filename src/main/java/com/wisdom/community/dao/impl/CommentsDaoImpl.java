@@ -62,8 +62,8 @@ public class CommentsDaoImpl implements ICommentsDao {
 
 	@Override
 	public boolean deleteComments(Comments comments) {
-		String sql = "delete from comments where id = ?";
-		int affectedRows = jdbcTemplate.update(sql, comments.getId());
+		String sql = "delete from comments where community_id = ?";
+		int affectedRows = jdbcTemplate.update(sql, comments.getCommunityId());
 		logger.debug("deleteComments result : {}", affectedRows);
 		return affectedRows != 0;
 	}
