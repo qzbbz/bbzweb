@@ -1,5 +1,9 @@
 package com.wisdom.weixin.service;
 
-public interface ISettingService {
+import java.util.Map;
 
+public interface ISettingService {
+	
+	public Map<String, String> checkCompanyBind(String openId);
+	
 }

@@ -40,5 +40,11 @@ public class CompanyServiceImpl implements ICompanyService {
 		emp.setCreateTime(new Timestamp(System.currentTimeMillis()));
 		return employmentDao.addEmployment(emp);
 	}
+
+	@Override
+	public String getCompanyName(long companyId) {
+		Company company = companyDao.getCompanyByCompanyId(companyId);
+		return company.getName();
+	}
 	
 }

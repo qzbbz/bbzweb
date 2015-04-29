@@ -10,4 +10,6 @@ public interface ICompanyService {
 	
 	public boolean companySelectAccounter(long companyId, String userId);
 	
+	public String getCompanyName(long companyId);
+	
 }

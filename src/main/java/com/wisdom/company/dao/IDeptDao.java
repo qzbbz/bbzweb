@@ -4,7 +4,7 @@ import com.wisdom.common.model.Dept;
 
 public interface IDeptDao {
 
-	public Dept getDeptByDeptId(Long companyId);
+	public Dept getDeptByDeptId(long id);
 	
 	public boolean addDept(Dept dept);
 	

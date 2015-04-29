@@ -43,4 +43,10 @@ public class UserServiceImpl implements IUserService {
 		return 0;
 	}
 
+	@Override
+	public String getUserIdByOpenId(String openId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

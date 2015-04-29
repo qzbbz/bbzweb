@@ -14,4 +14,6 @@ public interface IUserService {
 	
 	public long getCompanyIdByUserId(String userId);
 	
+	public String getUserIdByOpenId(String openId);
+	
 }
