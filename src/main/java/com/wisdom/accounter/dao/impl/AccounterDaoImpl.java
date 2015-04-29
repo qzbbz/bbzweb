@@ -85,4 +85,18 @@ public class AccounterDaoImpl implements IAccounterDao {
 		return user != null ? true : false;
 	}
 
+	@Override
+	public List<Accounter> getAllAccounter() {
+		List<Accounter> list = null;
+		try {
+			String sql = "select * from accounter";
+			list = jdbcTemplate.query(sql,
+					new RowMapperResultSetExtractor<Accounter>(
+							new AccounterMapper()));
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return list;
+	}
+
 }

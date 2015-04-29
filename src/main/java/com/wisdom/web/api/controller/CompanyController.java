@@ -14,19 +14,52 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.wisdom.common.model.Company;
+import com.wisdom.company.service.ICompanyService;
+import com.wisdom.user.service.IUserService;
 import com.wisdom.web.api.ICompanyDetailRegisterApi;
 import com.wisdom.web.utils.ErrorCode;
 import com.wisdom.web.utils.SessionConstant;
 
 @Controller
-public class CompanyDetailRegisterController {
+public class CompanyController {
 
 	private static final Logger logger = LoggerFactory
-			.getLogger(CompanyDetailRegisterController.class);
+			.getLogger(CompanyController.class);
 
 	@Autowired
-	private ICompanyDetailRegisterApi companyDetailRegisterApi;
+	private ICompanyService companyService;
 
+	@Autowired
+	private IUserService userService;
+	
+	@Autowired
+	private ICompanyDetailRegisterApi companyDetailRegisterApi;
+	
+	@RequestMapping("/company/selectAccounter")
+	@ResponseBody
+	public Map<Integer, String> selectAccounter(HttpServletRequest request) {
+		logger.info("enter selectAccounter");
+		boolean selectSuccess = false;
+		Map<Integer, String> retMap = new HashMap<>();
+		String accounterUserId = request.getParameter("userId");
+		String userId = (String) request.getSession().getAttribute("userId");
+		long companyId = userService.getCompanyIdByUserId(userId);
+		int accounterAmount = companyService
+				.accounterAmountBelongToCompany(companyId);
+		if (companyId > -1 && accounterAmount < 2) {
+			selectSuccess = companyService.companySelectAccounter(companyId,
+					accounterUserId);
+		}
+		if (selectSuccess) {
+			retMap.put(ErrorCode.NO_ERROR_CODE, ErrorCode.NO_ERROR_MESSAGE);
+		} else {
+			retMap.put(ErrorCode.COMPANY_SELECT_ACCOUNTER_ERROR_CODE,
+					ErrorCode.COMPANY_SELECT_ACCOUNTER_ERROR_MESSAGE);
+		}
+		logger.info("leave selectAccounter");
+		return retMap;
+	}
+	
 	@RequestMapping("/company/register")
 	@ResponseBody
 	public Map<Integer, String> companyRegister(HttpServletRequest request) {
@@ -59,5 +92,5 @@ public class CompanyDetailRegisterController {
 		logger.debug("finish companyRegister");
 		return retMap;
 	}
-
+	
 }

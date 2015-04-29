@@ -1,6 +1,7 @@
 package com.wisdom.accounter.service.impl;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,15 +78,7 @@ public class AccounterServiceImpl implements IAccounterService {
 		Map<String, String> accounterInfoMap = new HashMap<>();
 		Accounter accounter = accounterDao.getAccounterByUserId(userId);
 		if (accounter != null) {
-			accounterInfoMap.put("user_id", accounter.getUserId());
-			accounterInfoMap.put("name", accounter.getName());
-			accounterInfoMap.put("area", accounter.getArea());
-			accounterInfoMap.put("city", accounter.getCity());
-			accounterInfoMap.put("province", accounter.getProvince());
-			accounterInfoMap.put("image", accounter.getImage());
-			accounterInfoMap.put("certificate_id", accounter.getCertificate());
-			accounterInfoMap.put("industry_id", accounter.getIndustry());
-			accounterInfoMap.put("career_id", accounter.getCareer());
+			accounterInfoMap = accounterConvertToMap(accounter);
 		}
 		return accounterInfoMap;
 	}
@@ -100,6 +93,31 @@ public class AccounterServiceImpl implements IAccounterService {
 			updateSuccess = accounterDao.addAccounter(accounter);
 		}
 		return updateSuccess;
+	}
+
+	@Override
+	public List<Map<String, String>> getAllAccounter() {
+		List<Map<String, String>> retList = new ArrayList<>();
+		List<Accounter> list = accounterDao.getAllAccounter();
+		if(list != null && list.size() > 0) {
+			for(Accounter accounter : list)
+				retList.add(accounterConvertToMap(accounter));
+		}
+		return retList;
+	}
+	
+	private Map<String, String> accounterConvertToMap(Accounter accounter) {
+		Map<String, String> map = new HashMap<>();
+		map.put("user_id", accounter.getUserId());
+		map.put("name", accounter.getName());
+		map.put("area", accounter.getArea());
+		map.put("city", accounter.getCity());
+		map.put("province", accounter.getProvince());
+		map.put("image", accounter.getImage());
+		map.put("certificate_id", accounter.getCertificate());
+		map.put("industry_id", accounter.getIndustry());
+		map.put("career_id", accounter.getCareer());
+		return map;
 	}
 
 }

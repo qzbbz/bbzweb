@@ -2,7 +2,9 @@ package com.wisdom.web.api.controller;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -70,6 +72,20 @@ public class AccounterController {
 			retMap = accounterService.getAccounterByUserId(userId);
 		}
 		logger.debug("finish getAccounterInfo");
+		return retMap;
+	}
+	
+	@RequestMapping("/getAllAccounter")
+	@ResponseBody
+	public List<Map<String, String>> getAllAccounter(HttpServletRequest request) {
+		logger.debug("enter getAllAccounter");
+		String userId = (String) request.getSession().getAttribute(
+				SessionConstant.SESSION_USER_ID);
+		List<Map<String, String>> retMap = new ArrayList<>();
+		if (userId != null && !userId.isEmpty()) {
+			retMap = accounterService.getAllAccounter();
+		}
+		logger.debug("finish getAllAccounter");
 		return retMap;
 	}
 

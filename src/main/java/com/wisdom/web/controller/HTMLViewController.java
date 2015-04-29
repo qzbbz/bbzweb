@@ -10,57 +10,57 @@ import com.wisdom.web.utils.SessionConstant;
 @Controller
 public class HTMLViewController {
 
-	@RequestMapping("/home")
+	@RequestMapping("/homeHtml")
 	public String getHomeHtml() {
 		return "redirect:/views/webviews/home.html";
 	}
 	
-	@RequestMapping("/feature")
+	@RequestMapping("/featureHtml")
 	public String getFeatureHtml() {
 		return "redirect:/views/webviews/feature.html";
 	}
 	
-	@RequestMapping("/register")
+	@RequestMapping("/registerHtml")
 	public String getRegisterHtml() {
 		return "redirect:/views/webviews/register.html";
 	}
 	
-	@RequestMapping("/community")
+	@RequestMapping("/communityHtml")
 	public String getCommunityHtml() {
 		return "redirect:/views/webviews/community.html";
 	}
 	
-	@RequestMapping("/team")
+	@RequestMapping("/teamHtml")
 	public String getTeamHtml() {
 		return "redirect:/views/webviews/team.html";
 	}
 	
-	@RequestMapping("/contact")
+	@RequestMapping("/contactHtml")
 	public String getContactHtml() {
 		return "redirect:/views/webviews/contact.html";
 	}
 	
-	@RequestMapping("/company/selectAccounter")
+	@RequestMapping("/company/selectAccounterHtml")
 	public String getSelectAccounterHtml() {
 		return "redirect:/views/webviews/select_accounter.html";
 	}
 	
-	@RequestMapping("/companyUser/staffInfo")
+	@RequestMapping("/companyUser/staffInfoHtml")
 	public String getCompanyStaffHtml() {
 		return "redirect:/views/webviews/staff_info.html";
 	}
 	
-	@RequestMapping("/accounter/accounterInfo")
+	@RequestMapping("/accounter/accounterInfoHtml")
 	public String getAccounterInfoHtml() {
 		return "redirect:/views/webviews/accounter_info.html";
 	}
 	
-	@RequestMapping("/company/companyInfo")
+	@RequestMapping("/company/companyInfoHtml")
 	public String getCompanyInfoHtml() {
 		return "redirect:/views/webviews/company_info.html";
 	}
 	
-	@RequestMapping("/company/companyDetailRegister")
+	@RequestMapping("/company/companyDetailRegisterHtml")
 	public String getCompanyDetailRegisterHtml() {
 		return "redirect:/views/webviews/company_detail_register.html";
 	}

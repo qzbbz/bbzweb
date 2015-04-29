@@ -10,6 +10,8 @@ public interface IAccounterDao {
 	
 	public List<Accounter> getAccounterByCompanyId(long companyId);
 	
+	public List<Accounter> getAllAccounter();
+	
 	public boolean addAccounter(Accounter accounter);
 	
 	public boolean deleteAccounter(Accounter accounter);
