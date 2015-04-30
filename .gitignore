@@ -1,10 +1,11 @@
 #filter folders
 target/
 .settings/
-
+.idea/
 #filter files
 *.class
 *.apk
 .tern-project
 .project
 .classpath
+bbzweb.iml
