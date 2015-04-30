@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.wisdom.common.model.User;
 import com.wisdom.common.model.UserDept;
-import com.wisdom.common.model.UserInvitecode;
+import com.wisdom.common.model.UserInviteCode;
 import com.wisdom.common.model.UserOpenid;
 import com.wisdom.common.model.UserPhone;
 import com.wisdom.common.model.UserPhoneType;
@@ -53,9 +53,9 @@ public class UserQueryDaoImpl implements IUserQueryDao {
 	}
 
 	@Override
-	public UserInvitecode getUserInvitecodeByInviteCode(String inviteCode) {
+	public UserInviteCode getUserInvitecodeByInviteCode(String inviteCode) {
 		String sql = "select * from user_invitecode where invite_code = ?";
-		UserInvitecode userInvitecode = jdbcTemplate.queryForObject(sql,
+		UserInviteCode userInvitecode = jdbcTemplate.queryForObject(sql,
 				new Object[] { inviteCode }, new UserInviteCodeMapper());
 		return userInvitecode;
 	}

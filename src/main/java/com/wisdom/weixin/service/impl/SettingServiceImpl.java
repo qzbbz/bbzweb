@@ -36,14 +36,31 @@ public class SettingServiceImpl implements ISettingService {
 		Map<String, String> retMap = new HashMap<>();
 		if(userWeixinService.userHasBindCompany(openId)) {
 			String userId = userService.getUserIdByOpenId(openId);
-			long companyId = userService.getCompanyIdByUserId(userId);
-			String companyName = companyService.getCompanyName(companyId);
-			long deptId = userDeptService.getDeptIdByUserId(userId);
-			String deptName = deptService.getDeptNameById(deptId);
-			retMap.put("companyName", companyName);
-			retMap.put("deptName", deptName);
+			retMap = getCompanyNameAndDeptName(userId);
 		}
 		return retMap;
 	}
+
+	@Override
+	public Map<String, String> userBindCompany(String openId, String inviteCode) {
+		Map<String, String> retMap = new HashMap<>();
+		retMap = checkCompanyBind(openId);
+		if(retMap.size() > 0) return retMap;
+		String userId = userWeixinService.getUserIdByUserInviteCode(inviteCode);
+		if(userId == null || userId.isEmpty()) return retMap;
+		retMap = getCompanyNameAndDeptName(userId);
+		return retMap;
+	}
 	
+	private Map<String, String> getCompanyNameAndDeptName(String userId) {
+		Map<String, String> retMap = new HashMap<>();
+		long companyId = userService.getCompanyIdByUserId(userId);
+		String companyName = companyService.getCompanyName(companyId);
+		long deptId = userDeptService.getDeptIdByUserId(userId);
+		String deptName = deptService.getDeptNameById(deptId);
+		retMap.put("companyName", companyName);
+		retMap.put("deptName", deptName);
+		return retMap;
+	}
+
 }

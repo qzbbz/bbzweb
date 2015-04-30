@@ -4,6 +4,8 @@ public interface IUserWeixinService {
 	
 	public boolean userHasBindCompany(String openid);
 	
-	public boolean userBindCompany(String openid, String inviteCode);
+	public String getUserIdByUserInviteCode(String inviteCode);
+
+	public boolean addOpenId(String userId, String openId);
 	
 }

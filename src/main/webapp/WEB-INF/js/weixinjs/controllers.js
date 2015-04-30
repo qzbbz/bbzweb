@@ -172,7 +172,7 @@ angular.module('qzapp.controllers', [])
 	$scope.showNoBind = false;
 	$scope.showNetError = false;
 	$scope.companyName = "";
-	$scope.companyDepartment = "";
+	$scope.deptName = "";
 	$scope.openId = "";
 
 	$scope.submitBind = function() {
@@ -190,9 +190,8 @@ angular.module('qzapp.controllers', [])
 				},
 				data: Object.toparams({'openId': $scope.openId,	'inviteCode' : inviteCode})
 			}).success(function(data) {
-				if (data.error == "true") {
-					alert(data.message);
-					$scope.showNoBind = true;
+				if (data.error_code == "true") {
+					alert(data.error_message);
 				} else {
 					$scope.showNoBind = false;
 					$scope.showHasBind = true;
@@ -232,18 +231,14 @@ angular.module('qzapp.controllers', [])
 				},
 				data: Object.toparams({openId: $scope.openId})
 			}).success(function(data) {
-				if (data.error == "true") {
-					//alert(data.message);
-				} else if(data.message == "noBind") {
-					//alert(data.message);
+				if (data.error_code != "0") {
+					alert(data.error_message);
+				} else if(data.bind_status == "not_bind") {
 					$scope.showNoBind = true;
-				} else if(data.message == "hasBind") {
-					//alert(data.message);
+				} else if(data.bind_status == "has_bind") {
 					$scope.showHasBind = true;
 					$scope.companyName = data.companyName;
-					$scope.companyDepartment = data.companyDepartment;
-				} else {
-					$scope.showNetError = true;
+					$scope.deptName = data.deptName;
 				}
 				$ionicLoading.hide();
 			}).error(function(response) {

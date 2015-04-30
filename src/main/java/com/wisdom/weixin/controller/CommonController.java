@@ -112,19 +112,17 @@ public class CommonController {
 		Map<String, String> result = new HashMap<>();
 		String openId = request.getParameter("openId");
 		if (openId == null || openId.isEmpty()) {
-			result.put(String.valueOf(WeixinJsonCode.NO_OPENID_ERROR_CODE),
-					WeixinJsonCode.NO_OPENID_ERROR_MESSAGE);
+			result.put("error_code", String.valueOf(WeixinJsonCode.NO_OPENID_ERROR_CODE));
+			result.put("error_message", WeixinJsonCode.NO_OPENID_ERROR_MESSAGE);
 		} else {
-			result.put(String.valueOf(WeixinJsonCode.NO_ERROR_CODE),
-					WeixinJsonCode.NO_ERROR_MESSAGE);
+			result.put("error_code", String.valueOf(WeixinJsonCode.NO_ERROR_CODE));
+			result.put("error_message", WeixinJsonCode.NO_ERROR_MESSAGE);
 			Map<String, String> ret = settingService.checkCompanyBind(openId);
 			if(ret.size() > 0) {
 				result.putAll(ret);
-				result.put(String.valueOf(WeixinJsonCode.USER_HAS_BIND_COMAPNY_CODE), 
-						WeixinJsonCode.USER_HAS_BIND_COMAPNY_MESSAGE);
+				result.put("bind_status", "has_bind");
 			} else {
-				result.put(String.valueOf(WeixinJsonCode.USER_NOT_BIND_COMAPNY_CODE), 
-						WeixinJsonCode.USER_NOT_BIND_COMAPNY_MESSAGE);
+				result.put("bind_status", "not_bind");
 			}
 		}
 		logger.info("finishCheckBindCompany");
