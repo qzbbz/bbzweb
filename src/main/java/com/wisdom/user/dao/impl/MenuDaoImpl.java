@@ -18,13 +18,18 @@ public class MenuDaoImpl implements IMenuDao {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
-	
+
 	@Override
 	public Menu getMenuById(long id) {
 		String sql = "select * from menu where id = ?";
-		Menu menu = jdbcTemplate.queryForObject(sql, new Object[] { id },
-				new MenuMapper());
-		logger.debug("menu : {}", menu.toString());
+		Menu menu = null;
+		try {
+			menu = jdbcTemplate.queryForObject(sql, new Object[] { id },
+					new MenuMapper());
+			logger.debug("menu : {}", menu.toString());
+		} catch (Exception e) {
+			logger.debug("result size is 0.");
+		}
 		return menu;
 	}
 

@@ -190,13 +190,14 @@ angular.module('qzapp.controllers', [])
 				},
 				data: Object.toparams({'openId': $scope.openId,	'inviteCode' : inviteCode})
 			}).success(function(data) {
-				if (data.error_code == "true") {
+				alert(data);
+				if (data.error_code != "0" || data.invite_code_error != null) {
 					alert(data.error_message);
 				} else {
 					$scope.showNoBind = false;
 					$scope.showHasBind = true;
 					$scope.companyName = data.companyName;
-					$scope.companyDepartment = data.companyDepartment;
+					$scope.deptName = data.deptName;
 				}
 				$ionicLoading.hide();
 			}).error(function(response) {
@@ -206,6 +207,8 @@ angular.module('qzapp.controllers', [])
 		}
 	}
 
+	alert(111);
+	
 	$ionicLoading.show({
 		template: '正在获取数据...'
 	})

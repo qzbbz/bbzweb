@@ -118,12 +118,7 @@ public class CommonController {
 			result.put("error_code", String.valueOf(WeixinJsonCode.NO_ERROR_CODE));
 			result.put("error_message", WeixinJsonCode.NO_ERROR_MESSAGE);
 			Map<String, String> ret = settingService.checkCompanyBind(openId);
-			if(ret.size() > 0) {
-				result.putAll(ret);
-				result.put("bind_status", "has_bind");
-			} else {
-				result.put("bind_status", "not_bind");
-			}
+			result.putAll(ret);
 		}
 		logger.info("finishCheckBindCompany");
 		logger.info("resultMap :{}", result.toString());
