@@ -10,6 +10,7 @@
 
 	<properties>
 		<spring.version>4.0.1.RELEASE</spring.version>
+		<spring.mock>2.0.8</spring.mock>
 		<jackson.version>2.5.1</jackson.version>
 		<jdk.version>1.8</jdk.version>
 		<mysql.version>5.1.26</mysql.version>
@@ -53,6 +54,12 @@
 			<artifactId>spring-tx</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
+		<dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-mock</artifactId>
+            <version>${spring.mock}</version>
+            <scope>test</scope>
+        </dependency>
 
 		<!-- Mysql -->
 		<dependency>

@@ -70,8 +70,8 @@
 	<mvc:resources mapping="/css/weixincss/**" location="/WEB-INF/css/weixincss/" cache-period="65535" />
 	<mvc:resources mapping="/img/webimg/**" location="/WEB-INF/img/webimg/" cache-period="65535" />
 	<mvc:resources mapping="/img/weixinimg/**" location="/WEB-INF/img/weixinimg/" cache-period="65535" />
+	<mvc:resources mapping="/views/weixinviews/**" location="/WEB-INF/views/weixinviews/" cache-period="65535" />
 	<mvc:resources mapping="/views/webviews/**" location="/WEB-INF/views/webviews/" cache-period="65535" />
-	<mvc:resources mapping="/views/weixinviews/**" location="/WEB-INF/views/weixinviews" cache-period="65535" />
 	<!-- static resources config end -->	
 
 	<!-- database config begin -->
@@ -95,6 +95,32 @@
 	<context:component-scan base-package="com.wisdom.user.dao.impl" />
 	<context:component-scan base-package="com.wisdom.user.service.impl" />
 	<!-- user component-scan end-->
+	
+	<!-- company component-scan begin-->
+	<context:component-scan base-package="com.wisdom.company.dao.impl" />
+	<context:component-scan base-package="com.wisdom.company.service.impl" />
+	<!-- company component-scan end-->
+	
+	<!-- area component-scan begin-->
+	<context:component-scan base-package="com.wisdom.area.dao.impl" />
+	<context:component-scan base-package="com.wisdom.area.service.impl" />
+	<!-- area component-scan end-->
+	
+	<!-- accounter component-scan begin-->
+	<context:component-scan base-package="com.wisdom.accounter.dao.impl" />
+	<context:component-scan base-package="com.wisdom.accounter.service.impl" />
+	<!-- accounter component-scan end-->
+	
+	<!-- community component-scan begin-->
+	<context:component-scan base-package="com.wisdom.community.dao.impl" />
+	<context:component-scan base-package="com.wisdom.community.service.impl" />
+	<!-- community component-scan end-->
+	
+	<!-- web component-scan begin-->
+	<context:component-scan base-package="com.wisdom.web.api.impl" />
+	<context:component-scan base-package="com.wisdom.web.api.controller" />
+	<context:component-scan base-package="com.wisdom.web.controller" />
+	<!-- web component-scan end-->
 	
 	<!-- weixin begin -->
 	<context:component-scan base-package="com.wisdom.weixin.controller" />

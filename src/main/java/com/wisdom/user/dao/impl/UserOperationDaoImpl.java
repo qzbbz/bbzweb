@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.wisdom.common.model.User;
 import com.wisdom.common.model.UserDept;
-import com.wisdom.common.model.UserInvitecode;
+import com.wisdom.common.model.UserInviteCode;
 import com.wisdom.common.model.UserOpenid;
 import com.wisdom.common.model.UserPhone;
 import com.wisdom.common.model.UserPhoneType;
@@ -53,7 +53,7 @@ public class UserOperationDaoImpl implements IUserOperationDao {
 	}
 
 	@Override
-	public boolean addInviteCode(UserInvitecode userInvitecode) {
+	public boolean addInviteCode(UserInviteCode userInvitecode) {
 		String sql = "insert into user_invitecode (user_id, invite_code, create_time)"
 				+ " values (?, ?, ?, ?)";
 		int affectedRows = jdbcTemplate.update(sql, userInvitecode.getUserId(),
@@ -63,7 +63,7 @@ public class UserOperationDaoImpl implements IUserOperationDao {
 	}
 
 	@Override
-	public boolean deleteInviteCode(UserInvitecode userInvitecode) {
+	public boolean deleteInviteCode(UserInviteCode userInvitecode) {
 		String sql = "delete from user_invitecode where user_id = ?";
 		int affectedRows = jdbcTemplate.update(sql, userInvitecode.getUserId());
 		logger.debug("deleteInviteCode result : {}", affectedRows);
@@ -71,7 +71,7 @@ public class UserOperationDaoImpl implements IUserOperationDao {
 	}
 
 	@Override
-	public boolean updateInviteCode(UserInvitecode userInviteCode) {
+	public boolean updateInviteCode(UserInviteCode userInviteCode) {
 		String sql = "update user_invitecode set invite_code=? where user_id=?";
 		int affectedRows = jdbcTemplate.update(sql,
 				userInviteCode.getInviteCode(), userInviteCode.getUserId());

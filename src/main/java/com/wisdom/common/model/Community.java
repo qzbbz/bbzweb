@@ -17,6 +17,7 @@ public class Community implements java.io.Serializable {
 	private Long id;
 	private String userId;
 	private Long tagId;
+	private String image;
 	private String title;
 	private String abstractData;
 	private String data;
@@ -30,11 +31,12 @@ public class Community implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public Community(Long id, String userId, Long tagId, String title,
-			String abstractData, String data, Timestamp createTime,
-			Timestamp updateTime) {
+	public Community(Long id, String userId, Long tagId, String image,
+			String title, String abstractData, String data,
+			Timestamp createTime, Timestamp updateTime) {
 		this.id = id;
 		this.userId = userId;
+		this.image = image;
 		this.title = title;
 		this.abstractData = abstractData;
 		this.data = data;
@@ -60,23 +62,31 @@ public class Community implements java.io.Serializable {
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
+	
+	public String getImage() {
+		return this.image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
 
 	public String getTitle() {
 		return this.title;
 	}
-	
+
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	
+
 	public String getAbstractData() {
 		return this.abstractData;
 	}
-	
+
 	public void setAbstractData(String abstractData) {
 		this.abstractData = abstractData;
 	}
-	
+
 	public String getData() {
 		return this.data;
 	}

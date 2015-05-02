@@ -13,10 +13,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.wisdom.weixin.service.IMessageProcessService;
+import com.wisdom.weixin.service.ISettingService;
 import com.wisdom.weixin.service.ITokenCheckService;
+import com.wisdom.weixin.utils.WeixinJsonCode;
 import com.wisdom.weixin.utils.WeixinTools;
 
 @Controller
@@ -31,6 +32,9 @@ public class CommonController {
 
 	@Autowired
 	private IMessageProcessService messageProcessService;
+	
+	@Autowired
+	private ISettingService settingService;
 
 	@RequestMapping("/weixinRequest")
 	@ResponseBody
@@ -56,8 +60,7 @@ public class CommonController {
 
 	@RequestMapping("/getJsConfigInfo")
 	@ResponseBody
-	public Map<String, String> getJsConfigInfo(Model model,
-			HttpServletRequest request) {
+	public Map<String, String> getJsConfigInfo(HttpServletRequest request) {
 		logger.debug("getJsConfigInfo");
 		Map<String, String> result = new HashMap<>();
 		String url = request.getParameter("url");
@@ -69,7 +72,7 @@ public class CommonController {
 	}
 
 	@RequestMapping("/getOpenIdRedirect")
-	public ModelAndView getOpenIdRedirect(Model model,
+	public String getOpenIdRedirect(Model model,
 			HttpServletRequest request) {
 		logger.debug("getOpenIdRedirect");
 		String code = request.getParameter("code");
@@ -84,7 +87,7 @@ public class CommonController {
 		}
 		logger.debug("finishGetOpenIdRedirect");
 		logger.debug("code :{}, openId :{}, view :{}", code, openId, view);
-		return new ModelAndView(view);
+		return "redirect:/views/weixinviews/" + view;
 	}
 
 	@RequestMapping("/getUserOpenId")
@@ -102,8 +105,23 @@ public class CommonController {
 		return result;
 	}
 	
-	@RequestMapping("/")
-	public String getHomeHtml(HttpServletRequest request) {
-		return "redirect:/views/webviews/home.html";
+	@RequestMapping("/checkBindCompany")
+	@ResponseBody
+	public Map<String, String> checkBindCompany(HttpServletRequest request) {
+		logger.info("checkBindCompany");
+		Map<String, String> result = new HashMap<>();
+		String openId = request.getParameter("openId");
+		if (openId == null || openId.isEmpty()) {
+			result.put("error_code", String.valueOf(WeixinJsonCode.NO_OPENID_ERROR_CODE));
+			result.put("error_message", WeixinJsonCode.NO_OPENID_ERROR_MESSAGE);
+		} else {
+			result.put("error_code", String.valueOf(WeixinJsonCode.NO_ERROR_CODE));
+			result.put("error_message", WeixinJsonCode.NO_ERROR_MESSAGE);
+			Map<String, String> ret = settingService.checkCompanyBind(openId);
+			result.putAll(ret);
+		}
+		logger.info("finishCheckBindCompany");
+		logger.info("resultMap :{}", result.toString());
+		return result;
 	}
 }

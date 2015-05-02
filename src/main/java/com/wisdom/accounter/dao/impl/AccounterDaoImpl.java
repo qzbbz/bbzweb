@@ -46,13 +46,13 @@ public class AccounterDaoImpl implements IAccounterDao {
 
 	@Override
 	public boolean addAccounter(Accounter accounter) {
-		String sql = "insert into accounter (user_id, name, area_id, image, certificate_id, industry_id, career_id, comapny_id, create_time)"
-				+ " values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-		int affectedRows = jdbcTemplate.update(sql, accounter.getUSerId(),
-				accounter.getName(), accounter.getAreaId(),
-				accounter.getImage(), accounter.getCertificateId(),
-				accounter.getIndustryId(), accounter.getCareerId(),
-				accounter.getCreateTime());
+		String sql = "insert into accounter (user_id, name, area, city, province, image, certificate, industry, career, create_time)"
+				+ " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		int affectedRows = jdbcTemplate.update(sql, accounter.getUserId(),
+				accounter.getName(), accounter.getArea(), accounter.getCity(),
+				accounter.getProvince(), accounter.getImage(),
+				accounter.getCertificate(), accounter.getIndustry(),
+				accounter.getCareer(), accounter.getCreateTime());
 		logger.debug("addAccounter result : {}", affectedRows);
 		return affectedRows != 0;
 	}
@@ -67,14 +67,36 @@ public class AccounterDaoImpl implements IAccounterDao {
 
 	@Override
 	public boolean updateAccounter(Accounter accounter) {
-		String sql = "update accounter set name=?, area_id=?, image=?, certificate_id=?, industry_id=?, career_id=?, company_id=?  where user_id=?";
+		String sql = "update accounter set name=?, area=?, city=?, province=?, image=?, certificate=?, industry=?, career=? where user_id=?";
 		int affectedRows = jdbcTemplate.update(sql, accounter.getName(),
-				accounter.getAreaId(), accounter.getImage(),
-				accounter.getCertificateId(), accounter.getIndustryId(),
-				accounter.getCareerId(), accounter.getCreateTime(),
-				accounter.getUSerId());
+				accounter.getArea(), accounter.getCity(),
+				accounter.getProvince(), accounter.getImage(),
+				accounter.getCertificate(), accounter.getIndustry(),
+				accounter.getCareer(), accounter.getUserId());
 		logger.debug("updateAccounter result : {}", affectedRows);
 		return affectedRows != 0;
+	}
+
+	@Override
+	public boolean isAccounterExistByUserId(String userId) {
+		String sql = "select id from accounter where user_id = ?";
+		Accounter user = jdbcTemplate.queryForObject(sql,
+				new Object[] { userId }, new AccounterMapper());
+		return user != null ? true : false;
+	}
+
+	@Override
+	public List<Accounter> getAllAccounter() {
+		List<Accounter> list = null;
+		try {
+			String sql = "select * from accounter";
+			list = jdbcTemplate.query(sql,
+					new RowMapperResultSetExtractor<Accounter>(
+							new AccounterMapper()));
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return list;
 	}
 
 }

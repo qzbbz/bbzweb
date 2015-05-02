@@ -2,7 +2,7 @@ package com.wisdom.user.dao;
 
 import com.wisdom.common.model.User;
 import com.wisdom.common.model.UserDept;
-import com.wisdom.common.model.UserInvitecode;
+import com.wisdom.common.model.UserInviteCode;
 import com.wisdom.common.model.UserOpenid;
 import com.wisdom.common.model.UserPhone;
 import com.wisdom.common.model.UserPhoneType;
@@ -16,11 +16,11 @@ public interface IUserOperationDao {
 	
 	public boolean updateUser(User user);
 	
-	public boolean addInviteCode(UserInvitecode userInvitecode);
+	public boolean addInviteCode(UserInviteCode userInvitecode);
 	
-	public boolean deleteInviteCode(UserInvitecode userInvitecode);
+	public boolean deleteInviteCode(UserInviteCode userInvitecode);
 	
-	public boolean updateInviteCode(UserInvitecode userInviteCode);
+	public boolean updateInviteCode(UserInviteCode userInviteCode);
 	
 	public boolean addOpenid(UserOpenid userOpenid);
 	

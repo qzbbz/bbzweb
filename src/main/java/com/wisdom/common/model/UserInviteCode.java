@@ -6,7 +6,7 @@ import java.sql.Timestamp;
  * UserInvitecode entity. @author MyEclipse Persistence Tools
  */
 
-public class UserInvitecode implements java.io.Serializable {
+public class UserInviteCode implements java.io.Serializable {
 
 	// Fields
 
@@ -22,19 +22,19 @@ public class UserInvitecode implements java.io.Serializable {
 	// Constructors
 
 	/** default constructor */
-	public UserInvitecode() {
+	public UserInviteCode() {
 	}
 
 	/** minimal constructor */
-	public UserInvitecode(Long id, String userId, String inviteCode) {
+	public UserInviteCode(Long id, String userId, String inviteCode) {
 		this.id = id;
 		this.userId = userId;
 		this.inviteCode = inviteCode;
 	}
 
 	/** full constructor */
-	public UserInvitecode(Long id, String userId, String inviteCode,
-			Timestamp createTime) {
+	public UserInviteCode(Long id, String userId, String inviteCode,
+						  Timestamp createTime) {
 		this.id = id;
 		this.userId = userId;
 		this.inviteCode = inviteCode;

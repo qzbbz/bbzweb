@@ -14,11 +14,13 @@ public class Accounter implements java.io.Serializable {
 	private Long id;
 	private String userId;
 	private String name;
-	private Long areaId;
+	private String area;
+	private String city;
+	private String province;
 	private String image;
-	private Long certificateId;
-	private Long industryId;
-	private Long careerId;
+	private String certificate;
+	private String industry;
+	private String career;
 	private Timestamp createTime;
 
 	// Constructors
@@ -33,17 +35,19 @@ public class Accounter implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public Accounter(Long id, String userId, String name, Long areaId, String image,
-			Long certificateId, Long industryId, Long careerId, 
-			Timestamp createTime) {
+	public Accounter(Long id, String userId, String name, String area,
+			String city, String province, String image, String certificate,
+			String industry, String career, Timestamp createTime) {
 		this.id = id;
 		this.userId = userId;
 		this.name = name;
-		this.areaId = areaId;
+		this.area = area;
+		this.city = city;
+		this.province = province;
 		this.image = image;
-		this.certificateId = certificateId;
-		this.industryId = industryId;
-		this.careerId = careerId;
+		this.certificate = certificate;
+		this.industry = industry;
+		this.career = career;
 		this.createTime = createTime;
 	}
 
@@ -57,14 +61,14 @@ public class Accounter implements java.io.Serializable {
 		this.id = id;
 	}
 
-	public String getUSerId() {
+	public String getUserId() {
 		return this.userId;
 	}
 
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-	
+
 	public String getName() {
 		return this.name;
 	}
@@ -73,14 +77,30 @@ public class Accounter implements java.io.Serializable {
 		this.name = name;
 	}
 
-	public Long getAreaId() {
-		return this.areaId;
+	public String getArea() {
+		return this.area;
 	}
 
-	public void setAreaId(Long areaId) {
-		this.areaId = areaId;
+	public void setArea(String area) {
+		this.area = area;
+	}
+	
+	public String getCity() {
+		return this.city;
 	}
 
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getProvince() {
+		return this.province;
+	}
+
+	public void setProvince(String province) {
+		this.province = province;
+	}
+	
 	public String getImage() {
 		return this.image;
 	}
@@ -89,28 +109,28 @@ public class Accounter implements java.io.Serializable {
 		this.image = image;
 	}
 
-	public Long getCertificateId() {
-		return this.certificateId;
+	public String getCertificate() {
+		return this.certificate;
 	}
 
-	public void setCertificateId(Long certificateId) {
-		this.certificateId = certificateId;
+	public void setCertificate(String certificate) {
+		this.certificate = certificate;
 	}
 
-	public Long getIndustryId() {
-		return this.industryId;
+	public String getIndustry() {
+		return this.industry;
 	}
 
-	public void setIndustryId(Long industryId) {
-		this.industryId = industryId;
+	public void setIndustry(String industry) {
+		this.industry = industry;
 	}
 
-	public Long getCareerId() {
-		return this.careerId;
+	public String getCareer() {
+		return this.career;
 	}
 
-	public void setCareerId(Long careerId) {
-		this.careerId = careerId;
+	public void setCareer(String career) {
+		this.career = career;
 	}
 
 	public Timestamp getCreateTime() {

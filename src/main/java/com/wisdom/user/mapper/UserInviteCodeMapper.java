@@ -5,11 +5,11 @@ import java.sql.SQLException;
 
 import org.springframework.jdbc.core.RowMapper;
 
-import com.wisdom.common.model.UserInvitecode;
+import com.wisdom.common.model.UserInviteCode;
 
-public class UserInviteCodeMapper implements RowMapper<UserInvitecode> {
-	public UserInvitecode mapRow(ResultSet rs, int index) throws SQLException {
-		UserInvitecode u = new UserInvitecode(rs.getLong("id"), rs.getString("user_id"),
+public class UserInviteCodeMapper implements RowMapper<UserInviteCode> {
+	public UserInviteCode mapRow(ResultSet rs, int index) throws SQLException {
+		UserInviteCode u = new UserInviteCode(rs.getLong("id"), rs.getString("user_id"),
 				rs.getString("invite_code"), rs.getTimestamp("create_time"));
 		return u;
 	}

@@ -26,7 +26,7 @@ public class CommunityDaoImpl implements ICommunityDao {
 	public List<Community> getCommunityByTagId(long tagId) {
 		List<Community> list = null;
 		try {
-			String sql = "select * from community where id =?";
+			String sql = "select * from community where tag_id =?";
 			list = jdbcTemplate.query(sql, new Object[] { tagId },
 					new RowMapperResultSetExtractor<Community>(
 							new CommunityMapper()));
@@ -38,9 +38,10 @@ public class CommunityDaoImpl implements ICommunityDao {
 
 	@Override
 	public List<Community> getCommunityByKeywords(String keywords) {
+		keywords = "%" + keywords + "%";
 		List<Community> list = null;
 		try {
-			String sql = "select * from community where title like '%?%' or abstract_data like '%?%' or data like '%?%'";
+			String sql = "select * from community where title like ? or abstract_data like ? or data like ?";
 			list = jdbcTemplate.query(sql, new Object[] { keywords, keywords,
 					keywords }, new RowMapperResultSetExtractor<Community>(
 					new CommunityMapper()));
@@ -66,12 +67,13 @@ public class CommunityDaoImpl implements ICommunityDao {
 
 	@Override
 	public boolean addCommunity(Community community) {
-		String sql = "insert into community (user_id, tag_id, title, abstract_data, data, create_time, update_time)"
-				+ " values (?, ?, ?, ?, ?, ?, ?)";
+		String sql = "insert into community (user_id, tag_id, image, title, abstract_data, data, create_time, update_time)"
+				+ " values (?, ?, ?, ?, ?, ?, ?, ?)";
 		int affectedRows = jdbcTemplate.update(sql, community.getUserId(),
-				community.getTagId(), community.getTitle(),
-				community.getAbstractData(), community.getData(),
-				community.getCreateTime(), community.getUpdateTime());
+				community.getTagId(), community.getImage(),
+				community.getTitle(), community.getAbstractData(),
+				community.getData(), community.getCreateTime(),
+				community.getUpdateTime());
 		logger.debug("addCommunity result : {}", affectedRows);
 		return affectedRows != 0;
 	}
@@ -86,11 +88,11 @@ public class CommunityDaoImpl implements ICommunityDao {
 
 	@Override
 	public boolean updateCommunity(Community community) {
-		String sql = "update community set tag_id=?, title=?, abstract_data=?, data=?, update_time=? where id=?";
+		String sql = "update community set tag_id=?, image=?, title=?, abstract_data=?, data=?, update_time=? where id=?";
 		int affectedRows = jdbcTemplate.update(sql, community.getTagId(),
-				community.getTitle(), community.getAbstractData(),
-				community.getData(), community.getUpdateTime(),
-				community.getId());
+				community.getImage(), community.getTitle(),
+				community.getAbstractData(), community.getData(),
+				community.getUpdateTime(), community.getId());
 		logger.debug("updateCommunity result : {}", affectedRows);
 		return affectedRows != 0;
 	}

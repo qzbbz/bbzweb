@@ -26,7 +26,7 @@ public class RoleAuthDaoImpl implements IRoleAuthDao {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
-	
+
 	@Override
 	public boolean addAuthAction(AuthAction authAction) {
 		String sql = "insert into auth_action (name, create_time)"
@@ -57,9 +57,14 @@ public class RoleAuthDaoImpl implements IRoleAuthDao {
 	@Override
 	public AuthAction getAuthAction(long id) {
 		String sql = "select * from auth_action where id = ?";
-		AuthAction user = jdbcTemplate.queryForObject(sql, new Object[] { id },
-				new AuthActionMapper());
-		return user;
+		AuthAction authAction = null;
+		try {
+			authAction = jdbcTemplate.queryForObject(sql, new Object[] { id },
+					new AuthActionMapper());
+		} catch (Exception e) {
+			logger.debug("result size is 0.");
+		}
+		return authAction;
 	}
 
 	@Override
@@ -92,15 +97,19 @@ public class RoleAuthDaoImpl implements IRoleAuthDao {
 	@Override
 	public ObjectTypes getObjectTypes(long id) {
 		String sql = "select * from object_types where id = ?";
-		ObjectTypes objectTypes = jdbcTemplate.queryForObject(sql, new Object[] { id },
-				new ObjectTypesMapper());
+		ObjectTypes objectTypes = null;
+		try {
+			objectTypes = jdbcTemplate.queryForObject(sql, new Object[] { id },
+					new ObjectTypesMapper());
+		} catch (Exception e) {
+			logger.debug("result size is 0.");
+		}
 		return objectTypes;
 	}
 
 	@Override
 	public boolean addRole(Role role) {
-		String sql = "insert into role (name, create_time)"
-				+ " values (?, ?)";
+		String sql = "insert into role (name, create_time)" + " values (?, ?)";
 		int affectedRows = jdbcTemplate.update(sql, role.getName(),
 				role.getCreateTime());
 		logger.debug("addRole result : {}", affectedRows);
@@ -127,8 +136,13 @@ public class RoleAuthDaoImpl implements IRoleAuthDao {
 	@Override
 	public Role getRole(long id) {
 		String sql = "select * from role where id = ?";
-		Role role = jdbcTemplate.queryForObject(sql, new Object[] { id },
-				new RoleMapper());
+		Role role = null;
+		try {
+			role = jdbcTemplate.queryForObject(sql, new Object[] { id },
+					new RoleMapper());
+		} catch (Exception e) {
+			logger.debug("result size is 0.");
+		}
 		return role;
 	}
 
@@ -136,8 +150,10 @@ public class RoleAuthDaoImpl implements IRoleAuthDao {
 	public boolean addRolePermission(RolePermission rolePermission) {
 		String sql = "insert into role_permission (object_type_id, auth_action_id, create_time)"
 				+ " values (?, ?)";
-		int affectedRows = jdbcTemplate.update(sql, rolePermission.getObjectTypeId(),
-				rolePermission.getAuthActionId(), rolePermission.getCreateTime());
+		int affectedRows = jdbcTemplate.update(sql,
+				rolePermission.getObjectTypeId(),
+				rolePermission.getAuthActionId(),
+				rolePermission.getCreateTime());
 		logger.debug("addRolePermission result : {}", affectedRows);
 		return affectedRows != 0;
 	}
@@ -153,7 +169,8 @@ public class RoleAuthDaoImpl implements IRoleAuthDao {
 	@Override
 	public boolean updateRolePermission(RolePermission rolePermission) {
 		String sql = "update role_permission set object_type_id=?, auth_action=? where id=?";
-		int affectedRows = jdbcTemplate.update(sql, rolePermission.getObjectTypeId(),
+		int affectedRows = jdbcTemplate.update(sql,
+				rolePermission.getObjectTypeId(),
 				rolePermission.getAuthActionId(), rolePermission.getId());
 		logger.debug("updateRolePermission result : {}", affectedRows);
 		return affectedRows != 0;
@@ -162,8 +179,13 @@ public class RoleAuthDaoImpl implements IRoleAuthDao {
 	@Override
 	public RolePermission getRolePermission(long id) {
 		String sql = "select * from role_permission where id = ?";
-		RolePermission rolePermission = jdbcTemplate.queryForObject(sql, new Object[] { id },
-				new RolePermissionMapper());
+		RolePermission rolePermission = null;
+		try {
+			jdbcTemplate.queryForObject(sql, new Object[] { id },
+					new RolePermissionMapper());
+		} catch (Exception e) {
+			logger.debug("result size is 0.");
+		}
 		return rolePermission;
 	}
 
@@ -197,8 +219,13 @@ public class RoleAuthDaoImpl implements IRoleAuthDao {
 	@Override
 	public RolePrivate getRolePrivate(long id) {
 		String sql = "select * from role_private where id = ?";
-		RolePrivate rolePrivate = jdbcTemplate.queryForObject(sql, new Object[] { id },
-				new RolePrivateMapper());
+		RolePrivate rolePrivate = null;
+		try {
+			rolePrivate = jdbcTemplate.queryForObject(sql,
+				new Object[] { id }, new RolePrivateMapper());
+		} catch (Exception e) {
+			logger.debug("result size is 0.");
+		}
 		return rolePrivate;
 	}
 

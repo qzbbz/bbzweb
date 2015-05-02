@@ -20,10 +20,10 @@ public class DeptDaoImpl implements IDeptDao {
 	private JdbcTemplate jdbcTemplate;
 	
 	@Override
-	public Dept getDeptByDeptId(Long deptId) {
+	public Dept getDeptByDeptId(long id) {
 		String sql = "select * from dept where id = ?";
 		Dept dept = jdbcTemplate.queryForObject(sql,
-				new Object[] { deptId }, new DeptMapper());
+				new Object[] { id }, new DeptMapper());
 		logger.debug("getDeptByDeptId");
 		return dept;
 	}

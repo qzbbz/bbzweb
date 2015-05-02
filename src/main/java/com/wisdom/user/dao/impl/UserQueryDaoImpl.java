@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.wisdom.common.model.User;
 import com.wisdom.common.model.UserDept;
-import com.wisdom.common.model.UserInvitecode;
+import com.wisdom.common.model.UserInviteCode;
 import com.wisdom.common.model.UserOpenid;
 import com.wisdom.common.model.UserPhone;
 import com.wisdom.common.model.UserPhoneType;
@@ -38,82 +38,144 @@ public class UserQueryDaoImpl implements IUserQueryDao {
 	@Override
 	public User getUserByUserId(String userId) {
 		String sql = "select * from user where user_id = ?";
-		User user = jdbcTemplate.queryForObject(sql, new Object[] { userId },
-				new UserMapper());
-		logger.debug("getUserByUserId");
+		User user = null;
+		try {
+			user = jdbcTemplate.queryForObject(sql, new Object[] { userId },
+					new UserMapper());
+		} catch (Exception e) {
+			logger.info("resuly is 0.");
+		}
 		return user;
 	}
 
 	@Override
 	public UserPwd getUserPwdByUserId(String userId) {
 		String sql = "select * from user_pwd where user_id = ?";
-		UserPwd userPwd = jdbcTemplate.queryForObject(sql,
-				new Object[] { userId }, new UserPwdMapper());
+		UserPwd userPwd = null;
+		try {
+			userPwd = jdbcTemplate.queryForObject(sql, new Object[] { userId },
+					new UserPwdMapper());
+		} catch (Exception e) {
+			logger.info("resuly is 0.");
+		}
 		return userPwd;
 	}
 
 	@Override
-	public UserInvitecode getUserInvitecodeByInviteCode(String inviteCode) {
+	public UserInviteCode getUserInvitecodeByInviteCode(String inviteCode) {
 		String sql = "select * from user_invitecode where invite_code = ?";
-		UserInvitecode userInvitecode = jdbcTemplate.queryForObject(sql,
-				new Object[] { inviteCode }, new UserInviteCodeMapper());
+		UserInviteCode userInvitecode = null;
+		try {
+			userInvitecode = jdbcTemplate.queryForObject(sql,
+					new Object[] { inviteCode }, new UserInviteCodeMapper());
+		} catch (Exception e) {
+			logger.info("resuly is 0.");
+		}
 		return userInvitecode;
 	}
 
 	@Override
 	public UserType getUserTypeByUserId(String userId) {
 		String sql = "select * from user_type where user_id = ?";
-		UserType userType = jdbcTemplate.queryForObject(sql,
-				new Object[] { userId }, new UserTypeMapper());
+		UserType userType = null;
+		try {
+			userType = jdbcTemplate.queryForObject(sql,
+					new Object[] { userId }, new UserTypeMapper());
+		} catch (Exception e) {
+			logger.info("resuly is 0.");
+		}
 		return userType;
 	}
 
 	@Override
 	public UserPhone getUserPhoneByUserId(String userId) {
 		String sql = "select * from user_phone where user_id = ?";
-		UserPhone userPhone = jdbcTemplate.queryForObject(sql,
-				new Object[] { userId }, new UserPhoneMapper());
+		UserPhone userPhone = null;
+		try {
+			userPhone = jdbcTemplate.queryForObject(sql,
+					new Object[] { userId }, new UserPhoneMapper());
+		} catch (Exception e) {
+			logger.info("resuly is 0.");
+		}
 		return userPhone;
 	}
 
 	@Override
 	public UserOpenid getUserOpenidByOpenid(String openid) {
+		UserOpenid userOpenid = null;
 		String sql = "select * from user_openid where openid = ?";
-		UserOpenid userOpenid = jdbcTemplate.queryForObject(sql,
-				new Object[] { openid }, new UserOpenidMapper());
+		try {
+			userOpenid = jdbcTemplate.queryForObject(sql,
+					new Object[] { openid }, new UserOpenidMapper());
+		} catch (Exception e) {
+			logger.info("resuly is 0.");
+		}
 		return userOpenid;
 	}
 
 	@Override
 	public UserDept getUserDeptByUserId(String userId) {
 		String sql = "select * from user_dept where user_id = ?";
-		UserDept userDept = jdbcTemplate.queryForObject(sql,
-				new Object[] { userId }, new UserDeptMapper());
+		UserDept userDept = null;
+		try {
+			userDept = jdbcTemplate.queryForObject(sql,
+					new Object[] { userId }, new UserDeptMapper());
+		} catch (Exception e) {
+			logger.info("resuly is 0.");
+		}
 		return userDept;
 	}
 
 	@Override
 	public UserDept getUserDeptByDeptId(long deptId) {
 		String sql = "select * from user_dept where id = ?";
-		UserDept userDept = jdbcTemplate.queryForObject(sql,
-				new Object[] { deptId }, new UserDeptMapper());
+		UserDept userDept = null;
+		try {
+			userDept = jdbcTemplate.queryForObject(sql,
+					new Object[] { deptId }, new UserDeptMapper());
+		} catch (Exception e) {
+			logger.info("resuly is 0.");
+		}
 		return userDept;
 	}
 
 	@Override
 	public UserPhoneType getUserPhoneTypeById(long id) {
 		String sql = "select * from user_phone_type where id = ?";
-		UserPhoneType userPhoneType = jdbcTemplate.queryForObject(sql,
-				new Object[] { id }, new UserPhoneTypeMapper());
+		UserPhoneType userPhoneType = null;
+		try {
+			userPhoneType = jdbcTemplate.queryForObject(sql,
+					new Object[] { id }, new UserPhoneTypeMapper());
+		} catch (Exception e) {
+			logger.info("resuly is 0.");
+		}
 		return userPhoneType;
 	}
 
 	@Override
 	public UserRole getUserRole(String userId) {
 		String sql = "select * from user_role where user_id = ?";
-		UserRole userRole = jdbcTemplate.queryForObject(sql,
-				new Object[] { userId }, new UserRoleMapper());
+		UserRole userRole = null;
+		try {
+			userRole = jdbcTemplate.queryForObject(sql,
+					new Object[] { userId }, new UserRoleMapper());
+		} catch (Exception e) {
+			logger.info("resuly is 0.");
+		}
 		return userRole;
+	}
+
+	@Override
+	public UserType getUserTypeById(long id) {
+		String sql = "select * from user_type where id = ?";
+		UserType userType = null;
+		try {
+			userType = jdbcTemplate.queryForObject(sql, new Object[] { id },
+					new UserTypeMapper());
+		} catch (Exception e) {
+			logger.info("resuly is 0.");
+		}
+		return userType;
 	}
 
 }

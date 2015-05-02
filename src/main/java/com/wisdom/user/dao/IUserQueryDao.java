@@ -2,7 +2,7 @@ package com.wisdom.user.dao;
 
 import com.wisdom.common.model.User;
 import com.wisdom.common.model.UserDept;
-import com.wisdom.common.model.UserInvitecode;
+import com.wisdom.common.model.UserInviteCode;
 import com.wisdom.common.model.UserOpenid;
 import com.wisdom.common.model.UserPhone;
 import com.wisdom.common.model.UserPhoneType;
@@ -18,7 +18,9 @@ public interface IUserQueryDao {
 	
 	public UserType getUserTypeByUserId(String userId);
 	
-	public UserInvitecode getUserInvitecodeByInviteCode(String inviteCode);
+	public UserType getUserTypeById(long id);
+	
+	public UserInviteCode getUserInvitecodeByInviteCode(String inviteCode);
 	
 	public UserPhone getUserPhoneByUserId(String userId);
 	

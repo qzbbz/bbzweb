@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="initial-scale=1" />
+		<meta charset="UTF-8">
+		<link href="../../css/weixincss/ionic.min.css" rel="stylesheet">
+		<link href="../../css/weixincss/weixin_style.css" rel="stylesheet">
+		<script src="../../js/weixinjs/jquery-1.10.2.min.js"></script>
+		<script src="../../js/weixinjs/ionic.bundle.min.js"></script>
+		<script src="../../js/weixinjs/angular-sanitize.min.js"></script>
+		<script src="../../js/weixinjs/app.js"></script>
+		<script src="../../js/weixinjs/controllers.js"></script>
+		<script src="../../js/weixinjs/services.js"></script>
+		<title>帮帮账</title>
+	</head>
+
+	<body ng-app="qzapp" ng-controller="MyBillsController">
+		<ion-header-bar align-title="center" class="bar-positive">
+			<h1 class="title">我的报销单</h1>
+		</ion-header-bar>
+		<ion-tabs class="tabs-positive tabs-icon-top">
+
+			<ion-tab title="已上传" icon-on="ion-ios-paperplane" icon-off="ion-ios-paperplane-outline">
+				<ion-content class="content-box">
+
+					<ion-refresher pulling-text="下拉刷新..." on-refresh="uploadedRefresh()">
+					</ion-refresher>
+
+					<div class="list" ng-show="!uploadedLists.length">
+						<div class="row aligner">
+							<div>暂时没有已上传的报销单！</div>
+						</div>
+					</div>
+
+					<div class="list" ng-show="uploadedLists.length">
+						<div class="item item-avatar item-button-right" ng-click="openModal(uploadedBill)" ng-repeat="uploadedBill in uploadedLists">
+							<img src="{{uploadedBill.imgUrl}}">
+							<p>单号：{{uploadedBill.billId}}</p>
+							<p>时间：{{uploadedBill.uploadedDate}}</p>
+
+						</div>
+					</div>
+				</ion-content>
+			</ion-tab>
+
+			<ion-tab title="审核中" icon-on="ion-ios-person" icon-off="ion-ios-person-outline">
+				<ion-content class="content-box">
+					<div class="list">
+						<a class="item item-avatar item-button-right" href="#">
+							<img src="img/logo.jpg">
+							<p>报销单号：</p>
+							<p>提交时间：</p>
+						</a>
+					</div>
+				</ion-content>
+			</ion-tab>
+
+			<ion-tab title="已完成" icon-on="ion-ios-checkmark" icon-off="ion-ios-checkmark-outline">
+				<ion-content class="content-box">
+					<div class="list">
+						<a class="item item-avatar item-button-right" href="#">
+							<img src="img/logo.jpg">
+							<p>报销单号：</p>
+							<p>提交时间：</p>
+						</a>
+					</div>
+				</ion-content>
+			</ion-tab>
+
+		</ion-tabs>
+	</body>
+	<script id="my-modal.html" type="text/ng-template">
+		<div class="modal">
+			<ion-header-bar align-title="center" class="bar-positive">
+				<h1 class="title">报销单{{bill.billId}}</h1>
+				<div class="buttons">
+					<a class="button button-icon icon ion-ios-close-empty" ng-click="closeModal()"></a>
+				</div>
+			</ion-header-bar>
+			<ion-content>
+				Hello!
+			</ion-content>
+		</div>
+	</script>
+
+</html>
