@@ -22,6 +22,7 @@ import com.wisdom.invoice.dao.IInvoiceApprovalDao;
 import com.wisdom.invoice.dao.IInvoiceDao;
 import com.wisdom.invoice.dao.IUserInvoiceDao;
 import com.wisdom.invoice.service.IInvoiceService;
+import com.wisdom.user.service.IUserService;
 import com.wisdom.user.service.IUserWeixinService;
 
 import org.springframework.util.StringUtils;
@@ -34,7 +35,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 	@Autowired
 	private IDispatcherService dispatcherService;
 	@Autowired
-	private IUserWeixinService userService;
+	private IUserService userService;
 	@Autowired
 	private IInvoiceDao invoiceDao;
 	@Autowired
