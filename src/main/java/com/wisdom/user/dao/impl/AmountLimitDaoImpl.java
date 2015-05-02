@@ -50,13 +50,12 @@ public class AmountLimitDaoImpl implements IAmountLimitDao {
 	}
 
 	@Override
-	public AmountLimit getAmountLimit(AmountLimit amountLimit) {
+	public AmountLimit getAmountLimit(long companyId, long deptId, long roleId) {
 		String sql = "select * from amount_limit where company_id=? and dept_id=? and role_id = ?";
 		AmountLimit limit = null;
 		try {
 			limit = jdbcTemplate.queryForObject(sql, new Object[] {
-				amountLimit.getCompanyId(), amountLimit.getDeptId(),
-				amountLimit.getRoleId() }, new AmountLimitMapper());
+					companyId, deptId, roleId }, new AmountLimitMapper());
 		} catch(Exception e) {
 			logger.debug("result size is 0.");
 		}

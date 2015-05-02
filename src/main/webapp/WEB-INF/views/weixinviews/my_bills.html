@@ -56,7 +56,6 @@
 							<img ng-src="{{bill.img}}">
 							<p>金额：{{bill.amount}}</p>
 							<p>时间：{{bill.date}}</p>
-
 						</div>
 					</div>
 				</ion-content>
@@ -75,7 +74,9 @@
 							<img ng-src="{{bill.img}}">
 							<p>金额：{{bill.amount}}</p>
 							<p>时间：{{bill.date}}</p>
-
+							<span class="item-note">
+						      {{bill.approval_status == "0" ? "未通过" : "通过"}}
+						    </span>
 						</div>
 					</div>
 				</ion-content>
@@ -114,6 +115,7 @@
 					</div>
 					<p>名称：{{bill.title}}</p>
 					<p>金额：{{bill.amount}}</p>
+					<p>审批人：{{bill.amount}}</p>
 					<p>时间：{{bill.date}}</p>
 			</ion-content>
 		</div>

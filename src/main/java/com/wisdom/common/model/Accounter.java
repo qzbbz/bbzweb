@@ -13,7 +13,6 @@ public class Accounter implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 	private Long id;
 	private String userId;
-	private String name;
 	private String area;
 	private String city;
 	private String province;
@@ -35,12 +34,11 @@ public class Accounter implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public Accounter(Long id, String userId, String name, String area,
+	public Accounter(Long id, String userId, String area,
 			String city, String province, String image, String certificate,
 			String industry, String career, Timestamp createTime) {
 		this.id = id;
 		this.userId = userId;
-		this.name = name;
 		this.area = area;
 		this.city = city;
 		this.province = province;
@@ -67,14 +65,6 @@ public class Accounter implements java.io.Serializable {
 
 	public void setUserId(String userId) {
 		this.userId = userId;
-	}
-
-	public String getName() {
-		return this.name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public String getArea() {

@@ -109,7 +109,6 @@ public class AccounterServiceImpl implements IAccounterService {
 	private Map<String, String> accounterConvertToMap(Accounter accounter) {
 		Map<String, String> map = new HashMap<>();
 		map.put("user_id", accounter.getUserId());
-		map.put("name", accounter.getName());
 		map.put("area", accounter.getArea());
 		map.put("city", accounter.getCity());
 		map.put("province", accounter.getProvince());

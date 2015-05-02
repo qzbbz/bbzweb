@@ -9,7 +9,7 @@
 		<script src="../../js/weixinjs/angular-sanitize.min.js"></script>
 		<script src="../../js/weixinjs/jweixin-1.0.0.js"></script>
 		<script src="../../js/weixinjs/app.js"></script>
-		<script src="../../js/weixinjs/controllers.js?201505020919"></script>
+		<script src="../../js/weixinjs/controllers.js?201505022024"></script>
 		<script src="../../js/weixinjs/services.js"></script>
 		<title>帮帮账</title>
 	</head>
@@ -37,7 +37,7 @@
 					<div class="list" ng-show="billList.length">
 						<div class="item item-avatar item-button-right" ng-click="openModal(bill)" ng-repeat="bill in billList">
 							<img src="../../img/weixinimg/bill_img_demo.jpg">
-							<img ng-src="{{bill.img}}">
+							<!-- <img ng-src="{{bill.img.toString()}}"> -->
 							<p>单号：{{bill.id}}</p>
 							<p>时间：{{bill.time}}</p>
 						</div>

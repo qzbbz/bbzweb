@@ -1,11 +1,14 @@
 package com.wisdom.weixin.service;
 
+import java.util.List;
 import java.util.Map;
 
 public interface IExpenseAccountService {
 	
-	Map<String, Map<String, String>> getBillsByOpenId(String openId);
+	Map<String, List<Map<String, String>>> getBillsByOpenId(String openId);
 	
-	public String downloadFromUrl(String mediaId);
+	boolean approvalBill(String approvalId, String invoiceId, String userId);
+	
+	public String downloadFromUrl(String mediaId, String openId);
 	
 }

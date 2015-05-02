@@ -21,18 +21,23 @@
 
 			<ion-tab title="待审核" icon-on="ion-ios-person" icon-off="ion-ios-person-outline">
 				<ion-content class="content-box">
-					<div class="list" ng-show="!uploadedList.length">
+					<div class="list" ng-show="!processingList.length">
 						<div class="row aligner">
 							<div>暂时没有您需要审核的报销单！</div>
 						</div>
 					</div>
 
-					<div class="list" ng-show="uploadedList.length">
-						<div class="item item-avatar item-button-right" ng-click="openModal(bill)" ng-repeat="bill in uploadedList">
+					<div class="list" ng-show="processingList.length">
+						<div class="item item-avatar item-button-right" ng-click="openModal(bill)" ng-repeat="bill in processingList">
 							<img ng-src="{{bill.img}}">
-							<p>金额：{{bill.amount}}</p>
-							<p>时间：{{bill.date}}</p>
-
+							<p>金额：{{bill.bill_amount}}</p>
+							<p>时间：{{bill.bill_date}}</p>
+							<button class="button button-positive" ng-click="approval(bill, 'pass');">
+						      <i class="icon ion-checkmark-circled"></i>
+						    </button>
+						    <button class="button button-positive" ng-click="approval(bill, 'not_pass');">
+						      <i class="icon ion-close-circled"></i>
+						    </button>
 						</div>
 					</div>
 				</ion-content>
@@ -40,18 +45,20 @@
 
 			<ion-tab title="已审核" icon-on="ion-ios-checkmark" icon-off="ion-ios-checkmark-outline">
 				<ion-content class="content-box">
-					<div class="list" ng-show="!finishList.length">
+					<div class="list" ng-show="!finishedList.length">
 						<div class="row aligner">
 							<div>暂时没有您审核过的报销单！</div>
 						</div>
 					</div>
 
-					<div class="list" ng-show="finishList.length">
-						<div class="item item-avatar item-button-right" ng-click="openModal(bill)" ng-repeat="bill in finishList">
+					<div class="list" ng-show="finishedList.length">
+						<div class="item item-avatar item-button-right" ng-click="openModal(bill)" ng-repeat="bill in finishedList">
 							<img ng-src="{{bill.img}}">
-							<p>金额：{{bill.amount}}</p>
-							<p>时间：{{bill.date}}</p>
-
+							<p>金额：{{bill.bill_amount}}</p>
+							<p>时间：{{bill.bill_date}}</p>
+							<span class="item-note">
+						      {{bill.approval_status == "0" ? "未通过" : "通过"}}
+						    </span>
 						</div>
 					</div>
 				</ion-content>
@@ -88,9 +95,10 @@
 						<img class="img-box" ng-src="{{bill.img}}" style="width:100%; height:100%;">
 					</div>
 					</div>
-					<p>名称：{{bill.title}}</p>
-					<p>金额：{{bill.amount}}</p>
-					<p>时间：{{bill.date}}</p>
+					<p>名称：{{bill.bill_title}}</p>
+					<p>金额：{{bill.bill_amount}}</p>
+					<p>申请人：{{bill.user_anme}}</p>
+					<p>时间：{{bill.bill_date}}</p>
 			</ion-content>
 		</div>
 	</script>

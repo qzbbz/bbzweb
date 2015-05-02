@@ -10,6 +10,6 @@ public interface IAmountLimitDao {
 	
 	public boolean updateAmountLimit(AmountLimit amountLimit);
 	
-	public AmountLimit getAmountLimit(AmountLimit amountLimit);
+	public AmountLimit getAmountLimit(long companyId, long deptId, long roleId);
 	
 }

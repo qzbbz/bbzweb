@@ -5,8 +5,8 @@ angular.module('qzapp.controllers', [])
 	$scope.openId = "";
 	$scope.showNoBind = false;
 	$scope.showNetError = false;
-	$scope.progressList = new Array();
-	$scope.finishList = new Array();
+	$scope.progressingList = new Array();
+	$scope.finishedList = new Array();
 
 	$ionicLoading.show({
 		template: '正在获取数据...'
@@ -31,9 +31,13 @@ angular.module('qzapp.controllers', [])
 					$scope.showNoBind = true;
 				} else if(data.bind_status == "has_bind") {
 					$http.get('/getMyInbox?openId=' + $scope.openId).success(function(response) {
-						if(response.status == "success") {
-							
+						if(response.processingList != null) {
+							processingList = response.processingList;
 						}
+						if(response.finishedList != null) {
+							finishedList = response.finishedList;
+						}
+						$scope.apply();
 					}).error(function(response) {
 						$scope.showNetError = true;
 					})
@@ -75,6 +79,36 @@ angular.module('qzapp.controllers', [])
 	$scope.$on('modal.removed', function() {
 	});
 
+	$scope.approval = function(bill, status) {
+		$ionicLoading.show({
+			template: '正在提交数据...'
+		})
+		$http.get('/approvalBill?invoiceId=' + bill.invoice_id + '&approvalId=' + bill.approval_id + '&userId=' + bill.user_id).success(function(response) {
+			$ionicLoading.hide();
+			if(response.status == 'success') {
+				var ele = null;
+				for(var i=0; i<$scope.progressingList.length; i++) {
+					if(bill === $scope.progressingList[i]) {
+						ele = $scope.progressingList[i];
+						$scope.progressingList.pop();
+						break;
+					}						
+				}
+				if(ele != null) {
+					finishedList.push(ele);
+				}
+				scope.$apply();
+				alert("Success!");
+			} else {
+				alert("Failed!");
+			}
+			
+		}).error(function(response) {
+			$ionicLoading.hide();
+			alert("Network error.");
+		})
+	}
+	
 })
 
 .controller('UploadBillController', function($scope, $http, $ionicLoading, $location, $ionicModal, $ionicTabsDelegate) {
@@ -171,15 +205,16 @@ angular.module('qzapp.controllers', [])
 						var date = new Date();
 						var time = date.getFullYear() + "-" + ((date.getMonth() + 1) < 10 ? "0" + (date.getMonth() + 1) : (date.getMonth() + 1)) + 
 								"-" +(date.getDate() < 10 ? "0" + date.getDate() : date.getDate()) + " " + 
-								(date.getHours() < 10 ? "0" + (date.getHours() < 10) : date.getHours()) + ":" +
-								(date.getMinutes() < 10 ? "0" + (date.getMinutes() < 10) : date.getMinutes()) + ":" + 
-								(date.getSeconds() < 10 ? "0" + (date.getSeconds() <10) : date.getSeconds());
+								(date.getHours() < 10 ? "0" + date.getHours() : date.getHours()) + ":" +
+								(date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes()) + ":" + 
+								(date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds());
 						var id = new Date().getTime();
 						var billData = {"img":res.localIds[i].toString(), "time":time, "id":id}
 						$scope.billList.push(billData);
+						$scope.apply();
+						$ionicTabsDelegate.select(2);
 					}
-				}
-				$ionicTabsDelegate.select(2);				
+				}				
 		    },
 		    fail : function(res) {
 		    	if(res.errMsg === "system:function not exist") {
@@ -187,9 +222,8 @@ angular.module('qzapp.controllers', [])
 		    	}
 		    }
 		});
-		
 	}
-
+	
 	$scope.uploadBill = function() {
 		wx.uploadImage({
 		    localId: $scope.billList[0].img,
@@ -199,7 +233,8 @@ angular.module('qzapp.controllers', [])
 		    		if(response.upload_status == "success") {
 		    			alert("Successed in uploading the bill.");
 		    			$scope.billList.pop();
-		    			$ionicTabsDelegate.select(0);
+		    			$scope.apply();
+		    			//$ionicTabsDelegate.select(0);
 		    		} else {
 		    			alert("Failed in uploading the bill, please retry!");
 		    		}
@@ -326,8 +361,8 @@ angular.module('qzapp.controllers', [])
 	$scope.showNoBind = false;
 	$scope.showNetError = false;
 	$scope.uploadedList = new Array();
-	$scope.progressList = new Array();
-	$scope.finishList = new Array();
+	$scope.progressingList = new Array();
+	$scope.finishedList = new Array();
 	
 	$ionicLoading.show({
 		template: '正在获取数据...'
@@ -352,9 +387,16 @@ angular.module('qzapp.controllers', [])
 					$scope.showNoBind = true;
 				} else if(data.bind_status == "has_bind") {
 					$http.get('/getMyBills?openId=' + $scope.openId).success(function(response) {
-						if(response.status == "success") {
-							
+						if(response.uploadedList != null) {
+							uploadedList = response.uploadedList;
 						}
+						if(response.processingList != null) {
+							processingList = response.processingList;
+						}
+						if(response.finishedList != null) {
+							finishedList = response.finishedList;
+						}
+						$scope.apply();
 					}).error(function(response) {
 						$scope.showNetError = true;
 					})

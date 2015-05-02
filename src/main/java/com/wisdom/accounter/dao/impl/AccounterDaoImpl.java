@@ -46,10 +46,10 @@ public class AccounterDaoImpl implements IAccounterDao {
 
 	@Override
 	public boolean addAccounter(Accounter accounter) {
-		String sql = "insert into accounter (user_id, name, area, city, province, image, certificate, industry, career, create_time)"
-				+ " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		String sql = "insert into accounter (user_id, area, city, province, image, certificate, industry, career, create_time)"
+				+ " values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		int affectedRows = jdbcTemplate.update(sql, accounter.getUserId(),
-				accounter.getName(), accounter.getArea(), accounter.getCity(),
+				accounter.getArea(), accounter.getCity(),
 				accounter.getProvince(), accounter.getImage(),
 				accounter.getCertificate(), accounter.getIndustry(),
 				accounter.getCareer(), accounter.getCreateTime());
@@ -67,8 +67,8 @@ public class AccounterDaoImpl implements IAccounterDao {
 
 	@Override
 	public boolean updateAccounter(Accounter accounter) {
-		String sql = "update accounter set name=?, area=?, city=?, province=?, image=?, certificate=?, industry=?, career=? where user_id=?";
-		int affectedRows = jdbcTemplate.update(sql, accounter.getName(),
+		String sql = "update accounter set area=?, city=?, province=?, image=?, certificate=?, industry=?, career=? where user_id=?";
+		int affectedRows = jdbcTemplate.update(sql, 
 				accounter.getArea(), accounter.getCity(),
 				accounter.getProvince(), accounter.getImage(),
 				accounter.getCertificate(), accounter.getIndustry(),

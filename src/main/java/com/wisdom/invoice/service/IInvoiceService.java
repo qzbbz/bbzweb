@@ -1,11 +1,10 @@
 package com.wisdom.invoice.service;
 
+import java.util.List;
 import java.util.Map;
 
-import com.wisdom.common.model.Attachment;
 import com.wisdom.common.model.Invoice;
 import com.wisdom.common.model.InvoiceApproval;
-import com.wisdom.common.model.UserInvoice;
 
 public interface IInvoiceService {
 	/**增加一条发票流水记录
@@ -52,6 +51,6 @@ public interface IInvoiceService {
 	public boolean addInvoiceApprovalRecord(long invoiceId,String approvalId,int status);
 	
 	
-	
+	Map<String, List<Map<String, String>>> getBillsList(String userId);
 
 }

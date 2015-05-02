@@ -178,4 +178,17 @@ public class UserQueryDaoImpl implements IUserQueryDao {
 		return userType;
 	}
 
+	@Override
+	public UserOpenid getUserOpenidByUserId(String userId) {
+		UserOpenid userOpenid = null;
+		String sql = "select * from user_openid where user_id = ?";
+		try {
+			userOpenid = jdbcTemplate.queryForObject(sql,
+					new Object[] { userId }, new UserOpenidMapper());
+		} catch (Exception e) {
+			logger.info("resuly is 0.");
+		}
+		return userOpenid;
+	}
+
 }

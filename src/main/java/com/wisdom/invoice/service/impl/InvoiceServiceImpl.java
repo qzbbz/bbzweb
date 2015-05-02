@@ -3,6 +3,7 @@ package com.wisdom.invoice.service.impl;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.wisdom.common.model.Attachment;
-import com.wisdom.common.model.Dispatcher;
 import com.wisdom.common.model.Invoice;
 import com.wisdom.common.model.InvoiceApproval;
 import com.wisdom.common.model.UserInvoice;
@@ -18,7 +18,7 @@ import com.wisdom.dispatch.service.IDispatcherService;
 import com.wisdom.invoice.dao.IAttachmentDao;
 import com.wisdom.invoice.dao.IInvoiceApprovalDao;
 import com.wisdom.invoice.dao.IInvoiceDao;
-import com.wisdom.invoice.dao.IUserInvoice;
+import com.wisdom.invoice.dao.IUserInvoiceDao;
 import com.wisdom.invoice.service.IInvoiceService;
 import com.wisdom.user.service.IUserWeixinService;
 
@@ -38,7 +38,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 	@Autowired
 	private IAttachmentDao attachmentDao;
 	@Autowired
-	private IUserInvoice userInvoiceDao;
+	private IUserInvoiceDao userInvoiceDao;
 	@Autowired
 	private IInvoiceApprovalDao invoiceApprovalDao;
 	
@@ -265,7 +265,13 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		invoiceApproval.setUpdateTime(time);
 		return false;
 	}
-	
-	
+
+
+
+	@Override
+	public Map<String, List<Map<String, String>>> getBillsList(String userId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

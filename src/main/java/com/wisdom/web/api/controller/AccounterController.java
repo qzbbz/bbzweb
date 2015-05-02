@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.wisdom.accounter.service.IAccounterService;
 import com.wisdom.common.model.Accounter;
+import com.wisdom.user.service.IUserService;
 import com.wisdom.web.utils.Base64Converter;
 import com.wisdom.web.utils.ErrorCode;
 import com.wisdom.web.utils.SessionConstant;
@@ -32,6 +33,9 @@ public class AccounterController {
 
 	@Autowired
 	private IAccounterService accounterService;
+	
+	@Autowired
+	private IUserService userService;
 
 	@RequestMapping("/getAllAccounterCareer")
 	@ResponseBody
@@ -108,7 +112,6 @@ public class AccounterController {
 		if (userId != null && !userId.isEmpty()) {
 			Accounter accounter = new Accounter();
 			accounter.setUserId(userId);
-			accounter.setName(name);
 			accounter.setProvince(province);
 			accounter.setCity(city);
 			accounter.setArea(area);
@@ -127,6 +130,7 @@ public class AccounterController {
 				}
 			}
 			updateSuccess = accounterService.updateAccounter(accounter);
+			updateSuccess = updateSuccess && userService.setUserNameByUserId(name, userId);
 		}
 		if (updateSuccess) {
 			retMap.put(ErrorCode.NO_ERROR_CODE, ErrorCode.NO_ERROR_MESSAGE);

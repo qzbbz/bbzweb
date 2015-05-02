@@ -16,6 +16,7 @@ public class User implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 	private Long id;
 	private String userId;
+	private String userName;
 	private Integer typeId;
 	private Long companyId;
 	private Timestamp createTime;
@@ -26,19 +27,13 @@ public class User implements java.io.Serializable {
 	public User() {
 	}
 
-	/** minimal constructor */
-	public User(Long id, String userId, Integer typeId) {
-		this.id = id;
-		this.userId = userId;
-		this.typeId = typeId;
-	}
-
 	/** full constructor */
-	public User(Long id, String userId, Integer typeId, Long companyId,
+	public User(Long id, String userId, String userName, Integer typeId, Long companyId,
 			Timestamp createTime) {
 		this.id = id;
 		this.userId = userId;
 		this.typeId = typeId;
+		this.userName = userName;
 		this.companyId = companyId;
 		this.createTime = createTime;
 	}
@@ -55,6 +50,14 @@ public class User implements java.io.Serializable {
 
 	public String getUserId() {
 		return this.userId;
+	}
+	
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	
+	public String getUserName() {
+		return this.userName;
 	}
 
 	public void setUserId(String userId) {

@@ -1,6 +1,7 @@
 package com.wisdom.weixin.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,10 +32,9 @@ public class ExpenseAccountController {
 		Map<String, String> retMap = new HashMap<>();
 		logger.debug("openId : {}", openId);
 		logger.debug("serverId : {}", serverId);
-		String base64ImageStr =  expenseAccounterService.downloadFromUrl(serverId);
+		String base64ImageStr =  expenseAccounterService.downloadFromUrl(serverId, openId);
 		if(!base64ImageStr.isEmpty()) {
 			retMap.put("upload_status", "success");
-			
 		} else {
 			retMap.put("upload_status", "fail");
 		}
@@ -42,9 +42,28 @@ public class ExpenseAccountController {
 		return retMap;
 	}
 	
+	@RequestMapping("/approvalBill")
+	@ResponseBody
+	public Map<String, String> approvalBill(HttpServletRequest request) {
+		String approvalId = request.getParameter("approvalId");
+		String invoiceId = request.getParameter("invoiceId");
+		String userId = request.getParameter("userId");
+		Map<String, String> retMap = new HashMap<>();
+		logger.debug("approvalId : {}", approvalId);
+		logger.debug("invoiceId : {}", invoiceId);
+		logger.debug("userId : {}", userId);
+		if(expenseAccounterService.approvalBill(approvalId, invoiceId, userId)) {
+			retMap.put("status", "success");
+		} else {
+			retMap.put("status", "fail");
+		}
+		logger.debug("retMap : {}", retMap.toString());
+		return retMap;
+	}
+	
 	@RequestMapping("/getMyBills")
 	@ResponseBody
-	public Map<String, Map<String, String>> getMyBills(HttpServletRequest request) {
+	public Map<String, List<Map<String, String>>> getMyBills(HttpServletRequest request) {
 		String openId = request.getParameter("openId");
 		return expenseAccounterService.getBillsByOpenId(openId);
 	}

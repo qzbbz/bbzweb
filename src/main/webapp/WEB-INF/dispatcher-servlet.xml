@@ -119,6 +119,16 @@
 	<context:component-scan base-package="com.wisdom.community.service.impl" />
 	<!-- community component-scan end-->
 	
+	<!-- invoice component-scan begin-->
+	<context:component-scan base-package="com.wisdom.invoice.dao.impl" />
+	<context:component-scan base-package="com.wisdom.invoice.service.impl" />
+	<!-- invoice component-scan end-->
+	
+	<!-- dispatch component-scan begin-->
+	<context:component-scan base-package="com.wisdom.dispatch.dao.impl" />
+	<context:component-scan base-package="com.wisdom.dispatch.service.impl" />
+	<!-- dispatch component-scan end-->
+	
 	<!-- web component-scan begin-->
 	<context:component-scan base-package="com.wisdom.web.api.impl" />
 	<context:component-scan base-package="com.wisdom.web.api.controller" />

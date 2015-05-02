@@ -53,6 +53,14 @@ public class UserOperationDaoImpl implements IUserOperationDao {
 	}
 
 	@Override
+	public boolean updateUserNameByUserId(String userName, String userId) {
+		String sql = "update user set user_name=? where user_id=?";
+		int affectedRows = jdbcTemplate.update(sql, userName, userId);
+		logger.debug("updateUserNameByUserId result : {}", affectedRows);
+		return affectedRows != 0;
+	}
+	
+	@Override
 	public boolean addInviteCode(UserInviteCode userInvitecode) {
 		String sql = "insert into user_invitecode (user_id, invite_code, create_time)"
 				+ " values (?, ?, ?, ?)";

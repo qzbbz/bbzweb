@@ -26,6 +26,8 @@ public interface IUserQueryDao {
 	
 	public UserOpenid getUserOpenidByOpenid(String openid);
 	
+	public UserOpenid getUserOpenidByUserId(String userId);
+	
 	public UserDept getUserDeptByUserId(String userId);
 	
 	public UserDept getUserDeptByDeptId(long deptId);
