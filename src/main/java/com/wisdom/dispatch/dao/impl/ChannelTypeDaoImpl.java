@@ -22,27 +22,42 @@ public class ChannelTypeDaoImpl implements IChannelTypeDao {
 	@Override
 	public ChannelType getChannelTypeById(long id) {
 		String sql = "select * from channel_type where id = ?";
-		ChannelType user = jdbcTemplate.queryForObject(sql, new Object[] { id },
-				new ChannelTypeMapper());
-		return user;
+		try{
+			ChannelType user = jdbcTemplate.queryForObject(sql, new Object[] { id },
+					new ChannelTypeMapper());
+			return user;
+		}catch(Exception e){
+			logger.error("getChannelTypeById error:");
+		}
+		return null;
 	}
 
 	@Override
 	public boolean addChannelType(ChannelType channelType) {
 		String sql = "insert into channel_type (name, create_time)"
 				+ " values (?, ?)";
-		int affectedRows = jdbcTemplate.update(sql, channelType.getName(),
-				channelType.getCreateTime());
-		logger.debug("addChannelType result : {}", affectedRows);
-		return affectedRows != 0;
+		try{
+			int affectedRows = jdbcTemplate.update(sql, channelType.getName(),
+					channelType.getCreateTime());
+			logger.debug("addChannelType result : {}", affectedRows);
+			return affectedRows != 0;
+		}catch(Exception e){
+			logger.error("addChannelType error!");
+		}
+		return false;
 	}
 
 	@Override
 	public boolean deleteChannelType(ChannelType channelType) {
 		String sql = "delete from channel_type where id = ?";
-		int affectedRows = jdbcTemplate.update(sql, channelType.getId());
-		logger.debug("deleteChannelType result : {}", affectedRows);
-		return affectedRows != 0;
+		try{
+			int affectedRows = jdbcTemplate.update(sql, channelType.getId());
+			logger.debug("deleteChannelType result : {}", affectedRows);
+			return affectedRows != 0;
+		}catch(Exception e){
+			logger.error("deleteChannelType error");
+		}
+		return false;
 	}
 
 }

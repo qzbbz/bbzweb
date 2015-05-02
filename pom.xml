@@ -21,6 +21,10 @@
 		<apache.commons.version>2.0</apache.commons.version>
 		<apache.commons.fileupload.version>1.2.2</apache.commons.fileupload.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<javamail.version>1.4.1</javamail.version>
+		
+		<!-- 业务 -->
+		<javamail.smtp.host>mail.163.com</javamail.smtp.host>
 	</properties>
 
 	<dependencies>
@@ -119,6 +123,13 @@
 			<artifactId>xstream</artifactId>
 			<version>${thoughtworks.xstream.version}</version>
 		</dependency>
+		
+		<!-- javaMail -->
+ 	   <dependency>
+	        <groupId>javax.mail</groupId>
+	        <artifactId>mail</artifactId>
+	        <version>${javamail.version}</version>
+	    </dependency>  
 
 	</dependencies>
 
@@ -130,6 +141,7 @@
 				<configuration>
 					<source>${jdk.version}</source>
 					<target>${jdk.version}</target>
+					<encoding>utf8</encoding> 
 				</configuration>
 			</plugin>
 		</plugins>

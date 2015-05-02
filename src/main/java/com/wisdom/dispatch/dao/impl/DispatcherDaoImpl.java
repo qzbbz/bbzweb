@@ -35,6 +35,20 @@ public class DispatcherDaoImpl implements IDispatcherDao {
 		}
 		return list;
 	}
+	
+	@Override
+	public List<Dispatcher> getDispatcherByStatusAndNum(int status,int num) {
+		List<Dispatcher> list = null;
+		try {
+			String sql = "select * from dispatcher where status=? order by create_time desc limit ?";
+			list = jdbcTemplate.query(sql, new Object[]{status,num},
+					new RowMapperResultSetExtractor<Dispatcher>(
+							new DispatcherMapper()));
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return list;
+	}
 
 	@Override
 	public boolean addDispatcher(Dispatcher dispatcher) {
