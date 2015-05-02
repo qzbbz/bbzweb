@@ -9,10 +9,10 @@ import com.wisdom.common.model.Dispatcher;
 
 public class DispatcherMapper implements RowMapper<Dispatcher> {
 	public Dispatcher mapRow(ResultSet rs, int index) throws SQLException {
-		Dispatcher u = new Dispatcher(rs.getLong("id"), 
+		Dispatcher u = new Dispatcher(rs.getLong("id"), rs.getString("user_id"),
 				rs.getLong("object_type_id"), rs.getLong("invoice_id"), 
 				rs.getInt("channel_type_id"), rs.getInt("status"),
-				rs.getString("reciever"), rs.getTimestamp("create_time"),
+				rs.getString("reciever"), rs.getString("openId"),rs.getTimestamp("create_time"),
 				rs.getTimestamp("update_time"));
 		return u;
 	}

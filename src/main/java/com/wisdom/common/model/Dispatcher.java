@@ -15,11 +15,14 @@ public class Dispatcher implements java.io.Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	private Long id;
+	private String userId;
+	private String userName;
 	private Long objectTypeId;
 	private Long invoiceId;
 	private Integer channelTypeId;
 	private Integer status;
 	private String reciever;
+	private String openId;
 	private Timestamp createTime;
 	private Timestamp updateTime;
 
@@ -41,15 +44,17 @@ public class Dispatcher implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public Dispatcher(Long id, Long objectTypeId, Long invoiceId,
-			Integer channelTypeId, Integer status, String reciever,
+	public Dispatcher(Long id,String userId, Long objectTypeId, Long invoiceId,
+			Integer channelTypeId, Integer status, String reciever,String openId,
 			Timestamp createTime, Timestamp updateTime) {
 		this.id = id;
+		this.userId = userId;
 		this.objectTypeId = objectTypeId;
 		this.invoiceId = invoiceId;
 		this.channelTypeId = channelTypeId;
 		this.status = status;
 		this.reciever = reciever;
+		this.openId = openId;
 		this.createTime = createTime;
 		this.updateTime = updateTime;
 	}
@@ -118,6 +123,30 @@ public class Dispatcher implements java.io.Serializable {
 
 	public void setUpdateTime(Timestamp updateTime) {
 		this.updateTime = updateTime;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public String getOpenId() {
+		return openId;
+	}
+
+	public void setOpenId(String openId) {
+		this.openId = openId;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 }

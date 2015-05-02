@@ -1,6 +1,7 @@
 package com.wisdom.invoice.service.impl;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.wisdom.common.model.Attachment;
+import com.wisdom.common.model.Dispatcher;
 import com.wisdom.common.model.Invoice;
 import com.wisdom.common.model.InvoiceApproval;
 import com.wisdom.common.model.UserInvoice;
@@ -89,9 +91,12 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			return retMap;
 		}
 		
-		
+		//获取用户openId
+		String openId = "";
+		openId = userService.getOpenIdByUserId(userId);	
+		String userName = userService.getUserNameByUserId(userId); 
 		//生成一条dispatcher日志。
-		blRet = dispatcherService.addDispatcherRecord(invoiceId,0,1,receiver,1);		//TODO 
+		blRet = dispatcherService.addDispatcherRecord(userId,userName,invoiceId,0,1,receiver,openId,1);		//TODO 
 		if(!blRet){
 			log.error("add dispatcher log error!" + "userId:" + userId + ",reciever:" + receiver + ",InvoiceId:" + invoice.getId());
 			return retMap;
@@ -174,7 +179,9 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		}
 		
 		//生成一条dispatcher日志。
-		blRet = dispatcherService.addDispatcherRecord(Long.parseLong(invoiceId),0,1,receiver,1);		//TODO 
+		String openId = userService.getOpenIdByUserId(userId);
+		String userName = userService.getUserNameByUserId(userId);
+		blRet = dispatcherService.addDispatcherRecord(userId,userName,Long.parseLong(invoiceId),0,1,receiver,openId,1);		//TODO 
 		if(!blRet){
 			log.error("add dispatcher log error!" + "userId:" + userId + ",reciever:" + receiver + ",InvoiceId:" + invoice.getId());
 			return retMap;
@@ -183,6 +190,93 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		return retMap;
 	}
 
+	@Override
+	public Map<String, List<Map<String, Object>>> getBillsList(String userId) {
+		Map<String, List<Map<String, Object>>> retMap=new HashMap<String, List<Map<String, Object>>>();
+		retMap.put("uploadedList", null);
+		retMap.put("processingList", null);
+		retMap.put("finishedList", null);
+		
+		if(StringUtils.isEmpty(userId)){
+			log.error("input param error");
+			return retMap;		
+		}
+		
+		List<UserInvoice> billList = userInvoiceDao.getUserInvoiceByUserId(userId);
+		if(null == billList){
+			log.debug("no bill existed");
+			return retMap;
+		}
+		
+		List<Map<String,Object>> processingList = new ArrayList<Map<String,Object>>(); 
+		List<Map<String,Object>> finishedList = new ArrayList<Map<String,Object>>(); 
+		List<Map<String,Object>> uploadedList = new ArrayList<Map<String,Object>>(); 
+		
+		try {
+			for(UserInvoice invoice:billList){
+				Map<String,Object> billInfo = new HashMap<String,Object>();
+				billInfo = getBillInfo(billInfo,invoice);
+				if(1 == invoice.getStatus()){
+					billInfo.put("bill_status", "1");
+					finishedList.add(billInfo);
+				}else{
+					Dispatcher dispatch = dispatcherService.getDispatcherByInvoiceId(invoice.getInvoiceId());
+					if(null != dispatch && dispatch.getStatus() == 1){
+						billInfo.put("bill_status", "0");
+						billInfo.put("approval_id",dispatch.getReciever());
+						processingList.add(billInfo);
+					}else if(null != dispatch && dispatch.getStatus() == 0){
+						billInfo.put("bill_status", "0");
+						billInfo.put("approval_id",dispatch.getReciever());
+						uploadedList.add(billInfo);
+					}else{
+						uploadedList.add(billInfo);
+					}
+				}
+			}
+			if(uploadedList.size()>0)
+				retMap.put("uploadedList", uploadedList);
+			if(processingList.size()>0)
+				retMap.put("processingList", processingList);
+			if(finishedList.size()>0)
+				retMap.put("finishedList", finishedList);
+		} catch (Exception e) {
+			log.error("operation failed");
+			e.printStackTrace();
+		}
+		return retMap;
+	}
+	
+	public Map<String,Object> getBillInfo(Map<String,Object> map,UserInvoice userInvoice){
+		if(userInvoice == null ){
+			return map;
+		}
+	
+		map.put("invoice_id", userInvoice.getInvoiceId());
+		map.put("user_id", userInvoice.getUserId());
+		map.put("processStatus",userInvoice.getStatus());
+		map.put("approval_status", userInvoice.getStatus());
+		
+		Invoice invoice =  getSingleInvoiceInfo(userInvoice.getInvoiceId());
+		if(null == invoice){
+			log.debug("invoice not exsisted");
+			return map;
+		}
+		map.put("bill_title", invoice.getTitle());
+		map.put("bill_amount", invoice.getAmount());
+		map.put("billd_date", invoice.getCreateTime());
+		
+		if(!StringUtils.isEmpty((String)map.get("approval_id"))){
+			//TODO map.put("approval_name", value);
+		}
+		
+		Attachment attach = getAttachMentByInvoiceId(invoice.getId());
+		if(null != attach){
+			map.put("billd_img", attach.getImage());
+		}
+
+		return map;
+	}
 	
 	public boolean checkUserAuth(String userId,String appovalUser){
 		//TODO
@@ -265,13 +359,10 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		invoiceApproval.setUpdateTime(time);
 		return false;
 	}
-
-
-
 	@Override
-	public Map<String, List<Map<String, String>>> getBillsList(String userId) {
-		// TODO Auto-generated method stub
-		return null;
+	public Attachment getAttachMentByInvoiceId(long invoiceId){
+		return attachmentDao.getAttatchmentByInvoiceId(invoiceId);
 	}
+
 
 }

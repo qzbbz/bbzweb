@@ -1,10 +1,12 @@
 package com.wisdom.invoice.dao;
 
+import java.util.List;
+
 import com.wisdom.common.model.UserInvoice;
 
 public interface IUserInvoiceDao {
 
-	public UserInvoice getUserInvoiceByUserId(String userId);
+	public List<UserInvoice> getUserInvoiceByUserId(String userId);
 	
 	public UserInvoice getUserInvoiceByInvoiceId(long invoiceId);
 	

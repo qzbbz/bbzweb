@@ -1,5 +1,7 @@
 package com.wisdom.invoice.dao.impl;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +23,13 @@ public class UserInvoiceDaoImpl implements IUserInvoiceDao {
 	private JdbcTemplate jdbcTemplate;
 	
 	@Override
-	public UserInvoice getUserInvoiceByUserId(String userId) {
+	public List<UserInvoice> getUserInvoiceByUserId(String userId) {
 		String sql = "select * from user_invoice where user_id = ?";
 		try {
-			UserInvoice userInvoice = jdbcTemplate.queryForObject(sql,
-					new Object[] { userId }, new UserInvoiceMapper());
+			List<UserInvoice> userInvoiceList = jdbcTemplate.queryForList(sql,
+					new Object[] { userId }, UserInvoice.class);
 			logger.debug("getUserInvoiceByUserId");
-			return userInvoice;
+			return userInvoiceList;
 		} catch (DataAccessException e) {
 			e.printStackTrace();
 		}

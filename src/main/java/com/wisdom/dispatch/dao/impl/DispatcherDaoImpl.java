@@ -9,8 +9,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.stereotype.Repository;
 
+import com.wisdom.common.model.ChannelType;
 import com.wisdom.common.model.Dispatcher;
 import com.wisdom.dispatch.dao.IDispatcherDao;
+import com.wisdom.dispatch.mapper.ChannelTypeMapper;
 import com.wisdom.dispatch.mapper.DispatcherMapper;
 
 @Repository("dispatcherDao")
@@ -69,6 +71,19 @@ public class DispatcherDaoImpl implements IDispatcherDao {
 				dispatcher.getUpdateTime(), dispatcher.getInvoiceId());
 		logger.debug("updateDispatcherByInvoiceId result : {}", affectedRows);
 		return affectedRows != 0;
+	}
+
+	@Override
+	public Dispatcher getDispatcherByInvoiceId(long invoiceId) {
+		String sql = "select * from dispatcher where invoice_id = ?";
+		try{
+			Dispatcher record = jdbcTemplate.queryForObject(sql, new Object[] { invoiceId },
+					new DispatcherMapper());
+			return record;
+		}catch(Exception e){
+			logger.error("getChannelTypeById error:");
+		}
+		return null;
 	}
 
 }

@@ -30,5 +30,10 @@ public interface IDispatcherDao {
 	 * @return
 	 */
 	public boolean updateDispatcherByInvoiceId(Dispatcher dispatcher);
-	
+	/**
+	 * 
+	 * @param invoiceId
+	 * @return
+	 */
+	public Dispatcher getDispatcherByInvoiceId(long invoiceId);
 }
