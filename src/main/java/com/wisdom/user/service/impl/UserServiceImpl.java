@@ -4,6 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.wisdom.common.model.User;
+import com.wisdom.common.model.UserOpenid;
+import com.wisdom.common.model.UserPwd;
+import com.wisdom.common.model.UserType;
+import com.wisdom.user.dao.IUserOperationDao;
 import com.wisdom.user.dao.IUserQueryDao;
 import com.wisdom.user.service.IUserService;
 
@@ -12,41 +16,43 @@ public class UserServiceImpl implements IUserService {
 
 	@Autowired
 	private IUserQueryDao userQueryDao;
+	
+	@Autowired
+	private IUserOperationDao userOperationDao;
 
 	@Override
 	public String getUserPwdByUserId(String userId) {
-		// TODO Auto-generated method stub
-		return null;
+		UserPwd userPwd = userQueryDao.getUserPwdByUserId(userId);
+		return userPwd != null ? userPwd.getPwd() : "";
 	}
 
 	@Override
 	public int getUserTypeIdByUserId(String userId) {
-		// TODO Auto-generated method stub
-		return 0;
+		UserType userType = userQueryDao.getUserTypeByUserId(userId);
+		return userType != null ? userType.getId() : 0;
 	}
 
 	@Override
 	public boolean userIdExist(String userId) {
-		// TODO Auto-generated method stub
-		return false;
+		User user = userQueryDao.getUserByUserId(userId);
+		return user != null ? true : false;
 	}
 
 	@Override
 	public boolean addUser(User user) {
-		// TODO Auto-generated method stub
-		return false;
+		return userOperationDao.addUser(user);
 	}
 
 	@Override
 	public long getCompanyIdByUserId(String userId) {
-		// TODO Auto-generated method stub
-		return 0;
+		User user = userQueryDao.getUserByUserId(userId);
+		return user != null ? user.getCompanyId() : 0;
 	}
 
 	@Override
 	public String getUserIdByOpenId(String openId) {
-		// TODO Auto-generated method stub
-		return null;
+		UserOpenid userOpenid = userQueryDao.getUserOpenidByOpenid(openId);
+		return userOpenid != null ? userOpenid.getUserId() : "";
 	}
 
 }

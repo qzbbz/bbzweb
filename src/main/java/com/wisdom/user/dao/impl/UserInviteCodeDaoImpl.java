@@ -26,7 +26,7 @@ public class UserInviteCodeDaoImpl implements IUserInviteCodeDao {
 
 	@Override
 	public UserInviteCode getUserInviteCodeByInviteCode(String inviteCode) {
-		String sql = "select * from user_invitecode where user_id = ?";
+		String sql = "select * from user_invitecode where invite_code = ?";
 		UserInviteCode userInviteCode = null;
 		try {
 			userInviteCode = jdbcTemplate.queryForObject(sql,

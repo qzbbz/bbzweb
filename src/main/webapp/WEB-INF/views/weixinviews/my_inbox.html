@@ -5,6 +5,7 @@
 		<meta charset="UTF-8">
 		<link href="../../css/weixincss/ionic.min.css" rel="stylesheet">
 		<link href="../../css/weixincss/weixin_style.css" rel="stylesheet">
+		<script src="../../js/weixinjs/jquery-1.10.2.min.js"></script>
 		<script src="../../js/weixinjs/ionic.bundle.min.js"></script>
 		<script src="../../js/weixinjs/angular-sanitize.min.js"></script>
 		<script src="../../js/weixinjs/app.js"></script>
@@ -12,7 +13,7 @@
 		<script src="../../js/weixinjs/services.js"></script>
 		<title>帮帮账-发票</title>
 	</head>
-	<body ng-app="qzapp" ng-controller="MyBillsController">
+	<body ng-app="qzapp" ng-controller="MyInboxController">
 		<ion-header-bar align-title="center" class="bar-positive">
 			<h1 class="title">我的收件箱</h1>
 		</ion-header-bar>
@@ -20,29 +21,78 @@
 
 			<ion-tab title="待审核" icon-on="ion-ios-person" icon-off="ion-ios-person-outline">
 				<ion-content class="content-box">
-					<div class="list">
-						<a class="item item-avatar item-button-right" href="#">
-							<img src="img/logo.jpg">
-							<p>报销单号：</p>
-							<p>提交时间：</p>
-						</a>
+					<div class="list" ng-show="!uploadedList.length">
+						<div class="row aligner">
+							<div>暂时没有您需要审核的报销单！</div>
+						</div>
+					</div>
+
+					<div class="list" ng-show="uploadedList.length">
+						<div class="item item-avatar item-button-right" ng-click="openModal(bill)" ng-repeat="bill in uploadedList">
+							<img ng-src="{{bill.img}}">
+							<p>金额：{{bill.amount}}</p>
+							<p>时间：{{bill.date}}</p>
+
+						</div>
 					</div>
 				</ion-content>
 			</ion-tab>
 
 			<ion-tab title="已审核" icon-on="ion-ios-checkmark" icon-off="ion-ios-checkmark-outline">
 				<ion-content class="content-box">
-					<div class="list">
-						<a class="item item-avatar item-button-right" href="#">
-							<img src="img/logo.jpg">
-							<p>报销单号：</p>
-							<p>提交时间：</p>
-						</a>
+					<div class="list" ng-show="!finishList.length">
+						<div class="row aligner">
+							<div>暂时没有您审核过的报销单！</div>
+						</div>
+					</div>
+
+					<div class="list" ng-show="finishList.length">
+						<div class="item item-avatar item-button-right" ng-click="openModal(bill)" ng-repeat="bill in finishList">
+							<img ng-src="{{bill.img}}">
+							<p>金额：{{bill.amount}}</p>
+							<p>时间：{{bill.date}}</p>
+
+						</div>
 					</div>
 				</ion-content>
 			</ion-tab>
 			
 		</ion-tabs>
+		<ion-content class="content-box" ng-show="showNetError">
+			<div class="list">
+				<div class="row aligner">
+					<div>网络错误，请稍后再试！</div>
+				</div>
+			</div>
+		</ion-content>
+		<ion-content class="content-box" ng-show="showNoBind">
+			<div class="list">
+				<div class="row aligner">
+					<div>您还没有绑定公司，</div>
+					<div>请您先绑定公司！</div>
+				</div>
+			</div>
+		</ion-content>
 	</body>
+	<script id="my-modal.html" type="text/ng-template">
+		<div class="modal">
+			<ion-header-bar align-title="center" class="bar-positive">
+				<h1 class="title">报销单详细信息</h1>
+				<div class="buttons">
+					<a class="button button-icon icon ion-ios-close-empty" ng-click="closeModal()"></a>
+				</div>
+			</ion-header-bar>
+			<ion-content class="content-box" style="margin-bottom:20px;">
+					<div class="item item-body">
+    				<div class="aligner">
+						<img class="img-box" ng-src="{{bill.img}}" style="width:100%; height:100%;">
+					</div>
+					</div>
+					<p>名称：{{bill.title}}</p>
+					<p>金额：{{bill.amount}}</p>
+					<p>时间：{{bill.date}}</p>
+			</ion-content>
+		</div>
+	</script>
 
 </html>

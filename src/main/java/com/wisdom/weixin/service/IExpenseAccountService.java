@@ -4,7 +4,8 @@ import java.util.Map;
 
 public interface IExpenseAccountService {
 	
-	public Map<String, String> checkBindCompany(String openId);
+	Map<String, Map<String, String>> getBillsByOpenId(String openId);
 	
-	public Map<String, String> bindCompany(String openId);
+	public String downloadFromUrl(String mediaId);
+	
 }

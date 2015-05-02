@@ -7,8 +7,9 @@
 		<link href="../../css/weixincss/weixin_style.css" rel="stylesheet">
 		<script src="../../js/weixinjs/ionic.bundle.min.js"></script>
 		<script src="../../js/weixinjs/angular-sanitize.min.js"></script>
+		<script src="../../js/weixinjs/jweixin-1.0.0.js"></script>
 		<script src="../../js/weixinjs/app.js"></script>
-		<script src="../../js/weixinjs/controllers.js"></script>
+		<script src="../../js/weixinjs/controllers.js?201505020919"></script>
 		<script src="../../js/weixinjs/services.js"></script>
 		<title>帮帮账</title>
 	</head>
@@ -20,9 +21,6 @@
 
 			<ion-tab title="主页" icon-on="ion-ios-home" icon-off="ion-ios-home-outline">
 				<ion-content class="content-box">
-					<div class="aligner">
-						<img class="img-box" ng-src="{{mainImg}}">
-					</div>
 					<div class="aligner">
 						<div class="text-center">
 							请对发票拍照并上传
@@ -38,13 +36,14 @@
 				<ion-content class="content-box">
 					<div class="list" ng-show="billList.length">
 						<div class="item item-avatar item-button-right" ng-click="openModal(bill)" ng-repeat="bill in billList">
+							<img src="../../img/weixinimg/bill_img_demo.jpg">
 							<img ng-src="{{bill.img}}">
 							<p>单号：{{bill.id}}</p>
 							<p>时间：{{bill.time}}</p>
-							<button ng-click="uploadBill(bill);" class="button button-positive aligner">
-								开始上传
-							</button>
 						</div>
+					</div>
+					<div ng-show="billList.length" style="margin-top:10px;margin-bottom:30px;">
+					<button ng-click="uploadBill();" class="button button-block button-positive">一键上传</button>
 					</div>
 					<div class="list" ng-show="!billList.length">
 						暂时没有需要上传的发票
@@ -78,9 +77,11 @@
 					<a class="button button-icon icon ion-ios-close-empty" ng-click="closeModal()"></a>
 				</div>
 			</ion-header-bar>
-			<ion-content class="content-box">
-					<div class="aligner">
-						<img class="img-box" ng-src="{{bill.img}}">
+			<ion-content class="content-box" style="margin-bottom:20px;">
+					<div class="item item-body">
+    				<div class="aligner">
+						<img class="img-box" src="../../img/weixinimg/bill_img_demo.jpg" style="width:100%; height:100%;">
+					</div>
 					</div>
 					<p>单号：{{bill.id}}</p>
 					<p>时间：{{bill.time}}</p>

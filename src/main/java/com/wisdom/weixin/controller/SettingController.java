@@ -26,7 +26,7 @@ public class SettingController {
     @RequestMapping("/userBindCompany")
     @ResponseBody
     public Map<String, String> userBindCompany(HttpServletRequest request) {
-        logger.info("userBindCompany");
+        logger.debug("userBindCompany");
         Map<String, String> result = new HashMap<>();
         String openId = request.getParameter("openId");
         String inviteCode = request.getParameter("inviteCode");
@@ -34,13 +34,14 @@ public class SettingController {
             result.put("error_code", String.valueOf(WeixinJsonCode.NO_OPENID_OR_INVITE_CODE_ERROR_CODE));
             result.put("error_message", WeixinJsonCode.NO_OPENID_OR_INVITE_CODE_ERROR_MESSAGE);
         } else {
+        	logger.debug("call settingService");
         	result.put("error_code", String.valueOf(WeixinJsonCode.NO_ERROR_CODE));
             result.put("error_message", WeixinJsonCode.NO_ERROR_MESSAGE);
             Map<String, String> ret = settingService.userBindCompany(openId, inviteCode);
             result.putAll(ret);
         }
-        logger.info("finishUserBindCompany");
-        logger.info("resultMap :{}", result.toString());
+        logger.debug("finishUserBindCompany");
+        logger.debug("resultMap :{}", result.toString());
         return result;
     }
 }

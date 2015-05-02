@@ -29,10 +29,15 @@ public class CompanyDaoImpl implements ICompanyDao {
 
 	@Override
 	public Company getCompanyByCompanyId(long companyId) {
+		logger.debug("companyId : {}", companyId);
 		String sql = "select * from company where id = ?";
-		Company company = jdbcTemplate.queryForObject(sql,
+		Company company = null;
+		try {
+			company = jdbcTemplate.queryForObject(sql,
 				new Object[] { companyId }, new CompanyMapper());
-		logger.debug("getCompanyByCompanyId");
+		} catch(Exception e) {
+			logger.debug("result is 0.");
+		}
 		return company;
 	}
 

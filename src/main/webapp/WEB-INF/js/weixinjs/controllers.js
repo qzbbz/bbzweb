@@ -2,28 +2,83 @@ angular.module('qzapp.controllers', [])
 
 .controller('MyInboxController', function($scope, $http, $ionicLoading) {
 
-	$scope.uploadImg = "img/logo.jpg";
+	$scope.openId = "";
+	$scope.showNoBind = false;
+	$scope.showNetError = false;
+	$scope.progressList = new Array();
+	$scope.finishList = new Array();
 
 	$ionicLoading.show({
-		template: '正在上传...'
-	})
-	$http.jsonp('http://api.openbeerdatabase.com/v1/breweries.json?callback=JSON_CALLBACK').then(function(result) {
-		$ionicLoading.hide()
+		template: '正在获取数据...'
 	})
 
-	$scope.captureBill = function() {
-		$scope.uploadImg = "img/logo1.jpg";
+	$http.get('/getUserOpenId').success(function(response) {
+		if (response.openId == null || response.openId == "") {
+			alert("无法获取openid,请重新进入!");
+		} else {
+			$scope.openId = response.openId;
+			$http({
+				url: '/checkBindCompany',
+				method: "POST",
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+				},
+				data: Object.toparams({openId: $scope.openId})
+			}).success(function(data) {
+				if (data.error_code != "0") {
+					alert(data.error_message);
+				} else if(data.bind_status == "not_bind") {
+					$scope.showNoBind = true;
+				} else if(data.bind_status == "has_bind") {
+					$http.get('/getMyInbox?openId=' + $scope.openId).success(function(response) {
+						if(response.status == "success") {
+							
+						}
+					}).error(function(response) {
+						$scope.showNetError = true;
+					})
+				}
+				$ionicLoading.hide();
+			}).error(function(response) {
+				$scope.showNetError = true;
+				$ionicLoading.hide();
+			})
+	    }
+		$ionicLoading.hide();
+	}).error(function(response) {
+		$scope.showNetError = true;
+		$ionicLoading.hide();
+	})
+	
+	$scope.uploadedRefresh = function() {
+		$scope.$broadcast('scroll.refreshComplete');
 	}
 
-	$scope.uploadBill = function() {
-		$scope.uploadImg = "img/logo.jpg";
-	}
+	$ionicModal.fromTemplateUrl('my-modal.html', {
+		scope: $scope,
+		animation: 'slide-in-up'
+	}).then(function(modal) {
+		$scope.modal = modal;
+	});
+	$scope.openModal = function(bill) {
+		$scope.modal.show();
+		$scope.bill = bill;
+	};
+	$scope.closeModal = function() {
+		$scope.modal.hide();
+	};
+	$scope.$on('$destroy', function() {
+		$scope.modal.remove();
+	});
+	$scope.$on('modal.hide', function() {
+	});
+	$scope.$on('modal.removed', function() {
+	});
 
 })
 
-.controller('UploadBillController', function($scope, $http, $ionicLoading, $location, $ionicModal) {
+.controller('UploadBillController', function($scope, $http, $ionicLoading, $location, $ionicModal, $ionicTabsDelegate) {
 	$scope.openId = "";
-	$scope.mainImg = "images/logo.jpg";
 	$scope.showMainContent = false;
 	$scope.showNetError = false;
 	$scope.showNoBind = false;
@@ -32,7 +87,10 @@ angular.module('qzapp.controllers', [])
 	function billListHasComtain(ele) {
 		var i = $scope.billList.length;
 		while(i > 0) {
-			if($scope.billList[i].img === ele) return true;
+			return true;
+			if($scope.billList[i-1].img === ele) {
+				return true;
+			}
 			i--;
 		}
 		return false;
@@ -64,14 +122,14 @@ angular.module('qzapp.controllers', [])
 				},
 				data: Object.toparams({openId: $scope.openId})
 			}).success(function(data) {
-				if (data.error == "true") {
+				if (data.error_code != "0") {
 					alert(data.message);
-				} else if(data.message == "noBind") {
+				} else if(data.bind_status == "not_bind") {
 					$scope.showNoBind = true;
-				} else if(data.message == "hasBind") {
+				} else if(data.bind_status == "has_bind") {
 					$http.get('/getJsConfigInfo?url=' + encodeURIComponent(location.href.split('#')[0])).success(function(response) {
 						wx.config({
-							debug: true,
+							//debug: true,
 							appId: 'wx309df15b6ddc5371',
 							timestamp: response.timestamp,
 							nonceStr: response.nonceStr,
@@ -83,10 +141,10 @@ angular.module('qzapp.controllers', [])
 							]
 						});
 						$scope.showMainContent = true;
-						$ionicLoading.hide()
+						$ionicLoading.hide();
 					}).error(function(response){
 						$scope.showNetError = true;
-						$ionicLoading.hide()
+						$ionicLoading.hide();
 					})
 				} else {
 					$scope.showNetError = true;
@@ -117,11 +175,11 @@ angular.module('qzapp.controllers', [])
 								(date.getMinutes() < 10 ? "0" + (date.getMinutes() < 10) : date.getMinutes()) + ":" + 
 								(date.getSeconds() < 10 ? "0" + (date.getSeconds() <10) : date.getSeconds());
 						var id = new Date().getTime();
-						var billData = {"img":res.localIds[i], "time":time, "id":id}
+						var billData = {"img":res.localIds[i].toString(), "time":time, "id":id}
 						$scope.billList.push(billData);
-						alert($scope.billList[0].img);
 					}
 				}
+				$ionicTabsDelegate.select(2);				
 		    },
 		    fail : function(res) {
 		    	if(res.errMsg === "system:function not exist") {
@@ -133,16 +191,25 @@ angular.module('qzapp.controllers', [])
 	}
 
 	$scope.uploadBill = function() {
-		var status = false;
 		wx.uploadImage({
-		    localId: '',
+		    localId: $scope.billList[0].img,
 		    isShowProgressTips: 1,
 		    success: function (res) {
-		        var serverId = res.serverId;
-		        status = true;
-		    }
-		
+		    	$http.get('/downloadUserBill?openId=' + $scope.openId + '&serverId=' + res.serverId).success(function(response) {
+		    		if(response.upload_status == "success") {
+		    			alert("Successed in uploading the bill.");
+		    			$scope.billList.pop();
+		    			$ionicTabsDelegate.select(0);
+		    		} else {
+		    			alert("Failed in uploading the bill, please retry!");
+		    		}
+		    	
+		    	}).error(function(response) {
+		    		alert("Failed in uploading the bill.");
+		    	})
+		    }		
 		});
+		
 	}
 	
 	$scope.openModal = function(bill) {
@@ -190,9 +257,8 @@ angular.module('qzapp.controllers', [])
 				},
 				data: Object.toparams({'openId': $scope.openId,	'inviteCode' : inviteCode})
 			}).success(function(data) {
-				alert(data);
 				if (data.error_code != "0" || data.invite_code_error != null) {
-					alert(data.error_message);
+					alert(data.invite_code_error);
 				} else {
 					$scope.showNoBind = false;
 					$scope.showHasBind = true;
@@ -207,8 +273,6 @@ angular.module('qzapp.controllers', [])
 		}
 	}
 
-	alert(111);
-	
 	$ionicLoading.show({
 		template: '正在获取数据...'
 	})
@@ -258,16 +322,57 @@ angular.module('qzapp.controllers', [])
 
 .controller('MyBillsController', function($scope, $http, $ionicLoading, $ionicModal) {
 
+	$scope.openId = "";
+	$scope.showNoBind = false;
+	$scope.showNetError = false;
+	$scope.uploadedList = new Array();
+	$scope.progressList = new Array();
+	$scope.finishList = new Array();
+	
 	$ionicLoading.show({
 		template: '正在获取数据...'
 	})
 
+	$http.get('/getUserOpenId').success(function(response) {
+		if (response.openId == null || response.openId == "") {
+			alert("无法获取openid,请重新进入!");
+		} else {
+			$scope.openId = response.openId;
+			$http({
+				url: '/checkBindCompany',
+				method: "POST",
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+				},
+				data: Object.toparams({openId: $scope.openId})
+			}).success(function(data) {
+				if (data.error_code != "0") {
+					alert(data.error_message);
+				} else if(data.bind_status == "not_bind") {
+					$scope.showNoBind = true;
+				} else if(data.bind_status == "has_bind") {
+					$http.get('/getMyBills?openId=' + $scope.openId).success(function(response) {
+						if(response.status == "success") {
+							
+						}
+					}).error(function(response) {
+						$scope.showNetError = true;
+					})
+				}
+				$ionicLoading.hide();
+			}).error(function(response) {
+				$scope.showNetError = true;
+				$ionicLoading.hide();
+			})
+	    }
+		$ionicLoading.hide();
+	}).error(function(response) {
+		$scope.showNetError = true;
+		$ionicLoading.hide();
+	})
+	
 	$scope.uploadedRefresh = function() {
 		$scope.$broadcast('scroll.refreshComplete');
-	}
-
-	$scope.showUploadedBill = function(billId) {
-
 	}
 
 	$ionicModal.fromTemplateUrl('my-modal.html', {
@@ -283,44 +388,11 @@ angular.module('qzapp.controllers', [])
 	$scope.closeModal = function() {
 		$scope.modal.hide();
 	};
-	//当我们用到模型时，清除它！
 	$scope.$on('$destroy', function() {
 		$scope.modal.remove();
 	});
-	// 当隐藏的模型时执行动作
 	$scope.$on('modal.hide', function() {
-		// 执行动作
 	});
-	// 当移动模型时执行动作
 	$scope.$on('modal.removed', function() {
-		// 执行动作
 	});
-
-	$http({
-		url: 'http://localhost/getMyBills',
-		method: "POST",
-		headers: {
-			'Content-Type': 'application/x-www-form-urlencoded'
-		},
-		data: {
-			'Code': 'test data'
-		}
-	}).success(function(data) {
-		//alert(JSON.stringify(data));
-		var results = data.sort(function(a, b) {
-			return parseInt(a.uploadedTime) - parseInt(b.uploadedTime);
-		});
-		$scope.uploadedLists = results;
-		$ionicLoading.hide();
-	}).error(function(response) {
-		$ionicLoading.hide();
-	});
-
-	$scope.captureBill = function() {
-		$scope.uploadImg = "img/logo1.jpg";
-	}
-
-	$scope.uploadBill = function() {
-		$scope.uploadImg = "img/logo.jpg";
-	}
 });

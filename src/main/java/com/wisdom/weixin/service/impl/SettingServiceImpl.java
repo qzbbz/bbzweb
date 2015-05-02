@@ -13,7 +13,6 @@ import com.wisdom.company.service.IDeptService;
 import com.wisdom.user.service.IUserDeptService;
 import com.wisdom.user.service.IUserService;
 import com.wisdom.user.service.IUserWeixinService;
-import com.wisdom.weixin.controller.SettingController;
 import com.wisdom.weixin.service.ISettingService;
 
 @Service("weixinSettingService")
@@ -47,14 +46,14 @@ public class SettingServiceImpl implements ISettingService {
 		} else {
 			retMap.put("bind_status", "not_bind");
 		}
+		logger.debug("retMap : {}", retMap);
 		return retMap;
 	}
 
 	@Override
 	public Map<String, String> userBindCompany(String openId, String inviteCode) {
-		Map<String, String> retMap = new HashMap<>();
-		retMap = checkCompanyBind(openId);
-		if (retMap.size() > 0) {
+		Map<String, String> retMap  = checkCompanyBind(openId);
+		if (("has_bind").equals(retMap.get("bind_status"))) {
 			logger.info("retMap : {}", retMap.toString());
 			return retMap;
 		}
@@ -64,6 +63,7 @@ public class SettingServiceImpl implements ISettingService {
 			logger.info("retMap : {}", retMap.toString());
 			return retMap;
 		}
+		userWeixinService.addOpenId(userId, openId);
 		retMap = getCompanyNameAndDeptName(userId);
 		logger.info("retMap : {}", retMap.toString());
 		return retMap;
@@ -71,9 +71,12 @@ public class SettingServiceImpl implements ISettingService {
 
 	private Map<String, String> getCompanyNameAndDeptName(String userId) {
 		Map<String, String> retMap = new HashMap<>();
+		logger.debug("userId : {}", userId);
 		long companyId = userService.getCompanyIdByUserId(userId);
+		logger.debug("comapnyId : {}", companyId);
 		String companyName = companyService.getCompanyName(companyId);
 		long deptId = userDeptService.getDeptIdByUserId(userId);
+		logger.debug("deptId : {}", deptId);
 		String deptName = deptService.getDeptNameById(deptId);
 		retMap.put("companyName", companyName);
 		retMap.put("deptName", deptName);

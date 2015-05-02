@@ -40,7 +40,7 @@ public class UserOpenIdDaoImpl implements IUserOpenIdDao {
 	@Override
 	public boolean addUserOpenid(String userId, String openId) {
 		String sql = "insert into user_openid (user_id, openid, create_time)"
-				+ " values (?, ?)";
+				+ " values (?, ?, ?)";
 		int affectedRows = jdbcTemplate.update(sql, userId, openId,
 				new Timestamp(System.currentTimeMillis()));
 		logger.debug("addUserOpenid result : {}", affectedRows);

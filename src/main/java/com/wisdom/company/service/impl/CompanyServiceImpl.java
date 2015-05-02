@@ -44,7 +44,7 @@ public class CompanyServiceImpl implements ICompanyService {
 	@Override
 	public String getCompanyName(long companyId) {
 		Company company = companyDao.getCompanyByCompanyId(companyId);
-		return company.getName();
+		return company != null ? company.getName() : "";
 	}
 	
 }

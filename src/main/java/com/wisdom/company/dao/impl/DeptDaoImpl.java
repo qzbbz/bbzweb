@@ -18,13 +18,18 @@ public class DeptDaoImpl implements IDeptDao {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
-	
+
 	@Override
 	public Dept getDeptByDeptId(long id) {
+		logger.debug("Dept id : {}", id);
 		String sql = "select * from dept where id = ?";
-		Dept dept = jdbcTemplate.queryForObject(sql,
-				new Object[] { id }, new DeptMapper());
-		logger.debug("getDeptByDeptId");
+		Dept dept = null;
+		try {
+			dept = jdbcTemplate.queryForObject(sql, new Object[] { id },
+					new DeptMapper());
+		} catch (Exception e) {
+			logger.debug("result is 0.");
+		}
 		return dept;
 	}
 
@@ -33,8 +38,7 @@ public class DeptDaoImpl implements IDeptDao {
 		String sql = "insert into dept (name, company_id, parent_id, create_time)"
 				+ " values (?, ?, ?, ?)";
 		int affectedRows = jdbcTemplate.update(sql, dept.getName(),
-				dept.getCompanyId(), dept.getParentId(),
-				dept.getCreateTime());
+				dept.getCompanyId(), dept.getParentId(), dept.getCreateTime());
 		logger.debug("addDept result : {}", affectedRows);
 		return affectedRows != 0;
 	}

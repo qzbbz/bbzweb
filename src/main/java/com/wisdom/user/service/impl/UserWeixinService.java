@@ -42,6 +42,7 @@ public class UserWeixinService implements IUserWeixinService {
 	public String getUserIdByUserInviteCode(String inviteCode) {
 		UserInviteCode userInviteCode = userInviteCodeDao
 				.getUserInviteCodeByInviteCode(inviteCode);
+		logger.debug("inviteCode : {}", inviteCode);
 		return userInviteCode != null ? userInviteCode.getUserId() : null;
 	}
 

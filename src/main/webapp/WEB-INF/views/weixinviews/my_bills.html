@@ -23,20 +23,20 @@
 			<ion-tab title="已上传" icon-on="ion-ios-paperplane" icon-off="ion-ios-paperplane-outline">
 				<ion-content class="content-box">
 
-					<ion-refresher pulling-text="下拉刷新..." on-refresh="uploadedRefresh()">
-					</ion-refresher>
+					<!-- <ion-refresher pulling-text="下拉刷新..." on-refresh="uploadedRefresh()">
+					</ion-refresher> -->
 
-					<div class="list" ng-show="!uploadedLists.length">
+					<div class="list" ng-show="!uploadedList.length">
 						<div class="row aligner">
-							<div>暂时没有已上传的报销单！</div>
+							<div>您暂时没有已上传的报销单！</div>
 						</div>
 					</div>
 
-					<div class="list" ng-show="uploadedLists.length">
-						<div class="item item-avatar item-button-right" ng-click="openModal(uploadedBill)" ng-repeat="uploadedBill in uploadedLists">
-							<img src="{{uploadedBill.imgUrl}}">
-							<p>单号：{{uploadedBill.billId}}</p>
-							<p>时间：{{uploadedBill.uploadedDate}}</p>
+					<div class="list" ng-show="uploadedList.length">
+						<div class="item item-avatar item-button-right" ng-click="openModal(bill)" ng-repeat="bill in uploadedList">
+							<img ng-src="{{bill.img}}">
+							<p>金额：{{bill.amount}}</p>
+							<p>时间：{{bill.date}}</p>
 
 						</div>
 					</div>
@@ -45,40 +45,76 @@
 
 			<ion-tab title="审核中" icon-on="ion-ios-person" icon-off="ion-ios-person-outline">
 				<ion-content class="content-box">
-					<div class="list">
-						<a class="item item-avatar item-button-right" href="#">
-							<img src="img/logo.jpg">
-							<p>报销单号：</p>
-							<p>提交时间：</p>
-						</a>
+					<div class="list" ng-show="!progressList.length">
+						<div class="row aligner">
+							<div>您暂时没有待审核的报销单！</div>
+						</div>
+					</div>
+
+					<div class="list" ng-show="progressList.length">
+						<div class="item item-avatar item-button-right" ng-click="openModal(bill)" ng-repeat="bill in progressList">
+							<img ng-src="{{bill.img}}">
+							<p>金额：{{bill.amount}}</p>
+							<p>时间：{{bill.date}}</p>
+
+						</div>
 					</div>
 				</ion-content>
 			</ion-tab>
 
 			<ion-tab title="已完成" icon-on="ion-ios-checkmark" icon-off="ion-ios-checkmark-outline">
 				<ion-content class="content-box">
-					<div class="list">
-						<a class="item item-avatar item-button-right" href="#">
-							<img src="img/logo.jpg">
-							<p>报销单号：</p>
-							<p>提交时间：</p>
-						</a>
+					<div class="list" ng-show="!finishList.length">
+						<div class="row aligner">
+							<div>您暂时没有已审核的报销单！</div>
+						</div>
+					</div>
+
+					<div class="list" ng-show="progressList.length">
+						<div class="item item-avatar item-button-right" ng-click="openModal(bill)" ng-repeat="bill in finishList">
+							<img ng-src="{{bill.img}}">
+							<p>金额：{{bill.amount}}</p>
+							<p>时间：{{bill.date}}</p>
+
+						</div>
 					</div>
 				</ion-content>
 			</ion-tab>
 
 		</ion-tabs>
+		<ion-content class="content-box" ng-show="showNetError">
+			<div class="list">
+				<div class="row aligner">
+					<div>网络错误，请稍后再试！</div>
+				</div>
+			</div>
+		</ion-content>
+		<ion-content class="content-box" ng-show="showNoBind">
+			<div class="list">
+				<div class="row aligner">
+					<div>您还没有绑定公司，</div>
+					<div>请您先绑定公司！</div>
+				</div>
+			</div>
+		</ion-content>
 	</body>
 	<script id="my-modal.html" type="text/ng-template">
 		<div class="modal">
 			<ion-header-bar align-title="center" class="bar-positive">
-				<h1 class="title">报销单{{bill.billId}}</h1>
+				<h1 class="title">报销单详细信息</h1>
 				<div class="buttons">
 					<a class="button button-icon icon ion-ios-close-empty" ng-click="closeModal()"></a>
 				</div>
 			</ion-header-bar>
-			<ion-content>
-				Hello!
+			<ion-content class="content-box" style="margin-bottom:20px;">
+					<div class="item item-body">
+    				<div class="aligner">
+						<img class="img-box" ng-src="{{bill.img}}" style="width:100%; height:100%;">
+					</div>
+					</div>
+					<p>名称：{{bill.title}}</p>
+					<p>金额：{{bill.amount}}</p>
+					<p>时间：{{bill.date}}</p>
 			</ion-content>
 		</div>
 	</script>
