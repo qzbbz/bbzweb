@@ -22,27 +22,43 @@ public class AttachmentDaoImpl implements IAttachmentDao {
 	@Override
 	public Attachment getAttatchmentByInvoiceId(long invoiceId) {
 		String sql = "select * from attachment where invoice_id = ?";
+		try{
 		Attachment attachment = jdbcTemplate.queryForObject(sql,
 				new Object[] { invoiceId }, new AttachmentMapper());
 		return attachment;
+		}catch(Exception e){
+			logger.error("get attatchment error,invoiceId:" + invoiceId);
+		}
+		return null;
 	}
 
 	@Override
 	public boolean addAttatchment(Attachment attatchment) {
 		String sql = "insert into attachment (invoice_id, image, create_time)"
 				+ " values (?, ?, ?)";
-		int affectedRows = jdbcTemplate.update(sql, attatchment.getInvoiceId(),
-				attatchment.getImage(), attatchment.getCreateTime());
-		logger.debug("addAttatchment result : {}", affectedRows);
-		return affectedRows != 0;
+
+		try{
+			int affectedRows = jdbcTemplate.update(sql, attatchment.getInvoiceId(),
+					attatchment.getImage(), attatchment.getCreateTime());
+			logger.debug("addAttatchment result : {}", affectedRows);
+			return affectedRows != 0;
+		}catch(Exception e){
+			logger.error("addAttatchment error:" + e.getMessage());
+		}
+		return false;
 	}
 
 	@Override
 	public boolean deleteAttatchment(Attachment attatchment) {
 		String sql = "delete from attachment where invoice_id = ?";
-		int affectedRows = jdbcTemplate.update(sql, attatchment.getInvoiceId());
-		logger.debug("deleteAttatchment result : {}", affectedRows);
-		return affectedRows != 0;
+		try{
+			int affectedRows = jdbcTemplate.update(sql, attatchment.getInvoiceId());
+			logger.debug("deleteAttatchment result : {}", affectedRows);
+			return affectedRows != 0;
+		}catch(Exception e){
+			logger.error("deleteAttatchment error!" + e.getMessage());
+		}
+		return false;
 	}
 
 }
