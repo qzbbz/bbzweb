@@ -14,6 +14,16 @@
 	http://www.springframework.org/schema/task/spring-task-4.0.xsd
 	http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
 
+    <bean id="appConfigure"
+class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer">
+        
+        <property name="locations">
+            <list>
+                <value>classpath:important.properties</value>
+            </list>
+        </property>
+    </bean>
+
 	<mvc:interceptors>
 		<mvc:interceptor>
 			<mvc:mapping path="/**/*" />
@@ -98,6 +108,8 @@
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 	<!-- database config begin -->
+	
+	<task:annotation-driven/>
 
 	<!-- user component-scan begin-->
 	<context:component-scan base-package="com.wisdom.user.dao.impl" />
