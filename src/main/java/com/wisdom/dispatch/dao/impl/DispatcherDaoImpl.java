@@ -54,9 +54,10 @@ public class DispatcherDaoImpl implements IDispatcherDao {
 
 	@Override
 	public boolean addDispatcher(Dispatcher dispatcher) {
-		String sql = "insert into dispatcher (object_type_id, invoice_id, channel_type_id, status, reciever, create_time, update_time)"
+		String sql = "insert into dispatcher (user_id,user_name,object_type_id, invoice_id, channel_type_id, status, reciever, create_time, update_time)"
 				+ " values (?, ?, ?, ?, ?, ?, ?)";
-		int affectedRows = jdbcTemplate.update(sql, dispatcher.getObjectTypeId(),
+		int affectedRows = jdbcTemplate.update(sql, dispatcher.getUserId(),dispatcher.getUserName(),
+				dispatcher.getObjectTypeId(),
 				dispatcher.getInvoiceId(), dispatcher.getChannelTypeId(),
 				dispatcher.getStatus(), dispatcher.getReciever(),
 				dispatcher.getCreateTime(), dispatcher.getUpdateTime());
