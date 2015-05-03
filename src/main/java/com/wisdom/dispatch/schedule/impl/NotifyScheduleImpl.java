@@ -35,13 +35,13 @@ public class NotifyScheduleImpl implements NotifySchedule {
 	
 	@Scheduled(cron="0/30 * * * * ?") //每30秒
 	@Override
-	public boolean invoiceApprovalNotify() {
+	public void invoiceApprovalNotify() {
 		//查询一批记录
 		log.error("schedule working");
 		List<Dispatcher> dispatchList =  dispatcherService.getDispatcherByStatusAndNum(0,5);
-		if(null == dispatchList){
+		if(null == dispatchList || !(dispatchList.size() > 0)){
 			log.debug("no record need to be send");
-			return true;
+			return;
 		}
 		for(Dispatcher dispatch:dispatchList){
 			boolean blRet = false;
@@ -51,7 +51,7 @@ public class NotifyScheduleImpl implements NotifySchedule {
 			String fromUser = "";
 			int channelType = dispatch.getChannelTypeId();
 			if(channelType == 0 ){
-				blRet = javaMailService.sendMailOut(dispatch.getUserId(), subject, body, fromUser);
+				blRet = javaMailService.sendMailOut(dispatch.getReciever(), subject, body, fromUser);
 				if(!blRet){
 					log.error("send mail to User failed,User:" + userId);
 				}
@@ -67,7 +67,7 @@ public class NotifyScheduleImpl implements NotifySchedule {
 					log.error("push weixin message error,openId:" + dispatch.getOpenId());
 				}
 			}else{
-				blRet = javaMailService.sendMailOut(userId, subject, body, fromUser);
+				blRet = javaMailService.sendMailOut(dispatch.getReciever(), subject, body, fromUser);
 				if(!blRet){
 					log.error("send mail to User failed,User:" + userId);
 				}
@@ -80,7 +80,7 @@ public class NotifyScheduleImpl implements NotifySchedule {
 				}
 			}
 		}
-		return true;
+		return;
 	}
 
 }

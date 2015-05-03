@@ -66,7 +66,7 @@ public class DispatcherDaoImpl implements IDispatcherDao {
 
 	@Override
 	public boolean updateDispatcherByInvoiceId(Dispatcher dispatcher) {
-		String sql = "update accounter_career set status=?, update_time=? where invoice_id=?";
+		String sql = "update dispatcher set status=?, update_time=? where invoice_id=?";
 		int affectedRows = jdbcTemplate.update(sql, dispatcher.getStatus(),
 				dispatcher.getUpdateTime(), dispatcher.getInvoiceId());
 		logger.debug("updateDispatcherByInvoiceId result : {}", affectedRows);
