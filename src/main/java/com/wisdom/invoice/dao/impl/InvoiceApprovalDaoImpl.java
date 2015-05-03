@@ -1,17 +1,22 @@
 package com.wisdom.invoice.dao.impl;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.stereotype.Repository;
 
+import com.wisdom.accounter.mapper.AccounterCareerMapper;
+import com.wisdom.common.model.AccounterCareer;
 import com.wisdom.common.model.InvoiceApproval;
 import com.wisdom.invoice.dao.IInvoiceApprovalDao;
 import com.wisdom.invoice.mapper.InvoiceApprovalMapper;
+import com.wisdom.invoice.mapper.UserInvoiceMapper;
 
 @Repository("invoiceApprovalDao")
 public class InvoiceApprovalDaoImpl implements IInvoiceApprovalDao {
@@ -21,6 +26,21 @@ public class InvoiceApprovalDaoImpl implements IInvoiceApprovalDao {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+	
+	@Override
+	public List<InvoiceApproval> getInvoiceApprovalListByUserId(String userId){
+		String sql = "select * from invoice_approval where userId = ?";
+		try {
+			List<InvoiceApproval> retList = jdbcTemplate.query(sql,
+					new Object[] { userId }, new RowMapperResultSetExtractor<InvoiceApproval>(new InvoiceApprovalMapper()));
+			logger.debug("getInvoiceApprovalListByUserId");
+			return retList;
+		} catch (Exception e) {
+			logger.error("getInvoiceApprovalListByUserId error,"
+					+ e.getMessage());
+		}
+		return null;
+	}
 
 	@Override
 	public InvoiceApproval getInvoiceApprovalByInvoiceId(long id) {

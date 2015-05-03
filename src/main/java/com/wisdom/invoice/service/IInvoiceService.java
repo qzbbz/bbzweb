@@ -31,7 +31,7 @@ public interface IInvoiceService {
 	/**增加一条发票和用户关系映射记录
 	 * @param 
 	 */
-	public boolean addUserInvoiceRecord(long invoiceId,String userId,int status);
+//	public boolean addUserInvoiceRecord(long invoiceId,String userId,int status);
 	
 	/**
 	 * 增加一条审批记录
@@ -62,6 +62,9 @@ public interface IInvoiceService {
 	public Invoice getSingleInvoiceInfo(Long invoiceId);
 	
 	public boolean addInvoiceApprovalRecord(long invoiceId,String approvalId,int status);
+	
+	public Map<String, List<Map<String, Object>>> getNeededAuditBillList(String userId);
+
 	
 	
 	

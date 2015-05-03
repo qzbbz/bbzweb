@@ -25,8 +25,6 @@ import com.wisdom.invoice.dao.IInvoiceDao;
 import com.wisdom.invoice.dao.IUserInvoiceDao;
 import com.wisdom.invoice.service.IInvoiceService;
 import com.wisdom.user.service.IUserService;
-import com.wisdom.user.service.IUserWeixinService;
-
 import org.springframework.util.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -71,14 +69,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			log.error("addAttachMentRecord error");
 			return retMap;
 		}
-		log.debug("addUserInvoiceRecord");
-		blRet = addUserInvoiceRecord(invoiceId,userId,0);
-		if(!blRet){
-			log.error("addUserInvoiceRecord error! userId=" + userId + ",invoiceId:" + invoice.getId());
-			return retMap;
-		}
 		
-	
 		//TODO 获取当前用户的审批信息。
 		String receiver = new String("");
 		receiver = getApprovalUserList(userId);
@@ -87,6 +78,15 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			retMap.put("message", "获取审批人信息失败!");
 			return retMap;
 		}
+		
+		log.debug("addUserInvoiceRecord");
+		blRet = addUserInvoiceRecord(invoiceId,userId,receiver,0);
+		if(!blRet){
+			log.error("addUserInvoiceRecord error! userId=" + userId + ",invoiceId:" + invoice.getId());
+			return retMap;
+		}
+		
+	
 		
 		//先生成一条审批记录
 		blRet = addInvoiceApprovalRecord(invoiceId,userId,0);
@@ -296,6 +296,27 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		return map;
 	}
 	
+	public Map<String, List<Map<String, Object>>> getNeededAuditBillList(String userId){
+		return getBillsList(userId);
+		/*Map<String, List<Map<String, Object>>> retMap = new HashMap<String, List<Map<String, Object>>>();
+		retMap.put("finishedList",null);
+		retMap.put("processingList",null);
+		
+		List<InvoiceApproval> invoiceApprovalList = invoiceApprovalDao.getInvoiceApprovalListByUserId(userId);
+		if(null == invoiceApprovalList){
+			log.error("null invoiceApprovalList error");
+			return retMap;
+		}
+		
+		List<Map<String,Object>> finishedList = new ArrayList<Map<String,Object>>();
+		for(InvoiceApproval invoiceApproval : invoiceApprovalList){
+			Map map = new HashMap<String,Object>();
+			
+		}*/
+		
+	}
+
+	
 	public boolean checkUserAuth(String userId,String appovalUser){
 		//TODO
 		return true;		
@@ -353,12 +374,13 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		return attachmentDao.addAttatchment(imageRecord);
 	}
 
-	@Override
-	public boolean addUserInvoiceRecord(long invoiceId,String userId,int status) {
+	
+	public boolean addUserInvoiceRecord(long invoiceId,String userId,String receiver,int status) {
 		UserInvoice userInvoice = new UserInvoice();
 		userInvoice.setInvoiceId(invoiceId);
 		userInvoice.setStatus(status);
 		userInvoice.setUserId(userId);
+		userInvoice.setApprovalId(receiver);
 		userInvoice.setCreateTime(new Timestamp(new Date().getTime()));
 		return userInvoiceDao.addUserInvoice(userInvoice);
 	}
