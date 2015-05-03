@@ -138,6 +138,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		Invoice invoice = getSingleInvoiceInfo(longId);
 		if(null == invoice || null == invoice.getAmount() || 0 == invoice.getAmount()){
 			log.error("发票信息不存在或不完整!");
+			retMap.put("message","发票信息不完整或不存在！");
 			return retMap;
 		}
 		
@@ -145,17 +146,20 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		UserInvoice userInvoice = userInvoiceDao.getUserInvoiceByInvoiceId(longId);
 		if(null == userInvoice){
 			log.error("发票状态信息不存在");
+			retMap.put("message","发票信息不存在！");
 			return retMap;
 		}
 		if(userInvoice.getStatus()==1){
 			log.debug("发票已经审批通过!");
 			retMap.put("success", true);
+			retMap.put("message","发票已经审批通过！");
 			return retMap;
 		}
 		
 		//执行审批
 		if(updateApprovalRecord(userId,longId,1)){
 			log.error("更新审批结果失败");
+			retMap.put("message","审批操作失败！");
 			return retMap;
 		}
 		
@@ -164,6 +168,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			//更改发票审批状态
 			updateInvoiceApprovalStatus(userId,longId,1);
 			retMap.put("success", true);
+			retMap.put("message", "发票审批成功！");
 			return retMap;
 		}
 		
@@ -272,7 +277,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		map.put("bill_amount", invoice.getAmount());
 		DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");  
 		Timestamp stamp = invoice.getCreateTime();
-		map.put("billd_date", sdf.format(stamp));
+		map.put("bill_date", sdf.format(stamp));
 		
 		if(!StringUtils.isEmpty((String)map.get("approval_id"))){
 			String userName = userService.getUserNameByUserId((String)map.get("approval_id"));
