@@ -57,17 +57,19 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		}
 		
 		Invoice invoice = new Invoice();
+		log.debug("addInvoiceRevord");
 		Long invoiceId = addInvoiceRecord(invoice);
 		if(null == invoiceId || invoiceId.longValue() == -1){
 			log.error("addInvoiceRecord failed");
 			return retMap;
 		}
+		log.debug("addAttachMentRecord");
 		boolean blRet = addAttachMentRecord(invoiceId,image);
 		if(!blRet){
 			log.error("addAttachMentRecord error");
 			return retMap;
 		}
-		
+		log.debug("addUserInvoiceRecord");
 		blRet = addUserInvoiceRecord(invoiceId,userId,0);
 		if(!blRet){
 			log.error("addUserInvoiceRecord error! userId=" + userId + ",invoiceId:" + invoice.getId());

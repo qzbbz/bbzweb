@@ -34,9 +34,7 @@ public class ExpenseAccountController {
 		logger.debug("serverId : {}", serverId);
 		String base64ImageStr = expenseAccounterService.downloadFromUrl(
 				serverId, openId);
-		if (!base64ImageStr.isEmpty()
-				&& expenseAccounterService.submitExpenseAccount(openId,
-						base64ImageStr)) {
+		if (!base64ImageStr.isEmpty()) {
 			retMap.put("upload_status", "success");
 		} else {
 			retMap.put("upload_status", "fail");
