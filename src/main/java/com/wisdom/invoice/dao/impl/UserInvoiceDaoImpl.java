@@ -8,9 +8,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.stereotype.Repository;
 
+import com.wisdom.common.model.Employment;
 import com.wisdom.common.model.UserInvoice;
+import com.wisdom.company.mapper.EmploymentMapper;
 import com.wisdom.invoice.dao.IUserInvoiceDao;
 import com.wisdom.invoice.mapper.UserInvoiceMapper;
 
@@ -25,16 +28,16 @@ public class UserInvoiceDaoImpl implements IUserInvoiceDao {
 
 	@Override
 	public List<UserInvoice> getUserInvoiceByUserId(String userId) {
-		String sql = "select * from user_invoice where user_id = ?";
+		List<UserInvoice> list = null;
 		try {
-			List<UserInvoice> userInvoiceList = jdbcTemplate.queryForList(sql,
-					new Object[] { userId }, UserInvoice.class);
-			logger.debug("getUserInvoiceByUserId");
-			return userInvoiceList;
-		} catch (DataAccessException e) {
-			e.printStackTrace();
+			String sql = "select * from user_invoice where user_id = ?";
+			list = jdbcTemplate.query(sql, new Object[]{userId},
+					new RowMapperResultSetExtractor<UserInvoice>(
+							new UserInvoiceMapper()));
+		} catch (Exception e) {
+			logger.error(e.toString());
 		}
-		return null;
+		return list;
 	}
 
 	@Override

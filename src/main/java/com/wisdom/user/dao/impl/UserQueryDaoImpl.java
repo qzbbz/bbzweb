@@ -182,6 +182,7 @@ public class UserQueryDaoImpl implements IUserQueryDao {
 	public UserOpenid getUserOpenidByUserId(String userId) {
 		UserOpenid userOpenid = null;
 		String sql = "select * from user_openid where user_id = ?";
+		logger.debug("userId : {}", userId);
 		try {
 			userOpenid = jdbcTemplate.queryForObject(sql,
 					new Object[] { userId }, new UserOpenidMapper());
