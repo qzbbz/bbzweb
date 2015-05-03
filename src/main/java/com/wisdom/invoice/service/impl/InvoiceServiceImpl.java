@@ -285,13 +285,20 @@ public class InvoiceServiceImpl implements IInvoiceService {
 	}
 	
 	public String getApprovalUserList(String userId){
-		
-		return new String(userId);
+		List<String> userList = userService.getApprovalUserList( userId);
+		if(null == userList || !(userList.size()>0)){
+			return new String("93628512@qq.com"); //TODO TEST
+		}
+		StringBuilder str = new StringBuilder();
+		for(String o:userList){
+			str.append(o).append(";");
+		}
+		return str.toString().substring(0, str.length()-1);
 	}
 	
 	public boolean ifNeedSuperApproval(String userId,String approvalId,double amount){
-//		TODO
-		return false;
+		
+		return userService.ifNeedSuperApproval( userId,  approvalId, amount);
 	}
 	
 	public boolean updateInvoiceApprovalStatus(String userId,long invoiceId,int status){
