@@ -111,11 +111,13 @@ public class UserServiceImpl implements IUserService {
 			userIdList.add(userId);
 			return userIdList;
 		}
-		List<UserDept> userDeptList = userDeptDao.getUserDeptListByDeptId(deptId);
+		List<UserDept> userDeptList = userDeptDao.getUserDeptListByDeptId(deptParentId);
 		if(userDeptList == null || userDeptList.size() <= 0) return userIdList;
 		for(UserDept ud : userDeptList) {
 			userIdList.add(ud.getUserId());
 		}
+		logger.debug("getApprovalUserList deptId : {}", deptId);
+		logger.debug("getApprovalUserList deptParentId : {}", deptParentId);
 		logger.debug("userIdList : {}", userIdList);
 		return userIdList;
 	}

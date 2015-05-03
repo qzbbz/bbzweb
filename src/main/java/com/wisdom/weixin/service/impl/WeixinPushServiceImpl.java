@@ -56,6 +56,7 @@ public class WeixinPushServiceImpl implements IWeixinPushService {
 			logger.debug("push result : {}", result);
 			os.flush();
 			os.close();
+			status = true;
 		} catch (Exception e) {
 			logger.error("exception : {}", e.toString());
 		}

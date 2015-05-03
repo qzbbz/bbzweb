@@ -411,17 +411,19 @@ angular.module('qzapp.controllers', [])
 						alert(1);
 						if(response.uploadedList != null) {
 							uploadedList = response.uploadedList;
-							alert(uploadedList);
+							alert(JSON.stringify(uploadedList));
 						}
 						alert(2);
 						if(response.processingList != null) {
 							processingList = response.processingList;
-							alert(processingList);
+							alert(processingList.length);
+							alert(processingList[0].bill_title);
+							alert(JSON.stringify(processingList));
 						}
 						alert(3);
 						if(response.finishedList != null) {
 							finishedList = response.finishedList;
-							alert(finishedList);
+							alert(JSON.stringify(finishedList));
 						}
 						$scope.apply();
 					}).error(function(response) {
