@@ -99,7 +99,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		openId = userService.getOpenIdByUserId(userId);	
 		String userName = userService.getUserNameByUserId(userId); 
 		//生成一条dispatcher日志。
-		blRet = dispatcherService.addDispatcherRecord(userId,userName,invoiceId,0,1,receiver,openId,1);		//TODO 
+		blRet = dispatcherService.addDispatcherRecord(userId,userName,invoiceId,0,0,receiver,openId,1);		//TODO 
 		if(!blRet){
 			log.error("add dispatcher log error!" + "userId:" + userId + ",reciever:" + receiver + ",InvoiceId:" + invoice.getId());
 			return retMap;
