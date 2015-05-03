@@ -7,7 +7,7 @@ public interface IExpenseAccountService {
 	
 	Map<String, List<Map<String, Object>>> getBillsByOpenId(String openId);
 	
-	boolean approvalBill(String approvalId, String invoiceId, String userId);
+	boolean approvalBill(String approvalId, String invoiceId, String userId, int status);
 	
 	public boolean submitExpenseAccount(String openId,String image);
 	

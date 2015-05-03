@@ -74,9 +74,9 @@ public class ExpenseAccountServiceImpl implements IExpenseAccountService {
 	}
 
 	@Override
-	public boolean approvalBill(String approvalId, String invoiceId, String userId) {
+	public boolean approvalBill(String approvalId, String invoiceId, String userId, int status) {
 		boolean status = false;
-		Map<String, Object> retMap = invoiceService.excuteApproval(userId, approvalId, invoiceId);
+		Map<String, Object> retMap = invoiceService.excuteApproval(userId, approvalId, invoiceId, status);
 		if(retMap.containsKey("success") && (boolean) retMap.get("success")) {
 			status = true;
 		}
