@@ -26,7 +26,7 @@ public class WeixinPushServiceImpl implements IWeixinPushService {
 				+ message + "\"}}";
 		String action = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token="
 				+ WeixinCache.getAccessToken();
-		logger.debug("openId : {}", openId);
+		logger.debug("pushTextMessage openId : {}", openId);
 		try {
 			status = connectWeiXinInterface(action, json);
 		} catch (Exception e) {

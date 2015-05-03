@@ -28,7 +28,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public User(Long id, String userId, String userName, Integer typeId, Long companyId,
+	public User(Long id, String userName, String userId, Integer typeId, Long companyId,
 			Timestamp createTime) {
 		this.id = id;
 		this.userId = userId;

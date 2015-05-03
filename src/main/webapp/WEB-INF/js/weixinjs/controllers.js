@@ -408,28 +408,30 @@ angular.module('qzapp.controllers', [])
 				} else if(data.bind_status == "has_bind") {
 					$scope.showMainContent = true;
 					$http.get('/getMyBills?openId=' + $scope.openId).success(function(response) {
-						alert(1);
 						if(response.uploadedList != null) {
-							uploadedList = response.uploadedList;
-							alert(JSON.stringify(uploadedList));
+							for(var i=0; i<response.uploadedList.length; i++) {
+								$scope.uploadedList.push(response.uploadedList[i]);
+							}
+							$scope.apply();
 						}
-						alert(2);
 						if(response.processingList != null) {
-							processingList = response.processingList;
-							alert(processingList.length);
-							alert(processingList[0].bill_title);
-							alert(JSON.stringify(processingList));
+							for(var i=0; i<response.processingList.length; i++) {
+								$scope.progressingList.push(response.processingList[i]);
+							}
+							$scope.apply();
 						}
-						alert(3);
 						if(response.finishedList != null) {
-							finishedList = response.finishedList;
-							alert(JSON.stringify(finishedList));
+							for(var i=0; i<response.finishedList.length; i++) {
+								$scope.finishedList.push(response.finishedList[i]);
+							}
+							$scope.apply();
 						}
 						$scope.apply();
 					}).error(function(response) {
 						$scope.showNetError = true;
 					})
 				}
+				$scope.apply();
 				$ionicLoading.hide();
 			}).error(function(response) {
 				$scope.showNetError = true;
@@ -437,6 +439,7 @@ angular.module('qzapp.controllers', [])
 			})
 	    }
 		$ionicLoading.hide();
+		$scope.apply();
 	}).error(function(response) {
 		$scope.showNetError = true;
 		$ionicLoading.hide();

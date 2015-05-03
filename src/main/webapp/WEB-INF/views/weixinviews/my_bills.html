@@ -9,7 +9,7 @@
 		<script src="../../js/weixinjs/ionic.bundle.min.js"></script>
 		<script src="../../js/weixinjs/angular-sanitize.min.js"></script>
 		<script src="../../js/weixinjs/app.js"></script>
-		<script src="../../js/weixinjs/controllers.js?20505031959"></script>
+		<script src="../../js/weixinjs/controllers.js?20505032202"></script>
 		<script src="../../js/weixinjs/services.js"></script>
 		<title>帮帮账</title>
 	</head>
@@ -35,8 +35,8 @@
 					<div class="list" ng-show="uploadedList.length">
 						<div class="item item-avatar item-button-right" ng-click="openModal(bill)" ng-repeat="bill in uploadedList">
 							<img ng-src="{{bill.img}}">
-							<p>金额：{{bill.amount}}</p>
-							<p>时间：{{bill.date}}</p>
+							<p>金额：{{bill.bill_amount}}</p>
+							<p>时间：{{bill.bill_date}}</p>
 
 						</div>
 					</div>
@@ -45,14 +45,14 @@
 
 			<ion-tab title="审核中" icon-on="ion-ios-person" icon-off="ion-ios-person-outline">
 				<ion-content class="content-box">
-					<div class="list" ng-show="!progressList.length">
+					<div class="list" ng-show="!progressingList.length">
 						<div class="row aligner">
 							<div>您暂时没有待审核的报销单！</div>
 						</div>
 					</div>
 
-					<div class="list" ng-show="progressList.length">
-						<div class="item item-avatar item-button-right" ng-click="openModal(bill)" ng-repeat="bill in progressList">
+					<div class="list" ng-show="progressingList.length">
+						<div class="item item-avatar item-button-right" ng-click="openModal(bill)" ng-repeat="bill in progressingList">
 							<img ng-src="{{bill.img}}">
 							<p>金额：{{bill.bill_amount}}</p>
 							<p>时间：{{bill.bill_date}}</p>
@@ -63,14 +63,14 @@
 
 			<ion-tab title="已完成" icon-on="ion-ios-checkmark" icon-off="ion-ios-checkmark-outline">
 				<ion-content class="content-box">
-					<div class="list" ng-show="!finishList.length">
+					<div class="list" ng-show="!finishedList.length">
 						<div class="row aligner">
 							<div>您暂时没有已审核的报销单！</div>
 						</div>
 					</div>
 
-					<div class="list" ng-show="progressList.length">
-						<div class="item item-avatar item-button-right" ng-click="openModal(bill)" ng-repeat="bill in finishList">
+					<div class="list" ng-show="finishedList.length">
+						<div class="item item-avatar item-button-right" ng-click="openModal(bill)" ng-repeat="bill in finishedList">
 							<img ng-src="{{bill.img}}">
 							<p>金额：{{bill.bill_amount}}</p>
 							<p>时间：{{bill.bill_date}}</p>
@@ -116,7 +116,7 @@
 					<p>名称：{{bill.bill_title}}</p>
 					<p>金额：{{bill.bill_amount}}</p>
 					<p>审批人：{{bill.approval_name}}</p>
-					<p>时间：{{bill.date}}</p>
+					<p>提交时间：{{bill.bill_date}}</p>
 			</ion-content>
 		</div>
 	</script>
