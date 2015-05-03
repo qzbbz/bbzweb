@@ -6,7 +6,7 @@ angular.module('qzapp.controllers', [])
 	$scope.showNoBind = false;
 	$scope.showNetError = false;
 	$scope.showMainContent = false;
-	$scope.progressingList = new Array();
+	$scope.processingList = new Array();
 	$scope.finishedList = new Array();
 
 	$ionicLoading.show({

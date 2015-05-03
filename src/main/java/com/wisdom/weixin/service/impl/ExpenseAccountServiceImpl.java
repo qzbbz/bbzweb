@@ -39,6 +39,17 @@ public class ExpenseAccountServiceImpl implements IExpenseAccountService {
 		}
 		return retMap;
 	}
+	
+	@Override
+	public Map<String, List<Map<String, Object>>> getInboxByOpenId(String openId) {
+		Map<String, List<Map<String, Object>>> retMap = null;
+		String userId = userService.getUserIdByOpenId(openId);
+		logger.debug("userId : {}", userId);
+		if (userId != null && !userId.isEmpty()) {
+			retMap = invoiceService.getNeededAuditBillList(userId);
+		}
+		return retMap;
+	}
 
 	public String downloadFromUrl(String mediaId, String openId) {
 		String base64ImageStr = "";
@@ -74,9 +85,9 @@ public class ExpenseAccountServiceImpl implements IExpenseAccountService {
 	}
 
 	@Override
-	public boolean approvalBill(String approvalId, String invoiceId, String userId, int status) {
+	public boolean approvalBill(String approvalId, String invoiceId, String userId, int approval_status) {
 		boolean status = false;
-		Map<String, Object> retMap = invoiceService.excuteApproval(userId, approvalId, invoiceId, status);
+		Map<String, Object> retMap = invoiceService.excuteApproval(userId, approvalId, invoiceId, approval_status);
 		if(retMap.containsKey("success") && (boolean) retMap.get("success")) {
 			status = true;
 		}

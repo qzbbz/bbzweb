@@ -31,7 +31,7 @@ public class UserInvoiceDaoImpl implements IUserInvoiceDao {
 		List<UserInvoice> list = null;
 		try {
 			String sql = "select * from user_invoice where user_id = ?";
-			list = jdbcTemplate.query(sql, new Object[]{userId},
+			list = jdbcTemplate.query(sql, new Object[] { userId },
 					new RowMapperResultSetExtractor<UserInvoice>(
 							new UserInvoiceMapper()));
 		} catch (Exception e) {
@@ -55,13 +55,15 @@ public class UserInvoiceDaoImpl implements IUserInvoiceDao {
 
 	@Override
 	public boolean addUserInvoice(UserInvoice userInvoice) {
-		String sql = "insert into user_invoice (user_id, invoice_id, status, update_time, create_time)"
-				+ " values (?, ?, ?, ?, ?)";
+		String sql = "insert into user_invoice (user_id, invoice_id, approval_id, status, update_time, create_time)"
+				+ " values (?, ?, ?, ?, ?, ?)";
 		try {
 			int affectedRows = jdbcTemplate
 					.update(sql,
 							userInvoice.getUserId(),
 							userInvoice.getInvoiceId(),
+							userInvoice.getApprovalId() == null ? ""
+									: userInvoice.getApprovalId(),
 							userInvoice.getStatus() == null ? 0 : userInvoice
 									.getStatus(),
 							userInvoice.getUpdateTime() == null ? new Timestamp(
@@ -99,8 +101,10 @@ public class UserInvoiceDaoImpl implements IUserInvoiceDao {
 					.update(sql,
 							userInvoice.getStatus() == null ? 0 : userInvoice
 									.getStatus(),
-							userInvoice.getApprovalStatus() == null? 0:userInvoice.getApprovalStatus(),
-							userInvoice.getApprovalId() == null ? "" : userInvoice.getApprovalId(),
+							userInvoice.getApprovalStatus() == null ? 0
+									: userInvoice.getApprovalStatus(),
+							userInvoice.getApprovalId() == null ? ""
+									: userInvoice.getApprovalId(),
 							userInvoice.getUpdateTime() == null ? new Timestamp(
 									System.currentTimeMillis()) : userInvoice
 									.getUpdateTime(), userInvoice.getId());
