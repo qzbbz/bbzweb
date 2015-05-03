@@ -44,11 +44,12 @@ public class Dispatcher implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public Dispatcher(Long id,String userId, Long objectTypeId, Long invoiceId,
+	public Dispatcher(Long id,String userId,String userName, Long objectTypeId, Long invoiceId,
 			Integer channelTypeId, Integer status, String reciever,String openId,
 			Timestamp createTime, Timestamp updateTime) {
 		this.id = id;
 		this.userId = userId;
+		this.userName = userName;
 		this.objectTypeId = objectTypeId;
 		this.invoiceId = invoiceId;
 		this.channelTypeId = channelTypeId;
