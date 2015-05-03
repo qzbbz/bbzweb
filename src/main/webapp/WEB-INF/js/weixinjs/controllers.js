@@ -1,10 +1,11 @@
 angular.module('qzapp.controllers', [])
 
-.controller('MyInboxController', function($scope, $http, $ionicLoading) {
+.controller('MyInboxController', function($scope, $http, $ionicLoading,  $location, $ionicModal, $ionicTabsDelegate) {
 
 	$scope.openId = "";
 	$scope.showNoBind = false;
 	$scope.showNetError = false;
+	$scope.showMainContent = false;
 	$scope.progressingList = new Array();
 	$scope.finishedList = new Array();
 
@@ -12,6 +13,14 @@ angular.module('qzapp.controllers', [])
 		template: '正在获取数据...'
 	})
 
+	Object.toparams = function ObjecttoParams(obj) {
+	    var p = [];
+	    for (var key in obj) {
+	        p.push(key + '=' + encodeURIComponent(obj[key]));
+	    }
+	    return p.join('&');
+	};
+	
 	$http.get('/getUserOpenId').success(function(response) {
 		if (response.openId == null || response.openId == "") {
 			alert("无法获取openid,请重新进入!");
@@ -30,6 +39,7 @@ angular.module('qzapp.controllers', [])
 				} else if(data.bind_status == "not_bind") {
 					$scope.showNoBind = true;
 				} else if(data.bind_status == "has_bind") {
+					$scope.showMainContent = true;
 					$http.get('/getMyInbox?openId=' + $scope.openId).success(function(response) {
 						if(response.processingList != null) {
 							processingList = response.processingList;
@@ -360,6 +370,7 @@ angular.module('qzapp.controllers', [])
 	$scope.openId = "";
 	$scope.showNoBind = false;
 	$scope.showNetError = false;
+	$scope.showMainContent = false;
 	$scope.uploadedList = new Array();
 	$scope.progressingList = new Array();
 	$scope.finishedList = new Array();
@@ -367,6 +378,14 @@ angular.module('qzapp.controllers', [])
 	$ionicLoading.show({
 		template: '正在获取数据...'
 	})
+	
+	Object.toparams = function ObjecttoParams(obj) {
+	    var p = [];
+	    for (var key in obj) {
+	        p.push(key + '=' + encodeURIComponent(obj[key]));
+	    }
+	    return p.join('&');
+	};
 
 	$http.get('/getUserOpenId').success(function(response) {
 		if (response.openId == null || response.openId == "") {
@@ -385,16 +404,24 @@ angular.module('qzapp.controllers', [])
 					alert(data.error_message);
 				} else if(data.bind_status == "not_bind") {
 					$scope.showNoBind = true;
+					$scope.apply();
 				} else if(data.bind_status == "has_bind") {
+					$scope.showMainContent = true;
 					$http.get('/getMyBills?openId=' + $scope.openId).success(function(response) {
+						alert(1);
 						if(response.uploadedList != null) {
 							uploadedList = response.uploadedList;
+							alert(uploadedList);
 						}
+						alert(2);
 						if(response.processingList != null) {
 							processingList = response.processingList;
+							alert(processingList);
 						}
+						alert(3);
 						if(response.finishedList != null) {
 							finishedList = response.finishedList;
+							alert(finishedList);
 						}
 						$scope.apply();
 					}).error(function(response) {

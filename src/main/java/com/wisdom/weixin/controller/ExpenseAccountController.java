@@ -20,7 +20,7 @@ public class ExpenseAccountController {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(ExpenseAccountController.class);
-	
+
 	@Autowired
 	private IExpenseAccountService expenseAccounterService;
 
@@ -32,8 +32,11 @@ public class ExpenseAccountController {
 		Map<String, String> retMap = new HashMap<>();
 		logger.debug("openId : {}", openId);
 		logger.debug("serverId : {}", serverId);
-		String base64ImageStr =  expenseAccounterService.downloadFromUrl(serverId, openId);
-		if(!base64ImageStr.isEmpty()) {
+		String base64ImageStr = expenseAccounterService.downloadFromUrl(
+				serverId, openId);
+		if (!base64ImageStr.isEmpty()
+				&& expenseAccounterService.submitExpenseAccount(openId,
+						base64ImageStr)) {
 			retMap.put("upload_status", "success");
 		} else {
 			retMap.put("upload_status", "fail");
@@ -41,7 +44,7 @@ public class ExpenseAccountController {
 		logger.debug("retMap : {}", retMap.toString());
 		return retMap;
 	}
-	
+
 	@RequestMapping("/approvalBill")
 	@ResponseBody
 	public Map<String, String> approvalBill(HttpServletRequest request) {
@@ -52,7 +55,7 @@ public class ExpenseAccountController {
 		logger.debug("approvalId : {}", approvalId);
 		logger.debug("invoiceId : {}", invoiceId);
 		logger.debug("userId : {}", userId);
-		if(expenseAccounterService.approvalBill(approvalId, invoiceId, userId)) {
+		if (expenseAccounterService.approvalBill(approvalId, invoiceId, userId)) {
 			retMap.put("status", "success");
 		} else {
 			retMap.put("status", "fail");
@@ -60,10 +63,11 @@ public class ExpenseAccountController {
 		logger.debug("retMap : {}", retMap.toString());
 		return retMap;
 	}
-	
+
 	@RequestMapping("/getMyBills")
 	@ResponseBody
-	public Map<String, List<Map<String, String>>> getMyBills(HttpServletRequest request) {
+	public Map<String, List<Map<String, Object>>> getMyBills(
+			HttpServletRequest request) {
 		String openId = request.getParameter("openId");
 		return expenseAccounterService.getBillsByOpenId(openId);
 	}

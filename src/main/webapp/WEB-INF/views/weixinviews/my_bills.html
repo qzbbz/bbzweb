@@ -9,7 +9,7 @@
 		<script src="../../js/weixinjs/ionic.bundle.min.js"></script>
 		<script src="../../js/weixinjs/angular-sanitize.min.js"></script>
 		<script src="../../js/weixinjs/app.js"></script>
-		<script src="../../js/weixinjs/controllers.js"></script>
+		<script src="../../js/weixinjs/controllers.js?20505031112"></script>
 		<script src="../../js/weixinjs/services.js"></script>
 		<title>帮帮账</title>
 	</head>
@@ -18,7 +18,7 @@
 		<ion-header-bar align-title="center" class="bar-positive">
 			<h1 class="title">我的报销单</h1>
 		</ion-header-bar>
-		<ion-tabs class="tabs-positive tabs-icon-top">
+		<ion-tabs class="tabs-positive tabs-icon-top" ng-show="showMainContent">
 
 			<ion-tab title="已上传" icon-on="ion-ios-paperplane" icon-off="ion-ios-paperplane-outline">
 				<ion-content class="content-box">
@@ -54,8 +54,8 @@
 					<div class="list" ng-show="progressList.length">
 						<div class="item item-avatar item-button-right" ng-click="openModal(bill)" ng-repeat="bill in progressList">
 							<img ng-src="{{bill.img}}">
-							<p>金额：{{bill.amount}}</p>
-							<p>时间：{{bill.date}}</p>
+							<p>金额：{{bill.bill_amount}}</p>
+							<p>时间：{{bill.bill_date}}</p>
 						</div>
 					</div>
 				</ion-content>
@@ -72,8 +72,8 @@
 					<div class="list" ng-show="progressList.length">
 						<div class="item item-avatar item-button-right" ng-click="openModal(bill)" ng-repeat="bill in finishList">
 							<img ng-src="{{bill.img}}">
-							<p>金额：{{bill.amount}}</p>
-							<p>时间：{{bill.date}}</p>
+							<p>金额：{{bill.bill_amount}}</p>
+							<p>时间：{{bill.bill_date}}</p>
 							<span class="item-note">
 						      {{bill.approval_status == "0" ? "未通过" : "通过"}}
 						    </span>
@@ -110,12 +110,12 @@
 			<ion-content class="content-box" style="margin-bottom:20px;">
 					<div class="item item-body">
     				<div class="aligner">
-						<img class="img-box" ng-src="{{bill.img}}" style="width:100%; height:100%;">
+						<img class="img-box" ng-src="{{bill.bill_img}}" style="width:100%; height:100%;">
 					</div>
 					</div>
-					<p>名称：{{bill.title}}</p>
-					<p>金额：{{bill.amount}}</p>
-					<p>审批人：{{bill.amount}}</p>
+					<p>名称：{{bill.bill_title}}</p>
+					<p>金额：{{bill.bill_amount}}</p>
+					<p>审批人：{{bill.approval_name}}</p>
 					<p>时间：{{bill.date}}</p>
 			</ion-content>
 		</div>

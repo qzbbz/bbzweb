@@ -30,8 +30,8 @@ public class ExpenseAccountServiceImpl implements IExpenseAccountService {
 	private IUserService userService;
 
 	@Override
-	public Map<String, List<Map<String, String>>> getBillsByOpenId(String openId) {
-		Map<String, List<Map<String, String>>> retMap = null;
+	public Map<String, List<Map<String, Object>>> getBillsByOpenId(String openId) {
+		Map<String, List<Map<String, Object>>> retMap = null;
 		String userId = userService.getUserIdByOpenId(openId);
 		logger.debug("userId : {}", userId);
 		if (userId != null && !userId.isEmpty()) {
@@ -81,6 +81,18 @@ public class ExpenseAccountServiceImpl implements IExpenseAccountService {
 			status = true;
 		}
 		return status;
+	}
+
+	@Override
+	public boolean submitExpenseAccount(String openId, String image) {
+		String userId = userService.getUserIdByOpenId(openId);
+		if(userId == null || userId.isEmpty()) return false;
+		Map<String, Object> retMap = invoiceService.createInvoiceProcess(userId, image, "0", "1");
+		if(retMap.containsKey("success") && (boolean)retMap.get("success")) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }

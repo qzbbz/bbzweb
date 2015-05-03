@@ -5,9 +5,11 @@ import java.util.Map;
 
 public interface IExpenseAccountService {
 	
-	Map<String, List<Map<String, String>>> getBillsByOpenId(String openId);
+	Map<String, List<Map<String, Object>>> getBillsByOpenId(String openId);
 	
 	boolean approvalBill(String approvalId, String invoiceId, String userId);
+	
+	public boolean submitExpenseAccount(String openId,String image);
 	
 	public String downloadFromUrl(String mediaId, String openId);
 	
