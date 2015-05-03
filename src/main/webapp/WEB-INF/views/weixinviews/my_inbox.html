@@ -9,7 +9,7 @@
 		<script src="../../js/weixinjs/ionic.bundle.min.js"></script>
 		<script src="../../js/weixinjs/angular-sanitize.min.js"></script>
 		<script src="../../js/weixinjs/app.js"></script>
-		<script src="../../js/weixinjs/controllers.js?201505040016"></script>
+		<script src="../../js/weixinjs/controllers.js?201505040206"></script>
 		<script src="../../js/weixinjs/services.js"></script>
 		<title>帮帮账-发票</title>
 	</head>
@@ -28,14 +28,16 @@
 					</div>
 
 					<div class="list" ng-show="processingList.length">
-						<div class="item item-avatar item-button-right" ng-click="openModal(bill)" ng-repeat="bill in processingList">
+						<div class="item item-avatar "  ng-repeat="bill in processingList">
 							<img ng-src="{{bill.bill_img}}">
+							<div ng-click="openModal(bill)">
 							<p>申请人：{{bill.user_name}},金额：{{bill.bill_amount}}</p>
 							<p>时间：{{bill.bill_date}}</p>
-							<button class="button button-positive" ng-click="approval(bill, '1');">
+							</div>
+							<button class="button button-positive" ng-click="approval(bill, '0');">
 						      <i class="icon ion-checkmark-circled"></i>
 						    </button>
-						    <button class="button button-positive" ng-click="approval(bill, '0');">
+						    <button class="button button-positive" ng-click="approval(bill, '1');">
 						      <i class="icon ion-close-circled"></i>
 						    </button>
 						</div>

@@ -8,7 +8,7 @@ angular.module('qzapp.controllers', [])
 	$scope.showMainContent = false;
 	$scope.processingList = new Array();
 	$scope.finishedList = new Array();
-
+	
 	$ionicLoading.show({
 		template: '正在获取数据...'
 	})
@@ -102,20 +102,19 @@ angular.module('qzapp.controllers', [])
 		$http.get('/approvalBill?invoiceId=' + bill.invoice_id + '&approvalId=' + bill.approval_id + '&userId=' + bill.user_id + '&status=' + status).success(function(response) {
 			$ionicLoading.hide();
 			if(response.status == 'success') {
+				alert("Success!");
 				var ele = null;
-				for(var i=0; i<$scope.progressingList.length; i++) {
-					if(bill === $scope.progressingList[i]) {
-						ele = $scope.progressingList[i];
-						$scope.progressingList.pop();
-						scope.$apply();
+				for(var i=0; i<$scope.processingList.length; i++) {
+					if(bill === $scope.processingList[i]) {
+						ele = $scope.processingList[i];
+						$scope.processingList.pop();
 						break;
 					}						
 				}
 				if(ele != null) {
 					$scope.finishedList.push(ele);
 				}
-				scope.$apply();
-				alert("Success!");
+				$scope.apply();
 			} else {
 				alert("Failed!");
 			}

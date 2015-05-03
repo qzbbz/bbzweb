@@ -89,7 +89,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 	
 		
 		//先生成一条审批记录
-		blRet = addInvoiceApprovalRecord(invoiceId,userId,0);
+		blRet = addInvoiceApprovalRecord(invoiceId,receiver,0);
 		if(!blRet){
 			log.error("add invoiceAppovalRecord failed");
 			retMap.put("message", "");
@@ -136,7 +136,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		}
 		long longId = Long.parseLong(invoiceId);
 		Invoice invoice = getSingleInvoiceInfo(longId);
-		if(null == invoice || null == invoice.getAmount() || 0 == invoice.getAmount()){
+		if(null == invoice || null == invoice.getAmount()){// || 0 == invoice.getAmount()){
 			log.error("发票信息不存在或不完整!");
 			retMap.put("message","发票信息不完整或不存在！");
 			return retMap;
@@ -161,6 +161,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			updateInvoiceApprovalStatus(userId,approvalUserId,longId,1,approvalStatus);
 			log.error("审批成功，审批拒绝!");
 			retMap.put("message","审批成功，审批拒绝！");
+			retMap.put("success", true);
 			return retMap;
 		}
 		
@@ -296,24 +297,58 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		return map;
 	}
 	
-	public Map<String, List<Map<String, Object>>> getNeededAuditBillList(String userId){
-		return getBillsList(userId);
-		/*Map<String, List<Map<String, Object>>> retMap = new HashMap<String, List<Map<String, Object>>>();
+	@SuppressWarnings("unchecked")
+	public Map<String, List<Map<String, Object>>> getNeededAuditBillList(String approvalId){
+		Map<String, List<Map<String, Object>>> retMap = new HashMap<String, List<Map<String, Object>>>();
 		retMap.put("finishedList",null);
 		retMap.put("processingList",null);
 		
-		List<InvoiceApproval> invoiceApprovalList = invoiceApprovalDao.getInvoiceApprovalListByUserId(userId);
+		List<InvoiceApproval> invoiceApprovalList = invoiceApprovalDao.getInvoiceApprovalListByUserId(approvalId);
 		if(null == invoiceApprovalList){
-			log.error("null invoiceApprovalList error");
+			log.error("null invoiceApprovalList error:" + approvalId);
 			return retMap;
 		}
 		
 		List<Map<String,Object>> finishedList = new ArrayList<Map<String,Object>>();
+		List<Map<String,Object>> processingList = new ArrayList<Map<String,Object>>();
 		for(InvoiceApproval invoiceApproval : invoiceApprovalList){
 			Map map = new HashMap<String,Object>();
+			map.put("processStatus", invoiceApproval.getStatus());
+			map.put("invoice_id", invoiceApproval.getInvoiceId());
+			map.put("approval_status", invoiceApproval.getApprovalStatus());
+			map.put("approval_id", approvalId);
+			UserInvoice userInvoice = userInvoiceDao.getUserInvoiceByInvoiceId(invoiceApproval.getInvoiceId());
+			if(null != userInvoice){
+				map.put("user_id", userInvoice.getUserId());
+				DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");  
+				Timestamp stamp = userInvoice.getCreateTime();
+				map.put("bill_date", sdf.format(stamp));
+				String userName = userService.getUserNameByUserId(userInvoice.getUserId());
+				map.put("user_name", userName);
+				map.put("bill_status", userInvoice.getStatus());
+			}		
+			map.put("approval_id", approvalId);
+			String approvalName = userService.getUserNameByUserId(userInvoice.getUserId());
+			map.put("approval_name", approvalName);
 			
-		}*/
-		
+			Invoice invoice =  getSingleInvoiceInfo(invoiceApproval.getInvoiceId());
+			if(null == invoice){
+				log.debug("invoice not exsisted");
+				return map;
+			}
+			map.put("bill_title", invoice.getTitle());
+			map.put("bill_amount", invoice.getAmount());
+			
+			if(0 == invoiceApproval.getStatus()){
+				processingList.add(map);
+			}else{
+				finishedList.add(map);
+			}
+			
+		}
+		retMap.put("finishedList", finishedList);
+		retMap.put("processingList", processingList);
+		return retMap;
 	}
 
 	

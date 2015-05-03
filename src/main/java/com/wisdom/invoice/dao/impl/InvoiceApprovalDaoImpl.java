@@ -29,7 +29,7 @@ public class InvoiceApprovalDaoImpl implements IInvoiceApprovalDao {
 	
 	@Override
 	public List<InvoiceApproval> getInvoiceApprovalListByUserId(String userId){
-		String sql = "select * from invoice_approval where userId = ?";
+		String sql = "select * from invoice_approval where user_id = ?";
 		try {
 			List<InvoiceApproval> retList = jdbcTemplate.query(sql,
 					new Object[] { userId }, new RowMapperResultSetExtractor<InvoiceApproval>(new InvoiceApprovalMapper()));

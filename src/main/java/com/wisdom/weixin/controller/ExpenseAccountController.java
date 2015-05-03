@@ -54,6 +54,7 @@ public class ExpenseAccountController {
 		logger.debug("approvalId : {}", approvalId);
 		logger.debug("invoiceId : {}", invoiceId);
 		logger.debug("userId : {}", userId);
+		logger.debug("status : {}", status);
 		if (expenseAccounterService.approvalBill(approvalId, invoiceId, userId,
 				Integer.valueOf(status))) {
 			retMap.put("status", "success");
