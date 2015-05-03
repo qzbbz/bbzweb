@@ -1,6 +1,8 @@
 package com.wisdom.invoice.service.impl;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -98,6 +100,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		String openId = "";
 		openId = userService.getOpenIdByUserId(receiver);	//TODO 多个审批人场景还要处理一下。
 		String userName = userService.getUserNameByUserId(userId); 
+		log.debug("getUserNameByUserId:" + userName);
 		//生成一条dispatcher日志。
 		blRet = dispatcherService.addDispatcherRecord(userId,userName,invoiceId,0,0,receiver,openId,1);		//TODO 
 		if(!blRet){
@@ -267,7 +270,9 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		}
 		map.put("bill_title", invoice.getTitle());
 		map.put("bill_amount", invoice.getAmount());
-		map.put("billd_date", invoice.getCreateTime());
+		DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");  
+		Timestamp stamp = invoice.getCreateTime();
+		map.put("billd_date", sdf.format(stamp));
 		
 		if(!StringUtils.isEmpty((String)map.get("approval_id"))){
 			//TODO map.put("approval_name", value);

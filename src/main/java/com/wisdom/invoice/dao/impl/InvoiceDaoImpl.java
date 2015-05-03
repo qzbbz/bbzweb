@@ -72,8 +72,8 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 					return ps;
 				}
 			}, keyHolder);
-			logger.debug("addInvoiceAndGetKey result : {}", id);
-			return id;
+			logger.debug("addInvoiceAndGetKey result : {}", keyHolder.getKey().longValue());
+			return keyHolder.getKey().longValue();
 		} catch (DataAccessException e) {
 			logger.error("addInvoiceAndGetKey error." + e.getMessage());
 			e.printStackTrace();

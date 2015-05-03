@@ -47,31 +47,33 @@ public class NotifyScheduleImpl implements NotifySchedule {
 			boolean blRet = false;
 			String userId = dispatch.getUserId();
 			String userName = StringUtils.isEmpty(dispatch.getUserName()) ? userId : dispatch.getUserName();
-			String body = "您有一个来自" + userName + "的新报销单据需要您审批，请登录系统查看!";
+			String mailBody = "您有一个来自" + userName + "的新报销单据需要您审批，请登录系统查看!";
+			String weixinBody ="您有一个来自" + userName + "的新报销单据需要您审批，请到收件箱查看!";
 			String fromUser = "";
 			int channelType = dispatch.getChannelTypeId();
 			if(channelType == 0 ){
-				blRet = javaMailService.sendMailOut(dispatch.getReciever(), subject, body, fromUser);
+				blRet = javaMailService.sendMailOut(dispatch.getReciever(), subject, mailBody, fromUser);
 				if(!blRet){
-					log.error("send mail to User failed,User:" + userId);
+					log.error("send mail to User failed,User:" + dispatch.getReciever());
 				}
 				if(!StringUtils.isEmpty(dispatch.getOpenId())){
-					blRet =  weixinPushService.pushTextMessage(dispatch.getOpenId(), body);
+					blRet =  weixinPushService.pushTextMessage(dispatch.getOpenId(), weixinBody);
 					if(!blRet){
 						log.error("push weixin message error,openId:" + dispatch.getOpenId());
 					}
 				}
 			}else if(channelType==2){
-				blRet =  weixinPushService.pushTextMessage(dispatch.getOpenId(), body);
+				blRet =  weixinPushService.pushTextMessage(dispatch.getOpenId(), weixinBody);
 				if(!blRet){
 					log.error("push weixin message error,openId:" + dispatch.getOpenId());
 				}
 			}else{
-				blRet = javaMailService.sendMailOut(dispatch.getReciever(), subject, body, fromUser);
+				blRet = javaMailService.sendMailOut(dispatch.getReciever(), subject, mailBody, fromUser);
 				if(!blRet){
 					log.error("send mail to User failed,User:" + userId);
 				}
 			}
+			
 			if(blRet){//更新发票通知状态
 				if(dispatcherService.updateDispatcherStatus(dispatch.getInvoiceId())){
 					log.debug("update dispatch status success");
