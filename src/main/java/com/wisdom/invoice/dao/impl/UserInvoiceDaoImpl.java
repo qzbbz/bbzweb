@@ -1,5 +1,6 @@
 package com.wisdom.invoice.dao.impl;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -21,7 +22,7 @@ public class UserInvoiceDaoImpl implements IUserInvoiceDao {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
-	
+
 	@Override
 	public List<UserInvoice> getUserInvoiceByUserId(String userId) {
 		String sql = "select * from user_invoice where user_id = ?";
@@ -54,9 +55,18 @@ public class UserInvoiceDaoImpl implements IUserInvoiceDao {
 		String sql = "insert into user_invoice (user_id, invoice_id, status, update_time, create_time)"
 				+ " values (?, ?, ?, ?, ?)";
 		try {
-			int affectedRows = jdbcTemplate.update(sql, userInvoice.getUserId(),
-					userInvoice.getInvoiceId(), userInvoice.getStatus(),
-					userInvoice.getUpdateTime(), userInvoice.getCreateTime());
+			int affectedRows = jdbcTemplate
+					.update(sql,
+							userInvoice.getUserId(),
+							userInvoice.getInvoiceId(),
+							userInvoice.getStatus() == null ? 0 : userInvoice
+									.getStatus(),
+							userInvoice.getUpdateTime() == null ? new Timestamp(
+									System.currentTimeMillis()) : userInvoice
+									.getUpdateTime(),
+							userInvoice.getCreateTime() == null ? new Timestamp(
+									System.currentTimeMillis()) : userInvoice
+									.getCreateTime());
 			logger.debug("addUserInvoice result : {}", affectedRows);
 			return affectedRows != 0;
 		} catch (DataAccessException e) {
@@ -82,14 +92,19 @@ public class UserInvoiceDaoImpl implements IUserInvoiceDao {
 	public boolean updateUserInvoice(UserInvoice userInvoice) {
 		String sql = "update user_invoice set status=?, update_time=? where id=?";
 		try {
-			int affectedRows = jdbcTemplate.update(sql, userInvoice.getStatus(),
-					userInvoice.getUpdateTime(), userInvoice.getId());
+			int affectedRows = jdbcTemplate
+					.update(sql,
+							userInvoice.getStatus() == null ? 0 : userInvoice
+									.getStatus(),
+							userInvoice.getUpdateTime() == null ? new Timestamp(
+									System.currentTimeMillis()) : userInvoice
+									.getUpdateTime(), userInvoice.getId());
 			logger.debug("updateUserInvoice result : {}", affectedRows);
 			return affectedRows != 0;
 		} catch (DataAccessException e) {
 			e.printStackTrace();
 		}
 		return false;
-	}	
-	
+	}
+
 }

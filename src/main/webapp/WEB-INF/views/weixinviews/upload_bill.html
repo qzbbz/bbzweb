@@ -18,7 +18,6 @@
 			<h1 class="title">上传发票</h1>
 		</ion-header-bar>
 		<ion-tabs class="tabs-positive tabs-icon-top" ng-show="showMainContent">
-
 			<ion-tab title="主页" icon-on="ion-ios-home" icon-off="ion-ios-home-outline">
 				<ion-content class="content-box">
 					<div class="aligner">
@@ -28,10 +27,8 @@
 					</div>
 				</ion-content>
 			</ion-tab>
-
 			<ion-tab title="发票拍照" icon-on="ion-ios-camera" icon-off="ion-ios-camera-outline" ng-click="captureBill()">
 			</ion-tab>
-
 			<ion-tab title="发票上传" icon-on="ion-ios-cloud-upload" icon-off="ion-ios-cloud-upload-outline">
 				<ion-content class="content-box">
 					<div class="list" ng-show="billList.length">
@@ -50,7 +47,6 @@
 					</div>
 				</ion-content>
 			</ion-tab>
-
 		</ion-tabs>
 		<ion-content class="content-box" ng-show="showNetError">
 			<div class="list">

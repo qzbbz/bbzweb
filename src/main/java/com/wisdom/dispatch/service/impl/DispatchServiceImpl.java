@@ -17,9 +17,6 @@ public class DispatchServiceImpl implements IDispatcherService {
 	
 	@Autowired
 	private IDispatcherDao dispatcherDao;
-	@Autowired
-	private JavaMail javaMail;
-	
 	
 	@Override
 	public boolean addDispatcherRecord(String userId,String userName,long invoiceId,int status,int channalTypeID,

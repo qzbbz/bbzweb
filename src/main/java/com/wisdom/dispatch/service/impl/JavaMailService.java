@@ -21,7 +21,7 @@ public class JavaMailService {
 		javaMail.setBody(body);
 		StringBuffer strRet = new StringBuffer();
 		boolean blRet = javaMail.sendout(strRet);
-		return blRet;		
+		return blRet;
 	}
 //	
 //	public static final void main(String[] args){

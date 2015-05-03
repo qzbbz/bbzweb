@@ -3,8 +3,11 @@ package com.wisdom.user.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.wisdom.common.model.AmountLimit;
 import com.wisdom.common.model.User;
 import com.wisdom.common.model.UserDept;
@@ -22,6 +25,9 @@ import com.wisdom.user.service.IUserService;
 @Service("userInfoService")
 public class UserServiceImpl implements IUserService {
 
+	private static final Logger logger = LoggerFactory
+			.getLogger(UserServiceImpl.class);
+	
 	@Autowired
 	private IUserQueryDao userQueryDao;
 	
@@ -36,7 +42,7 @@ public class UserServiceImpl implements IUserService {
 	
 	@Autowired
 	private IAmountLimitDao amountLimitDao;
-
+	
 	@Override
 	public String getUserPwdByUserId(String userId) {
 		UserPwd userPwd = userQueryDao.getUserPwdByUserId(userId);
@@ -110,6 +116,7 @@ public class UserServiceImpl implements IUserService {
 		for(UserDept ud : userDeptList) {
 			userIdList.add(ud.getUserId());
 		}
+		logger.debug("userIdList : {}", userIdList);
 		return userIdList;
 	}
 

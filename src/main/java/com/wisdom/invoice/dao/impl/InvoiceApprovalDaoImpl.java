@@ -1,5 +1,7 @@
 package com.wisdom.invoice.dao.impl;
 
+import java.sql.Timestamp;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,17 +21,18 @@ public class InvoiceApprovalDaoImpl implements IInvoiceApprovalDao {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
-	
+
 	@Override
 	public InvoiceApproval getInvoiceApprovalByInvoiceId(long id) {
 		String sql = "select * from invoice_approval where invoice_id = ?";
-		try{
+		try {
 			InvoiceApproval invoiceApproval = jdbcTemplate.queryForObject(sql,
 					new Object[] { id }, new InvoiceApprovalMapper());
 			logger.debug("getInvoiceApprovalByInvoiceId");
 			return invoiceApproval;
-		}catch(Exception e){
-			logger.error("getInvoiceApprovalByInvoiceId error," + e.getMessage());
+		} catch (Exception e) {
+			logger.error("getInvoiceApprovalByInvoiceId error,"
+					+ e.getMessage());
 		}
 		return null;
 	}
@@ -39,14 +42,22 @@ public class InvoiceApprovalDaoImpl implements IInvoiceApprovalDao {
 		String sql = "insert into invoice_approval (invoice_id, user_id, status, update_time, create_time)"
 				+ " values (?, ?, ?, ?, ?)";
 
-		try{
-			int affectedRows = jdbcTemplate.update(sql, invoiceApproval.getInvoiceId(),
-					invoiceApproval.getUserId(), invoiceApproval.getStatus(),
-					invoiceApproval.getUpdateTime(), invoiceApproval.getCreateTime());
+		try {
+			int affectedRows = jdbcTemplate.update(
+					sql,
+					invoiceApproval.getInvoiceId(),
+					invoiceApproval.getUserId(),
+					invoiceApproval.getStatus(),
+					invoiceApproval.getUpdateTime() == null ? new Timestamp(
+							System.currentTimeMillis()) : invoiceApproval
+							.getUpdateTime(),
+					invoiceApproval.getCreateTime() == null ? new Timestamp(
+							System.currentTimeMillis()) : invoiceApproval
+							.getCreateTime());
 			logger.debug("addInvoiceApproval result : {}", affectedRows);
 			return affectedRows != 0;
-		}catch(Exception e){
-			logger.error("addInvoiceApproval error."  + e.getMessage());
+		} catch (Exception e) {
+			logger.error("addInvoiceApproval error." + e.getMessage());
 		}
 		return false;
 	}
@@ -55,7 +66,8 @@ public class InvoiceApprovalDaoImpl implements IInvoiceApprovalDao {
 	public boolean deleteInvoiceApproval(InvoiceApproval invoiceApproval) {
 		String sql = "delete from invoice_approval where invoice_id = ?";
 		try {
-			int affectedRows = jdbcTemplate.update(sql, invoiceApproval.getId());
+			int affectedRows = jdbcTemplate
+					.update(sql, invoiceApproval.getId());
 			logger.debug("deleteInvoiceApproval result : {}", affectedRows);
 			return affectedRows != 0;
 		} catch (DataAccessException e) {
@@ -68,12 +80,16 @@ public class InvoiceApprovalDaoImpl implements IInvoiceApprovalDao {
 	public boolean updateInvoiceApproval(InvoiceApproval invoiceApproval) {
 		String sql = "update invoice_approval set status=?, update_time=? where invoice_id=?";
 		try {
-			int affectedRows = jdbcTemplate.update(sql, invoiceApproval.getStatus(),
-					invoiceApproval.getUpdateTime(), invoiceApproval.getInvoiceId());
+			int affectedRows = jdbcTemplate.update(sql,
+					invoiceApproval.getStatus(),
+					invoiceApproval.getUpdateTime() == null ? new Timestamp(
+							System.currentTimeMillis()) : invoiceApproval
+							.getUpdateTime(),
+					invoiceApproval.getInvoiceId());
 			logger.debug("updateInvoiceApproval result : {}", affectedRows);
 			return affectedRows != 0;
 		} catch (DataAccessException e) {
-			logger.error("updateInvoiceApproval error." + e.getMessage() );
+			logger.error("updateInvoiceApproval error." + e.getMessage());
 		}
 		return false;
 	}

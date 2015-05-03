@@ -58,7 +58,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		
 		Invoice invoice = new Invoice();
 		Long invoiceId = addInvoiceRecord(invoice);
-		if(null == invoiceId || invoiceId.longValue() == 0){
+		if(null == invoiceId || invoiceId.longValue() == -1){
 			log.error("addInvoiceRecord failed");
 			return retMap;
 		}
@@ -358,7 +358,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		Timestamp time = new Timestamp(new Date().getTime());
 		invoiceApproval.setCreateTime(time);
 		invoiceApproval.setUpdateTime(time);
-		return false;
+		return invoiceApprovalDao.addInvoiceApproval(invoiceApproval);
 	}
 	@Override
 	public Attachment getAttachMentByInvoiceId(long invoiceId){

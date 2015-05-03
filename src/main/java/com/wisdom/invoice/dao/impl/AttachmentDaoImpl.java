@@ -1,5 +1,7 @@
 package com.wisdom.invoice.dao.impl;
 
+import java.sql.Timestamp;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +20,15 @@ public class AttachmentDaoImpl implements IAttachmentDao {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
-	
+
 	@Override
 	public Attachment getAttatchmentByInvoiceId(long invoiceId) {
 		String sql = "select * from attachment where invoice_id = ?";
-		try{
-		Attachment attachment = jdbcTemplate.queryForObject(sql,
-				new Object[] { invoiceId }, new AttachmentMapper());
-		return attachment;
-		}catch(Exception e){
+		try {
+			Attachment attachment = jdbcTemplate.queryForObject(sql,
+					new Object[] { invoiceId }, new AttachmentMapper());
+			return attachment;
+		} catch (Exception e) {
 			logger.error("get attatchment error,invoiceId:" + invoiceId);
 		}
 		return null;
@@ -37,12 +39,17 @@ public class AttachmentDaoImpl implements IAttachmentDao {
 		String sql = "insert into attachment (invoice_id, image, create_time)"
 				+ " values (?, ?, ?)";
 
-		try{
-			int affectedRows = jdbcTemplate.update(sql, attatchment.getInvoiceId(),
-					attatchment.getImage(), attatchment.getCreateTime());
+		try {
+			int affectedRows = jdbcTemplate
+					.update(sql,
+							attatchment.getInvoiceId(),
+							attatchment.getImage(),
+							attatchment.getCreateTime() == null ? new Timestamp(
+									System.currentTimeMillis()) : attatchment
+									.getCreateTime());
 			logger.debug("addAttatchment result : {}", affectedRows);
 			return affectedRows != 0;
-		}catch(Exception e){
+		} catch (Exception e) {
 			logger.error("addAttatchment error:" + e.getMessage());
 		}
 		return false;
@@ -51,11 +58,12 @@ public class AttachmentDaoImpl implements IAttachmentDao {
 	@Override
 	public boolean deleteAttatchment(Attachment attatchment) {
 		String sql = "delete from attachment where invoice_id = ?";
-		try{
-			int affectedRows = jdbcTemplate.update(sql, attatchment.getInvoiceId());
+		try {
+			int affectedRows = jdbcTemplate.update(sql,
+					attatchment.getInvoiceId());
 			logger.debug("deleteAttatchment result : {}", affectedRows);
 			return affectedRows != 0;
-		}catch(Exception e){
+		} catch (Exception e) {
 			logger.error("deleteAttatchment error!" + e.getMessage());
 		}
 		return false;

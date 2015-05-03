@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +28,7 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
-	
+
 	@Override
 	public Invoice getInvoiceById(long id) {
 		String sql = "select * from invoice where id = ?";
@@ -45,19 +46,31 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 	@Override
 	public long addInvoiceAndGetKey(final Invoice invoice) {
 		KeyHolder keyHolder = new GeneratedKeyHolder();
-		
+
 		try {
-			int id = jdbcTemplate.update(new PreparedStatementCreator() {  
-			    public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {  
-			    	String sql = "insert into invoice (title, amount, date, create_time)"
+			int id = jdbcTemplate.update(new PreparedStatementCreator() {
+				public PreparedStatement createPreparedStatement(
+						Connection connection) throws SQLException {
+					String sql = "insert into invoice (title, amount, date, create_time)"
 							+ " values (?, ?, ?, ?)";
-			           PreparedStatement ps = connection.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);  
-			           ps.setString(1, invoice.getTitle());  
-			           ps.setDouble(2, invoice.getAmount());  
-			           ps.setTimestamp(3, invoice.getDate());  
-			           ps.setTimestamp(4, invoice.getCreateTime());
-			           return ps;  
-			    }  
+					PreparedStatement ps = connection.prepareStatement(sql,
+							Statement.RETURN_GENERATED_KEYS);
+					ps.setString(
+							1,
+							invoice.getTitle() == null ? "" : invoice
+									.getTitle());
+					ps.setDouble(2, invoice.getAmount()==null?0:invoice.getAmount());
+					ps.setTimestamp(
+							3,
+							invoice.getDate() == null ? new Timestamp(System
+									.currentTimeMillis()) : invoice.getDate());
+					ps.setTimestamp(
+							4,
+							invoice.getCreateTime() == null ? new Timestamp(
+									System.currentTimeMillis()) : invoice
+									.getCreateTime());
+					return ps;
+				}
 			}, keyHolder);
 			logger.debug("addInvoiceAndGetKey result : {}", id);
 			return id;
@@ -85,8 +98,13 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 	public boolean updateInvoice(Invoice invoice) {
 		String sql = "update invoice set title=?, amount=?, date=? where id=?";
 		try {
-			int affectedRows = jdbcTemplate.update(sql, invoice.getTitle(),
-					invoice.getAmount(), invoice.getDate(), invoice.getId());
+			int affectedRows = jdbcTemplate.update(
+					sql,
+					invoice.getTitle() == null ? "" : invoice.getTitle(),
+					invoice.getAmount()==null?0:invoice.getAmount(),
+					invoice.getDate() == null ? new Timestamp(System
+							.currentTimeMillis()) : invoice.getDate(), invoice
+							.getId());
 			logger.debug("updateInvoice result : {}", affectedRows);
 			return affectedRows != 0;
 		} catch (DataAccessException e) {
@@ -94,5 +112,4 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 		}
 		return false;
 	}
-
 }
