@@ -15,7 +15,7 @@ public class UserRole implements java.io.Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	private Long id;
-	private Long userId;
+	private String userId;
 	private Long roleId;
 	private Timestamp createTime;
 
@@ -26,14 +26,14 @@ public class UserRole implements java.io.Serializable {
 	}
 
 	/** minimal constructor */
-	public UserRole(Long id, Long userId, Long roleId) {
+	public UserRole(Long id, String userId, Long roleId) {
 		this.id = id;
 		this.userId = userId;
 		this.roleId = roleId;
 	}
 
 	/** full constructor */
-	public UserRole(Long id, Long userId, Long roleId, Timestamp createTime) {
+	public UserRole(Long id, String userId, Long roleId, Timestamp createTime) {
 		this.id = id;
 		this.userId = userId;
 		this.roleId = roleId;
@@ -50,11 +50,11 @@ public class UserRole implements java.io.Serializable {
 		this.id = id;
 	}
 
-	public Long getUserId() {
+	public String getUserId() {
 		return this.userId;
 	}
 
-	public void setUserId(Long userId) {
+	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 
