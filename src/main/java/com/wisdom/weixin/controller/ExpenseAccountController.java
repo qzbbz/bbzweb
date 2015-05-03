@@ -67,6 +67,7 @@ public class ExpenseAccountController {
 	public Map<String, List<Map<String, Object>>> getMyBills(
 			HttpServletRequest request) {
 		String openId = request.getParameter("openId");
+		logger.debug("getMyBills result : {}", expenseAccounterService.getBillsByOpenId(openId).toString());
 		return expenseAccounterService.getBillsByOpenId(openId);
 	}
 
