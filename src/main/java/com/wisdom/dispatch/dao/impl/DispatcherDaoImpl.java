@@ -76,7 +76,7 @@ public class DispatcherDaoImpl implements IDispatcherDao {
 
 	@Override
 	public Dispatcher getDispatcherByInvoiceId(long invoiceId) {
-		String sql = "select * from dispatcher where invoice_id = ?";
+		String sql = "select * from dispatcher where invoice_id = ? order by update_time desc";
 		try{
 			Dispatcher record = jdbcTemplate.queryForObject(sql, new Object[] { invoiceId },
 					new DispatcherMapper());

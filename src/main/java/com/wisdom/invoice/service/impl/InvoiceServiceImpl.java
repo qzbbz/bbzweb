@@ -120,7 +120,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 	@Override
 	@Transactional
 	public Map<String, Object> excuteApproval(String userId,
-			String approvalUserId, String invoiceId) {
+			String approvalUserId, String invoiceId,int approvalStatus) {
 		Map<String,Object> retMap = new HashMap<String,Object>();
 		retMap.put("success", false);
 		if(StringUtils.isEmpty(invoiceId) || StringUtils.isEmpty(userId)||StringUtils.isEmpty(approvalUserId)){
@@ -156,17 +156,18 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			return retMap;
 		}
 		
-		//执行审批
-		if(updateApprovalRecord(userId,longId,1)){
-			log.error("更新审批结果失败");
-			retMap.put("message","审批操作失败！");
+		//执行审批：拒绝时候，直接结束
+		if(1 == approvalStatus && updateApprovalRecord(userId,longId,1,approvalStatus)){
+			updateInvoiceApprovalStatus(userId,approvalUserId,longId,1,approvalStatus);
+			log.error("审批成功，审批拒绝!");
+			retMap.put("message","审批成功，审批拒绝！");
 			return retMap;
 		}
 		
 		//是否需要上一级审批
 		if(!ifNeedSuperApproval(userId,approvalUserId,invoice.getAmount())){
 			//更改发票审批状态
-			updateInvoiceApprovalStatus(userId,longId,1);
+			updateInvoiceApprovalStatus(userId,approvalUserId,longId,1,approvalStatus);
 			retMap.put("success", true);
 			retMap.put("message", "发票审批成功！");
 			return retMap;
@@ -234,11 +235,11 @@ public class InvoiceServiceImpl implements IInvoiceService {
 					Dispatcher dispatch = dispatcherService.getDispatcherByInvoiceId(invoice.getInvoiceId());
 					if(null != dispatch && dispatch.getStatus() == 1){
 						billInfo.put("bill_status", "0");
-						billInfo.put("approval_id",dispatch.getReciever());
+//						billInfo.put("approval_id",dispatch.getReciever());
 						processingList.add(billInfo);
 					}else if(null != dispatch && dispatch.getStatus() == 0){
 						billInfo.put("bill_status", "0");
-						billInfo.put("approval_id",dispatch.getReciever());
+//						billInfo.put("approval_id",dispatch.getReciever());
 						uploadedList.add(billInfo);
 					}else{
 						uploadedList.add(billInfo);
@@ -266,7 +267,10 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		map.put("invoice_id", userInvoice.getInvoiceId());
 		map.put("user_id", userInvoice.getUserId());
 		map.put("processStatus",userInvoice.getStatus());
-		map.put("approval_status", userInvoice.getStatus());
+		map.put("approval_status", userInvoice.getApprovalStatus());
+		map.put("approval_id", userInvoice.getApprovalId());
+		String userName = userService.getUserNameByUserId(userInvoice.getUserId());
+		map.put("user_name", userName);
 		
 		Invoice invoice =  getSingleInvoiceInfo(userInvoice.getInvoiceId());
 		if(null == invoice){
@@ -280,8 +284,8 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		map.put("bill_date", sdf.format(stamp));
 		
 		if(!StringUtils.isEmpty((String)map.get("approval_id"))){
-			String userName = userService.getUserNameByUserId((String)map.get("approval_id"));
-			map.put("approval_name", userName);
+			String approvalName = userService.getUserNameByUserId((String)map.get("approval_id"));
+			map.put("approval_name", approvalName);
 		}
 		
 		Attachment attach = getAttachMentByInvoiceId(invoice.getId());
@@ -314,20 +318,23 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		return userService.ifNeedSuperApproval( userId,  approvalId, amount);
 	}
 	
-	public boolean updateInvoiceApprovalStatus(String userId,long invoiceId,int status){
+	public boolean updateInvoiceApprovalStatus(String userId,String approvalUserId,long invoiceId,int status,int approvalStatus){
 		UserInvoice userInvoice = new UserInvoice();
 		userInvoice.setInvoiceId(invoiceId);
 		userInvoice.setStatus(status);
+		userInvoice.setApprovalStatus(approvalStatus);
 		userInvoice.setUserId(userId);
+		userInvoice.setApprovalId(approvalUserId);
 		userInvoice.setUpdateTime(new Timestamp(new Date().getTime()));
 		return userInvoiceDao.updateUserInvoice(userInvoice);
 	}
 	
-	public boolean updateApprovalRecord(String userId,long invoiceId,int status){
+	public boolean updateApprovalRecord(String userId,long invoiceId,int status,int approvalStatus){
 		InvoiceApproval invoiceApproval = new InvoiceApproval();
 		invoiceApproval.setInvoiceId(invoiceId);
 		invoiceApproval.setStatus(status);
 		invoiceApproval.setUserId(userId);
+		invoiceApproval.setApprovalStatus(approvalStatus);
 		invoiceApproval.setUpdateTime(new Timestamp(new Date().getTime()));
 		return invoiceApprovalDao.updateInvoiceApproval(invoiceApproval);
 	}

@@ -18,6 +18,7 @@ public class InvoiceApproval implements java.io.Serializable {
 	private Long invoiceId;
 	private String userId;
 	private Integer status;
+	private Integer approvalStatus;
 	private Timestamp updateTime;
 	private Timestamp createTime;
 
@@ -36,11 +37,12 @@ public class InvoiceApproval implements java.io.Serializable {
 
 	/** full constructor */
 	public InvoiceApproval(Long id, Long invoiceId, String userId,
-			Integer status, Timestamp updateTime, Timestamp createTime) {
+			Integer status, Integer approvalStatus,Timestamp updateTime, Timestamp createTime) {
 		this.id = id;
 		this.invoiceId = invoiceId;
 		this.userId = userId;
 		this.status = status;
+		this.approvalStatus = approvalStatus;
 		this.updateTime = updateTime;
 		this.createTime = createTime;
 	}
@@ -93,6 +95,14 @@ public class InvoiceApproval implements java.io.Serializable {
 
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
+	}
+
+	public Integer getApprovalStatus() {
+		return approvalStatus;
+	}
+
+	public void setApprovalStatus(Integer approvalStatus) {
+		this.approvalStatus = approvalStatus;
 	}
 
 }

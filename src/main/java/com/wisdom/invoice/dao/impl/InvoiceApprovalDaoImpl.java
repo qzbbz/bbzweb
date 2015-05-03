@@ -78,10 +78,11 @@ public class InvoiceApprovalDaoImpl implements IInvoiceApprovalDao {
 
 	@Override
 	public boolean updateInvoiceApproval(InvoiceApproval invoiceApproval) {
-		String sql = "update invoice_approval set status=?, update_time=? where invoice_id=?";
+		String sql = "update invoice_approval set status=?, approval_status=?,update_time=? where invoice_id=?";
 		try {
 			int affectedRows = jdbcTemplate.update(sql,
 					invoiceApproval.getStatus(),
+					invoiceApproval.getApprovalStatus() == null? 0:invoiceApproval.getApprovalStatus(),
 					invoiceApproval.getUpdateTime() == null ? new Timestamp(
 							System.currentTimeMillis()) : invoiceApproval
 							.getUpdateTime(),

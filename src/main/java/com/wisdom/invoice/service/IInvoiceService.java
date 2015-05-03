@@ -54,7 +54,7 @@ public interface IInvoiceService {
 	/**
 	 * 执行审批
 	 */
-	public Map<String,Object> excuteApproval(String userId,String approvalUerId,String invoiceId);
+	public Map<String,Object> excuteApproval(String userId,String approvalUerId,String invoiceId,int approvalStatus);
 	
 	/**
 	 * 

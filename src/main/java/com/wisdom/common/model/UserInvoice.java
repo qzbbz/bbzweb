@@ -18,6 +18,8 @@ public class UserInvoice implements java.io.Serializable {
 	private String userId;
 	private Long invoiceId;
 	private Integer status;
+	private Integer approvalStatus;
+	private String approvalId;
 	private Timestamp updateTime;
 	private Timestamp createTime;
 
@@ -38,12 +40,14 @@ public class UserInvoice implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public UserInvoice(Long id, String userId, Long invoiceId, Integer status,
-			Timestamp updateTime, Timestamp createTime) {
+	public UserInvoice(Long id, String userId, Long invoiceId, Integer status,Integer approvalStatus,
+			String approvalId,Timestamp updateTime, Timestamp createTime) {
 		this.id = id;
 		this.userId = userId;
 		this.invoiceId = invoiceId;
 		this.status = status;
+		this.approvalStatus = approvalStatus;
+		this.approvalId = approvalId;
 		this.updateTime = updateTime;
 		this.createTime = createTime;
 	}
@@ -96,6 +100,22 @@ public class UserInvoice implements java.io.Serializable {
 
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
+	}
+
+	public Integer getApprovalStatus() {
+		return approvalStatus;
+	}
+
+	public void setApprovalStatus(Integer approvalStatus) {
+		this.approvalStatus = approvalStatus;
+	}
+
+	public String getApprovalId() {
+		return approvalId;
+	}
+
+	public void setApprovalId(String approvalId) {
+		this.approvalId = approvalId;
 	}
 
 }

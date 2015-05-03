@@ -10,8 +10,8 @@ import com.wisdom.common.model.UserInvoice;
 public class UserInvoiceMapper  implements RowMapper<UserInvoice> {
 	public UserInvoice mapRow(ResultSet rs, int index) throws SQLException {
 		UserInvoice u = new UserInvoice(rs.getLong("id"), rs.getString("user_id"),
-				rs.getLong("invoice_id"), rs.getInt("status"), 
-				rs.getTimestamp("update_time"), rs.getTimestamp("create_time"));
+				rs.getLong("invoice_id"), rs.getInt("status"), rs.getInt("approval_status"),
+				rs.getString("approval_id"),rs.getTimestamp("update_time"), rs.getTimestamp("create_time"));
 		return u;
 	}
 }

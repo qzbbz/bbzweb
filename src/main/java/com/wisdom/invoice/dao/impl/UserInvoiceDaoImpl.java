@@ -93,12 +93,14 @@ public class UserInvoiceDaoImpl implements IUserInvoiceDao {
 
 	@Override
 	public boolean updateUserInvoice(UserInvoice userInvoice) {
-		String sql = "update user_invoice set status=?, update_time=? where id=?";
+		String sql = "update user_invoice set status=?, approval_status=?,approval_id=?,update_time=? where id=?";
 		try {
 			int affectedRows = jdbcTemplate
 					.update(sql,
 							userInvoice.getStatus() == null ? 0 : userInvoice
 									.getStatus(),
+							userInvoice.getApprovalStatus() == null? 0:userInvoice.getApprovalStatus(),
+							userInvoice.getApprovalId() == null ? "" : userInvoice.getApprovalId(),
 							userInvoice.getUpdateTime() == null ? new Timestamp(
 									System.currentTimeMillis()) : userInvoice
 									.getUpdateTime(), userInvoice.getId());
