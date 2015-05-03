@@ -13,5 +13,11 @@
         scope="prototype">
         <constructor-arg value="${javamail.smtp.host}"></constructor-arg>
     </bean>
+    
+    <bean id="javaMailService" class="com.wisdom.dispatch.service.impl.JavaMailService">
+    	<property name="javaMail" ref="javaMail"></property>
+    	<property name="username" value="${javamail.username}"></property>
+    	<property name="password" value="${javamail.password}"></property>
+    </bean>
 
 </beans>

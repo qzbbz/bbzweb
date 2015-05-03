@@ -25,6 +25,8 @@
 		
 		<!-- 业务 -->
 		<javamail.smtp.host>mail.163.com</javamail.smtp.host>
+		<javamail.username>xuhaonupt@163.com</javamail.username>
+		<javamail.password></javamail.password>
 	</properties>
 
 	<dependencies>

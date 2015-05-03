@@ -20,6 +20,7 @@ public class DispatchServiceImpl implements IDispatcherService {
 	@Autowired
 	private JavaMail javaMail;
 	
+	
 	@Override
 	public boolean addDispatcherRecord(String userId,String userName,long invoiceId,int status,int channalTypeID,
 			String receiver,String openId,long objectTypeId) {

@@ -132,6 +132,7 @@
 	<!-- dispatch component-scan begin-->
 	<context:component-scan base-package="com.wisdom.dispatch.dao.impl" />
 	<context:component-scan base-package="com.wisdom.dispatch.service.impl" />
+	<context:component-scan base-package="com.wisdom.dispatch.schedule.impl" />
 	<!-- dispatch component-scan end-->
 	
 	<!-- web component-scan begin-->

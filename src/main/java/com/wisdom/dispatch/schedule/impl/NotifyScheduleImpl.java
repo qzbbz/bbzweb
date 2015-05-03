@@ -7,12 +7,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import com.wisdom.common.model.Dispatcher;
 import com.wisdom.dispatch.schedule.NotifySchedule;
 import com.wisdom.dispatch.service.IDispatcherService;
 import com.wisdom.dispatch.service.impl.JavaMailService;
 import com.wisdom.weixin.service.IMessageProcessService;
+import com.wisdom.weixin.service.IWeixinPushService;
 
 @Component
 public class NotifyScheduleImpl implements NotifySchedule {
@@ -26,6 +28,8 @@ public class NotifyScheduleImpl implements NotifySchedule {
 	private JavaMailService javaMailService;
 	@Autowired
 	private IDispatcherService dispatcherService;
+	@Autowired
+	private IWeixinPushService weixinPushService;
 	
 	private final String subject = "您有一个新的要审批的报销单据!";
 	
@@ -42,7 +46,8 @@ public class NotifyScheduleImpl implements NotifySchedule {
 		for(Dispatcher dispatch:dispatchList){
 			boolean blRet = false;
 			String userId = dispatch.getUserId();
-			String body = "您有一个新的要审批的报销单据!";
+			String userName = StringUtils.isEmpty(dispatch.getUserName()) ? userId : dispatch.getUserName();
+			String body = "您有一个来自" + userName + "的新报销单据需要您审批，请登录系统查看!";
 			String fromUser = "";
 			int channelType = dispatch.getChannelTypeId();
 			if(channelType == 0 ){
@@ -50,9 +55,17 @@ public class NotifyScheduleImpl implements NotifySchedule {
 				if(!blRet){
 					log.error("send mail to User failed,User:" + userId);
 				}
-//				blRet =  
+				if(!StringUtils.isEmpty(dispatch.getOpenId())){
+					blRet =  weixinPushService.pushTextMessage(dispatch.getOpenId(), body);
+					if(!blRet){
+						log.error("push weixin message error,openId:" + dispatch.getOpenId());
+					}
+				}
 			}else if(channelType==2){
-				
+				blRet =  weixinPushService.pushTextMessage(dispatch.getOpenId(), body);
+				if(!blRet){
+					log.error("push weixin message error,openId:" + dispatch.getOpenId());
+				}
 			}else{
 				blRet = javaMailService.sendMailOut(userId, subject, body, fromUser);
 				if(!blRet){
@@ -61,9 +74,9 @@ public class NotifyScheduleImpl implements NotifySchedule {
 			}
 			if(blRet){//更新发票通知状态
 				if(dispatcherService.updateDispatcherStatus(dispatch.getInvoiceId())){
-					
+					log.debug("update dispatch status success");
 				}else{
-					log.error("更新发票状态失败，");
+					log.error("update dispatch status failed");
 				}
 			}
 		}
