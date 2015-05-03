@@ -2,6 +2,7 @@ package com.wisdom.dispatch.schedule.impl;
 
 import java.util.List;
 
+import org.omg.CORBA.Current;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,9 +47,13 @@ public class NotifyScheduleImpl implements NotifySchedule {
 		for(Dispatcher dispatch:dispatchList){
 			boolean blRet = false;
 			String userId = dispatch.getUserId();
-			String userName = StringUtils.isEmpty(dispatch.getUserName()) ? userId : dispatch.getUserName();
+			String userName = dispatch.getUserName();
+			if(StringUtils.isEmpty(userName)){
+				userName =  userId;
+			}
 			String mailBody = "您有一个来自" + userName + "的新报销单据需要您审批，请登录系统查看!";
 			String weixinBody ="您有一个来自" + userName + "的新报销单据需要您审批，请到收件箱查看!";
+			log.debug("dispatch.getUserName" + userName);
 			String fromUser = "";
 			int channelType = dispatch.getChannelTypeId();
 			if(channelType == 0 ){
@@ -57,6 +62,7 @@ public class NotifyScheduleImpl implements NotifySchedule {
 					log.error("send mail to User failed,User:" + dispatch.getReciever());
 				}
 				if(!StringUtils.isEmpty(dispatch.getOpenId())){
+					log.debug("callpushTextMessage,threadId:" + Thread.currentThread().getId());
 					blRet =  weixinPushService.pushTextMessage(dispatch.getOpenId(), weixinBody);
 					if(!blRet){
 						log.error("push weixin message error,openId:" + dispatch.getOpenId());

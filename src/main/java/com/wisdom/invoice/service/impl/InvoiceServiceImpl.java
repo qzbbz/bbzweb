@@ -275,12 +275,13 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		map.put("billd_date", sdf.format(stamp));
 		
 		if(!StringUtils.isEmpty((String)map.get("approval_id"))){
-			//TODO map.put("approval_name", value);
+			String userName = userService.getUserNameByUserId((String)map.get("approval_id"));
+			map.put("approval_name", userName);
 		}
 		
 		Attachment attach = getAttachMentByInvoiceId(invoice.getId());
 		if(null != attach){
-			map.put("billd_img", attach.getImage());
+			map.put("bill_img", attach.getImage());
 		}
 
 		return map;
