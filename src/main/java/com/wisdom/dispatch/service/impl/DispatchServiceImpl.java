@@ -30,6 +30,9 @@ public class DispatchServiceImpl implements IDispatcherService {
 		notifyLog.setReciever(receiver);
 		notifyLog.setOpenId(openId);
 		notifyLog.setObjectTypeId(objectTypeId); 
+		Timestamp time = new Timestamp(new Date().getTime());
+		notifyLog.setCreateTime(time);
+		notifyLog.setUpdateTime(time);
 		
 		return dispatcherDao.addDispatcher(notifyLog) ;
 	}

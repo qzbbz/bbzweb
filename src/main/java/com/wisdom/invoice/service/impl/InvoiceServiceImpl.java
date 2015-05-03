@@ -96,7 +96,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		
 		//获取用户openId
 		String openId = "";
-		openId = userService.getOpenIdByUserId(userId);	
+		openId = userService.getOpenIdByUserId(receiver);	//TODO 多个审批人场景还要处理一下。
 		String userName = userService.getUserNameByUserId(userId); 
 		//生成一条dispatcher日志。
 		blRet = dispatcherService.addDispatcherRecord(userId,userName,invoiceId,0,0,receiver,openId,1);		//TODO 
