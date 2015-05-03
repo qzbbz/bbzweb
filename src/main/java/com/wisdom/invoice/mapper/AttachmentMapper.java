@@ -10,7 +10,7 @@ import com.wisdom.common.model.Attachment;
 public class AttachmentMapper implements RowMapper<Attachment> {
 	public Attachment mapRow(ResultSet rs, int index) throws SQLException {
 		Attachment u = new Attachment(rs.getLong("id"), 
-				rs.getLong("invoice_id"), rs.getString("blob"),
+				rs.getLong("invoice_id"), rs.getString("image"),
 				rs.getTimestamp("create_time"));
 		return u;
 	}

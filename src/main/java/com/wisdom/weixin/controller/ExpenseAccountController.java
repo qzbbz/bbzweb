@@ -49,11 +49,13 @@ public class ExpenseAccountController {
 		String approvalId = request.getParameter("approvalId");
 		String invoiceId = request.getParameter("invoiceId");
 		String userId = request.getParameter("userId");
+		String status = request.getParameter("status");
 		Map<String, String> retMap = new HashMap<>();
 		logger.debug("approvalId : {}", approvalId);
 		logger.debug("invoiceId : {}", invoiceId);
 		logger.debug("userId : {}", userId);
-		if (expenseAccounterService.approvalBill(approvalId, invoiceId, userId)) {
+		if (expenseAccounterService.approvalBill(approvalId, invoiceId, userId,
+				Integer.valueOf(status))) {
 			retMap.put("status", "success");
 		} else {
 			retMap.put("status", "fail");
@@ -67,7 +69,8 @@ public class ExpenseAccountController {
 	public Map<String, List<Map<String, Object>>> getMyBills(
 			HttpServletRequest request) {
 		String openId = request.getParameter("openId");
-		Map<String, List<Map<String, Object>>> retMap = expenseAccounterService.getBillsByOpenId(openId);
+		Map<String, List<Map<String, Object>>> retMap = expenseAccounterService
+				.getBillsByOpenId(openId);
 		logger.debug("getMyBills result : {}", retMap.toString());
 		return retMap;
 	}

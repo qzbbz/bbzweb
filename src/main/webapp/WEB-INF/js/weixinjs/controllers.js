@@ -42,10 +42,16 @@ angular.module('qzapp.controllers', [])
 					$scope.showMainContent = true;
 					$http.get('/getMyInbox?openId=' + $scope.openId).success(function(response) {
 						if(response.processingList != null) {
-							processingList = response.processingList;
+							for(var i=0; i<response.processingList.length; i++) {
+								$scope.processingList.push(response.processingList[i]);
+							}
+							$scope.apply();
 						}
 						if(response.finishedList != null) {
-							finishedList = response.finishedList;
+							for(var i=0; i<response.finishedList.length; i++) {
+								$scope.finishedList.push(response.finishedList[i]);
+							}
+							$scope.apply();
 						}
 						$scope.apply();
 					}).error(function(response) {
@@ -93,7 +99,7 @@ angular.module('qzapp.controllers', [])
 		$ionicLoading.show({
 			template: '正在提交数据...'
 		})
-		$http.get('/approvalBill?invoiceId=' + bill.invoice_id + '&approvalId=' + bill.approval_id + '&userId=' + bill.user_id).success(function(response) {
+		$http.get('/approvalBill?invoiceId=' + bill.invoice_id + '&approvalId=' + bill.approval_id + '&userId=' + bill.user_id + '&status=' + status).success(function(response) {
 			$ionicLoading.hide();
 			if(response.status == 'success') {
 				var ele = null;
@@ -101,11 +107,12 @@ angular.module('qzapp.controllers', [])
 					if(bill === $scope.progressingList[i]) {
 						ele = $scope.progressingList[i];
 						$scope.progressingList.pop();
+						scope.$apply();
 						break;
 					}						
 				}
 				if(ele != null) {
-					finishedList.push(ele);
+					$scope.finishedList.push(ele);
 				}
 				scope.$apply();
 				alert("Success!");

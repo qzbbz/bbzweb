@@ -34,7 +34,7 @@
 
 					<div class="list" ng-show="uploadedList.length">
 						<div class="item item-avatar item-button-right" ng-click="openModal(bill)" ng-repeat="bill in uploadedList">
-							<img ng-src="{{bill.img}}">
+							<img ng-src="{{bill.bill_img}}">
 							<p>金额：{{bill.bill_amount}}</p>
 							<p>时间：{{bill.bill_date}}</p>
 
@@ -53,7 +53,7 @@
 
 					<div class="list" ng-show="progressingList.length">
 						<div class="item item-avatar item-button-right" ng-click="openModal(bill)" ng-repeat="bill in progressingList">
-							<img ng-src="{{bill.img}}">
+							<img ng-src="{{bill.bill_img}}">
 							<p>金额：{{bill.bill_amount}}</p>
 							<p>时间：{{bill.bill_date}}</p>
 						</div>
@@ -71,11 +71,11 @@
 
 					<div class="list" ng-show="finishedList.length">
 						<div class="item item-avatar item-button-right" ng-click="openModal(bill)" ng-repeat="bill in finishedList">
-							<img ng-src="{{bill.img}}">
+							<img ng-src="{{bill.bill_img}}">
 							<p>金额：{{bill.bill_amount}}</p>
 							<p>时间：{{bill.bill_date}}</p>
 							<span class="item-note">
-						      {{bill.approval_status == "0" ? "未通过" : "通过"}}
+						      {{bill.bill_status == "0" ? "未通过" : "通过"}}
 						    </span>
 						</div>
 					</div>
