@@ -32,8 +32,9 @@ public class ExpenseAccountController {
 		Map<String, String> retMap = new HashMap<>();
 		logger.debug("openId : {}", openId);
 		logger.debug("serverId : {}", serverId);
+		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/img/weixinimg");
 		String base64ImageStr = expenseAccounterService.downloadFromUrl(
-				serverId, openId);
+				serverId, openId, realPath);
 		if (!base64ImageStr.isEmpty()) {
 			retMap.put("upload_status", "success");
 		} else {

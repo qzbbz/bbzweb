@@ -15,4 +15,6 @@ public interface IExpenseAccountService {
 	
 	public String downloadFromUrl(String mediaId, String openId);
 	
+	public String downloadFromUrl(String mediaId, String openId, String realPath);
+	
 }

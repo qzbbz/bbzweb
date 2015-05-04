@@ -29,7 +29,7 @@
 
 					<div class="list" ng-show="processingList.length">
 						<div class="item item-avatar "  ng-repeat="bill in processingList">
-							<img ng-src="{{'data:image/png;base64,' + bill.bill_img}}">
+							<img ng-src="{{'../../img/weixinimg/' + bill.bill_img}}">
 							<div ng-click="openModal(bill)">
 							<p>申请人：{{bill.user_name}},金额：{{bill.bill_amount}}</p>
 							<p>时间：{{bill.bill_date}}</p>
@@ -55,7 +55,7 @@
 
 					<div class="list" ng-show="finishedList.length">
 						<div class="item item-avatar item-button-right" ng-click="openModal(bill)" ng-repeat="bill in finishedList">
-							<img ng-src="{{'data:image/png;base64,' + bill.bill_img}}">
+							<img ng-src="{{'../../img/weixinimg/' + bill.bill_img}}">
 							<p>申请人：{{bill.user_name}},金额：{{bill.bill_amount}}</p>
 							<p>时间：{{bill.bill_date}}</p>
 							<span class="item-note">
@@ -94,7 +94,7 @@
 			<ion-content class="content-box" style="margin-bottom:20px;">
 					<div class="item item-body">
     				<div class="aligner">
-						<img class="img-box" ng-src="{{'data:image/png;base64,' + bill.bill_img}}" style="max-width: 100%;height: auto;width: auto;">
+						<img class="img-box" ng-src="{{'../../img/weixinimg/' + bill.bill_img}}" style="max-width: 100%;height: auto;width: auto;">
 					</div>
 					</div>
 					<p>名称：{{bill.bill_title}}</p>

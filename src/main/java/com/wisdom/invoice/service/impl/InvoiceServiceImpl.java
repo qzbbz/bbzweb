@@ -327,11 +327,10 @@ public class InvoiceServiceImpl implements IInvoiceService {
 				String userName = userService.getUserNameByUserId(userInvoice.getUserId());
 				map.put("user_name", userName);
 				map.put("bill_status", userInvoice.getStatus());
+				String approvalName = userService.getUserNameByUserId(userInvoice.getUserId());
+				map.put("approval_name", approvalName);
 			}		
 			map.put("approval_id", approvalId);
-			String approvalName = userService.getUserNameByUserId(userInvoice.getUserId());
-			map.put("approval_name", approvalName);
-			
 			Invoice invoice =  getSingleInvoiceInfo(invoiceApproval.getInvoiceId());
 			if(null == invoice){
 				log.debug("invoice not exsisted");
