@@ -41,17 +41,15 @@ angular.module('qzapp.controllers', [])
 				} else if(data.bind_status == "has_bind") {
 					$scope.showMainContent = true;
 					$http.get('/getMyInbox?openId=' + $scope.openId).success(function(response) {
-						if(response.processingList != null) {
+						if(response.processingList != null && response.processingList) {
 							for(var i=0; i<response.processingList.length; i++) {
 								$scope.processingList.push(response.processingList[i]);
 							}
-							$scope.apply();
 						}
 						if(response.finishedList != null) {
 							for(var i=0; i<response.finishedList.length; i++) {
 								$scope.finishedList.push(response.finishedList[i]);
 							}
-							$scope.apply();
 						}
 						$scope.apply();
 					}).error(function(response) {
@@ -107,11 +105,12 @@ angular.module('qzapp.controllers', [])
 				for(var i=0; i<$scope.processingList.length; i++) {
 					if(bill === $scope.processingList[i]) {
 						ele = $scope.processingList[i];
-						$scope.processingList.pop();
+						$scope.processingList.splice(i,1);
 						break;
 					}						
 				}
 				if(ele != null) {
+					ele.approval_status = status;
 					$scope.finishedList.push(ele);
 				}
 				$scope.apply();
@@ -418,19 +417,16 @@ angular.module('qzapp.controllers', [])
 							for(var i=0; i<response.uploadedList.length; i++) {
 								$scope.uploadedList.push(response.uploadedList[i]);
 							}
-							$scope.apply();
 						}
 						if(response.processingList != null) {
 							for(var i=0; i<response.processingList.length; i++) {
 								$scope.progressingList.push(response.processingList[i]);
 							}
-							$scope.apply();
 						}
 						if(response.finishedList != null) {
 							for(var i=0; i<response.finishedList.length; i++) {
 								$scope.finishedList.push(response.finishedList[i]);
 							}
-							$scope.apply();
 						}
 						$scope.apply();
 					}).error(function(response) {

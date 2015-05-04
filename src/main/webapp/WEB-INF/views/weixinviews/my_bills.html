@@ -9,7 +9,7 @@
 		<script src="../../js/weixinjs/ionic.bundle.min.js"></script>
 		<script src="../../js/weixinjs/angular-sanitize.min.js"></script>
 		<script src="../../js/weixinjs/app.js"></script>
-		<script src="../../js/weixinjs/controllers.js?20505040056"></script>
+		<script src="../../js/weixinjs/controllers.js?20505041310"></script>
 		<script src="../../js/weixinjs/services.js"></script>
 		<title>帮帮账</title>
 	</head>
@@ -34,7 +34,7 @@
 
 					<div class="list" ng-show="uploadedList.length">
 						<div class="item item-avatar item-button-right" ng-click="openModal(bill)" ng-repeat="bill in uploadedList">
-							<img ng-src="{{bill.bill_img}}">
+							<img ng-src="{{'data:image/png;base64,' + bill.bill_img}}">
 							<p>金额：{{bill.bill_amount}}</p>
 							<p>时间：{{bill.bill_date}}</p>
 
@@ -53,7 +53,7 @@
 
 					<div class="list" ng-show="progressingList.length">
 						<div class="item item-avatar item-button-right" ng-click="openModal(bill)" ng-repeat="bill in progressingList">
-							<img ng-src="{{bill.bill_img}}">
+							<img ng-src="{{'data:image/png;base64,' + bill.bill_img}}">
 							<p>金额：{{bill.bill_amount}}</p>
 							<p>时间：{{bill.bill_date}}</p>
 						</div>
@@ -71,11 +71,11 @@
 
 					<div class="list" ng-show="finishedList.length">
 						<div class="item item-avatar item-button-right" ng-click="openModal(bill)" ng-repeat="bill in finishedList">
-							<img ng-src="{{bill.bill_img}}">
+							<img ng-src="{{'data:image/png;base64,' + bill.bill_img}}">
 							<p>金额：{{bill.bill_amount}}</p>
 							<p>时间：{{bill.bill_date}}</p>
 							<span class="item-note">
-						      {{bill.bill_status == "0" ? "未通过" : "通过"}}
+						      {{bill.approval_status != "0" ? "审核未通过" : "审核通过"}}
 						    </span>
 						</div>
 					</div>
@@ -110,7 +110,7 @@
 			<ion-content class="content-box" style="margin-bottom:20px;">
 					<div class="item item-body">
     				<div class="aligner">
-						<img class="img-box" ng-src="{{bill.bill_img}}" style="width:100%; height:100%;">
+						<img class="img-box" ng-src="{{'data:image/png;base64,' + bill.bill_img}}" style="width:100%; height:100%;">
 					</div>
 					</div>
 					<p>名称：{{bill.bill_title}}</p>

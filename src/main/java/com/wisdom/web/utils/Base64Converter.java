@@ -22,7 +22,7 @@ public class Base64Converter {
 	}
 	
 	public static void main(String[] args) throws FileNotFoundException {
-		String imgFile = "C:\\Users\\Administrator\\Desktop\\test.jpg";
+		String imgFile = "d:\\Users\\kcchai\\Desktop\\test.png";
         InputStream in = new FileInputStream(imgFile);
         System.out.println(Base64Converter.imageToBase64(in));
 	}

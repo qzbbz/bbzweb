@@ -169,6 +169,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		if(!ifNeedSuperApproval(userId,approvalUserId,invoice.getAmount())){
 			//更改发票审批状态
 			updateInvoiceApprovalStatus(userId,approvalUserId,longId,1,approvalStatus);
+			updateApprovalRecord(userId,longId,1,approvalStatus);
 			retMap.put("success", true);
 			retMap.put("message", "发票审批成功！");
 			return retMap;
@@ -338,6 +339,10 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			}
 			map.put("bill_title", invoice.getTitle());
 			map.put("bill_amount", invoice.getAmount());
+			Attachment attach = getAttachMentByInvoiceId(invoice.getId());
+			if(null != attach){
+				map.put("bill_img", attach.getImage());
+			}
 			
 			if(0 == invoiceApproval.getStatus()){
 				processingList.add(map);
@@ -346,8 +351,8 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			}
 			
 		}
-		retMap.put("finishedList", finishedList);
-		retMap.put("processingList", processingList);
+		if(finishedList.size() > 0) retMap.put("finishedList", finishedList);
+		if(processingList.size() > 0) retMap.put("processingList", processingList);
 		return retMap;
 	}
 

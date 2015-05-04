@@ -48,7 +48,7 @@ public class UserInvoiceDaoImpl implements IUserInvoiceDao {
 					new Object[] { invoiceId }, new UserInvoiceMapper());
 			return userInvoice;
 		} catch (DataAccessException e) {
-			e.printStackTrace();
+			logger.error(e.toString());
 		}
 		return null;
 	}
@@ -95,7 +95,7 @@ public class UserInvoiceDaoImpl implements IUserInvoiceDao {
 
 	@Override
 	public boolean updateUserInvoice(UserInvoice userInvoice) {
-		String sql = "update user_invoice set status=?, approval_status=?,approval_id=?,update_time=? where id=?";
+		String sql = "update user_invoice set status=?, approval_status=?,approval_id=?,update_time=? where invoice_id=?";
 		try {
 			int affectedRows = jdbcTemplate
 					.update(sql,
@@ -107,7 +107,7 @@ public class UserInvoiceDaoImpl implements IUserInvoiceDao {
 									: userInvoice.getApprovalId(),
 							userInvoice.getUpdateTime() == null ? new Timestamp(
 									System.currentTimeMillis()) : userInvoice
-									.getUpdateTime(), userInvoice.getId());
+									.getUpdateTime(), userInvoice.getInvoiceId());
 			logger.debug("updateUserInvoice result : {}", affectedRows);
 			return affectedRows != 0;
 		} catch (DataAccessException e) {
