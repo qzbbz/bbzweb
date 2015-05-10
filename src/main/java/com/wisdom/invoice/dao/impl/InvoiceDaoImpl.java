@@ -51,21 +51,23 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 			int id = jdbcTemplate.update(new PreparedStatementCreator() {
 				public PreparedStatement createPreparedStatement(
 						Connection connection) throws SQLException {
-					String sql = "insert into invoice (title, amount, date, create_time)"
-							+ " values (?, ?, ?, ?)";
+					String sql = "insert into invoice (expense_type_id, status, title, amount, date, create_time)"
+							+ " values (?, ?, ?, ?, ?, ?)";
 					PreparedStatement ps = connection.prepareStatement(sql,
 							Statement.RETURN_GENERATED_KEYS);
+					ps.setInt(1, invoice.getExpenseTypeId() == null? 0: invoice.getExpenseTypeId());
+					ps.setInt(2, invoice.getStatus() == null? 0: invoice.getStatus());
 					ps.setString(
-							1,
+							3,
 							invoice.getTitle() == null ? "" : invoice
 									.getTitle());
-					ps.setDouble(2, invoice.getAmount()==null?0:invoice.getAmount());
+					ps.setDouble(4, invoice.getAmount()==null?0:invoice.getAmount());
 					ps.setTimestamp(
-							3,
+							5,
 							invoice.getDate() == null ? new Timestamp(System
 									.currentTimeMillis()) : invoice.getDate());
 					ps.setTimestamp(
-							4,
+							6,
 							invoice.getCreateTime() == null ? new Timestamp(
 									System.currentTimeMillis()) : invoice
 									.getCreateTime());

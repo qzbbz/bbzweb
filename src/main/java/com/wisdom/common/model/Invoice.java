@@ -16,6 +16,8 @@ public class Invoice implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 	private Long id;
 	private String title;
+	private Integer expenseTypeId;
+	private Integer status;
 	private Double amount;
 	private Timestamp date;
 	private Timestamp createTime;
@@ -32,10 +34,12 @@ public class Invoice implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public Invoice(Long id, String title, Double amount, Timestamp date,
+	public Invoice(Long id, String title, Integer expenseTypeId, Integer status, Double amount, Timestamp date,
 			Timestamp createTime) {
 		this.id = id;
 		this.title = title;
+		this.expenseTypeId = expenseTypeId;
+		this.status = status;
 		this.amount = amount;
 		this.date = date;
 		this.createTime = createTime;
@@ -49,6 +53,22 @@ public class Invoice implements java.io.Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+	
+	public Integer getExpenseTypeId() {
+		return this.expenseTypeId;
+	}
+
+	public void setExpenseTypeId(Integer expenseTypeId) {
+		this.expenseTypeId = expenseTypeId;
+	}
+	
+	public Integer getStatus() {
+		return this.status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 
 	public String getTitle() {
