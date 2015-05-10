@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html ng-app="qzapp">
+
+	<head>
+		<meta charset="utf-8" />
+		<link rel="stylesheet" href="../../css/weixincss/angular-material.min.css" />
+		<link rel="stylesheet" href="../../css/weixincss/qzapp.css" />
+		<title>帮帮账</title>
+	</head>
+
+	<body ngCloack ng-controller="AppCtrl">
+
+		<md-content>
+			<md-toolbar>
+				<div class="md-toolbar-tools">
+					<md-button class="md-icon-button" ng-click="showListBottomSheet($event)" aria-label="Menus">
+						<md-icon md-svg-icon="../../img/weixinimg/menu.svg"></md-icon>
+					</md-button>
+					<h2><span>我的发票</span></h2>
+					<span flex></span>
+					<md-button class="md-icon-button" ng-click="cameraClick()" aria-label="Camera">
+						<md-icon md-svg-icon="../../img/weixinimg/ic_camera_alt_24px.svg"></md-icon>
+					</md-button>
+					<md-button ng-show="showRefresh" class="md-icon-button" ng-click="refreshClick($event)" aria-label="Refresh">
+						<md-icon md-svg-icon="../../img/weixinimg/refresh.svg"></md-icon>
+					</md-button>
+				</div>
+			</md-toolbar>
+		</md-content>
+
+		<md-content class="md-padding" ng-show="showMainContent">
+			<md-tabs md-dynamic-height md-border-bottom>
+				<md-tab label="服务">
+					<md-content class="md-padding">
+						<h4>微信帮帮账</h4>
+						<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;微信帮帮账服务是上海元升财务咨询有限公司提供的微信报销审批服务，通过该服务，您可以高效的完成报销审批的工作。</p>
+					</md-content>
+				</md-tab>
+				<md-tab label="帮助">
+					<md-content class="md-padding">
+						<h4>如何提交报销单</h4>
+						<p>1.点击主菜单拍照按钮，对发票拍照或选择手机中已经存作。在的报销单图片。</p>
+						<p>2.打开我的报销单，对每张报销单填写金额。</p>作。
+						<p>3.打开上传发票，上传报销单。</p>
+						<md-divider></md-divider>
+						<h4>如何审批报销单</h4>
+						<p>1.点击主菜单拍照按钮，对发票拍照或选择手机中已经存在的报销单图片。</p>
+						<p>2.打开我的报销单，对每张报销单填写金额。</p>
+						<p>3.打开上传发票，上传报销单。</p>
+					</md-content>
+				</md-tab>
+			</md-tabs>
+		</md-content>
+
+		<md-content class="md-padding" ng-show="showUploadContent">
+			<md-subheader class="md-primary" ng-show="!uploadBills.length">暂时没有需要上传的发票</md-subheader>
+			<section ng-show="uploadBills.length">
+				<md-subheader class="md-primary">
+					需要上传的发票
+					<md-button class="md-raised md-warn" ng-click="onekeyUploadPress($event)">一键上传</md-button>
+				</md-subheader>
+				<md-divider></md-divider>
+				<md-list layout-padding>
+					<md-list-item class="md-3-line" class="blue-background" ng-repeat="bill in uploadBills" ng-click="uploadBillListItemClick($event, $index)">
+						<img ng-src="{{bill.img}}" class="md-avatar">
+						<div class="md-list-item-text">
+							<p>金额：{{bill.amount}}</p>
+							<p>提交人：{{bill.name}}</p>
+							<p>
+								时间：{{bill.time}}
+							</p>
+						</div>
+						<md-checkbox class="md-secondary" ng-model="topping.wanted"></md-checkbox>
+						<md-divider ng-if="!$last"></md-divider>
+					</md-list-item>
+				</md-list>
+			</section>
+		</md-content>
+
+		<md-content class="md-padding" ng-show="showInboxContent">
+			<md-tabs md-dynamic-height md-border-bottom>
+				<md-tab label="待审核发票">
+					<md-content class="md-padding">
+						<section>
+							<md-list layout-padding>
+								<md-list-item class="md-3-line" class="blue-background" ng-repeat="bill in infoBills" ng-click="infoBillListItemClick($event, $index)">
+									<img ng-src="{{bill.img}}" class="md-avatar">
+									<div class="md-list-item-text">
+										<p>金额：{{bill.amount}}</p>
+										<p>审批人：{{bill.name}}</p>
+										<p>
+											时间：{{bill.time}}
+										</p>
+									</div>
+									<md-divider ng-if="!$last"></md-divider>
+								</md-list-item>
+							</md-list>
+						</section>
+					</md-content>
+				</md-tab>
+				<md-tab label="已审核发票">
+					<md-content class="md-padding">
+						<section>
+							<md-list layout-padding>
+								<md-list-item class="md-3-line" class="blue-background" ng-repeat="bill in infoBills" ng-click="infoBillListItemClick($event, $index)">
+									<img ng-src="{{bill.img}}" class="md-avatar">
+									<div class="md-list-item-text">
+										<p>金额：{{bill.amount}}</p>
+										<p>
+											时间：{{bill.time}}
+										</p>
+										<p>提交人：{{bill.name}}</p>
+									</div>
+									<h5 class="md-secondary" ng-if="bill.status==0" style="color:rgb(63,81,181);">已通过</h5>
+									<h5 class="md-secondary" ng-if="bill.status==1" style="color:rgb(255,64,129);">已拒绝</h5>
+									<md-divider ng-if="!$last"></md-divider>
+								</md-list-item>
+							</md-list>
+						</section>
+					</md-content>
+				</md-tab>
+			</md-tabs>
+		</md-content>
+
+		<md-content ngCloack class="md-padding" ng-show="showAuditContent">
+			<md-subheader class="md-primary" ng-show="!auditBills.length">暂时没有需要您审核的发票</md-subheader>
+			<section ng-show="auditBills.length">
+				<md-subheader class="md-primary">
+					需要您审核的发票
+					<md-button class="md-raised md-warn" ng-click="onekeyAuditPress($event)">一键审核通过</md-button>
+				</md-subheader>
+				<md-divider></md-divider>
+				<md-list layout-padding>
+					<md-list-item class="md-3-line" class="blue-background" ng-repeat="bill in auditBills" ng-click="auditBillListItemClick($event, $index)">
+						<img ng-src="{{bill.img}}" class="md-avatar">
+						<div class="md-list-item-text">
+							<p>金额：{{bill.amount}}</p>
+							<p>提交人：{{bill.name}}</p>
+							<p>
+								{{bill.time}}
+							</p>
+						</div>
+						<md-checkbox class="md-secondary" ng-model="topping.wanted"></md-checkbox>
+						<md-divider ng-if="!$last"></md-divider>
+					</md-list-item>
+				</md-list>
+			</section>
+		</md-content>
+		</material-preloader>
+	</body>
+
+	<script src="../../js/weixinjs/angular.min.js"></script>
+	<script src="../../js/weixinjs/angular-animate.min.js"></script>
+	<script src="../../js/weixinjs/angular-route.min.js"></script>
+	<script src="../../js/weixinjs/angular-aria.min.js"></script>
+	<script src="../../js/weixinjs/angular-messages.min.js"></script>
+	<script src="../../js/weixinjs/angular-material.min.js"></script>
+	<script src="../../js/weixinjs/angular-material-icons.min.js"></script>
+	<script src="../../js/weixinjs/app.js"></script>
+	<script src="../../js/weixinjs/expacc_controllers.js"></script>
+
+	<script id="bottom-sheet-list-template.html" type="text/ng-template">
+		<md-bottom-sheet>
+			<md-list>
+				<md-list-item class="blue-background" ng-repeat="item in items" ng-click="listItemClick($index)">
+					<md-icon style="color:rgb(255,64,129);" md-svg-src="{{item.icon}}"></md-icon>
+					<p>{{ item.name }}</p>
+					<md-divider ng-if="!$last"></md-divider>
+				</md-list-item>
+			</md-list>
+		</md-bottom-sheet>
+	</script>
+
+	<script id="uploadBill.dialog.html" type="text/ng-template">
+		<md-dialog>
+			<md-content>
+				<md-card>
+					<img ng-src="{{content.img}}" class="md-card-image">
+					<form name="billAmountForm">
+						<md-input-container>
+							<label>请输入发票金额(必填)</label>
+							<input required type="number" name="billAmount" ng-model="bill_amount">
+							<div ng-messages="billAmountForm.billAmount.$error">
+								<div ng-message="required">金额必须填！</div>
+								<div ng-message="number">金额必须为数字！</div>
+							</div>
+						</md-input-container>
+						<div class="md-actions blue-background" layout="row" layout-align="end center">
+							<md-button class="md-raised md-primary" ng-click="answer()">提交</md-button>
+							<md-button class="md-raised md-primary" ng-click="cancel()">取消</md-button>
+						</div>
+					</form>
+				</md-card>
+			</md-content>
+		</md-dialog>
+	</script>
+
+	<script id="auditBill.dialog.html" type="text/ng-template">
+		<md-dialog>
+			<md-content>
+				<md-card>
+					<img ng-src="{{content.img}}" class="md-card-image">
+					<p>
+						金额：{{content.amount}}
+						<br> 申请人：{{content.name}}
+						<br> 申请时间：{{content.time}}
+					</p>
+					<div class="md-actions blue-background" layout="row" layout-align="end center">
+						<md-button class="md-raised md-warn" ng-click="answer('not useful')">审核拒绝</md-button>
+						<md-button class="md-raised md-primary" ng-click="answer('not useful')">审核通过</md-button>
+					</div>
+				</md-card>
+			</md-content>
+		</md-dialog>
+	</script>
+
+	<script id="infoBill.info.dialog.html" type="text/ng-template">
+		<md-dialog>
+			<md-content>
+				<md-card>
+					<img ng-src="{{content.img}}" class="md-card-image">
+					<p>
+						金额：{{content.amount}}
+						<br> 申请人：{{content.name}}
+						<br> 申请时间：{{content.time}}
+					</p>
+					<div class="md-actions blue-background" layout="row" layout-align="end center">
+						<md-button class="md-raised md-primary" ng-click="cancel()">关闭</md-button>
+					</div>
+				</md-card>
+			</md-content>
+		</md-dialog>
+	</script>
+
+	<script id="refresh.dialog.html" type="text/ng-template">
+		<md-dialog>
+			<md-content>
+				<div layout="column" layout-margin style="padding:25px;">
+					<p style="margin-top:0px;">正在获取数据</p>
+					<md-progress-linear md-mode="indeterminate"></md-progress-linear>
+				</div>
+			</md-content>
+		</md-dialog>
+	</script>
+
+</html>
