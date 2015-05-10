@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.wisdom.company.service.IExpenseTypeService;
 import com.wisdom.invoice.service.IInvoiceService;
 import com.wisdom.user.service.IUserService;
 import com.wisdom.web.utils.Base64Converter;
@@ -30,6 +31,9 @@ public class ExpenseAccountServiceImpl implements IExpenseAccountService {
 
 	@Autowired
 	private IUserService userService;
+	
+	@Autowired
+	private IExpenseTypeService expenseTypeService;
 
 	@Override
 	public Map<String, List<Map<String, Object>>> getBillsByOpenId(String openId) {
@@ -143,6 +147,11 @@ public class ExpenseAccountServiceImpl implements IExpenseAccountService {
 		} else {
 			return false;
 		}
+	}
+
+	@Override
+	public Map<Long, String> getAllExpenseType() {
+		return expenseTypeService.getExpenseTypeMap();
 	}
 
 }
