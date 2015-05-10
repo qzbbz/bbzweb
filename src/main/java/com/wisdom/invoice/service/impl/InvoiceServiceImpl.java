@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,12 +24,17 @@ import com.wisdom.invoice.dao.IAttachmentDao;
 import com.wisdom.invoice.dao.IInvoiceApprovalDao;
 import com.wisdom.invoice.dao.IInvoiceDao;
 import com.wisdom.invoice.dao.IUserInvoiceDao;
+import com.wisdom.invoice.domain.InvoiceInfoVo;
+import com.wisdom.invoice.service.IAttachmentService;
+import com.wisdom.invoice.service.IInvoiceApprovalService;
 import com.wisdom.invoice.service.IInvoiceService;
+import com.wisdom.invoice.service.IUserInvoiceService;
 import com.wisdom.user.service.IUserService;
+
 import org.springframework.util.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
+@Component
 @Service("invoiceService")
 public class InvoiceServiceImpl implements IInvoiceService {
 	private static final Log log = LogFactory.getLog(InvoiceServiceImpl.class);
@@ -39,16 +45,16 @@ public class InvoiceServiceImpl implements IInvoiceService {
 	@Autowired
 	private IInvoiceDao invoiceDao;
 	@Autowired
-	private IAttachmentDao attachmentDao;
+	private IAttachmentService attachmentService;
 	@Autowired
-	private IUserInvoiceDao userInvoiceDao;
+	private IUserInvoiceService userInvoiceService;
 	@Autowired
-	private IInvoiceApprovalDao invoiceApprovalDao;
+	private IInvoiceApprovalService invoiceApprovalService;
 	
 	@Transactional
 	@Override
 	public Map<String,Object> createInvoiceProcess(String userId, String image,
-			String channelTypeId,String objectTypeId) {
+			String channelTypeId,String objectTypeId,Map<String,Object> params) {
 		Map<String,Object> retMap = new HashMap<String,Object>();
 		retMap.put("success", false);
 		if(StringUtils.isEmpty(userId)||StringUtils.isEmpty(image) || StringUtils.isEmpty(channelTypeId)){
@@ -56,7 +62,17 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			return retMap;
 		}
 		
+		if(null == params || null == (Integer)params.get("expenseTypeId")){
+			log.error("expenseTypeId not exsited");
+			retMap.put("message", "lost expenseTypeId param!");
+			return retMap;
+		}
+		int expenseTypeId = (Integer)params.get("expenseTypeId");
+		
 		Invoice invoice = new Invoice();
+		invoice.setExpenseTypeId(expenseTypeId);
+		invoice.setStatus(0); //微信默认创建后即审批		
+		
 		log.debug("addInvoiceRevord");
 		Long invoiceId = addInvoiceRecord(invoice);
 		if(null == invoiceId || invoiceId.longValue() == -1){
@@ -64,7 +80,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			return retMap;
 		}
 		log.debug("addAttachMentRecord");
-		boolean blRet = addAttachMentRecord(invoiceId,image);
+		boolean blRet = attachmentService.addAttachMentRecord(invoiceId,image);
 		if(!blRet){
 			log.error("addAttachMentRecord error");
 			return retMap;
@@ -80,16 +96,14 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		}
 		
 		log.debug("addUserInvoiceRecord");
-		blRet = addUserInvoiceRecord(invoiceId,userId,receiver,0);
+		blRet = userInvoiceService.addUserInvoiceRecord(invoiceId,userId,receiver,0);
 		if(!blRet){
 			log.error("addUserInvoiceRecord error! userId=" + userId + ",invoiceId:" + invoice.getId());
 			return retMap;
 		}
 		
-	
-		
 		//先生成一条审批记录
-		blRet = addInvoiceApprovalRecord(invoiceId,receiver,0);
+		blRet = invoiceApprovalService.addInvoiceApprovalRecord(invoiceId,receiver,0);
 		if(!blRet){
 			log.error("add invoiceAppovalRecord failed");
 			retMap.put("message", "");
@@ -143,7 +157,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		}
 		
 		//根据发票ID查询审批状态
-		UserInvoice userInvoice = userInvoiceDao.getUserInvoiceByInvoiceId(longId);
+		UserInvoice userInvoice = userInvoiceService.getUserInvoiceByInvoiceId(longId);
 		if(null == userInvoice){
 			log.error("发票状态信息不存在");
 			retMap.put("message","发票信息不存在！");
@@ -157,8 +171,8 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		}
 		
 		//执行审批：拒绝时候，直接结束
-		if(1 == approvalStatus && updateApprovalRecord(userId,longId,1,approvalStatus)){
-			updateInvoiceApprovalStatus(userId,approvalUserId,longId,1,approvalStatus);
+		if(1 == approvalStatus && invoiceApprovalService.updateApprovalRecord(userId,longId,1,approvalStatus)){
+			userInvoiceService.updateInvoiceApprovalStatus(userId,approvalUserId,longId,1,approvalStatus);
 			log.error("审批成功，审批拒绝!");
 			retMap.put("message","审批成功，审批拒绝！");
 			retMap.put("success", true);
@@ -168,8 +182,8 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		//是否需要上一级审批
 		if(!ifNeedSuperApproval(userId,approvalUserId,invoice.getAmount())){
 			//更改发票审批状态
-			updateInvoiceApprovalStatus(userId,approvalUserId,longId,1,approvalStatus);
-			updateApprovalRecord(userId,longId,1,approvalStatus);
+			userInvoiceService.updateInvoiceApprovalStatus(userId,approvalUserId,longId,1,approvalStatus);
+			invoiceApprovalService.updateApprovalRecord(userId,longId,1,approvalStatus);
 			retMap.put("success", true);
 			retMap.put("message", "发票审批成功！");
 			return retMap;
@@ -185,7 +199,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		}
 		
 		//先生成一条审批记录
-		boolean blRet = addInvoiceApprovalRecord(Long.parseLong(invoiceId),userId,0);
+		boolean blRet = invoiceApprovalService.addInvoiceApprovalRecord(Long.parseLong(invoiceId),userId,0);
 		if(!blRet){
 			log.error("add invoiceAppovalRecord failed");
 			retMap.put("message", "");
@@ -216,7 +230,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			return retMap;		
 		}
 		
-		List<UserInvoice> billList = userInvoiceDao.getUserInvoiceByUserId(userId);
+		List<UserInvoice> billList = userInvoiceService.getUserInvoiceByUserId(userId);
 		if(null == billList){
 			log.debug("no bill existed");
 			return retMap;
@@ -290,7 +304,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			map.put("approval_name", approvalName);
 		}
 		
-		Attachment attach = getAttachMentByInvoiceId(invoice.getId());
+		Attachment attach = attachmentService.getAttachMentByInvoiceId(invoice.getId());
 		if(null != attach){
 			map.put("bill_img", attach.getImage());
 		}
@@ -304,7 +318,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		retMap.put("finishedList",null);
 		retMap.put("processingList",null);
 		
-		List<InvoiceApproval> invoiceApprovalList = invoiceApprovalDao.getInvoiceApprovalListByUserId(approvalId);
+		List<InvoiceApproval> invoiceApprovalList = invoiceApprovalService.getInvoiceApprovalListByUserId(approvalId);
 		if(null == invoiceApprovalList){
 			log.error("null invoiceApprovalList error:" + approvalId);
 			return retMap;
@@ -318,7 +332,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			map.put("invoice_id", invoiceApproval.getInvoiceId());
 			map.put("approval_status", invoiceApproval.getApprovalStatus());
 			map.put("approval_id", approvalId);
-			UserInvoice userInvoice = userInvoiceDao.getUserInvoiceByInvoiceId(invoiceApproval.getInvoiceId());
+			UserInvoice userInvoice = userInvoiceService.getUserInvoiceByInvoiceId(invoiceApproval.getInvoiceId());
 			if(null != userInvoice){
 				map.put("user_id", userInvoice.getUserId());
 				DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");  
@@ -338,7 +352,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			}
 			map.put("bill_title", invoice.getTitle());
 			map.put("bill_amount", invoice.getAmount());
-			Attachment attach = getAttachMentByInvoiceId(invoice.getId());
+			Attachment attach = attachmentService.getAttachMentByInvoiceId(invoice.getId());
 			if(null != attach){
 				map.put("bill_img", attach.getImage());
 			}
@@ -355,6 +369,30 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		return retMap;
 	}
 
+	@Override
+	public InvoiceInfoVo getInvoiceInfo(long invoiceId) {
+//		Invoice invoice = getSingleInvoiceInfo(invoiceId);
+		Invoice invoice = getSingleInvoiceInfoByStatus(invoiceId,0);
+		if(null == invoice){
+			log.info("no invoice existed!invoiceId:" + invoiceId);
+			return null;
+		}
+		InvoiceInfoVo vo = new InvoiceInfoVo();
+		vo.setAmount(invoice.getAmount());
+		vo.setTitle(invoice.getTitle());
+		vo.setInvoiceId(invoiceId);
+		vo.setCostCenter(invoice.getCostCenter());
+		vo.setDate(invoice.getDate());
+		vo.setDesc(invoice.getDesc());
+		
+		UserInvoice userInvoice = userInvoiceService.getUserInvoiceByInvoiceId(invoiceId);
+		
+		vo.setProcessStatus(userInvoice.getStatus());
+		vo.setApprovalStatus(userInvoice.getApprovalStatus());
+		vo.setApprover(userInvoice.getApprovalId());
+		return vo;
+	}
+	
 	
 	public boolean checkUserAuth(String userId,String appovalUser){
 		//TODO
@@ -377,81 +415,20 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		
 		return userService.ifNeedSuperApproval( userId,  approvalId, amount);
 	}
-	
-	public boolean updateInvoiceApprovalStatus(String userId,String approvalUserId,long invoiceId,int status,int approvalStatus){
-		UserInvoice userInvoice = new UserInvoice();
-		userInvoice.setInvoiceId(invoiceId);
-		userInvoice.setStatus(status);
-		userInvoice.setApprovalStatus(approvalStatus);
-		userInvoice.setUserId(userId);
-		userInvoice.setApprovalId(approvalUserId);
-		userInvoice.setUpdateTime(new Timestamp(new Date().getTime()));
-		return userInvoiceDao.updateUserInvoice(userInvoice);
-	}
-	
-	public boolean updateApprovalRecord(String userId,long invoiceId,int status,int approvalStatus){
-		InvoiceApproval invoiceApproval = new InvoiceApproval();
-		invoiceApproval.setInvoiceId(invoiceId);
-		invoiceApproval.setStatus(status);
-		invoiceApproval.setUserId(userId);
-		invoiceApproval.setApprovalStatus(approvalStatus);
-		invoiceApproval.setUpdateTime(new Timestamp(new Date().getTime()));
-		return invoiceApprovalDao.updateInvoiceApproval(invoiceApproval);
-	}
 
 	@Override
 	public Long addInvoiceRecord(Invoice invoice) {
 		return invoiceDao.addInvoiceAndGetKey(invoice);
 	}
 
-	@Override
-	public boolean addAttachMentRecord(long id,String image) {
-		Attachment imageRecord = new Attachment();
-		imageRecord.setInvoiceId(id);
-		imageRecord.setImage(image);
-		imageRecord.setCreateTime(new Timestamp(new Date().getTime()));
-		return attachmentDao.addAttatchment(imageRecord);
-	}
-
-	
-	public boolean addUserInvoiceRecord(long invoiceId,String userId,String receiver,int status) {
-		UserInvoice userInvoice = new UserInvoice();
-		userInvoice.setInvoiceId(invoiceId);
-		userInvoice.setStatus(status);
-		userInvoice.setUserId(userId);
-		userInvoice.setApprovalId(receiver);
-		userInvoice.setCreateTime(new Timestamp(new Date().getTime()));
-		return userInvoiceDao.addUserInvoice(userInvoice);
-	}
-
-	@Override
-	public boolean addInvoiceAppovalRecord(InvoiceApproval invoiceApproval) {
-		return invoiceApprovalDao.addInvoiceApproval(invoiceApproval);
-	}
-
-	@Override
 	public Invoice getSingleInvoiceInfo(Long invoiceId) {
 		return invoiceDao.getInvoiceById(invoiceId);
 	}
-
-
-
-	@Override
-	public boolean addInvoiceApprovalRecord(long invoiceId, String approvalId,
-			int status) {
-		InvoiceApproval invoiceApproval = new InvoiceApproval();
-		invoiceApproval.setInvoiceId(invoiceId);
-		invoiceApproval.setStatus(0);
-		invoiceApproval.setUserId(approvalId);
-		Timestamp time = new Timestamp(new Date().getTime());
-		invoiceApproval.setCreateTime(time);
-		invoiceApproval.setUpdateTime(time);
-		return invoiceApprovalDao.addInvoiceApproval(invoiceApproval);
-	}
-	@Override
-	public Attachment getAttachMentByInvoiceId(long invoiceId){
-		return attachmentDao.getAttatchmentByInvoiceId(invoiceId);
+	
+	public Invoice getSingleInvoiceInfoByStatus(Long invoiceId,int status) {
+		return invoiceDao.getInvoiceById(invoiceId);
 	}
 
+	
 
 }

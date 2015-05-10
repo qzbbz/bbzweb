@@ -12,8 +12,8 @@
 	http://www.springframework.org/schema/context/spring-context-4.0.xsd
 	http://www.springframework.org/schema/task
 	http://www.springframework.org/schema/task/spring-task-4.0.xsd
-	http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
-	http://www.springframework.org/schema/tx">
+	http://www.springframework.org/schema/tx
+	http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
 
     <bean id="appConfigure"
 class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer">
@@ -113,6 +113,13 @@ class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer
 	<task:executor id="executor" pool-size="1" />  
     <task:scheduler id="scheduler" pool-size="1" />  
     <task:annotation-driven executor="executor" scheduler="scheduler" />
+    
+    <!-- 事务管理 -->
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">  
+    <!-- (this dependency is defined somewhere else) -->  
+    	<property name="dataSource" ref="dataSource"/>  
+ 	 </bean> 
+ 	 <tx:annotation-driven transaction-manager="txManager"></tx:annotation-driven>
 
 	<!-- user component-scan begin-->
 	<context:component-scan base-package="com.wisdom.user.dao.impl" />

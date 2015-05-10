@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -79,7 +80,7 @@ public class ExpenseAccountServiceImpl implements IExpenseAccountService {
 			logger.debug("userId : {}", userId);
 			if (userId != null && !userId.isEmpty()) {
 				Map<String, Object> retMap = invoiceService
-						.createInvoiceProcess(userId, base64ImageStr, "0", "1");
+						.createInvoiceProcess(userId, base64ImageStr, "0", "1",new HashMap());
 				if (!retMap.containsKey("success")
 						|| !(boolean) retMap.get("success")) {
 					base64ImageStr = "";
@@ -113,7 +114,7 @@ public class ExpenseAccountServiceImpl implements IExpenseAccountService {
 			logger.debug("userId : {}", userId);
 			if (userId != null && !userId.isEmpty()) {
 				Map<String, Object> retMap = invoiceService
-						.createInvoiceProcess(userId, base64ImageStr, "0", "1");
+						.createInvoiceProcess(userId, base64ImageStr, "0", "1",new HashMap());
 				if (!retMap.containsKey("success")
 						|| !(boolean) retMap.get("success")) {
 					base64ImageStr = "";
@@ -141,7 +142,7 @@ public class ExpenseAccountServiceImpl implements IExpenseAccountService {
 	public boolean submitExpenseAccount(String openId, String image) {
 		String userId = userService.getUserIdByOpenId(openId);
 		if(userId == null || userId.isEmpty()) return false;
-		Map<String, Object> retMap = invoiceService.createInvoiceProcess(userId, image, "0", "1");
+		Map<String, Object> retMap = invoiceService.createInvoiceProcess(userId, image, "0", "1",new HashMap());
 		if(retMap.containsKey("success") && (boolean)retMap.get("success")) {
 			return true;
 		} else {

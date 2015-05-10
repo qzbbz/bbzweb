@@ -5,6 +5,7 @@ import com.wisdom.common.model.Invoice;
 public interface IInvoiceDao {
 
 	public Invoice getInvoiceById(long id);
+	public Invoice getInvoiceByIdAndStatus(long invoiceId,int status);
 	
 	public long addInvoiceAndGetKey(Invoice invoice);
 	
