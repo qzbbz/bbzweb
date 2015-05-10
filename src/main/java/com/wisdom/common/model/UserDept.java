@@ -17,6 +17,7 @@ public class UserDept implements java.io.Serializable {
 	private Long id;
 	private String userId;
 	private Long deptId;
+	private Integer status;
 	private Timestamp createTime;
 
 	// Constructors
@@ -26,17 +27,19 @@ public class UserDept implements java.io.Serializable {
 	}
 
 	/** minimal constructor */
-	public UserDept(Long id, String userId, Long deptId) {
+	public UserDept(Long id, String userId, Long deptId, Integer status) {
 		this.id = id;
 		this.userId = userId;
 		this.deptId = deptId;
+		this.status = status;
 	}
 
 	/** full constructor */
-	public UserDept(Long id, String userId, Long deptId, Timestamp createTime) {
+	public UserDept(Long id, String userId, Long deptId, Integer status, Timestamp createTime) {
 		this.id = id;
 		this.userId = userId;
 		this.deptId = deptId;
+		this.status = status;
 		this.createTime = createTime;
 	}
 
@@ -48,6 +51,14 @@ public class UserDept implements java.io.Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+	
+	public Integer getStatus() {
+		return this.status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 
 	public String getUserId() {

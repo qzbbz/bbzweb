@@ -49,4 +49,19 @@ public class UserDeptDaoImpl implements IUserDeptDao {
 		return list;
 	}
 
+	@Override
+	public List<UserDept> getUserDeptListByStatusAndDeptId(int status,
+			long deptId) {
+		List<UserDept> list = null;
+		try {
+			String sql = "select * from user_dept where dept_id =? and status=?";
+			list = jdbcTemplate.query(sql, new Object[] { deptId, status },
+					new RowMapperResultSetExtractor<UserDept>(
+							new UserDeptMapper()));
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return list;
+	}
+
 }
