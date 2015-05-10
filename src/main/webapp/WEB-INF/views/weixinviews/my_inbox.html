@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="initial-scale=1" />
+		<meta charset="UTF-8">
+		<link href="../../css/weixincss/ionic.min.css" rel="stylesheet">
+		<link href="../../css/weixincss/weixin_style.css" rel="stylesheet">
+		<script src="../../js/weixinjs/jquery-1.10.2.min.js"></script>
+		<script src="../../js/weixinjs/ionic.bundle.min.js"></script>
+		<script src="../../js/weixinjs/angular-sanitize.min.js"></script>
+		<script src="../../js/weixinjs/app.js"></script>
+		<script src="../../js/weixinjs/controllers.js?201505041310"></script>
+		<script src="../../js/weixinjs/services.js"></script>
+		<title>帮帮账-发票</title>
+	</head>
+	<body ng-app="qzapp" ng-controller="MyInboxController">
+		<ion-header-bar align-title="center" class="bar-positive">
+			<h1 class="title">我的收件箱</h1>
+		</ion-header-bar>
+		<ion-tabs class="tabs-positive tabs-icon-top" ng-show="showMainContent">
+
+			<ion-tab title="待审核" icon-on="ion-ios-person" icon-off="ion-ios-person-outline">
+				<ion-content class="content-box">
+					<div class="list" ng-show="!processingList.length">
+						<div class="row aligner">
+							<div>暂时没有您需要审核的报销单！</div>
+						</div>
+					</div>
+
+					<div class="list" ng-show="processingList.length">
+						<div class="item item-avatar "  ng-repeat="bill in processingList">
+							<img ng-src="{{'../../img/weixinimg/' + bill.bill_img}}">
+							<div ng-click="openModal(bill)">
+							<p>申请人：{{bill.user_name}},金额：{{bill.bill_amount}}</p>
+							<p>时间：{{bill.bill_date}}</p>
+							</div>
+							<button class="button button-positive" ng-click="approval(bill, '0');">
+						      <i class="icon ion-checkmark-circled"></i>
+						    </button>
+						    <button class="button button-positive" ng-click="approval(bill, '1');">
+						      <i class="icon ion-close-circled"></i>
+						    </button>
+						</div>
+					</div>
+				</ion-content>
+			</ion-tab>
+
+			<ion-tab title="已审核" icon-on="ion-ios-checkmark" icon-off="ion-ios-checkmark-outline">
+				<ion-content class="content-box">
+					<div class="list" ng-show="!finishedList.length">
+						<div class="row aligner">
+							<div>暂时没有您审核过的报销单！</div>
+						</div>
+					</div>
+
+					<div class="list" ng-show="finishedList.length">
+						<div class="item item-avatar item-button-right" ng-click="openModal(bill)" ng-repeat="bill in finishedList">
+							<img ng-src="{{'../../img/weixinimg/' + bill.bill_img}}">
+							<p>申请人：{{bill.user_name}},金额：{{bill.bill_amount}}</p>
+							<p>时间：{{bill.bill_date}}</p>
+							<span class="item-note">
+						      {{bill.approval_status != "0" ? "审核未通过" : "审核通过"}}
+						    </span>
+						</div>
+					</div>
+				</ion-content>
+			</ion-tab>
+			
+		</ion-tabs>
+		<ion-content class="content-box" ng-show="showNetError">
+			<div class="list">
+				<div class="row aligner">
+					<div>网络错误，请稍后再试！</div>
+				</div>
+			</div>
+		</ion-content>
+		<ion-content class="content-box" ng-show="showNoBind">
+			<div class="list">
+				<div class="row aligner">
+					<div>您还没有绑定公司，</div>
+					<div>请您先绑定公司！</div>
+				</div>
+			</div>
+		</ion-content>
+	</body>
+	<script id="my-modal.html" type="text/ng-template">
+		<div class="modal">
+			<ion-header-bar align-title="center" class="bar-positive">
+				<h1 class="title">报销单详细信息</h1>
+				<div class="buttons">
+					<a class="button button-icon icon ion-ios-close-empty" ng-click="closeModal()"></a>
+				</div>
+			</ion-header-bar>
+			<ion-content class="content-box" style="margin-bottom:20px;">
+					<div class="item item-body">
+    				<div class="aligner">
+						<img class="img-box" ng-src="{{'../../img/weixinimg/' + bill.bill_img}}" style="max-width: 100%;height: auto;width: auto;">
+					</div>
+					</div>
+					<p>名称：{{bill.bill_title}}</p>
+					<p>金额：{{bill.bill_amount}}</p>
+					<p>申请人：{{bill.user_name}}</p>
+					<p>时间：{{bill.bill_date}}</p>
+			</ion-content>
+		</div>
+	</script>
+
+</html>

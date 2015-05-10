@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="initial-scale=1" />
+		<meta charset="UTF-8">
+		<link href="../../css/weixincss/ionic.min.css" rel="stylesheet">
+		<link href="../../css/weixincss/weixin_style.css" rel="stylesheet">
+		<script src="../../js/weixinjs/jquery-1.10.2.min.js"></script>
+		<script src="../../js/weixinjs/ionic.bundle.min.js"></script>
+		<script src="../../js/weixinjs/angular-sanitize.min.js"></script>
+		<script src="../../js/weixinjs/app.js"></script>
+		<script src="../../js/weixinjs/controllers.js?20505041310"></script>
+		<script src="../../js/weixinjs/services.js"></script>
+		<title>帮帮账</title>
+	</head>
+
+	<body ng-app="qzapp" ng-controller="MyBillsController">
+		<ion-header-bar align-title="center" class="bar-positive">
+			<h1 class="title">我的报销单</h1>
+		</ion-header-bar>
+		<ion-tabs class="tabs-positive tabs-icon-top" ng-show="showMainContent">
+
+			<ion-tab title="已上传" icon-on="ion-ios-paperplane" icon-off="ion-ios-paperplane-outline">
+				<ion-content class="content-box">
+
+					<!-- <ion-refresher pulling-text="下拉刷新..." on-refresh="uploadedRefresh()">
+					</ion-refresher> -->
+
+					<div class="list" ng-show="!uploadedList.length">
+						<div class="row aligner">
+							<div>您暂时没有已上传的报销单！</div>
+						</div>
+					</div>
+
+					<div class="list" ng-show="uploadedList.length">
+						<div class="item item-avatar item-button-right" ng-click="openModal(bill)" ng-repeat="bill in uploadedList">
+							<img ng-src="{{'../../img/weixinimg/' + bill.bill_img}}">
+							<p>金额：{{bill.bill_amount}}</p>
+							<p>时间：{{bill.bill_date}}</p>
+						</div>
+					</div>
+				</ion-content>
+			</ion-tab>
+
+			<ion-tab title="审核中" icon-on="ion-ios-person" icon-off="ion-ios-person-outline">
+				<ion-content class="content-box">
+					<div class="list" ng-show="!progressingList.length">
+						<div class="row aligner">
+							<div>您暂时没有待审核的报销单！</div>
+						</div>
+					</div>
+
+					<div class="list" ng-show="progressingList.length">
+						<div class="item item-avatar item-button-right" ng-click="openModal(bill)" ng-repeat="bill in progressingList">
+							<img ng-src="{{'../../img/weixinimg/' + bill.bill_img}}">
+							<p>金额：{{bill.bill_amount}}</p>
+							<p>时间：{{bill.bill_date}}</p>
+						</div>
+					</div>
+				</ion-content>
+			</ion-tab>
+
+			<ion-tab title="已完成" icon-on="ion-ios-checkmark" icon-off="ion-ios-checkmark-outline">
+				<ion-content class="content-box">
+					<div class="list" ng-show="!finishedList.length">
+						<div class="row aligner">
+							<div>您暂时没有已审核的报销单！</div>
+						</div>
+					</div>
+
+					<div class="list" ng-show="finishedList.length">
+						<div class="item item-avatar item-button-right" ng-click="openModal(bill)" ng-repeat="bill in finishedList">
+							<img ng-src="{{'../../img/weixinimg/' + bill.bill_img}}">
+							<p>金额：{{bill.bill_amount}}</p>
+							<p>时间：{{bill.bill_date}}</p>
+							<span class="item-note">
+						      {{bill.approval_status != "0" ? "审核未通过" : "审核通过"}}
+						    </span>
+						</div>
+					</div>
+				</ion-content>
+			</ion-tab>
+
+		</ion-tabs>
+		<ion-content class="content-box" ng-show="showNetError">
+			<div class="list">
+				<div class="row aligner">
+					<div>网络错误，请稍后再试！</div>
+				</div>
+			</div>
+		</ion-content>
+		<ion-content class="content-box" ng-show="showNoBind">
+			<div class="list">
+				<div class="row aligner">
+					<div>您还没有绑定公司，</div>
+					<div>请您先绑定公司！</div>
+				</div>
+			</div>
+		</ion-content>
+	</body>
+	<script id="my-modal.html" type="text/ng-template">
+		<div class="modal">
+			<ion-header-bar align-title="center" class="bar-positive">
+				<h1 class="title">报销单详细信息</h1>
+				<div class="buttons">
+					<a class="button button-icon icon ion-ios-close-empty" ng-click="closeModal()"></a>
+				</div>
+			</ion-header-bar>
+			<ion-content class="content-box" style="margin-bottom:20px;">
+					<div class="item item-body">
+    				<div class="aligner">
+						<img class="img-box" ng-src="{{'../../img/weixinimg/' + bill.bill_img}}" style="width:100%; height:100%;">
+					</div>
+					</div>
+					<p>名称：{{bill.bill_title}}</p>
+					<p>金额：{{bill.bill_amount}}</p>
+					<p>审批人：{{bill.approval_name}}</p>
+					<p>提交时间：{{bill.bill_date}}</p>
+			</ion-content>
+		</div>
+	</script>
+
+</html>
