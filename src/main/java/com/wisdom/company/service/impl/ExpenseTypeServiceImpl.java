@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.wisdom.common.model.ExpenseType;
 import com.wisdom.company.dao.IExpenseTypeDao;
 import com.wisdom.company.service.IExpenseTypeService;
 
+@Service("expenseTypeService")
 public class ExpenseTypeServiceImpl implements IExpenseTypeService {
 
 	@Autowired

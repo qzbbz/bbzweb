@@ -87,5 +87,15 @@ public class ExpenseAccountController {
 		logger.debug("getMyInbox result : {}", retMap.toString());
 		return retMap;
 	}
+	
+	@RequestMapping("/getAllExpenseType")
+	@ResponseBody
+	public Map<Long, String> getAllExpenseType(
+			HttpServletRequest request) {
+		Map<Long, String> retMap = expenseAccounterService
+				.getInboxByOpenId(openId);
+		logger.debug("getAllExpenseType result : {}", retMap.toString());
+		return retMap;
+	}
 
 }
