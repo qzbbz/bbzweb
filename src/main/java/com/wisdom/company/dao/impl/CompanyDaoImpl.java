@@ -57,7 +57,7 @@ public class CompanyDaoImpl implements ICompanyDao {
 	               return ps;  
 	        }  
 	    }, keyHolder);
-		logger.debug("addCompany result : {}", id);
+		logger.debug("addCompany result : {}", keyHolder.getKey().longValue());
 		return id;
 	}
 
