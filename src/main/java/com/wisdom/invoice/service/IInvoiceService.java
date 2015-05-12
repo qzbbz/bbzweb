@@ -5,10 +5,11 @@ import java.util.Map;
 
 import com.wisdom.common.model.Attachment;
 import com.wisdom.common.model.Invoice;
-import com.wisdom.common.model.InvoiceApproval;
-import com.wisdom.common.model.UserInvoice;
+import com.wisdom.invoice.domain.InvoiceInfoVo;
 
 public interface IInvoiceService {
+	public InvoiceInfoVo getInvoiceInfo(long invoiceId);
+	
 	/**
 	 * 根据userId查询该用户所有发票审批信息
 	 * @param userId
@@ -20,28 +21,9 @@ public interface IInvoiceService {
 	/**增加一条发票流水记录
 	 * */
 	public Long addInvoiceRecord(Invoice invoice);
-	/**
-	 * 增加一条发票图片记录
-	 * @return
-	 */
-	public boolean addAttachMentRecord(long id,String image);
-	
-	public Attachment getAttachMentByInvoiceId(long invoiceId);
-	
-	/**增加一条发票和用户关系映射记录
-	 * @param 
-	 */
-//	public boolean addUserInvoiceRecord(long invoiceId,String userId,int status);
 	
 	/**
-	 * 增加一条审批记录
-	 * @param invoiceApproval
-	 * @return
-	 */
-	public boolean addInvoiceAppovalRecord(InvoiceApproval invoiceApproval);
-	
-	/**
-	 * 创建一个新的发票处理记录
+	 * 创建一个新的发票处理记录 for weixin
 	 * @param userId
 	 * @param image
 	 * @param channelType 0-所有终端  
@@ -49,19 +31,17 @@ public interface IInvoiceService {
 	 * @return
 	 */
 	public Map<String,Object> createInvoiceProcess(String userId,String image,String channelType,
-			String objectTypeId);
+			String objectTypeId,Map<String,Object> params);
 	
 	/**
-	 * 执行审批
+	 * 执行审批流程 for weixin
+	 * @param userId
+	 * @param approvalUserId
+	 * @param incoiceId
+	 * @param approavalStatus
+	 * @return 
 	 */
 	public Map<String,Object> excuteApproval(String userId,String approvalUerId,String invoiceId,int approvalStatus);
-	
-	/**
-	 * 
-	 */
-	public Invoice getSingleInvoiceInfo(Long invoiceId);
-	
-	public boolean addInvoiceApprovalRecord(long invoiceId,String approvalId,int status);
 	
 	public Map<String, List<Map<String, Object>>> getNeededAuditBillList(String userId);
 

@@ -19,7 +19,9 @@ public class Invoice implements java.io.Serializable {
 	private Integer expenseTypeId;
 	private Integer status;
 	private Double amount;
+	private String desc;
 	private Timestamp date;
+	private String costCenter;
 	private Timestamp createTime;
 
 	// Constructors
@@ -34,14 +36,17 @@ public class Invoice implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public Invoice(Long id, String title, Integer expenseTypeId, Integer status, Double amount, Timestamp date,
+	public Invoice(Long id, String title, Integer expenseTypeId, Integer status, Double amount, 
+			String desc,Timestamp date,String costCenter,
 			Timestamp createTime) {
 		this.id = id;
 		this.title = title;
 		this.expenseTypeId = expenseTypeId;
 		this.status = status;
 		this.amount = amount;
+		this.desc = desc;
 		this.date = date;
+		this.costCenter = costCenter;
 		this.createTime = createTime;
 	}
 
@@ -101,6 +106,22 @@ public class Invoice implements java.io.Serializable {
 
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
+	}
+
+	public String getDesc() {
+		return desc;
+	}
+
+	public void setDesc(String desc) {
+		this.desc = desc;
+	}
+
+	public String getCostCenter() {
+		return costCenter;
+	}
+
+	public void setCostCenter(String costCenter) {
+		this.costCenter = costCenter;
 	}
 
 }
