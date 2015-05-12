@@ -1,0 +1,118 @@
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>帮帮账</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" type="text/css" href="../../js/weixinjs/libs/jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.css">
+		<link rel="stylesheet" type="text/css" href="../../css/weixincss/style.css?201502121240">
+		<link rel="stylesheet" type="text/css" href="../../css/weixincss/iconfont/iconfont.css?201502121240">
+	</head>
+<body>
+	<div data-role="page" id="ticket">
+
+		<header>
+			<i class="icon-menu iconfont fa"></i>
+			<span class="current-menu"></span>
+			<ul class="menu">
+				<li menu-page="bindAccount"><i class="icon-bindproperty iconbigfont"></i>绑定公司</li>
+				<li menu-page="accountSet"><i class="icon-account3 iconbigfont"></i>账号设置</li>
+				<li menu-page="help"><i class="icon-help iconbigfont"></i>服务与帮助</li>
+			</ul>
+		</header>
+
+		<div id="content">
+			
+		</div>
+	</div><!-- /page one -->
+
+	<script id="help" type="text/template">
+		<div data-role="tabs">
+			<div class="navbar">
+				<ul>
+			      <li><a href="#service" data-theme="ab" class="ui-btn-active">服务</a></li>
+			      <li><a href="#help" data-theme="ab">帮助</a></li>
+			    </ul>
+			</div>
+
+			<div id="service" class="ui-content typo">
+				<h4>微信帮帮账</h4>
+						<p>微信帮帮账服务是上海元升财务咨询有限公司提供的微信报销审批服务，通过该服务，您可以高效的完成报销审批的工作。</p>
+			</div>		
+			<div id="help" class="ui-content typo">
+				<h4>如何绑定公司</h4>
+						<p>1.点击屏幕左上角菜单按钮。</p>
+						<p>2.在下方弹出的子菜单中选择绑定公司。</p>
+						<p>3.在绑定公司页面的邀请码输入框中输入邀请码，点击绑定按钮。</p>
+				<h4>如何设定账号</h4>
+				<p>1.点击屏幕左上角菜单按钮。</p>
+				<p>2.在下方弹出的子菜单中选择账号设定。</p>
+				<p>3.在账号设定页面修改姓名和电子邮件地址，<span style="color:rgb(255,64,129);">请注意</span>，您在这里更新您的电子邮件地址后，当您登陆元升财务系统后台时，请以您在此提供的电子邮件地址为用户名进行系统登陆。</p>
+			</div>
+		</div>
+	</script>
+
+	<script id="accountSet" type="text/template">
+		<div data-role="tabs">
+			<div class="navbar">
+				<ul>
+			      <li><a href="#setAccount" data-theme="ab" class="ui-btn-active">设置您的账号信息</a></li>
+			    </ul>
+			</div>
+			<div id="setAccount" class="ui-content typo">
+				<form  type="account" data-ajax="false">
+					<div class="item">
+						<label>您的姓名：<span class="name-empty-error">不能为空</span></label>
+						<input type="text" name="name"/>
+					</div>
+					<div class="item">
+						<label>您的邮箱：<span class="email-empty-error">不能为空</span></label>
+						<input type="text" name="email"/>
+					</div>
+					<div class="actions" style="float:right;margin-top: 0.7em;"> 
+						<button class="ladda-button small submit" style="background :rgba(239, 109, 68, 0.8);" type="submit">确定</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</script>
+	
+	<script id="bindAccount" type="text/template">
+		<div data-role="tabs">
+			<div class="navbar">
+				<ul>
+				  {{^company}}
+			      <li><a href="#companyBind" data-theme="ab" class="ui-btn-active">绑定您的公司</a></li>
+			      {{/company}}
+			      {{#company}}
+			      <li><a href="#companyBind" data-theme="ab" class="ui-btn-active">您已经绑定了公司</a></li>
+			      {{/company}}
+			    </ul>
+			</div>
+			<div id="companyBind" class="ui-content typo">
+					{{^company}}
+					<form type="company" data-ajax="false">
+					<div class="item">
+						<label>邀请码（必填）<span class="code-empty-error">不能为空</span></label>
+						<input type="text" name="code"/>
+					</div>
+					<div style="float:right;margin-top: 0.7em;">                
+						<button class="ladda-button small submit" style="background :rgba(239, 109, 68, 0.8);" type="submit">确定</button>
+					</div>
+					</form>
+					{{/company}}
+					{{#company}}
+					<div>
+						<label>公司名称：{{name}}</label>
+						<label>公司部门：{{branch}}</label>
+					</div>
+					{{/company}}
+			</div>
+		</div>
+	</script>
+
+	<script type="text/javascript" src="../../js/weixinjs/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="../../js/weixinjs/libs/jquery.mobile-1.4.5/jquery.mobile-1.4.5.js"></script>
+	<script type="text/javascript" src="../../js/weixinjs/mustache.js"></script>
+	<script type="text/javascript" src="../../js/weixinjs/settings.js?201502121240"></script>
+</body>
+</html>	

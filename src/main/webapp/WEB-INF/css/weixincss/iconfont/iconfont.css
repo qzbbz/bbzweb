@@ -1,0 +1,78 @@
+
+@font-face {font-family: "iconfont";
+  src: url('iconfont.eot'); /* IE9*/
+  src: url('iconfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('iconfont.woff') format('woff'), /* chrome、firefox */
+  url('iconfont.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+  url('iconfont.svg#iconfont') format('svg'); /* iOS 4.1- */
+}
+
+.iconfont {
+  font-family:"iconfont" !important;
+  font-size:16px;
+  font-style:normal;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-stroke-width: 0.2px;
+  -moz-osx-font-smoothing: grayscale;
+}
+.iconbigfont {
+  font-family:"iconfont" !important;
+  font-size:26px;
+  font-style:normal;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-stroke-width: 0.2px;
+  -moz-osx-font-smoothing: grayscale;
+}
+.icon-camera:before { content: "\e643"; }
+.icon-camera1:before { content: "\e629"; }
+.icon-camera2:before { content: "\e632"; }
+.icon-camera3:before { content: "\e612"; }
+.icon-camera4:before { content: "\e601"; }
+.icon-camera5:before { content: "\e60f"; }
+.icon-help:before { content: "\e623"; }
+.icon-help1:before { content: "\e637"; }
+.icon-help2:before { content: "\f004b"; }
+.icon-helpround:before { content: "\e640"; }
+.icon-iconfonthelp:before { content: "\e605"; }
+.icon-inbox:before { content: "\e6e5"; }
+.icon-inbox1:before { content: "\e69d"; }
+.icon-inbox2:before { content: "\e6d3"; }
+.icon-inbox3:before { content: "\e646"; }
+.icon-inbox4:before { content: "\e6ff"; }
+.icon-inbox5:before { content: "\e659"; }
+.icon-inbox6:before { content: "\e75d"; }
+.icon-upload:before { content: "\e67b"; }
+.icon-upload1:before { content: "\34bf"; }
+.icon-icon1:before { content: "\e604"; }
+.icon-cloudupload:before { content: "\e682"; }
+.icon-cloud-upload:before { content: "\e693"; }
+.icon-cloudupload1:before { content: "\e6cb"; }
+.icon-cloudupload2:before { content: "\e678"; }
+.icon-documentupload:before { content: "\e61f"; }
+.icon-upload2:before { content: "\e60d"; }
+.icon-upload3:before { content: "\e60f"; }
+.icon-upload4:before { content: "\e6ed"; }
+.icon-tihuan:before { content: "\e624"; }
+.icon-upload5:before { content: "\e7f6"; }
+.icon-imageupload:before { content: "\e6e4"; }
+.icon-audit:before { content: "\f00cb"; }
+.icon-bindproperty:before { content: "\e60d"; }
+.icon-account:before { content: "\e600"; }
+.icon-account1:before { content: "\f0032"; }
+.icon-account2:before { content: "\e609"; }
+.icon-account3:before { content: "\e602"; }
+.icon-billfill:before { content: "\e676"; }
+.icon-adminbill:before { content: "\e644"; }
+.icon-menu:before { content: "\e6e3"; }
+.icon-menu1:before { content: "\e703"; }
+.icon-menu2:before { content: "\e606"; }
+.icon-menu3:before { content: "\e604"; }
+.icon-menu4:before { content: "\e65b"; }
+.icon-menu5:before { content: "\e726"; }
+.icon-menu6:before { content: "\e618"; }
+.icon-menu7:before { content: "\f003a"; }
+.icon-menu8:before { content: "\e6ae"; }
+.icon-chat:before { content: "\e631"; }
+.icon-menu9:before { content: "\e600"; }
+.icon-deji:before { content: "\e60b"; }
+.icon-menu10:before { content: "\e71c"; }
