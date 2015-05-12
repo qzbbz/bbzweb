@@ -1,6 +1,7 @@
 package com.wisdom.invoice.service.impl;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,17 @@ public class SingleInvoiceServiceImpl implements ISingleInvoiceService {
 		invoice.setId(invoiceId);
 		
 		return invoiceDao.updateInvoice(invoice);
+	}
+	@Override
+	public List<Invoice> getUserInvoiceByStatus(String userId,String status){
+		return invoiceDao.getUserInvoiceByStatus(userId, status);
+	}
+	
+	@Override
+	public List<Invoice> getUserInvoiceByStatusByPage(String userId,String status,int page,int pageSize){
+		int start = (page-1)*pageSize;
+		int end = page*pageSize;
+		return invoiceDao.getUserInvoiceByStatusByPage(userId, status, start, end);
 	}
 	
 }

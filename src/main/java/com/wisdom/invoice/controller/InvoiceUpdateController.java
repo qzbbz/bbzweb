@@ -61,4 +61,18 @@ public class InvoiceUpdateController {
 		return result;
 	}
 	
+	@ResponseBody
+	@RequestMapping("/action=submitBatchInvoice")
+	public Result submitBatchInvoice(HttpServletRequest request){
+		Result result = new Result();
+		String userId = (String)request.getParameter("userId");
+		String strInvoice = (String)request.getParameter("invoiceId");
+		String date = (String)request.getParameter("date");
+		String desc = (String)request.getParameter("desc");
+		String amount = (String)request.getParameter("amount");
+		String expenseType = (String)request.getParameter("expenseType");
+		
+		return null;
+	}
+	
 }

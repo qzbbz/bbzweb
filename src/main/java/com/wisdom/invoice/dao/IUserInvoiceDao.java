@@ -2,6 +2,7 @@ package com.wisdom.invoice.dao;
 
 import java.util.List;
 
+import com.wisdom.common.model.Invoice;
 import com.wisdom.common.model.UserInvoice;
 
 public interface IUserInvoiceDao {
@@ -15,5 +16,6 @@ public interface IUserInvoiceDao {
 	public boolean deleteUserInvoice(UserInvoice userInvoice);
 	
 	public boolean updateUserInvoice(UserInvoice userInvoice);
+	
 	
 }

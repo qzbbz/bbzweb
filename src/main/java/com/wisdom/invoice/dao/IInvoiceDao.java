@@ -1,5 +1,7 @@
 package com.wisdom.invoice.dao;
 
+import java.util.List;
+
 import com.wisdom.common.model.Invoice;
 
 public interface IInvoiceDao {
@@ -12,5 +14,6 @@ public interface IInvoiceDao {
 	public boolean deleteInvoice(Invoice invoice);
 	
 	public boolean updateInvoice(Invoice invoice);
-	
+	public List<Invoice> getUserInvoiceByStatus(String userId,String status);
+	public List<Invoice> getUserInvoiceByStatusByPage(String userId,String status,int begin,int end);
 }
