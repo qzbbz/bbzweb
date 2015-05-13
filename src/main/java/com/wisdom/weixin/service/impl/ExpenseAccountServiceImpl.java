@@ -32,12 +32,12 @@ public class ExpenseAccountServiceImpl implements IExpenseAccountService {
 
 	@Autowired
 	private IUserService userService;
-	
+
 	@Autowired
 	private IExpenseTypeService expenseTypeService;
 
 	@Override
-	public Map<String, List<Map<String, Object>>> getBillsByOpenId(String openId) {
+	public Map<String, List<Map<String, Object>>> getInboxBillsByOpenId(String openId) {
 		Map<String, List<Map<String, Object>>> retMap = null;
 		String userId = userService.getUserIdByOpenId(openId);
 		logger.debug("userId : {}", userId);
@@ -46,9 +46,9 @@ public class ExpenseAccountServiceImpl implements IExpenseAccountService {
 		}
 		return retMap;
 	}
-	
+
 	@Override
-	public Map<String, List<Map<String, Object>>> getInboxByOpenId(String openId) {
+	public Map<String, List<Map<String, Object>>> getNeedAuditBillsByOpenId(String openId) {
 		Map<String, List<Map<String, Object>>> retMap = null;
 		String userId = userService.getUserIdByOpenId(openId);
 		logger.debug("userId : {}", userId);
@@ -58,7 +58,6 @@ public class ExpenseAccountServiceImpl implements IExpenseAccountService {
 		return retMap;
 	}
 
-	
 	public String downloadFromUrl(String mediaId, String openId, String realPath) {
 		String base64ImageStr = "";
 		String weixinFileURL = "http://file.api.weixin.qq.com/cgi-bin/media/get?access_token=ACCESS_TOKEN&media_id=MEDIA_ID";
@@ -72,15 +71,20 @@ public class ExpenseAccountServiceImpl implements IExpenseAccountService {
 			conn.setReadTimeout(250000);
 			conn.connect();
 			InputStream in = conn.getInputStream();
-			String fileName = openId + String.valueOf(System.currentTimeMillis()) + ".jpg";
+			String fileName = openId
+					+ String.valueOf(System.currentTimeMillis()) + ".jpg";
 			FileUtils.copyInputStreamToFile(in, new File(realPath, fileName));
 			base64ImageStr = fileName;
 			logger.debug("uploadBillFilePath : {}", base64ImageStr);
 			String userId = userService.getUserIdByOpenId(openId);
 			logger.debug("userId : {}", userId);
 			if (userId != null && !userId.isEmpty()) {
+				Map<String, Object> params = new HashMap<>();
+				// params.put("expenseTypeId", Integer.valueOf());
+				// params.put("expenseTypeId", Double.valueOf());
 				Map<String, Object> retMap = invoiceService
-						.createInvoiceProcess(userId, base64ImageStr, "0", "1", new HashMap());
+						.createInvoiceProcess(userId, base64ImageStr, "0", "1",
+								new HashMap());
 				if (!retMap.containsKey("success")
 						|| !(boolean) retMap.get("success")) {
 					base64ImageStr = "";
@@ -93,8 +97,7 @@ public class ExpenseAccountServiceImpl implements IExpenseAccountService {
 		}
 		return base64ImageStr;
 	}
-	
-	
+
 	public String downloadFromUrl(String mediaId, String openId) {
 		String base64ImageStr = "";
 		String weixinFileURL = "http://file.api.weixin.qq.com/cgi-bin/media/get?access_token=ACCESS_TOKEN&media_id=MEDIA_ID";
@@ -114,7 +117,8 @@ public class ExpenseAccountServiceImpl implements IExpenseAccountService {
 			logger.debug("userId : {}", userId);
 			if (userId != null && !userId.isEmpty()) {
 				Map<String, Object> retMap = invoiceService
-						.createInvoiceProcess(userId, base64ImageStr, "0", "1",new HashMap());
+						.createInvoiceProcess(userId, base64ImageStr, "0", "1",
+								new HashMap());
 				if (!retMap.containsKey("success")
 						|| !(boolean) retMap.get("success")) {
 					base64ImageStr = "";
@@ -129,10 +133,12 @@ public class ExpenseAccountServiceImpl implements IExpenseAccountService {
 	}
 
 	@Override
-	public boolean approvalBill(String approvalId, String invoiceId, String userId, int approval_status) {
+	public boolean approvalBill(String approvalId, String invoiceId,
+			String userId, int approval_status) {
 		boolean status = false;
-		Map<String, Object> retMap = invoiceService.excuteApproval(userId, approvalId, invoiceId, approval_status);
-		if(retMap.containsKey("success") && (boolean) retMap.get("success")) {
+		Map<String, Object> retMap = invoiceService.excuteApproval(userId,
+				approvalId, invoiceId, approval_status);
+		if (retMap.containsKey("success") && (boolean) retMap.get("success")) {
 			status = true;
 		}
 		return status;
@@ -141,9 +147,11 @@ public class ExpenseAccountServiceImpl implements IExpenseAccountService {
 	@Override
 	public boolean submitExpenseAccount(String openId, String image) {
 		String userId = userService.getUserIdByOpenId(openId);
-		if(userId == null || userId.isEmpty()) return false;
-		Map<String, Object> retMap = invoiceService.createInvoiceProcess(userId, image, "0", "1",new HashMap());
-		if(retMap.containsKey("success") && (boolean)retMap.get("success")) {
+		if (userId == null || userId.isEmpty())
+			return false;
+		Map<String, Object> retMap = invoiceService.createInvoiceProcess(
+				userId, image, "0", "1", new HashMap());
+		if (retMap.containsKey("success") && (boolean) retMap.get("success")) {
 			return true;
 		} else {
 			return false;
@@ -153,6 +161,54 @@ public class ExpenseAccountServiceImpl implements IExpenseAccountService {
 	@Override
 	public List<Map<String, String>> getAllExpenseType() {
 		return expenseTypeService.getExpenseTypeMap();
+	}
+
+	@Override
+	public String downloadFromUrl(Map<String, Object> params) {
+		String base64ImageStr = "";
+		String weixinFileURL = "http://file.api.weixin.qq.com/cgi-bin/media/get?access_token=ACCESS_TOKEN&media_id=MEDIA_ID";
+		if (params == null || !params.containsKey("mediaId"))
+			return base64ImageStr;
+		weixinFileURL = weixinFileURL.replace("ACCESS_TOKEN",
+				WeixinCache.getAccessToken()).replace("MEDIA_ID",
+				(String) params.get("mediaId"));
+		if (!params.containsKey("openId") || !params.containsKey("realPath"))
+			return base64ImageStr;
+		try {
+			URL realUrl = new URL(weixinFileURL);
+			HttpURLConnection conn = (HttpURLConnection) realUrl
+					.openConnection();
+			conn.setConnectTimeout(250000);
+			conn.setReadTimeout(250000);
+			conn.connect();
+			InputStream in = conn.getInputStream();
+			String fileName = (String) params.get("openId")
+					+ String.valueOf(System.currentTimeMillis()) + ".jpg";
+			FileUtils.copyInputStreamToFile(in, new File((String) params.get("realPath"), fileName));
+			base64ImageStr = fileName;
+			logger.debug("uploadBillFilePath : {}", base64ImageStr);
+			String userId = userService.getUserIdByOpenId((String) params.get("openId"));
+			logger.debug("userId : {}", userId);
+			if (userId != null && !userId.isEmpty()) {
+				Map<String, Object> retMap = invoiceService
+						.createInvoiceProcess(userId, "../../img/billImg/" + base64ImageStr, "0", "1",
+								params);
+				if (!retMap.containsKey("success")
+						|| !(boolean) retMap.get("success")) {
+					base64ImageStr = "";
+				}
+			} else {
+				base64ImageStr = "";
+			}
+		} catch (Exception e) {
+			logger.debug("Failed in download file.Exception : {}", e.toString());
+		}
+		return base64ImageStr;
+	}
+
+	@Override
+	public boolean submitBillAudit(String invoiceId) {
+		return true;
 	}
 
 }

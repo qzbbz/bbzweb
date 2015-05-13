@@ -5,9 +5,9 @@ import java.util.Map;
 
 public interface IExpenseAccountService {
 	
-	Map<String, List<Map<String, Object>>> getBillsByOpenId(String openId);
+	Map<String, List<Map<String, Object>>> getNeedAuditBillsByOpenId(String openId);
 	
-	Map<String, List<Map<String, Object>>> getInboxByOpenId(String openId);
+	Map<String, List<Map<String, Object>>> getInboxBillsByOpenId(String openId);
 	
 	List<Map<String, String>> getAllExpenseType();
 	
@@ -17,6 +17,8 @@ public interface IExpenseAccountService {
 	
 	public String downloadFromUrl(String mediaId, String openId);
 	
-	public String downloadFromUrl(String mediaId, String openId, String realPath);
+	public String downloadFromUrl(Map<String, Object> params);
+	
+	public boolean submitBillAudit(String invoiceId);
 	
 }

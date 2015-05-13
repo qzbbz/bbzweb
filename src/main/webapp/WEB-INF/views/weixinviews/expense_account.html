@@ -14,7 +14,7 @@
 			<i class="icon-menu iconfont fa"></i>
 			<span class="current-menu"></span>
 			<ul class="menu">
-				<li menu-page="myTicket"><i class="icon-inbox iconbigfont"></i>收件箱</li>
+				<li menu-page="inbox"><i class="icon-inbox iconbigfont"></i>收件箱</li>
 				<li menu-page="uploadBill"><i class="icon-upload5 iconbigfont"></i>发票上传</li>
 				<li menu-page="ticketVerify"><i class="icon-adminbill iconbigfont"></i>发票审核</li>
 				<li menu-page="help"><i class="icon-help iconbigfont"></i>服务与帮助</li>
@@ -28,25 +28,86 @@
 		</div>
 	</div><!-- /page one -->
 	
-	<script id="myTicket" type="text/template">
+	<script id="inbox" type="text/template">
 		<div data-role="tabs">
 			<div class="navbar">
 				<ul>
-			      <li><a href="#waitverifyed" data-theme="ab" class="ui-btn-active">已上传发票</a></li>
-			      <li><a href="#verifyed" data-theme="ab">已审核发票</a></li>
+			      <li><a href="#draftBill" data-theme="ab" class="ui-btn-active">草稿箱</a></li>
+			      <li><a href="#progressingAudit" data-theme="ab">待审核</a></li>
+			      <li><a href="#finishedAudit" data-theme="ab">已审核</a></li>
 			    </ul>
 			</div>
-			<div id="waitverifyed" class="ui-content">
-				<ul data-role="listview" id="waitverifyed-list" class="ticket-list">
+			<div id="draftBill" class="ui-content">
+				<div id="inbox">
+					<h6 style="margin-bottom:30px;color:#38c;">您可以一键提交审核 
+						<button id="onePressSubmitAudit" class="ladda-button small" data-shadow="true" style="background :rgba(239, 109, 68, 0.8);">提交审核
+					</h6>
+				</div>				
+				<ul data-role="listview" id="draft-bill-list" class="draft-bill-list">
 				</ul>
 			</div>		
-			<div id="verifyed" class="ui-content">
-				<ul data-role="listview" id="verifyed-list" class="ticket-list">
+			<div id="progressingAudit" class="ui-content">
+				<ul data-role="listview" id="progressing-audit-list" class="ticket-list">
+					
+				</ul>
+			</div>
+			<div id="finishedAudit" class="ui-content">
+				<ul data-role="listview" id="finished-audit-list" class="ticket-list">
 					
 				</ul>
 			</div>
 		</div>
 	</script>
+
+	<script id="draftBillList" type="x-tmpl-mustache">
+		{{#draftBillList}}
+			<li data-src="{{bill_img}}">
+				<img src="{{bill_img}}" class="avatar">
+				<p class="amount">金额: {{bill_amount}}</p>
+				<p class="man">费用类型: {{bill_expenseTypeName}}</p>
+				<p class="date">创建时间: {{bill_date}}</p>
+				<input type="checkbox" name="choose" value="{{invoice_id}}">
+			</li>
+		{{/draftBillList}}
+		{{^draftBillList}}
+			<div style="margin-top: 10px;"><h6 style="color:#38c;">&nbsp;&nbsp;&nbsp;暂时没有数据，可以尝试下拉刷新。</h6></div>
+		{{/draftBillList}}
+    </script>
+    
+    <script id="progressingBillList" type="x-tmpl-mustache">
+		{{#progressingBillList}}
+			<li data-src="{{bill_img}}">
+				<img src="{{bill_img}}" class="avatar">
+				<p class="amount">金额: {{bill_amount}}</p>
+				<p style="float:right;color:#419088;">审核人：{{approval_name}}</p>
+				<p class="man">费用类型: {{bill_expenseTypeName}}</p>
+				<p class="date">创建时间: {{bill_date}}</p>
+			</li>
+		{{/progressingBillList}}
+		{{^progressingBillList}}
+			<div style="margin-top: 10px;"><h6 style="color:#38c;">&nbsp;&nbsp;&nbsp;暂时没有数据，可以尝试下拉刷新。</h6></div>
+		{{/progressingBillList}}
+    </script>
+    
+    <script id="finishedBillList" type="x-tmpl-mustache">
+		{{#finishedBillList}}
+			<li data-src="{{bill_img}}">
+				<img src="{{bill_img}}" class="avatar">
+				<p class="amount">金额: {{bill_amount}}</p>
+				{{#approval_status}}
+					<p style="float:right;color:#419088;">审核已通过</p>
+				{{/approval_status}}
+				{{^approval_status}}
+					<p style="float:right;color:rgba(239, 109, 68, 0.8);">审核未通过</p>
+				{{/approval_status}}
+				<p class="man">费用类型: {{bill_expenseTypeName}}</p>
+				<p class="date">创建时间: {{bill_date}}</p>
+			</li>
+		{{/finishedBillList}}
+		{{^finishedBillList}}
+			<div style="margin-top: 10px;"><h6 style="color:#38c;">&nbsp;&nbsp;&nbsp;暂时没有数据，可以尝试下拉刷新。</h6></div>
+		{{/finishedBillList}}
+    </script>
 
 	<script id="ticketList" type="x-tmpl-mustache">
 		{{#tickets}}
@@ -146,7 +207,7 @@
 
 	<script id="editTicket" type="text/template">
 		<div id="editTicket" class="typo">
-			<img src="{{src}}" style="max-width:100%;height:auto;">
+			<img src="{{src}}" style="max-width:100%;max-height:50%;">
 			<label>金额 <span class="price-empty-error">不能为空</span><br>
 			<input type="number" id="price" value="{{price}}"></label>
 			<label>费用类型<span class="type-select-error">请选择类型</span><br>
@@ -163,6 +224,6 @@
 	<script type="text/javascript" src="../../js/weixinjs/jquery-1.11.1.min.js"></script>
 	<script type="text/javascript" src="../../js/weixinjs/libs/jquery.mobile-1.4.5/jquery.mobile-1.4.5.js"></script>
 	<script type="text/javascript" src="../../js/weixinjs/mustache.js"></script>
-	<script type="text/javascript" src="../../js/weixinjs/expense_account.js?201505130924"></script>
+	<script type="text/javascript" src="../../js/weixinjs/expense_account.js?201505132024"></script>
 </body>
 </html>	

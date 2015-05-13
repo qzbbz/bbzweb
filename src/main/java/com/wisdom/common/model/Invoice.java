@@ -19,7 +19,7 @@ public class Invoice implements java.io.Serializable {
 	private Integer expenseTypeId;
 	private Integer status;
 	private Double amount;
-	private String desc;
+	private String detailDesc;
 	private Timestamp date;
 	private String costCenter;
 	private Timestamp createTime;
@@ -37,14 +37,14 @@ public class Invoice implements java.io.Serializable {
 
 	/** full constructor */
 	public Invoice(Long id, String title, Integer expenseTypeId, Integer status, Double amount, 
-			String desc,Timestamp date,String costCenter,
+			String detailDesc,Timestamp date,String costCenter,
 			Timestamp createTime) {
 		this.id = id;
 		this.title = title;
 		this.expenseTypeId = expenseTypeId;
 		this.status = status;
 		this.amount = amount;
-		this.desc = desc;
+		this.detailDesc = detailDesc;
 		this.date = date;
 		this.costCenter = costCenter;
 		this.createTime = createTime;
@@ -109,11 +109,11 @@ public class Invoice implements java.io.Serializable {
 	}
 
 	public String getDesc() {
-		return desc;
+		return detailDesc;
 	}
 
-	public void setDesc(String desc) {
-		this.desc = desc;
+	public void setDesc(String detailDesc) {
+		this.detailDesc = detailDesc;
 	}
 
 	public String getCostCenter() {

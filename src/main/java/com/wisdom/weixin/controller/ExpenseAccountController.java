@@ -49,15 +49,19 @@ public class ExpenseAccountController {
 			int sum = 0;
 			StringBuffer sb = new StringBuffer();
 			for(UploadBillEntity up : ube) {
-				logger.debug("serverId : {}", up.getImg());
+				logger.debug("mediaId : {}", up.getMediaId());
 				logger.debug("amount : {}", up.getAmount());
 				logger.debug("expenseTypeName : {}", up.getExpenseTypeName());
 				logger.debug("expenseTypeId : {}", up.getExpenseTypeId());
-				String base64ImageStr = expenseAccounterService.downloadFromUrl(
-						up.getImg(), openId, realPath);
+				Map<String, Object> params = new HashMap<>();
+				params.put("openId", openId);
+				params.put("realPath", realPath);
+				params.put("mediaId", up.getMediaId());
+				params.put("expenseTypeId", Integer.valueOf(up.getExpenseTypeId()));
+				params.put("amount", Double.valueOf(up.getAmount()));
+				String base64ImageStr = expenseAccounterService.downloadFromUrl(params);
 				if (!base64ImageStr.isEmpty()) {
 					sum++;
-				} else {
 					sb.append(up.getId());
 					sb.append(" ");
 				}
@@ -66,10 +70,13 @@ public class ExpenseAccountController {
 				retMap.put("error_code", "2");
 				retMap.put("error_message", "您选择上传的发票只有部分上传成功，请稍后重试！");
 				retMap.put("upload_count", String.valueOf(sum) + "/" + String.valueOf(ube.size()));
-				retMap.put("ids", sb.toString().substring(0, sb.length() - 1));
 			} else {
 				retMap.put("error_code", "0");
 				retMap.put("error_message", "全部上传成功！");
+			}
+			logger.debug("IDS : {}", sb.toString());
+			if(sb.length() > 0) {
+				retMap.put("ids", sb.toString().substring(0, sb.length() - 1));
 			}
 		}
 		logger.debug("retMap : {}", retMap.toString());
@@ -98,25 +105,25 @@ public class ExpenseAccountController {
 		return retMap;
 	}
 
-	@RequestMapping("/getMyBills")
+	@RequestMapping("/getNeedAuditBills")
 	@ResponseBody
 	public Map<String, List<Map<String, Object>>> getMyBills(
 			HttpServletRequest request) {
 		String openId = request.getParameter("openId");
 		Map<String, List<Map<String, Object>>> retMap = expenseAccounterService
-				.getBillsByOpenId(openId);
-		logger.debug("getMyBills result : {}", retMap.toString());
+				.getNeedAuditBillsByOpenId(openId);
+		logger.debug("getNeedAuditBills result : {}", retMap.toString());
 		return retMap;
 	}
 	
-	@RequestMapping("/getMyInbox")
+	@RequestMapping("/getInboxBills")
 	@ResponseBody
 	public Map<String, List<Map<String, Object>>> getMyInbox(
 			HttpServletRequest request) {
 		String openId = request.getParameter("openId");
 		Map<String, List<Map<String, Object>>> retMap = expenseAccounterService
-				.getInboxByOpenId(openId);
-		logger.debug("getMyInbox result : {}", retMap.toString());
+				.getInboxBillsByOpenId(openId);
+		logger.debug("getInboxBills result : {}", retMap.toString());
 		return retMap;
 	}
 	
@@ -127,6 +134,47 @@ public class ExpenseAccountController {
 		List<Map<String, String>> retList = expenseAccounterService.getAllExpenseType();
 		logger.debug("getAllExpenseType result : {}", retList.toString());
 		return retList;
+	}
+	
+	@RequestMapping(value="/submitBillListAudit", method=RequestMethod.POST, consumes="application/json")
+	@ResponseBody
+	public Map<String, String> submitBillListAudit(
+			@RequestBody List<String> invoiceIdList, HttpServletRequest request) {
+		Map<String, String> retMap = new HashMap<>();
+		String openId = request.getParameter("openId");
+		logger.debug("openid : {}", openId);
+		if(openId == null || openId.isEmpty()) {
+			retMap.put("error_code", "1");
+			retMap.put("error_message", "无法获取您微信的Openid，请稍后重新进入！");
+		}
+		if(invoiceIdList == null || invoiceIdList.size() == 0) {
+			retMap.put("error_code", "2");
+			retMap.put("error_message", "提交失败，服务器接收到的申请列表为空，请检查！");
+			logger.debug("invoiceIdList is null or size is 0");
+		}
+		int sum = 0;
+		StringBuffer sb = new StringBuffer();
+		for(String invoiceId : invoiceIdList) {
+			if(expenseAccounterService.submitBillAudit(invoiceId)) {
+				sum++;
+				sb.append(invoiceId);
+				sb.append(" ");
+			}
+		}
+		if(sum != invoiceIdList.size()) {
+			retMap.put("error_code", "3");
+			retMap.put("error_message", "您提交的审核申请只有部分提交成功，请稍后重试！");
+			retMap.put("submit_count", String.valueOf(sum) + "/" + String.valueOf(invoiceIdList.size()));
+		} else {
+			retMap.put("error_code", "0");
+			retMap.put("error_message", "全部提交成功！");
+		}
+		logger.debug("IDS : {}", sb.toString());
+		if(sb.length() > 0) {
+			retMap.put("ids", sb.toString().substring(0, sb.length() - 1));
+		}
+		logger.debug("submitBillListAudit result : {}", retMap.toString());
+		return retMap;
 	}
 
 }

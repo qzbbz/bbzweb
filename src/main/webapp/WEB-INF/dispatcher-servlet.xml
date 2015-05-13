@@ -89,6 +89,7 @@ class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer
 	<mvc:resources mapping="/css/weixincss/**" location="/WEB-INF/css/weixincss/" cache-period="0" />
 	<mvc:resources mapping="/img/webimg/**" location="/WEB-INF/img/webimg/" cache-period="0" />
 	<mvc:resources mapping="/img/weixinimg/**" location="/WEB-INF/img/weixinimg/" cache-period="0" />
+	<mvc:resources mapping="/img/billImg/**" location="/WEB-INF/img/billImg/" cache-period="0" />
 	<mvc:resources mapping="/views/weixinviews/**" location="/WEB-INF/views/weixinviews/" cache-period="0" />
 	<mvc:resources mapping="/views/webviews/**" location="/WEB-INF/views/webviews/" cache-period="0" />
 	<!-- static resources config end -->	

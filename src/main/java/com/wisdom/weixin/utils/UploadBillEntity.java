@@ -10,6 +10,8 @@ public class UploadBillEntity implements Serializable {
 	
 	private String img;
 	
+	private String mediaId;
+	
 	private String time;
 	
 	private String amount;
@@ -17,6 +19,14 @@ public class UploadBillEntity implements Serializable {
 	private String expenseTypeName;
 	
 	private String expenseTypeId;
+
+	public String getMediaId() {
+		return mediaId;
+	}
+
+	public void setMediaId(String mediaId) {
+		this.mediaId = mediaId;
+	}
 
 	public String getId() {
 		return id;

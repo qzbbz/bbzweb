@@ -48,7 +48,7 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 	}
 	@Override
 	public Invoice getInvoiceByIdAndStatus(long invoiceId,int status){
-		String sql = "select * from invoice where id = ? and 'status' = ?";
+		String sql = "select * from invoice where id = ? and status = ?";
 		try {
 			Invoice invoice = jdbcTemplate.queryForObject(sql,
 					new Object[] { invoiceId,status }, new InvoiceMapper());
@@ -62,13 +62,18 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 
 	@Override
 	public long addInvoiceAndGetKey(final Invoice invoice) {
+		logger.debug("Enter addInvoiceAndGetKey");
 		KeyHolder keyHolder = new GeneratedKeyHolder();
-
+		String title = invoice.getTitle() == null ? "" : invoice.getTitle();
+		String dateTime = invoice.getDate() == null ? 
+				new Timestamp(System.currentTimeMillis()).toString() : String.valueOf(invoice.getDate());
+		logger.debug("TITLE : " + title);
+		logger.debug("DATE:" + dateTime);
 		try {
 			int id = jdbcTemplate.update(new PreparedStatementCreator() {
 				public PreparedStatement createPreparedStatement(
 						Connection connection) throws SQLException {
-					String sql = "insert into invoice (expense_type_id, 'status', title, amount, 'desc',date, cost_center,create_time)"
+					String sql = "insert into invoice (expense_type_id,status,title,amount,detail_desc,date,cost_center,create_time)"
 							+ " values (?, ?, ?, ?, ?, ?, ?, ?)";
 					PreparedStatement ps = connection.prepareStatement(sql,
 							Statement.RETURN_GENERATED_KEYS);
@@ -79,17 +84,16 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 							invoice.getTitle() == null ? "" : invoice
 									.getTitle());
 					ps.setDouble(4, invoice.getAmount()==null?0:invoice.getAmount());
-					ps.setString(5, invoice.getDesc());
+					ps.setString(5, invoice.getDesc() == null?"":invoice.getDesc());
 					ps.setTimestamp(
 							6,
-							invoice.getDate() == null ? new Timestamp(System
-									.currentTimeMillis()) : invoice.getDate());
-					ps.setString(7, invoice.getCostCenter());
+							invoice.getDate() == null ? 
+									new Timestamp(System.currentTimeMillis()) : invoice.getDate());
+					ps.setString(7, invoice.getCostCenter() == null?"":invoice.getCostCenter());
 					ps.setTimestamp(
 							8,
-							invoice.getCreateTime() == null ? new Timestamp(
-									System.currentTimeMillis()) : invoice
-									.getCreateTime());
+							invoice.getCreateTime() == null ?
+									new Timestamp(System.currentTimeMillis()) : invoice.getCreateTime());
 					return ps;
 				}
 			}, keyHolder);
@@ -117,7 +121,7 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 
 	@Override
 	public boolean updateInvoice(Invoice invoice) {
-		String sql = "update invoice set title=?, amount=?, date=? ,'desc'=? ,expense_type_id=? where id=?";
+		String sql = "update invoice set title=?, amount=?, date=? ,detail_desc=? ,expense_type_id=? where id=?";
 		try {
 			int affectedRows = jdbcTemplate.update(
 					sql,
@@ -139,7 +143,7 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 	
 	@Override
 	public List<Invoice> getUserInvoiceByStatus(String userId,String status){
-		String sql = "select a.id id,expense_type_id,'status',title,amount,'desc',date " +
+		String sql = "select a.id id,expense_type_id,status,title,amount,detail_desc,date " +
 					" from user_invoice b, invoice a where b.user_id=? and b.invoice_id = a.id and a.status=?";
 		try {
 			List list = jdbcTemplate.query(sql,
@@ -157,7 +161,7 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 	public List<Invoice> getUserInvoiceByStatusByPage(String userId,
 			String status, int begin, int end) {
 		
-		String sql = "select a.id id,expense_type_id,'status',title,amount,'desc',date " +
+		String sql = "select a.id id,expense_type_id,status,title,amount,desc,date " +
 				" from user_invoice b, invoice a where b.user_id=? and b.invoice_id = a.id and a.status=? limit ? and ?";
 	try {
 		List list = jdbcTemplate.query(sql,

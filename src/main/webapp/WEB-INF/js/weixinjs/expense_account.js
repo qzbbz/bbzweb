@@ -36,6 +36,14 @@ $(function(){
 	
 	var uploadBillList = new Array();
 	
+	var draftBillList = new Array();
+	
+	var progressingBillList = new Array();
+	
+	var finishedBillList = new Array();
+	
+	var needAuditBillList = new Array();
+	
 	var expenseTypeList = new Array();
 	
 	var hasBindCompany = false;
@@ -255,86 +263,182 @@ $(function(){
 
 	var controler = {};
 
-	//  我的发票
-	controler['myTicket'] = {
-		verifyedListview: null,
-		waitVerifyListview: null,
-		render: function(){
-			var self = this;
-			var html = getTemplate('myTicket');
+	//  我的收件箱
+	controler['inbox'] = {
+			draftBillListview:null,
+			progressingAuditListview: null,
+			finishedAuditListview: null,
+			render: function(){
+				var self = this;
+				var html = getTemplate('inbox');
+
+				appendTemplate(html);
+
+				this.draftBillListview = $('#draft-bill-list');
+				this.progressingAuditListview = $('#progressing-audit-list');
+				this.finishedAuditListview = $('#finished-audit-list');
+
+				function listDraftBill(){
+					var data = null;
+					if(draftBillList != null && draftBillList.length != 0) {
+						data = {draftBillList:draftBillList};
+					}
+					var template = getTemplate('draftBillList');
+					Mustache.parse(template)
+					var html = Mustache.render(template, data);
+
+					self.draftBillListview.html(html);
+					self.draftBillListview.listview();
+				}
+				
+				function listProgressingBill(){
+					var data = null;
+					if(progressingBillList != null && progressingBillList.length != 0) {
+						alert(1.5);
+						data = {progressingBillList:progressingBillList};
+					}
+					var template = getTemplate('progressingBillList');
+					Mustache.parse(template)
+					var html = Mustache.render(template, data);
+					self.progressingAuditListview.html(html);
+					self.progressingAuditListview.listview();
+				}
+
+				function listFinishedBill(){
+					var data = null;
+					if(finishedBillList != null && finishedBillList.length != 0) {
+						data = {finishedBillList:finishedBillList};
+					}
+					var template = getTemplate('finishedBillList');
+					Mustache.parse(template)
+					var html = Mustache.render(template, data);
+					self.finishedAuditListview.html(html);
+					self.finishedAuditListview.listview();
+				}
+
+				listDraftBill();
+				listProgressingBill();
+				listFinishedBill();
+
+				$('[data-role="tabs"]').tabs();
+			},
+
+			refresh: function() {
+				alert("refresh");
+				box.wrap.addClass("box-wrap-gif");
+				box.content.addClass("box-content-gif");
+				box.loading('<html><body><img src="../../img/weixinimg/loading1.gif"></body></html>');
+				getInboxBills(false);
+				alert(JSON.stringify(draftBillList));
+				this.render();
+				box.wrap.removeClass("box-wrap-gif");
+				box.content.removeClass("box-content-gif");
+				box.clearLoading();
+			},
 			
-
-			appendTemplate(html);
-
-			this.waitVerifyListview = $('#waitverifyed-list');
-			this.verifyedListview = $('#verifyed-list');
-
-			function verifyedTicket(){
-				var data = self.getVerifyedTicket();
-				var template = getTemplate('ticketList');
-				Mustache.parse(template)
-				var html = Mustache.render(template, data);
-
-				self.verifyedListview.html(html);
-				self.verifyedListview.listview();
-			}
-
-			function waitVerifyTicket(){
-				var data = self.getWaitVerifyTicket();
-				var template = getTemplate('ticketList');
-				Mustache.parse(template)
-				var html = Mustache.render(template, data);
-				self.waitVerifyListview.html(html);
-				self.waitVerifyListview.listview();
-			}
-
-			waitVerifyTicket();
-			verifyedTicket();
-
-			$('[data-role="tabs"]').tabs();
-		},
-
-		bindEvent: function(){
-
-		},
-		getWaitVerifyTicket: function(){
-			var test = {
-				audit: false,
-				verifyRet: true,
-				tickets : [{
-						price : 600,
-						avatar : '../../img/weixinimg/60.jpeg',
-						name: 'aaa',
-						time: 'ccc',
-						status: true
-					}, {
-						price : 600,
-						avatar : '../../img/weixinimg/60.jpeg',
-						name: 'aaa',
-						time: 'ccc',
-						status: false
-					}]
-				};
-			return test;
-		},
-
-		getVerifyedTicket: function(){
-			var test = {
-				tickets : [{
-						price : 6400,
-						avatar : '../../img/weixinimg/60.jpeg',
-						name: 'aaa',
-						time: 'ccc'
-					}]
-				};
-			return test;
-		},
-
-		init: function(){
-			this.render();
-			this.bindEvent();
+			bindEvent: function(){
+				var self = this;
+				$('#onePressSubmitAudit').click(function(){
+					var ids = [];
+					self.draftBillListview.find('li').each(function(index, obj){
+						var obj = $(obj), check = obj.find('input[type="checkbox"]');
+						if(check.is(':checked')){
+							ids.push(check.val());
+						}
+					})
+					self.submit(ids);
+				})
+			},
+			submit: function(ids){
+					if(ids == null || ids.length == 0) {
+						alert("请勾选需要提交审核的发票！");
+					} else {
+						box.wrap.addClass("box-wrap-gif");
+						box.content.addClass("box-content-gif");
+						box.loading('<html><body><img src="../../img/weixinimg/loading1.gif"></body></html>');
+						var isValid = true;
+						var submitList = new Array();
+						for(var i=0; i<ids.length && isValid; i++) {
+							for(var j=0; j<draftBillList.length; j++) {
+								if(draftBillList[j].invoice_id == ids[i]) {
+									if(draftBillList[j].amount=="0" || draftBillList[j].amount==0) {
+										isValid = false;
+										alert("您勾选的发票中，还存在没有填写金额的发票，请检查！");
+										break;
+									} else if(draftBillList[j].bill_expenseTypeId == null) {
+										isValid = false;
+										alert("您勾选的发票中，还存在没有选择费用类型的发票，请检查！");
+										break;
+									} else {
+										submitList.push(draftBillList[j]);
+									}
+								}
+							}
+						}
+						if(isValid) {
+							var jsonData = JSON.stringify(submitList);
+							$.ajax({ 
+						        type : "POST", 
+						        url  : "/submitBillListAudit?openId=" + userOpenId,  
+						        cache : false,
+						        data : jsonData,
+						        headers : {  
+				                    'Content-Type' : 'application/json;charset=utf-8'  
+				                },
+						        success :  submitSuccess, 
+						        error : submitError 
+						    });
+						} else {
+							box.wrap.removeClass("box-wrap-gif");
+							box.content.removeClass("box-content-gif");
+							box.clearLoading();
+						}
+						function submitSuccess(data) {
+							if (data.error_code == "0") {
+								alert("您提交审核的发票已经全部提交成功！");
+								var tmp = data.ids.split(" ");
+								if(tmp != null && tmp.length != 0) {
+									for(var i=0; i<tmp.length; i++) {
+										for(var j=0; j<draftBillList.length; j++) {
+											if(draftBillList[j].invoice_id == tmp[i]) {
+												draftBillList.splice(j,1);
+											}
+										}
+									}
+								}
+							} else if(data.error_code == "1" || data.error_code == "2"){
+								alert(data.error_message);
+							} else {
+								alert("data.error_message" + data.submit_count);
+								var tmp = data.ids.split(" ");
+								if(tmp != null && tmp.length != 0) {
+									for(var i=0; i<tmp.length; i++) {
+										for(var j=0; j<draftBillList.length; j++) {
+											if(draftBillList[j].invoice_id == tmp[i]) {
+												draftBillList.splice(j,1);
+											}
+										}
+									}
+								}
+							}
+							controler['inbox'].render();
+							box.wrap.removeClass("box-wrap-gif");
+							box.content.removeClass("box-content-gif");
+							box.clearLoading();
+						}
+						function submitError() {
+							alert("提交审核失败，可能是网络原因，请检查！");
+							box.wrap.removeClass("box-wrap-gif");
+							box.content.removeClass("box-content-gif");
+							box.clearLoading();
+						}
+					}
+				},
+				init: function(){
+					this.render();
+					this.bindEvent();
+				}
 		}
-	}
 
 
 	//  发票上传	
@@ -362,7 +466,7 @@ $(function(){
 			},
 			bindEvent: function(){
 				var self = this;
-				$('#uploadBill button').click(function(){
+				$('#onePressUpload').click(function(){
 					var ids = [];
 					self.uploadBillListview.find('li').each(function(index, obj){
 						var obj = $(obj), check = obj.find('input[type="checkbox"]');
@@ -383,13 +487,9 @@ $(function(){
 					box.loading('<html><body><img src="../../img/weixinimg/loading1.gif"></body></html>');
 					var isValid = true;
 					var submitList = new Array();
-					alert("选择上传的数量" + ids.length);
-					for(var i=0; i<ids.length && isValid; i++) {						
-						alert(ids[i]);
+					for(var i=0; i<ids.length && isValid; i++) {
 						for(var j=0; j<uploadBillList.length; j++) {
-							alert(uploadBillList[j].id);
 							if(uploadBillList[j].id == ids[i]) {
-								alert("发票金额" + uploadBillList[j].amount);
 								if(uploadBillList[j].amount=="0" || uploadBillList[j].amount==0) {
 									isValid = false;
 									alert("您勾选的发票中，还存在没有填写金额的发票，请检查！");
@@ -405,21 +505,59 @@ $(function(){
 						}
 					}
 					if(isValid) {
-						var jsonData = new Array();
-						var tmp = "{\"uploadBillEntities\":" +  JSON.stringify(submitList) + "}";
-						jsonData.push(tmp);
-						alert(tmp);
-						$.ajax({ 
-					        type : "POST", 
-					        url  : "/downloadUserBill?openId=" + userOpenId,  
-					        cache : false,
-					        data : tmp,
-					        headers : {  
-			                    'Content-Type' : 'application/json;charset=utf-8'  
-			                },
-					        success :  submitSuccess, 
-					        error : submitError 
-					    });
+						var finalSubmitList = new Array();
+						var index = 0;
+						var syncUpload = function() {
+							var localId = submitList[index].img;
+							wx.uploadImage({
+							    localId: localId,
+							    isShowProgressTips: 0,
+							    success: function (res) {
+							    	submitList[index].mediaId = res.serverId;
+							    	finalSubmitList.push(submitList[index]);
+							    	index++;
+							    	if(index < submitList.length) {
+							    		syncUpload();
+							    	} else {
+							    		finishWeixinUpload();
+							    	}
+							    },
+							    fail:function() {
+							    	if(index == submitList.length) {
+							    		finishWeixinUpload();
+							    	}
+							    }
+							});
+						}
+						function finishWeixinUpload() {
+							var shouldUpload = false;
+							if(finalSubmitList.length == 0) {
+								alert("微信服务器无法接受图片上传，请稍后重试！");
+								box.wrap.removeClass("box-wrap-gif");
+								box.content.removeClass("box-content-gif");
+								box.clearLoading();
+							} else if(finalSubmitList.length != submitList.length) {
+								alert("微信服务器没有成功接收全部图片，当前状态：" + finalSubmitList.length + "/" + submitList.length + "。下面开始向元升服务器上传数据。");
+								shouldUpload = true;
+							} else {
+								shouldUpload = true;
+							}
+							if(shouldUpload) {
+								var jsonData = "{\"uploadBillEntities\":" +  JSON.stringify(finalSubmitList) + "}";
+								$.ajax({ 
+							        type : "POST", 
+							        url  : "/downloadUserBill?openId=" + userOpenId,  
+							        cache : false,
+							        data : jsonData,
+							        headers : {  
+					                    'Content-Type' : 'application/json;charset=utf-8'  
+					                },
+							        success :  submitSuccess, 
+							        error : submitError 
+							    });
+							}
+						}
+						syncUpload();
 					} else {
 						box.wrap.removeClass("box-wrap-gif");
 						box.content.removeClass("box-content-gif");
@@ -428,16 +566,27 @@ $(function(){
 					function submitSuccess(data) {
 						if (data.error_code == "0") {
 							alert("您选择上传的发票已经全部上传成功！");
+							var tmp = data.ids.split(" ");
+							if(tmp != null && tmp.length != 0) {
+								for(var i=0; i<tmp.length; i++) {
+									for(var j=0; j<uploadBillList.length; j++) {
+										if(uploadBillList[j].id == tmp[i]) {
+											uploadBillList.splice(j,1);
+										}
+									}
+								}
+							}
 						} else if(data.error_code == "1" || data.error_code == "3"){
 							alert(data.error_message);
 						} else {
 							alert("data.error_message" + data.upload_count);
 							var tmp = data.ids.split(" ");
-							if(tmp != null && tmp.length != 0)
-							for(var i=0; i<tmp.length; i++) {
-								for(var j=0; j<uploadBillList.length; j++) {
-									if(uploadBillList[j].id === tmp[i]) {
-										uploadBillList.splice(j,1);
+							if(tmp != null && tmp.length != 0) {
+								for(var i=0; i<tmp.length; i++) {
+									for(var j=0; j<uploadBillList.length; j++) {
+										if(uploadBillList[j].id == tmp[i]) {
+											uploadBillList.splice(j,1);
+										}
 									}
 								}
 							}
@@ -630,7 +779,6 @@ $(function(){
 						uploadBillList[i].amount = price;
 						uploadBillList[i].expenseTypeName = typeName;
 						uploadBillList[i].expenseTypeId = typeId;
-						alert(JSON.stringify(uploadBillList[i]));
 						break;
 					}
 				}
@@ -638,9 +786,59 @@ $(function(){
 			}
 		}
 	}
+	
+	function draftBillEdit(){
 
+		$(document).on("click", ".draft-bill-list li", function(event) {
+			if(event.target.nodeName == "INPUT") return;
+			var obj = $(this), src = obj.data('src');
+			edit(obj, src);
+		})
+
+		function edit(obj, src){
+			var template = getTemplate('editTicket');
+			Mustache.parse(template)
+			var html = Mustache.render(template, {src: src});
+
+			box.html(html);
+			box.wrap.center($('#editTicket'));
+			setSelectOptions($('#expenseType'));
+			box.show();
+			$(window).bind( 'touchmove', touchScroll );
+			box.done(function(){
+				var bill_amount = $('#price').val();
+				var expenseTypeId = $("#expenseType  option:selected").val();
+				var expenseTypeName = $("#expenseType  option:selected").text();
+				var invoice_id = $(obj).find('input').val();
+				if(bill_amount == "" || !isNumber(bill_amount)){
+					$('.price-empty-error').show();
+				} else if(expenseTypeId == null || expenseTypeName == "请选择") {
+					$('.type-select-error').show();				
+				} else {
+					$('.price-empty-error').hide();
+					$('.type-select-error').hide();
+					updateBillInfo(bill_amount, expenseTypeId, expenseTypeName, invoice_id);
+					box.hide();
+				}
+			})
+
+			function updateBillInfo(price, typeId, typeName, id){
+				//alert("price:" + price + " typeId:" + typeId + " typeName:" + typeName + "id:" + id);
+				for(var i=0; i<draftBillList.length; i++) {
+					if(id == draftBillList[i].invoice_id) {
+						draftBillList[i].bill_amount = price;
+						draftBillList[i].bill_expenseTypeName = typeName;
+						draftBillList[i].bill_expenseTypeId = typeId;
+						break;
+					}
+				}
+				controler['inbox'].init();
+			}
+		}
+	}
 
 	billEdit();
+	draftBillEdit();
 	billDetail();
 	
 	$.ajax({ 
@@ -730,6 +928,49 @@ $(function(){
 		}
 	}
 	
+	function getNeedAuditBills(isAsync) {
+		if(userOpenId != null && userOpenId != '') {
+			$.ajax({ 
+		        type : "POST",
+		        url  : "/getNeedAuditBills?openId=" + userOpenId,  
+		        cache : false,
+		        async: isAsync,
+		        success : getNeedAuditBills 
+		    });
+			function getNeedAuditBills(data){
+				if(data.processingList != null) {
+					needAuditBillList = data.processingList; 
+				}
+			}
+		}
+	}
+	
+	function getInboxBills(isAsync) {
+		if(userOpenId != null && userOpenId != '') {
+			$.ajax({ 
+		        type : "POST",
+		        url  : "/getInboxBills?openId=" + userOpenId,  
+		        cache : false,
+		        async: isAsync,
+		        success : getInboxBills 
+		    });
+			function getInboxBills(data) {
+				if(data.uploadedList != null) {
+					draftBillList = data.uploadedList; 
+				}
+				if(data.uploadedList != null) {
+					progressingBillList = data.processingList; 
+				}
+				if(data.uploadedList != null) {
+					finishedBillList = data.finishedList; 
+				}
+			}
+		}
+	}
+	
+	getNeedAuditBills(false);
+	getInboxBills(false);
+	
 	$('#camera').click(function(){
 		if(!hasBindCompany) {
 			alert("您还没有绑定公司，请退出点击设置菜单，进行公司绑定！");
@@ -752,7 +993,7 @@ $(function(){
 								(date.getHours() < 10 ? "0" + date.getHours() : date.getHours()) + ":" +
 								(date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes()) + ":" + 
 								(date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds());
-						var billData = {"id":date.getTime(), "img":res.localIds[i].toString(), "time":time, "amount": 0, "expenseTypeName":"", "expenseTypeId":null}
+						var billData = {"id":date.getTime() + Math.floor(Math.random()*10000+1), "img":res.localIds[i].toString(), "time":time, "amount": 0, "expenseTypeName":"", "expenseTypeId":null, "mediaId":null}
 						uploadBillList.push(billData);
 					}
 				}
@@ -760,7 +1001,7 @@ $(function(){
 				box.content.removeClass("box-content-gif");
 				box.clearLoading();
 				controler['uploadBill'].init();
-				
+				setMenu('发票上传');				
 		    },
 		    fail : function(res) {
 		    	if(res.errMsg === "system:function not exist") {

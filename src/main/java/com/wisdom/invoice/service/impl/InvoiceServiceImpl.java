@@ -4,7 +4,6 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,11 +18,9 @@ import com.wisdom.common.model.Dispatcher;
 import com.wisdom.common.model.Invoice;
 import com.wisdom.common.model.InvoiceApproval;
 import com.wisdom.common.model.UserInvoice;
+import com.wisdom.company.service.IExpenseTypeService;
 import com.wisdom.dispatch.service.IDispatcherService;
-import com.wisdom.invoice.dao.IAttachmentDao;
-import com.wisdom.invoice.dao.IInvoiceApprovalDao;
 import com.wisdom.invoice.dao.IInvoiceDao;
-import com.wisdom.invoice.dao.IUserInvoiceDao;
 import com.wisdom.invoice.domain.InvoiceInfoVo;
 import com.wisdom.invoice.service.IAttachmentService;
 import com.wisdom.invoice.service.IInvoiceApprovalService;
@@ -50,6 +47,8 @@ public class InvoiceServiceImpl implements IInvoiceService {
 	private IUserInvoiceService userInvoiceService;
 	@Autowired
 	private IInvoiceApprovalService invoiceApprovalService;
+	@Autowired
+	private IExpenseTypeService expenseTypeService;
 	
 	@Transactional
 	@Override
@@ -57,6 +56,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			String channelTypeId,String objectTypeId,Map<String,Object> params) {
 		Map<String,Object> retMap = new HashMap<String,Object>();
 		retMap.put("success", false);
+		log.debug("createInvoiceProcess");
 		if(StringUtils.isEmpty(userId)||StringUtils.isEmpty(image) || StringUtils.isEmpty(channelTypeId)){
 			log.error("null pointor error");
 			return retMap;
@@ -67,11 +67,17 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			retMap.put("message", "lost expenseTypeId param!");
 			return retMap;
 		}
+		if(null == params || null == (Double)params.get("amount")){
+			log.error("amount not exsited");
+			retMap.put("message", "lost amount param!");
+			return retMap;
+		}
 		int expenseTypeId = (Integer)params.get("expenseTypeId");
-		
+		double amount = (Double)params.get("amount");
 		Invoice invoice = new Invoice();
 		invoice.setExpenseTypeId(expenseTypeId);
-		invoice.setStatus(0); //微信默认创建后即审批		
+		invoice.setAmount(amount);
+		invoice.setStatus(1); //微信上传默认为草稿		
 		
 		log.debug("addInvoiceRevord");
 		Long invoiceId = addInvoiceRecord(invoice);
@@ -283,7 +289,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		map.put("invoice_id", userInvoice.getInvoiceId());
 		map.put("user_id", userInvoice.getUserId());
 		map.put("processStatus",userInvoice.getStatus());
-		map.put("approval_status", userInvoice.getApprovalStatus());
+		map.put("approval_status", userInvoice.getApprovalStatus() == 0?true:false);
 		map.put("approval_id", userInvoice.getApprovalId());
 		String userName = userService.getUserNameByUserId(userInvoice.getUserId());
 		map.put("user_name", userName);
@@ -295,7 +301,9 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		}
 		map.put("bill_title", invoice.getTitle());
 		map.put("bill_amount", invoice.getAmount());
-		DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");  
+		map.put("bill_expenseTypeId", invoice.getExpenseTypeId());
+		map.put("bill_expenseTypeName", expenseTypeService.getExpenseTypeNameById(invoice.getExpenseTypeId()));
+		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
 		Timestamp stamp = invoice.getCreateTime();
 		map.put("bill_date", sdf.format(stamp));
 		
@@ -352,6 +360,8 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			}
 			map.put("bill_title", invoice.getTitle());
 			map.put("bill_amount", invoice.getAmount());
+			map.put("bill_expenseTypeId", invoice.getExpenseTypeId());
+			map.put("bill_expenseTypeName", expenseTypeService.getExpenseTypeNameById(invoice.getExpenseTypeId()));
 			Attachment attach = attachmentService.getAttachMentByInvoiceId(invoice.getId());
 			if(null != attach){
 				map.put("bill_img", attach.getImage());
