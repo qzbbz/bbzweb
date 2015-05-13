@@ -21,10 +21,13 @@ import com.wisdom.common.model.UserInvoice;
 import com.wisdom.company.service.IExpenseTypeService;
 import com.wisdom.dispatch.service.IDispatcherService;
 import com.wisdom.invoice.dao.IInvoiceDao;
+import com.wisdom.invoice.domain.ApprovalStatus;
 import com.wisdom.invoice.domain.InvoiceInfoVo;
+import com.wisdom.invoice.domain.ProcessStatus;
 import com.wisdom.invoice.service.IAttachmentService;
 import com.wisdom.invoice.service.IInvoiceApprovalService;
 import com.wisdom.invoice.service.IInvoiceService;
+import com.wisdom.invoice.service.ISingleInvoiceService;
 import com.wisdom.invoice.service.IUserInvoiceService;
 import com.wisdom.user.service.IUserService;
 
@@ -49,6 +52,8 @@ public class InvoiceServiceImpl implements IInvoiceService {
 	private IInvoiceApprovalService invoiceApprovalService;
 	@Autowired
 	private IExpenseTypeService expenseTypeService;
+	@Autowired
+	private ISingleInvoiceService singleInvoiceService;
 	
 	@Transactional
 	@Override
@@ -403,6 +408,61 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		return vo;
 	}
 	
+	
+	/**
+	 * 批量提交处于草稿状态的发票
+	 * @param userId
+	 * @param invoiceId
+	 * @return
+	 */
+	@Override
+	@Transactional
+	public Map submitUserInvoice(String userId,long invoiceId){
+		Map<String,Object> retMap = new HashMap<String,Object>();
+		retMap.put("success",false);
+		
+		UserInvoice userInvoice = userInvoiceService.getUserInvoiceByUserIdAndInvoiceId(userId, invoiceId);
+		if(null == userInvoice){
+			log.error("invoice not existed error");
+			retMap.put("msg", "invoice not existed");
+			return retMap;
+		}
+		
+		//TODO 获取当前用户的审批信息。
+		String receiver = new String("");
+		receiver = getApprovalUserList(userId);
+		if(StringUtils.isEmpty(receiver)){
+			log.error("get approval error!");
+			retMap.put("msg", "get approval error!");
+			return retMap;
+		}
+		
+		//先生成一条审批记录
+		boolean blRet = invoiceApprovalService.addInvoiceApprovalRecord(invoiceId,receiver,0);
+		if(!blRet){
+			log.error("add invoiceAppovalRecord failed");
+			retMap.put("message", "add approval record error!");
+			return retMap;
+		}
+		
+		//获取用户openId
+		String openId = "";
+		openId = userService.getOpenIdByUserId(receiver);	//TODO 多个审批人场景还要处理一下。
+		String userName = userService.getUserNameByUserId(userId); 
+		log.debug("getUserNameByUserId:" + userName);
+		//生成一条dispatcher日志。
+		blRet = dispatcherService.addDispatcherRecord(userId,userName,invoiceId,0,0,receiver,openId,1);		//TODO 
+		if(!blRet){
+			log.error("add dispatcher log error!" + "userId:" + userId + ",reciever:" + receiver + ",InvoiceId:" + invoiceId);
+			return retMap;
+		}
+		
+		/*更新状态*/
+		singleInvoiceService.updateInvoiceStatus(invoiceId,0);
+		userInvoiceService.updateInvoiceApprovalStatus(userId, receiver, invoiceId, ProcessStatus.PROCESSING, ApprovalStatus.APPROVALED);		
+		retMap.put("success", true);
+		return retMap;
+	}
 	
 	public boolean checkUserAuth(String userId,String appovalUser){
 		//TODO

@@ -44,6 +44,13 @@ public interface IInvoiceService {
 	public Map<String,Object> excuteApproval(String userId,String approvalUerId,String invoiceId,int approvalStatus);
 	
 	public Map<String, List<Map<String, Object>>> getNeededAuditBillList(String userId);
+	/**
+	 * 将某个订单从草稿提交审批
+	 * @param userId
+	 * @param invoiceId
+	 * @return
+	 */
+	public Map submitUserInvoice(String userId,long invoiceId);
 
 	
 	

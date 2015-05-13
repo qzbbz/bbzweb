@@ -40,5 +40,9 @@ public class SingleInvoiceServiceImpl implements ISingleInvoiceService {
 		int end = page*pageSize;
 		return invoiceDao.getUserInvoiceByStatusByPage(userId, status, start, end);
 	}
+	@Override
+	public boolean updateInvoiceStatus(long invoiceId,int status){
+		return invoiceDao.updateInvoiceStatus(invoiceId,status);
+	}
 	
 }

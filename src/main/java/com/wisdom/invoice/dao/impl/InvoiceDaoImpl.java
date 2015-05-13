@@ -161,7 +161,7 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 	public List<Invoice> getUserInvoiceByStatusByPage(String userId,
 			String status, int begin, int end) {
 		
-		String sql = "select a.id id,expense_type_id,status,title,amount,desc,date " +
+		String sql = "select a.id id,expense_type_id,status,title,amount,detail_desc,date " +
 				" from user_invoice b, invoice a where b.user_id=? and b.invoice_id = a.id and a.status=? limit ? and ?";
 	try {
 		List list = jdbcTemplate.query(sql,
@@ -173,5 +173,20 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 		logger.error("getInvoiceById error" + e.getMessage());
 	}
 		return null;
+	}
+	
+	@Override
+	public boolean updateInvoiceStatus(long invoiceId,int status) {
+		String sql = "update invoice set status=? where id=?";
+		try {
+			int affectedRows = jdbcTemplate.update(
+					sql,invoiceId,status);
+					
+			logger.debug("updateInvoice result : {}", affectedRows);
+			return affectedRows != 0;
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 }

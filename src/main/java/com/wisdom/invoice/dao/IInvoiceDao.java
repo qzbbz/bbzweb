@@ -16,4 +16,5 @@ public interface IInvoiceDao {
 	public boolean updateInvoice(Invoice invoice);
 	public List<Invoice> getUserInvoiceByStatus(String userId,String status);
 	public List<Invoice> getUserInvoiceByStatusByPage(String userId,String status,int begin,int end);
+	public boolean updateInvoiceStatus(long invoiceId,int status);
 }

@@ -12,4 +12,6 @@ public interface ISingleInvoiceService {
 	public List<Invoice> getUserInvoiceByStatus(String userId,String status);
 	
 	public List<Invoice> getUserInvoiceByStatusByPage(String userId,String status,int page,int pageSize);
+	
+	public boolean updateInvoiceStatus(long invoiceId,int status);
 }

@@ -49,4 +49,10 @@ public class UserInvoiceServiceImpl implements IUserInvoiceService {
 		return userInvoiceDao.addUserInvoice(userInvoice);
 	}
 
+	@Override
+	public UserInvoice getUserInvoiceByUserIdAndInvoiceId(String userId,
+			long invoiceId) {
+		return userInvoiceDao.getUserInvoiceByUserIdAndInvoiceId(userId, invoiceId);
+	}
+
 }

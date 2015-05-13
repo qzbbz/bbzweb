@@ -10,6 +10,7 @@ public interface IUserInvoiceDao {
 	public List<UserInvoice> getUserInvoiceByUserId(String userId);
 	
 	public UserInvoice getUserInvoiceByInvoiceId(long invoiceId);
+	public UserInvoice getUserInvoiceByUserIdAndInvoiceId(String userId,long invoiceId);
 	
 	public boolean addUserInvoice(UserInvoice userInvoice);
 	
