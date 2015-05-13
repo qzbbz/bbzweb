@@ -4,8 +4,8 @@
 		<title>帮帮账</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" type="text/css" href="../../js/weixinjs/libs/jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.css">
-		<link rel="stylesheet" type="text/css" href="../../css/weixincss/style.css?201505120844">
-		<link rel="stylesheet" type="text/css" href="../../css/weixincss/iconfont/iconfont.css?201505120844">
+		<link rel="stylesheet" type="text/css" href="../../css/weixincss/style.css?201505130754">
+		<link rel="stylesheet" type="text/css" href="../../css/weixincss/iconfont/iconfont.css?201505120821">
 	</head>
 <body>
 	<div data-role="page" id="ticket">
@@ -15,12 +15,12 @@
 			<span class="current-menu"></span>
 			<ul class="menu">
 				<li menu-page="myTicket"><i class="icon-inbox iconbigfont"></i>收件箱</li>
-				<li menu-page="ticketUpload"><i class="icon-upload5 iconbigfont"></i>发票上传</li>
+				<li menu-page="uploadBill"><i class="icon-upload5 iconbigfont"></i>发票上传</li>
 				<li menu-page="ticketVerify"><i class="icon-adminbill iconbigfont"></i>发票审核</li>
 				<li menu-page="help"><i class="icon-help iconbigfont"></i>服务与帮助</li>
 			</ul>
 
-			<i class="icon-camera iconfont take"></i>
+			<i id="camera" class="icon-camera1 iconfont take"></i>
 		</header>
 
 		<div id="content">
@@ -32,7 +32,7 @@
 		<div data-role="tabs">
 			<div class="navbar">
 				<ul>
-			      <li><a href="#waitverifyed" data-theme="ab" class="ui-btn-active">待审核发票</a></li>
+			      <li><a href="#waitverifyed" data-theme="ab" class="ui-btn-active">已上传发票</a></li>
 			      <li><a href="#verifyed" data-theme="ab">已审核发票</a></li>
 			    </ul>
 			</div>
@@ -52,33 +52,51 @@
 		{{#tickets}}
 			<li data-src="{{avatar}}">
 				<img src="{{avatar}}" class="avatar">
-				<p class="price">金额: {{price}}
+				<p class="price">金额: {{amount}}
 					{{#verifyRet}}
 						{{#status}}
-						<p style="float:right;color:rgba(239, 109, 68, 0.8);">审核已通过</p>
+						<p style="float:right;color:#419088;">审核已通过</p>
 						{{/status}}
 						{{^status}}
 						<p style="float:right;color:rgba(239, 109, 68, 0.8);">审核未通过</p>
 						{{/status}}
 					{{/verifyRet}}
 				</p>
+				<p class="man">费用类型: {{expenseTypeName}}</p>
 				<p class="date">时间: {{time}}</p>
-				<p class="man">提交人: {{name}}</p>
 				{{#audit}}
 					<input type="checkbox" name="choose" value="{{id}}">
 				{{/audit}}
+				{{#upload}}
+					<input type="checkbox" name="choose" value="{{id}}">
+				{{/upload}}
 			</li>
 		{{/tickets}}
 		{{^tickets}}
 			<p>暂时没有数据，可以尝试下拉刷新。</p>
 		{{/tickets}}
     </script>
+    
+	<script id="uploadBillList" type="x-tmpl-mustache">
+		{{#allUploadBillList}}
+			<li data-src="{{img}}">
+				<img src="{{img}}" class="avatar">
+				<p class="amount">金额: {{amount}}元</p>
+				<p class="man">费用类型: {{expenseTypeName}}</p>
+				<p class="date">创建时间: {{time}}</p>
+				<input type="checkbox" name="choose" value="{{id}}">
+			</li>
+		{{/allUploadBillList}}
+		{{^allUploadBillList}}
+			<div style="margin-top: 10px;"><h6 style="color:#38c;">&nbsp;&nbsp;&nbsp;暂时没有数据，请先对发票拍照。</h6></div>
+		{{/allUploadBillList}}
+    </script>
 
-	<script id="ticketUpload" type="text/template">
-		<div id="ticketUpload">
-			<h5>您要上传的发票 <button class="ladda-button small" data-shadow="true" style="background :rgba(239, 109, 68, 0.8);">一键上传</h5>
-			<div id="verify-ticktes" class="ui-content">
-				<ul id="verify-list" class="ticket-list-upload">
+	<script id="uploadBill" type="text/template">
+		<div id="uploadBill">
+			<h5>您要上传的发票 <button id="onePressUpload" class="ladda-button small" data-shadow="true" style="background :rgba(239, 109, 68, 0.8);">一键上传</h5>
+			<div id="upload-bill" class="ui-content">
+				<ul id="upload-bill-list" class="bill-list-upload">
 				</ul>
 			</div>
 		</div>
@@ -94,18 +112,24 @@
 			</div>
 
 			<div id="service" class="ui-content typo">
-				<h4>微信帮帮账</h4>
-						<p>微信帮帮账服务是上海元升财务咨询有限公司提供的微信报销审批服务，通过该服务，您可以高效的完成报销审批的工作。</p>
+				<p style="color:#38c;">微信帮帮账</p>
+						<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;微信帮帮账服务是上海元升财务咨询有限公司提供的微信报销审批服务，通过该服务，您可以高效的完成报销审批的工作。</p>
 			</div>		
 			<div id="help" class="ui-content typo">
-				<h4>如何绑定公司</h4>
-						<p>1.点击屏幕左上角菜单按钮。</p>
-						<p>2.在下方弹出的子菜单中选择绑定公司。</p>
-						<p>3.在绑定公司页面的邀请码输入框中输入邀请码，点击绑定按钮。</p>
-				<h4>如何设定账号</h4>
+				<p style="color:#38c;">如何上传发票</p>
+				<p>1.点击屏幕右上角拍照按钮。</p>
+				<p>2.在打开的页面中选择拍照或从图片库中直接选择图片。</p>
+				<p>3.在选择的发票中，点击每一个发票，在弹出的窗口中填写发票金额同时选择费用类型。</p>
+				<p>4.只有填写过发票金额的发票才可以上传，默认发票费用类型为电话费用，请注意更改。</p>
+				<p>5.填写完金额后，可在上传发票界面勾选多个发票，然后点击一键上传即可。</p>
+				<p style="color:#38c;">如何审核发票</p>
 				<p>1.点击屏幕左上角菜单按钮。</p>
-				<p>2.在下方弹出的子菜单中选择账号设定。</p>
-				<p>3.在账号设定页面修改姓名和电子邮件地址，<span style="color:rgb(255,64,129);">请注意</span>，您在这里更新您的电子邮件地址后，当您登陆元升财务系统后台时，请以您在此提供的电子邮件地址为用户名进行系统登陆。</p>
+				<p>2.在下方弹出的子菜单中选择发票审核。</p>
+				<p>3.在发票审核界面可以勾选多个发票，选择一键审核通过或一键审核拒绝，即可。</p>
+				<p style="color:#38c;">如何查看已提交的发票</p>
+				<p>1.点击屏幕左上角菜单按钮。</p>
+				<p>2.在下方弹出的子菜单中选择我的收件箱。</p>
+				<p>3.在我的收件箱界面可以查看已上传的草稿发票和已经审核过的发票。</p>
 			</div>
 		</div>
 	</script>
@@ -125,7 +149,7 @@
 			<img src="{{src}}" style="max-width:100%;height:auto;">
 			<label>金额 <span class="price-empty-error">不能为空</span><br>
 			<input type="number" id="price" value="{{price}}"></label>
-			<label>费用类型</span><br>
+			<label>费用类型<span class="type-select-error">请选择类型</span><br>
 			<select name="expenseType" id="expenseType" style="width:100%;">
 		    </select></label>
 		</div>
@@ -135,9 +159,10 @@
 		</div>
 	</script>
 
+	<script type="text/javascript" src="../../js/weixinjs/jweixin-1.0.0.js"></script>
 	<script type="text/javascript" src="../../js/weixinjs/jquery-1.11.1.min.js"></script>
 	<script type="text/javascript" src="../../js/weixinjs/libs/jquery.mobile-1.4.5/jquery.mobile-1.4.5.js"></script>
 	<script type="text/javascript" src="../../js/weixinjs/mustache.js"></script>
-	<script type="text/javascript" src="../../js/weixinjs/expense_account.js?201505120859"></script>
+	<script type="text/javascript" src="../../js/weixinjs/expense_account.js?201505130924"></script>
 </body>
 </html>	

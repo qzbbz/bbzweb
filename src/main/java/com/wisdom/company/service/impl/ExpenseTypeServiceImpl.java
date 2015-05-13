@@ -1,5 +1,6 @@
 package com.wisdom.company.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,13 +19,16 @@ public class ExpenseTypeServiceImpl implements IExpenseTypeService {
 	private IExpenseTypeDao expenseTypeDao;
 	
 	@Override
-	public Map<Long, String> getExpenseTypeMap() {
-		Map<Long, String> retMap = new HashMap<>();
+	public List<Map<String, String>> getExpenseTypeMap() {
+		List<Map<String, String>> retList = new ArrayList<>();
 		List<ExpenseType> list =  expenseTypeDao.getAllExpenseType();
 		for(ExpenseType type : list) {
-			retMap.put(type.getId(), type.getName());
+			Map<String, String> map = new HashMap<>();
+			map.put("name", type.getName());
+			map.put("value", String.valueOf(type.getId()));
+			retList.add(map);
 		}
-		return retMap;
+		return retList;
 	}
 
 	@Override

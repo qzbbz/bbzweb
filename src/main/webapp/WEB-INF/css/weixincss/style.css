@@ -9,7 +9,7 @@
  * BUTTON BASE
  @charset "utf-8";
 
-/* 防止用户自定义背景颜色对网页的影响，添加让用户可以自定义字体 */
+/* 闃叉鐢ㄦ埛鑷畾涔夎儗鏅鑹插缃戦〉鐨勫奖鍝嶏紝娣诲姞璁╃敤鎴峰彲浠ヨ嚜瀹氫箟瀛椾綋 */
 html {
   color: #333;
   background: #fff;
@@ -18,30 +18,30 @@ html {
   text-rendering: optimizelegibility;
 }
 
-/* 如果你的项目仅支持 IE9+ | Chrome | Firefox 等，推荐在 <html> 中添加 .borderbox 这个 class */
+/* 濡傛灉浣犵殑椤圭洰浠呮敮鎸� IE9+ | Chrome | Firefox 绛夛紝鎺ㄨ崘鍦� <html> 涓坊鍔� .borderbox 杩欎釜 class */
 html.borderbox *, html.borderbox *:before, html.borderbox *:after {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
 
-/* 内外边距通常让各个浏览器样式的表现位置不同 */
+/* 鍐呭杈硅窛閫氬父璁╁悇涓祻瑙堝櫒鏍峰紡鐨勮〃鐜颁綅缃笉鍚� */
 body, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, textarea, p, blockquote, th, td, hr, button, article, aside, details, figcaption, figure, footer, header, menu, nav, section {
   margin: 0;
   padding: 0;
 }
 
-/* 重设 HTML5 标签, IE 需要在 js 中 createElement(TAG) */
+/* 閲嶈 HTML5 鏍囩, IE 闇�瑕佸湪 js 涓� createElement(TAG) */
 article, aside, details, figcaption, figure, footer, header, menu, nav, section {
   display: block;
 }
 
-/* HTML5 媒体文件跟 img 保持一致 */
+/* HTML5 濯掍綋鏂囦欢璺� img 淇濇寔涓�鑷� */
 audio, canvas, video {
   display: inline-block;
 }
 
-/* 要注意表单元素并不继承父级 font 的问题 */
+/* 瑕佹敞鎰忚〃鍗曞厓绱犲苟涓嶇户鎵跨埗绾� font 鐨勯棶棰� */
 body, button, input, select, textarea {
   font: 100 1em/1.8 Lantinghei SC, Microsoft Yahei, Hiragino Sans GB, Microsoft Sans Serif, WenQuanYi Micro Hei, sans-serif;
 }
@@ -52,18 +52,18 @@ input::-moz-focus-inner {
   border: 0;
 }
 
-/* 去掉各Table cell 的边距并让其边重合 */
+/* 鍘绘帀鍚凾able cell 鐨勮竟璺濆苟璁╁叾杈归噸鍚� */
 table {
   border-collapse: collapse;
   border-spacing: 0;
 }
 
-/* 去除默认边框 */
+/* 鍘婚櫎榛樿杈规 */
 fieldset, img {
   border: 0;
 }
 
-/* 块/段落引用 */
+/* 鍧�/娈佃惤寮曠敤 */
 blockquote {
   position: relative;
   color: #999;
@@ -80,18 +80,18 @@ blockquote {
   }
 }
 
-/* Firefox 以外，元素没有下划线，需添加 */
+/* Firefox 浠ュ锛屽厓绱犳病鏈変笅鍒掔嚎锛岄渶娣诲姞 */
 acronym, abbr {
   border-bottom: 1px dotted;
   font-variant: normal;
 }
 
-/* 添加鼠标问号，进一步确保应用的语义是正确的（要知道，交互他们也有洁癖，如果你不去掉，那得多花点口舌） */
+/* 娣诲姞榧犳爣闂彿锛岃繘涓�姝ョ‘淇濆簲鐢ㄧ殑璇箟鏄纭殑锛堣鐭ラ亾锛屼氦浜掍粬浠篃鏈夋磥鐧栵紝濡傛灉浣犱笉鍘绘帀锛岄偅寰楀鑺辩偣鍙ｈ垖锛� */
 abbr {
   cursor: help;
 }
 
-/* 一致的 del 样式 */
+/* 涓�鑷寸殑 del 鏍峰紡 */
 del {
   text-decoration: line-through;
 }
@@ -101,12 +101,12 @@ address, caption, cite, code, dfn, em, th, var {
   font-weight: 400;
 }
 
-/* 去掉列表前的标识, li 会继承，大部分网站通常用列表来很多内容，所以应该当去 */
+/* 鍘绘帀鍒楄〃鍓嶇殑鏍囪瘑, li 浼氱户鎵匡紝澶ч儴鍒嗙綉绔欓�氬父鐢ㄥ垪琛ㄦ潵寰堝鍐呭锛屾墍浠ュ簲璇ュ綋鍘� */
 ul, ol {
   list-style: none;
 }
 
-/* 对齐是排版最重要的因素, 别让什么都居中 */
+/* 瀵归綈鏄帓鐗堟渶閲嶈鐨勫洜绱�, 鍒浠�涔堥兘灞呬腑 */
 caption, th {
   text-align: left;
 }
@@ -115,7 +115,7 @@ q:before, q:after {
   content: '';
 }
 
-/* 统一上标和下标 */
+/* 缁熶竴涓婃爣鍜屼笅鏍� */
 sub, sup {
   font-size: 75%;
   line-height: 0;
@@ -134,7 +134,7 @@ sub {
   bottom: -0.25em;
 }
 
-/* 让链接在 hover 状态下显示下划线 */
+/* 璁╅摼鎺ュ湪 hover 鐘舵�佷笅鏄剧ず涓嬪垝绾� */
 a {
   color: #1abc9c;
 }
@@ -153,22 +153,22 @@ a:hover {
   text-decoration: none;
 }
 
-/* 默认不显示下划线，保持页面简洁 */
+/* 榛樿涓嶆樉绀轰笅鍒掔嚎锛屼繚鎸侀〉闈㈢畝娲� */
 ins, a {
   text-decoration: none;
 }
 
-/* 专名号：虽然 u 已经重回 html5 Draft，但在所有浏览器中都是可以使用的，
- * 要做到更好，向后兼容的话，添加 class="typo-u" 来显示专名号
- * 关于 <u> 标签：http://www.whatwg.org/specs/web-apps/current-work/multipage/text-level-semantics.html#the-u-element
- * 被放弃的是 4，之前一直搞错 http://www.w3.org/TR/html401/appendix/changes.html#idx-deprecated
- * 一篇关于 <u> 标签的很好文章：http://html5doctor.com/u-element/ 
+/* 涓撳悕鍙凤細铏界劧 u 宸茬粡閲嶅洖 html5 Draft锛屼絾鍦ㄦ墍鏈夋祻瑙堝櫒涓兘鏄彲浠ヤ娇鐢ㄧ殑锛�
+ * 瑕佸仛鍒版洿濂斤紝鍚戝悗鍏煎鐨勮瘽锛屾坊鍔� class="typo-u" 鏉ユ樉绀轰笓鍚嶅彿
+ * 鍏充簬 <u> 鏍囩锛歨ttp://www.whatwg.org/specs/web-apps/current-work/multipage/text-level-semantics.html#the-u-element
+ * 琚斁寮冪殑鏄� 4锛屼箣鍓嶄竴鐩存悶閿� http://www.w3.org/TR/html401/appendix/changes.html#idx-deprecated
+ * 涓�绡囧叧浜� <u> 鏍囩鐨勫緢濂芥枃绔狅細http://html5doctor.com/u-element/ 
  */
 u, .typo-u {
   text-decoration: underline;
 }
 
-/* 标记，类似于手写的荧光笔的作用 */
+/* 鏍囪锛岀被浼间簬鎵嬪啓鐨勮崸鍏夌瑪鐨勪綔鐢� */
 mark {
   background: #fffdd1;
   border-bottom: 1px solid #ffedce;
@@ -176,7 +176,7 @@ mark {
   margin: 0 5px;
 }
 
-/* 代码片断 */
+/* 浠ｇ爜鐗囨柇 */
 pre, code, pre tt {
   font-family: Courier, 'Courier New', monospace;
 }
@@ -189,7 +189,7 @@ pre {
   -webkit-overflow-scrolling: touch;
 }
 
-/* 一致化 horizontal rule */
+/* 涓�鑷村寲 horizontal rule */
 hr {
   border: none;
   border-bottom: 1px solid #cfcfcf;
@@ -197,9 +197,9 @@ hr {
   height: 10px;
 }
 
-/* 底部印刷体、版本等标记 */
+/* 搴曢儴鍗板埛浣撱�佺増鏈瓑鏍囪 */
 small, .typo-small,
-  /* 图片说明 */
+  /* 鍥剧墖璇存槑 */
 figcaption {
   font-size: 0.9em;
   color: #888;
@@ -210,7 +210,7 @@ strong, b {
   color: #000;
 }
 
-/* 可拖动文件添加拖动手势 */
+/* 鍙嫋鍔ㄦ枃浠舵坊鍔犳嫋鍔ㄦ墜鍔� */
 [draggable] {
   cursor: move;
 }
@@ -228,7 +228,7 @@ strong, b {
   zoom: 1;
 }
 
-/* 强制文本换行 */
+/* 寮哄埗鏂囨湰鎹㈣ */
 .textwrap, .textwrap td, .textwrap th {
   word-wrap: break-word;
   word-break: break-all;
@@ -238,12 +238,12 @@ strong, b {
   table-layout: fixed;
 }
 
-/* 提供 serif 版本的字体设置: iOS 下中文自动 fallback 到 sans-serif */
+/* 鎻愪緵 serif 鐗堟湰鐨勫瓧浣撹缃�: iOS 涓嬩腑鏂囪嚜鍔� fallback 鍒� sans-serif */
 .serif {
   font-family: Palatino, Optima, Georgia, serif;
 }
 
-/* 保证块/段落之间的空白隔行 */
+/* 淇濊瘉鍧�/娈佃惤涔嬮棿鐨勭┖鐧介殧琛� */
 .typo p, .typo pre, .typo ul, .typo ol, .typo dl, .typo form, .typo hr, .typo table,
 .typo-p, .typo-pre, .typo-ul, .typo-ol, .typo-dl, .typo-form, .typo-hr, .typo-table, blockquote {
   margin-bottom: 1.2em
@@ -256,7 +256,7 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.35;
 }
 
-/* 标题应该更贴紧内容，并与其他块区分，margin 值要相应做优化 */
+/* 鏍囬搴旇鏇磋创绱у唴瀹癸紝骞朵笌鍏朵粬鍧楀尯鍒嗭紝margin 鍊艰鐩稿簲鍋氫紭鍖� */
 .typo h1, .typo h2, .typo h3, .typo h4, .typo h5, .typo h6,
 .typo-h1, .typo-h2, .typo-h3, .typo-h4, .typo-h5, .typo-h6 {
   margin-top: 1.2em;
@@ -284,7 +284,7 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 1.2em;
 }
 
-/* 在文章中，应该还原 ul 和 ol 的样式 */
+/* 鍦ㄦ枃绔犱腑锛屽簲璇ヨ繕鍘� ul 鍜� ol 鐨勬牱寮� */
 .typo ul, .typo-ul {
   margin-left: 1.3em;
   list-style: disc;
@@ -304,7 +304,7 @@ h1, h2, h3, h4, h5, h6 {
   list-style: circle;
 }
 
-/* 同 ul/ol，在文章中应用 table 基本格式 */
+/* 鍚� ul/ol锛屽湪鏂囩珷涓簲鐢� table 鍩烘湰鏍煎紡 */
 .typo table th, .typo table td, .typo-table th, .typo-table td, .typo table caption {
   border: 1px solid #ddd;
   padding: 0.5em 1em;
@@ -323,7 +323,7 @@ h1, h2, h3, h4, h5, h6 {
   border-bottom: none;
 }
 
-/* 去除 webkit 中 input 和 textarea 的默认样式  */
+/* 鍘婚櫎 webkit 涓� input 鍜� textarea 鐨勯粯璁ゆ牱寮�  */
 .typo-input, .typo-textarea {
   -webkit-appearance: none;
   border-radius: 0;
@@ -334,7 +334,7 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: inherit;
 }
 
-/* 着重号，只能在少量（少于100个字符）且全是全角字符的情况下使用 */
+/* 鐫�閲嶅彿锛屽彧鑳藉湪灏戦噺锛堝皯浜�100涓瓧绗︼級涓斿叏鏄叏瑙掑瓧绗︾殑鎯呭喌涓嬩娇鐢� */
 .typo-em {
   position: relative;
 }
@@ -346,7 +346,7 @@ h1, h2, h3, h4, h5, h6 {
   width: 100%;
   overflow: hidden;
   white-space: nowrap;
-  content: "・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・";
+  content: "銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓銉汇兓";
 }
 
 /* Responsive images */
@@ -505,7 +505,7 @@ header .take{
     text-shadow: none;
 }
 
-#ticketVerify h5, #ticketUpload h5{
+#ticketVerify h5, #uploadBill h5{
     background: white;
     height: 84px;
     line-height: 84px;
@@ -569,6 +569,16 @@ header .take{
     background-color: white;
 }
 
+.box-wrap-gif {
+	width:32px !important;
+	height:32px !important;
+	background: transparent !important;
+}
+
+.box-wrap-gif .box-content-gif{
+    background-color: transparent !important;
+}
+
 #box-wrap .inner-content, #box-wrap ul{
     margin: 20px 0;
 }
@@ -601,6 +611,11 @@ input[type="text"]{
 }
 
 .price-empty-error{
+  display: none;
+  color: red;
+}
+
+.type-select-error{
   display: none;
   color: red;
 }

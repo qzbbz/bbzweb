@@ -9,7 +9,7 @@ public interface IExpenseAccountService {
 	
 	Map<String, List<Map<String, Object>>> getInboxByOpenId(String openId);
 	
-	Map<Long, String> getAllExpenseType();
+	List<Map<String, String>> getAllExpenseType();
 	
 	boolean approvalBill(String approvalId, String invoiceId, String userId, int status);
 	

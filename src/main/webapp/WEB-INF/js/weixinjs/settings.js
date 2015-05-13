@@ -9,9 +9,18 @@ $(function(){
 	                                                $(window).scrollLeft()) + "px");
 	    return this;
 	}
-
+	
+	Object.toparams = function ObjecttoParams(obj) {
+	    var p = [];
+	    for (var key in obj) {
+	        p.push(key + '=' + encodeURIComponent(obj[key]));
+	    }
+	    return p.join('&');
+	};
+	
 	var companyInfo = null;
-
+	var userOpenId = '';
+	
 	var box = {
 	      overlay : null,
 	      wrap : null,
@@ -237,11 +246,27 @@ $(function(){
 					box.wrap.css({width:'32px',height:'32px',background:'transparent'});
 					box.content.css({width:'32px',height:'32px',background:'transparent'});
 					box.loading('<html><body><img src="../../img/weixinimg/loading1.gif"></body></html>');
-					setTimeout(function(){
-						box.clearLoading();
-						alert('设置信息成功！');
-						}, 2000);
+					$.ajax({ 
+				        type : "POST", 
+				        url  : "/updateUserInfo",  
+				        cache : false,
+				        data : Object.toparams({'openId': userOpenId, 'name' : args[0].value, 'email':args[1].value}), 
+				        success :  updateUserInfoSuccess, 
+				        error : updateUserInfoError 
+				    });
+				};
+				function updateUserInfoSuccess(data, status) {
+					box.clearLoading();
+					if (data.error_code != "0") {
+						alert(data.error_message);
+					} else {
+						alert("更新信息成功！");
 					}
+				};
+				function updateUserInfoError() {
+					box.clearLoading();
+					alert("更新信息失败，请稍后重试！");
+				};
 			}
 		},
 		init: function(){
@@ -260,6 +285,7 @@ $(function(){
 		},
 		form: {
 			company: function(form, args){
+				var self = this;
 				if(args[0].value == null || args[0].value == '') {
 					$('.code-empty-error').show();
 				}else{
@@ -267,9 +293,32 @@ $(function(){
 					box.wrap.css({width:'32px',height:'32px',background:'transparent'});
 					box.content.css({width:'32px',height:'32px',background:'transparent'});
 					box.loading('<html><body><img src="../../img/weixinimg/loading1.gif"></body></html>');
-					setTimeout(function(){box.clearLoading();companyInfo={company:{name:'青智',branch:'IT部'}};controler['bindAccount'].init();}, 2000);
-				}
-				console.log(args);
+					$.ajax({ 
+				        type : "POST", 
+				        url  : "/userBindCompany",  
+				        cache : false,
+				        data : Object.toparams({'openId': userOpenId, 'inviteCode' : args[0].value}), 
+				        success :  userBindCompanySuccess, 
+				        error : userBindCompanyError 
+				    });
+				};
+				function userBindCompanySuccess(data, status) {
+					box.clearLoading();
+					if (data.error_code != "0") {
+						alert("无法获取您的微信Openid,请稍后重试！");
+					} else if(data.invite_code_error != null ){
+						alert("邀请码错误，请检查！");
+					} else {
+						alert("绑定公司成功！");
+						companyInfo={company:{name:data.companyName,branch:data.deptName}};
+					}
+					controler['bindAccount'].init();
+				};
+				function userBindCompanyError() {
+					box.clearLoading();
+					controler['bindAccount'].init();
+					alert("绑定公司失败，请稍后重试！");
+				};
 			}
 		},
 		init: function(){
@@ -286,6 +335,42 @@ $(function(){
 		},
 		init: function(){
 			this.render();
+		}
+	}
+	
+	$.ajax({ 
+        type : "POST", 
+        url  : "/getUserOpenId",  
+        cache : false,
+        async: false,
+        data : "", 
+        success : onGetUserOpenIdSuccess, 
+        error : onGetUserOpenIdError 
+    });
+	
+	function onGetUserOpenIdSuccess(data,status) {
+		if (data.openId == "") {
+			alert("无法获取您的微信Openid,请稍后重试！");
+		} else {
+			userOpenId = data.openId;
+			$.ajax({ 
+		        type : "POST", 
+		        url  : "/checkBindCompany",  
+		        cache : false,
+		        async: false,
+		        data : Object.toparams({openId:userOpenId}), 
+		        success : checkBindCompanySuccess
+		    });
+		}
+	}
+	
+	function onGetUserOpenIdError() {
+		alert("无法获取您的微信Openid,请稍后重试！");
+	}
+	
+	function checkBindCompanySuccess(data, status) {
+		if(data.bind_status == "has_bind") {
+			companyInfo={company:{name:data.companyName,branch:data.deptName}};
 		}
 	}
 	

@@ -80,7 +80,7 @@ public class ExpenseAccountServiceImpl implements IExpenseAccountService {
 			logger.debug("userId : {}", userId);
 			if (userId != null && !userId.isEmpty()) {
 				Map<String, Object> retMap = invoiceService
-						.createInvoiceProcess(userId, base64ImageStr, "0", "1",new HashMap());
+						.createInvoiceProcess(userId, base64ImageStr, "0", "1", new HashMap());
 				if (!retMap.containsKey("success")
 						|| !(boolean) retMap.get("success")) {
 					base64ImageStr = "";
@@ -151,7 +151,7 @@ public class ExpenseAccountServiceImpl implements IExpenseAccountService {
 	}
 
 	@Override
-	public Map<Long, String> getAllExpenseType() {
+	public List<Map<String, String>> getAllExpenseType() {
 		return expenseTypeService.getExpenseTypeMap();
 	}
 

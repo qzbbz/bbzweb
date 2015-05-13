@@ -44,4 +44,34 @@ public class SettingController {
         logger.debug("resultMap :{}", result.toString());
         return result;
     }
+    
+    @RequestMapping("/updateUserInfo")
+    @ResponseBody
+    public Map<String, String> updateUserInfo(HttpServletRequest request) {
+        logger.debug("updateUserInfo");
+        Map<String, String> result = new HashMap<>();
+        String openId = request.getParameter("openId");
+        String name = request.getParameter("name");
+        String email = request.getParameter("email");
+        if (openId == null || openId.isEmpty()){
+            result.put("error_code", "1");
+            result.put("error_message", "无法获取您的微信Openid，请稍后重试!");
+        } else if(name == null || name.isEmpty() ||
+        		email == null || email.isEmpty()) {
+        	result.put("error_code", "1");
+            result.put("error_message", "用户姓名或电子邮件地址为空，请检查！");
+        } else {
+        	Map<String, String> ret = settingService.updateUserInfo(openId, name, email);
+            if(ret.get("error_code") != "0") {
+            	result.put("error_code", "1");
+                result.put("error_message", ret.get("error_message"));
+            } else {
+            	result.put("error_code", "0");
+                result.put("error_message", "更新信息成功！");
+            }
+        }
+        logger.debug("finishUpdateUserInfo");
+        logger.debug("resultMap :{}", result.toString());
+        return result;
+    }
 }

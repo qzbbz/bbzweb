@@ -83,4 +83,12 @@ public class SettingServiceImpl implements ISettingService {
 		return retMap;
 	}
 
+	@Override
+	public Map<String, String> updateUserInfo(String openId, String name,
+			String email) {
+		Map<String, String> retMap = new HashMap<>();
+		retMap.put("error_code", "0");
+		return retMap;
+	}
+
 }
