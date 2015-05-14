@@ -74,9 +74,9 @@ public class InvoiceQueryController {
 		}
 		
 		List list = new ArrayList<Invoice>();
-		if("1".equals(status)){
+		if("1".equals(status)){//草稿状态
 			list = singleInvoiceService.getUserInvoiceByStatus(userId, status);
-		}else{
+		}else{//提交状态
 			int iPage = 1;
 			int iPageSize = 10;
 			try{

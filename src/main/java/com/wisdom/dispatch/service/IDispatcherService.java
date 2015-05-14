@@ -7,7 +7,11 @@ import com.wisdom.common.model.Dispatcher;
 public interface IDispatcherService {
 	/**
 	 * 增加一条消息分发记录
-	 * @param dispatcher
+	 * @param userId
+	 * @param userName
+	 * @param invoiceId
+	 * @param status  通知状态
+	 * @param channalTypeID 通知渠道 0-全部渠道 
 	 * @return
 	 */
 	public boolean addDispatcherRecord(String userId,String userName,long invoiceId,int status,int channalTypeID,String receiver,String openId,long objectTypeId);

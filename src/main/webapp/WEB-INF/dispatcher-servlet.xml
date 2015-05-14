@@ -150,6 +150,7 @@ class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer
 	<!-- invoice component-scan begin-->
 	<context:component-scan base-package="com.wisdom.invoice.dao.impl" />
 	<context:component-scan base-package="com.wisdom.invoice.service.impl" />
+	<context:component-scan base-package="com.wisdom.invoice.controller" />
 	<!-- invoice component-scan end-->
 	
 	<!-- dispatch component-scan begin-->

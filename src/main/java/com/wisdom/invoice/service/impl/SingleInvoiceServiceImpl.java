@@ -80,4 +80,19 @@ public class SingleInvoiceServiceImpl implements ISingleInvoiceService {
 		return false;
 	}
 	
+	@Override
+	public Long addInvoiceRecord(Invoice invoice) {
+		return invoiceDao.addInvoiceAndGetKey(invoice);
+	}
+	
+	@Override
+	public Invoice getSingleInvoiceInfo(Long invoiceId) {
+		return invoiceDao.getInvoiceById(invoiceId);
+	}
+	
+	@Override
+	public Invoice getSingleInvoiceInfoByStatus(Long invoiceId,int status) {
+		return invoiceDao.getInvoiceById(invoiceId);
+	}
+	
 }

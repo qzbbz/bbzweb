@@ -23,6 +23,7 @@ import com.wisdom.dispatch.service.IDispatcherService;
 import com.wisdom.invoice.dao.IInvoiceDao;
 import com.wisdom.invoice.domain.ApprovalStatus;
 import com.wisdom.invoice.domain.InvoiceInfoVo;
+import com.wisdom.invoice.domain.InvoiceStatus;
 import com.wisdom.invoice.domain.ProcessStatus;
 import com.wisdom.invoice.service.IAttachmentService;
 import com.wisdom.invoice.service.IInvoiceApprovalService;
@@ -42,8 +43,6 @@ public class InvoiceServiceImpl implements IInvoiceService {
 	private IDispatcherService dispatcherService;
 	@Autowired
 	private IUserService userService;
-	@Autowired
-	private IInvoiceDao invoiceDao;
 	@Autowired
 	private IAttachmentService attachmentService;
 	@Autowired
@@ -82,12 +81,12 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		Invoice invoice = new Invoice();
 		invoice.setExpenseTypeId(expenseTypeId);
 		invoice.setAmount(amount);
-		invoice.setStatus(1); //微信上传默认为草稿
+		invoice.setStatus(InvoiceStatus.DRAFT); //微信上传默认为草稿
 		log.debug("double amount : " + amount);
 		log.debug("params amount : " + params.get("amount"));
 		
 		log.debug("addInvoiceRevord");
-		Long invoiceId = addInvoiceRecord(invoice);
+		Long invoiceId = singleInvoiceService.addInvoiceRecord(invoice);
 		if(null == invoiceId || invoiceId.longValue() == -1){
 			log.error("addInvoiceRecord failed");
 			return retMap;
@@ -109,7 +108,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		}
 		
 		log.debug("addUserInvoiceRecord");
-		blRet = userInvoiceService.addUserInvoiceRecord(invoiceId,userId,receiver,0);
+		blRet = userInvoiceService.addUserInvoiceRecord(invoiceId,userId,receiver,ProcessStatus.PROCESSING);
 		if(!blRet){
 			log.error("addUserInvoiceRecord error! userId=" + userId + ",invoiceId:" + invoice.getId());
 			return retMap;
@@ -162,7 +161,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			return retMap;			
 		}
 		long longId = Long.parseLong(invoiceId);
-		Invoice invoice = getSingleInvoiceInfo(longId);
+		Invoice invoice = singleInvoiceService.getSingleInvoiceInfo(longId);
 		if(null == invoice || null == invoice.getAmount()){// || 0 == invoice.getAmount()){
 			log.error("发票信息不存在或不完整!");
 			retMap.put("message","发票信息不完整或不存在！");
@@ -305,7 +304,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		String userName = userService.getUserNameByUserId(userInvoice.getUserId());
 		map.put("user_name", userName);
 		
-		Invoice invoice =  getSingleInvoiceInfo(userInvoice.getInvoiceId());
+		Invoice invoice =  singleInvoiceService.getSingleInvoiceInfo(userInvoice.getInvoiceId());
 		if(null == invoice){
 			log.debug("invoice not exsisted");
 			map.clear();
@@ -365,7 +364,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 				map.put("approval_name", approvalName);
 			}		
 			map.put("approval_id", approvalId);
-			Invoice invoice =  getSingleInvoiceInfo(invoiceApproval.getInvoiceId());
+			Invoice invoice =  singleInvoiceService.getSingleInvoiceInfo(invoiceApproval.getInvoiceId());
 			if(null == invoice){
 				log.debug("invoice not exsisted");
 				return map;
@@ -394,7 +393,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 	@Override
 	public InvoiceInfoVo getInvoiceInfo(long invoiceId) {
 //		Invoice invoice = getSingleInvoiceInfo(invoiceId);
-		Invoice invoice = getSingleInvoiceInfoByStatus(invoiceId,0);
+		Invoice invoice = singleInvoiceService.getSingleInvoiceInfoByStatus(invoiceId,0);
 		if(null == invoice){
 			log.info("no invoice existed!invoiceId:" + invoiceId);
 			return null;
@@ -468,7 +467,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		if(params != null) {
 			singleInvoiceService.updateInvoiceInfo(params);
 		}
-		singleInvoiceService.updateInvoiceStatus(invoiceId,0);
+		singleInvoiceService.updateInvoiceStatus(invoiceId,InvoiceStatus.SUBMITTED);
 		userInvoiceService.updateInvoiceApprovalStatus(userId, receiver, invoiceId, ProcessStatus.PROCESSING, ApprovalStatus.APPROVALED);		
 		retMap.put("success", true);
 		return retMap;
@@ -495,20 +494,5 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		
 		return userService.ifNeedSuperApproval( userId,  approvalId, amount);
 	}
-
-	@Override
-	public Long addInvoiceRecord(Invoice invoice) {
-		return invoiceDao.addInvoiceAndGetKey(invoice);
-	}
-
-	public Invoice getSingleInvoiceInfo(Long invoiceId) {
-		return invoiceDao.getInvoiceById(invoiceId);
-	}
-	
-	public Invoice getSingleInvoiceInfoByStatus(Long invoiceId,int status) {
-		return invoiceDao.getInvoiceById(invoiceId);
-	}
-
-	
 
 }

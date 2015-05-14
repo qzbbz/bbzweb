@@ -12,7 +12,11 @@ public enum ResultCode {
 	/**
 	 * 参数错误
 	 */
-	paramError("1");
+	paramError("1"),
+	/**
+	 * not login
+	 */
+	notLogin("2");
 
 	public String code;
 	public String message; //错误描述

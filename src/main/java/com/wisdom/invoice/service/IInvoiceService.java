@@ -18,15 +18,11 @@ public interface IInvoiceService {
 	public Map<String,List<Map<String,Object>>> getBillsList(String userId);
 	
 	
-	/**增加一条发票流水记录
-	 * */
-	public Long addInvoiceRecord(Invoice invoice);
-	
 	/**
 	 * 创建一个新的发票处理记录 for weixin
 	 * @param userId
 	 * @param image
-	 * @param channelType 0-所有终端  
+	 * @param channelType 0-所有终端   
 	 * @param objectTypeId 1-发票报销
 	 * @return
 	 */

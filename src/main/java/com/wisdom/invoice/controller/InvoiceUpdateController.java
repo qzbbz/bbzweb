@@ -16,6 +16,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.wisdom.common.utils.JsonUtils;
 import com.wisdom.common.utils.Result;
 import com.wisdom.common.utils.ResultCode;
 import com.wisdom.invoice.service.IInvoiceService;
@@ -103,4 +104,60 @@ public class InvoiceUpdateController {
 		return result;
 	}
 	
+	/**
+	 * body={"data":{["img":"","fileName":""],["img":"","fileName":""],["img":"","fileName":""]}
+	 * @param request
+	 * @return
+	 */
+	
+	@ResponseBody
+	@RequestMapping("action=uploadInvoice")
+	public Result uploadInvoice(HttpServletRequest request){
+		Result result = new Result();
+		String userId = (String)request.getParameter("userId");
+		String strBody = (String)request.getParameter("body");
+		
+		if(StringUtils.isEmpty(userId)){
+			result.setResultCode(ResultCode.notLogin.code);
+			return result;
+		}
+				
+		if(StringUtils.isEmpty("body")){
+			log.error("params body error");
+			result.setResultCode(ResultCode.paramError.code);
+			result.addResult("msg", "body param error!");
+			return result;
+		}
+		
+		List list = new ArrayList();
+		try{
+			Map obj = (Map)JsonUtils.fromJson(strBody, HashMap.class);
+			list = (List)obj.get("data");
+			if(null == list || list.size() <= 0){
+				log.error("empty img list error");
+				result.addResult("msg", "body param error!");
+				return result;
+			}
+		}catch(Exception e){
+			log.error("body parameter parse error!");
+			result.addResult("msg", "body param error!");
+			return result;
+		}
+		List nameList = new ArrayList();
+		int num = 0;
+		for(Map a : (List<Map<String,Object>>) list){
+			String img = (String)a.get("img");
+			Map map = invoiceService.createInvoiceProcess(userId, img, "0", "1", null);
+			if(null != map && ((Boolean)map.get("success")).booleanValue()){
+				num++;
+			}else{
+				nameList.add((String)a.get("fileName"));
+			}
+		}
+		if(nameList.size()>0){
+			result.addResult("failList", nameList);
+		}
+		result.addResult("succNum", num);
+		return result;
+	}
 }

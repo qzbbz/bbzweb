@@ -17,4 +17,11 @@ public interface ISingleInvoiceService {
 	public boolean updateInvoiceStatus(long invoiceId,int status);
 	
 	public boolean updateInvoiceInfo(Map<String, String> params);
+	
+	/**增加一条发票流水记录
+	 * */
+	public Long addInvoiceRecord(Invoice invoice);
+	
+	public Invoice getSingleInvoiceInfo(Long invoiceId);
+	public Invoice getSingleInvoiceInfoByStatus(Long invoiceId,int status);
 }
