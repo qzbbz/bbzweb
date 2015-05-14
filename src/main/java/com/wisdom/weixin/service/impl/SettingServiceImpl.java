@@ -41,8 +41,12 @@ public class SettingServiceImpl implements ISettingService {
 		Map<String, String> retMap = new HashMap<>();
 		if (userWeixinService.userHasBindCompany(openId)) {
 			String userId = userService.getUserIdByOpenId(openId);
+			String userName = userService.getUserNameByUserId(userId);
+			String userMsgEmail = userService.getUserMsgEmailByUserId(userId);
 			retMap = getCompanyNameAndDeptName(userId);
 			retMap.put("bind_status", "has_bind");
+			retMap.put("userName", userName);
+			retMap.put("userMsgEmail", userMsgEmail);
 		} else {
 			retMap.put("bind_status", "not_bind");
 		}
@@ -64,7 +68,11 @@ public class SettingServiceImpl implements ISettingService {
 			return retMap;
 		}
 		userWeixinService.addOpenId(userId, openId);
+		String userName = userService.getUserNameByUserId(userId);
+		String userMsgEmail = userService.getUserMsgEmailByUserId(userId);
 		retMap = getCompanyNameAndDeptName(userId);
+		retMap.put("userName", userName);
+		retMap.put("userMsgEmail", userMsgEmail);
 		logger.info("retMap : {}", retMap.toString());
 		return retMap;
 	}
@@ -87,6 +95,22 @@ public class SettingServiceImpl implements ISettingService {
 	public Map<String, String> updateUserInfo(String openId, String name,
 			String email) {
 		Map<String, String> retMap = new HashMap<>();
+		String userId = userService.getUserIdByOpenId(openId);
+		if(userId == null || userId.isEmpty()) {
+			retMap.put("error_code", "1");
+			retMap.put("error_message", "无法查询到您的UserId，请联系公司管理员！");
+			return retMap;
+		}
+		if(!userService.setUserNameByUserId(name, userId)) {
+			retMap.put("error_code", "1");
+			retMap.put("error_message", "更新用户姓名出错，请联系公司管理员！");
+			return retMap;
+		}
+		if(!userService.updateUserMsgEmailByUserId(email, userId)) {
+			retMap.put("error_code", "1");
+			retMap.put("error_message", "更新用户邮箱出错，请联系公司管理员！");
+			return retMap;
+		}
 		retMap.put("error_code", "0");
 		return retMap;
 	}

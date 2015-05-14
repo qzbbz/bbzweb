@@ -19,6 +19,6 @@ public interface IExpenseAccountService {
 	
 	public String downloadFromUrl(Map<String, Object> params);
 	
-	public boolean submitBillAudit(String invoiceId);
+	public boolean submitBillAudit(String openId, String invoiceId, Map<String, String> params);
 	
 }

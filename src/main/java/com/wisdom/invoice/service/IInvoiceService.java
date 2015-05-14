@@ -50,10 +50,5 @@ public interface IInvoiceService {
 	 * @param invoiceId
 	 * @return
 	 */
-	public Map submitUserInvoice(String userId,long invoiceId);
-
-	
-	
-	
-
+	public Map submitUserInvoice(String userId,long invoiceId, Map<String, String> params);
 }

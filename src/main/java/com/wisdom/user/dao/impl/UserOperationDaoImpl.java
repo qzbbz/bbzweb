@@ -51,6 +51,14 @@ public class UserOperationDaoImpl implements IUserOperationDao {
 		logger.debug("updateUser result : {}", affectedRows);
 		return affectedRows != 0;
 	}
+	
+	@Override
+	public boolean updateUserMsgEmail(String email, String userId) {
+		String sql = "update user set msg_email=? where user_id=?";
+		int affectedRows = jdbcTemplate.update(sql, email, userId);
+		logger.debug("updateUserMsgEmail result : {}", affectedRows);
+		return affectedRows != 0;
+	}
 
 	@Override
 	public boolean updateUserNameByUserId(String userName, String userId) {

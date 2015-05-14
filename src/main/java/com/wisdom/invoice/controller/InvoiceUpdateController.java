@@ -36,13 +36,14 @@ public class InvoiceUpdateController {
 	public Result updateInvoiceDetail(HttpServletRequest request){
 		Result result = new Result();
 		String userId = (String)request.getParameter("userId");
+		String title = (String)request.getParameter("title");
 		String strInvoice = (String)request.getParameter("invoiceId");
 		String date = (String)request.getParameter("date");
 		String desc = (String)request.getParameter("desc");
 		String amount = (String)request.getParameter("amount");
 		String expenseType = (String)request.getParameter("expenseType");
 		
-		log.debug("params:" + userId + "," + strInvoice + "," + date + "," + desc + "," + amount + "," + expenseType);
+		log.debug("params:" + userId + "," + title + "," + strInvoice + "," + date + "," + desc + "," + amount + "," + expenseType);
 		
 		long invoiceId;
 		long expenseTypeId;
@@ -57,7 +58,7 @@ public class InvoiceUpdateController {
 			return result;
 		}
 		
-		boolean blRet = singleInvoiceService.updateInvoiceInfo(invoiceId, desc, "", amountValue, expenseTypeId, 1, date);
+		boolean blRet = singleInvoiceService.updateInvoiceInfo(invoiceId, desc, title, amountValue, expenseTypeId, 1, date);
 		if(blRet) 
 			result.setResultCode(ResultCode.success.code);
 		else {
@@ -87,7 +88,7 @@ public class InvoiceUpdateController {
 		for(String s:invoiceList){
 			long invoiceId = Long.parseLong(s);
 			Map retMap = new HashMap<String,Object>();
-			retMap = invoiceService.submitUserInvoice(userId, invoiceId);
+			retMap = invoiceService.submitUserInvoice(userId, invoiceId, null);
 			if(null != retMap && ((Boolean)retMap.get("success")).booleanValue()){
 				log.info("invoiceId:" + invoiceId +" submit success");
 				result.setResultCode(ResultCode.success.code);

@@ -4,8 +4,8 @@
 		<title>帮帮账</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" type="text/css" href="../../js/weixinjs/libs/jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.css">
-		<link rel="stylesheet" type="text/css" href="../../css/weixincss/style.css?201505130754">
-		<link rel="stylesheet" type="text/css" href="../../css/weixincss/iconfont/iconfont.css?201505120821">
+		<link rel="stylesheet" type="text/css" href="../../css/weixincss/style.css?201505141557">
+		<link rel="stylesheet" type="text/css" href="../../css/weixincss/iconfont/iconfont.css?201505141601">
 	</head>
 <body>
 	<div data-role="page" id="ticket">
@@ -16,7 +16,7 @@
 			<ul class="menu">
 				<li menu-page="inbox"><i class="icon-inbox iconbigfont"></i>收件箱</li>
 				<li menu-page="uploadBill"><i class="icon-upload5 iconbigfont"></i>发票上传</li>
-				<li menu-page="ticketVerify"><i class="icon-adminbill iconbigfont"></i>发票审核</li>
+				<li menu-page="auditBill"><i class="icon-adminbill iconbigfont"></i>发票审核</li>
 				<li menu-page="help"><i class="icon-help iconbigfont"></i>服务与帮助</li>
 			</ul>
 
@@ -63,14 +63,14 @@
 		{{#draftBillList}}
 			<li data-src="{{bill_img}}">
 				<img src="{{bill_img}}" class="avatar">
-				<p class="amount">金额: {{bill_amount}}</p>
+				<p class="amount">金额: {{bill_amount}}元</p>
 				<p class="man">费用类型: {{bill_expenseTypeName}}</p>
 				<p class="date">创建时间: {{bill_date}}</p>
 				<input type="checkbox" name="choose" value="{{invoice_id}}">
 			</li>
 		{{/draftBillList}}
 		{{^draftBillList}}
-			<div style="margin-top: 10px;"><h6 style="color:#38c;">&nbsp;&nbsp;&nbsp;暂时没有数据，可以尝试下拉刷新。</h6></div>
+			<div style="margin-top: 10px;"><h6 style="color:#38c;">&nbsp;&nbsp;&nbsp;&nbsp;暂时没有数据，可以尝试下拉刷新。</h6></div>
 		{{/draftBillList}}
     </script>
     
@@ -78,14 +78,14 @@
 		{{#progressingBillList}}
 			<li data-src="{{bill_img}}">
 				<img src="{{bill_img}}" class="avatar">
-				<p class="amount">金额: {{bill_amount}}</p>
+				<p class="amount">金额: {{bill_amount}}元</p>
 				<p style="float:right;color:#419088;">审核人：{{approval_name}}</p>
 				<p class="man">费用类型: {{bill_expenseTypeName}}</p>
 				<p class="date">创建时间: {{bill_date}}</p>
 			</li>
 		{{/progressingBillList}}
 		{{^progressingBillList}}
-			<div style="margin-top: 10px;"><h6 style="color:#38c;">&nbsp;&nbsp;&nbsp;暂时没有数据，可以尝试下拉刷新。</h6></div>
+			<div style="margin-top: 10px;"><h6 style="color:#38c;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;暂时没有数据，可以尝试下拉刷新。</h6></div>
 		{{/progressingBillList}}
     </script>
     
@@ -93,7 +93,7 @@
 		{{#finishedBillList}}
 			<li data-src="{{bill_img}}">
 				<img src="{{bill_img}}" class="avatar">
-				<p class="amount">金额: {{bill_amount}}</p>
+				<p class="amount">金额: {{bill_amount}}元</p>
 				{{#approval_status}}
 					<p style="float:right;color:#419088;">审核已通过</p>
 				{{/approval_status}}
@@ -105,37 +105,24 @@
 			</li>
 		{{/finishedBillList}}
 		{{^finishedBillList}}
-			<div style="margin-top: 10px;"><h6 style="color:#38c;">&nbsp;&nbsp;&nbsp;暂时没有数据，可以尝试下拉刷新。</h6></div>
+			<div style="margin-top: 10px;"><h6 style="color:#38c;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;暂时没有数据，可以尝试下拉刷新。</h6></div>
 		{{/finishedBillList}}
     </script>
 
-	<script id="ticketList" type="x-tmpl-mustache">
-		{{#tickets}}
-			<li data-src="{{avatar}}">
-				<img src="{{avatar}}" class="avatar">
-				<p class="price">金额: {{amount}}
-					{{#verifyRet}}
-						{{#status}}
-						<p style="float:right;color:#419088;">审核已通过</p>
-						{{/status}}
-						{{^status}}
-						<p style="float:right;color:rgba(239, 109, 68, 0.8);">审核未通过</p>
-						{{/status}}
-					{{/verifyRet}}
-				</p>
-				<p class="man">费用类型: {{expenseTypeName}}</p>
-				<p class="date">时间: {{time}}</p>
-				{{#audit}}
-					<input type="checkbox" name="choose" value="{{id}}">
-				{{/audit}}
-				{{#upload}}
-					<input type="checkbox" name="choose" value="{{id}}">
-				{{/upload}}
+	<script id="need-audit-bill-list" type="x-tmpl-mustache">
+		{{#needAuditBillList}}
+			<li data-src="{{bill_img}}">
+				<img src="{{bill_img}}" class="avatar">
+				<p class="amount">金额: {{bill_amount}}</p>
+				<p class="man">费用类型: {{bill_expenseTypeName}}</p>
+				<p class="man">提交人: {{user_name}}</p>
+				<p class="date">创建时间: {{bill_date}}</p>
+				<input type="checkbox" name="choose" value="{{invoice_id}}">
 			</li>
-		{{/tickets}}
-		{{^tickets}}
-			<p>暂时没有数据，可以尝试下拉刷新。</p>
-		{{/tickets}}
+		{{/needAuditBillList}}
+		{{^needAuditBillList}}
+			<div style="margin-top: 10px;"><h6 style="color:#38c;">&nbsp;&nbsp;&nbsp;暂时没有数据，可以尝试下拉刷新。</h6></div>
+		{{/needAuditBillList}}
     </script>
     
 	<script id="uploadBillList" type="x-tmpl-mustache">
@@ -155,7 +142,7 @@
 
 	<script id="uploadBill" type="text/template">
 		<div id="uploadBill">
-			<h5>您要上传的发票 <button id="onePressUpload" class="ladda-button small" data-shadow="true" style="background :rgba(239, 109, 68, 0.8);">一键上传</h5>
+			<h5>请上传您的发票 <button id="onePressUpload" class="ladda-button small" data-shadow="true" style="background :rgba(239, 109, 68, 0.8);">一键上传</h5>
 			<div id="upload-bill" class="ui-content">
 				<ul id="upload-bill-list" class="bill-list-upload">
 				</ul>
@@ -195,11 +182,11 @@
 		</div>
 	</script>
 
-	<script id="ticketVerify" type="text/template">
-		<div id="ticketVerify">
-			<h5>需要您审核的发票 <button class="ladda-button small" style="background :rgba(239, 109, 68, 0.8);">全部通过</h5>
-			<div id="verify-ticktes" class="ui-content">
-				<ul id="verify-list" class="ticket-list">
+	<script id="auditBill" type="text/template">
+		<div id="auditBill">
+			<h5 style="color:#38c;">请对发票进行审核 <button id="onePressReject" class="ladda-button small" style="background :rgba(239, 109, 68, 0.8);">拒绝<button id="onePressPass" class="ladda-button small" style="margin-left:10px;background :#419088;">通过</h5>
+			<div id="audit-bill" class="ui-content">
+				<ul id="audit-bill-list" class="ticket-list">
 				</ul>
 			</div>
 		</div>
@@ -224,6 +211,6 @@
 	<script type="text/javascript" src="../../js/weixinjs/jquery-1.11.1.min.js"></script>
 	<script type="text/javascript" src="../../js/weixinjs/libs/jquery.mobile-1.4.5/jquery.mobile-1.4.5.js"></script>
 	<script type="text/javascript" src="../../js/weixinjs/mustache.js"></script>
-	<script type="text/javascript" src="../../js/weixinjs/expense_account.js?201505132024"></script>
+	<script type="text/javascript" src="../../js/weixinjs/expense_account.js?201505142056"></script>
 </body>
 </html>	

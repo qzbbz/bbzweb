@@ -8,6 +8,10 @@ public interface IUserService {
 	
 	public String getUserPwdByUserId(String userId);
 	
+	public String getUserMsgEmailByUserId(String userId);
+	
+	public boolean updateUserMsgEmailByUserId(String msgEamil, String userId);
+	
 	public int getUserTypeIdByUserId(String userId);
 	
 	public boolean userIdExist(String userId);

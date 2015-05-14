@@ -5,7 +5,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" type="text/css" href="../../js/weixinjs/libs/jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.css">
 		<link rel="stylesheet" type="text/css" href="../../css/weixincss/style.css?201505121446">
-		<link rel="stylesheet" type="text/css" href="../../css/weixincss/iconfont/iconfont.css?201505121446">
+		<link rel="stylesheet" type="text/css" href="../../css/weixincss/iconfont/iconfont.css?201505141924">
 	</head>
 <body>
 	<div data-role="page" id="ticket">
@@ -59,19 +59,17 @@
 			    </ul>
 			</div>
 			<div id="setAccount" class="ui-content typo">
-				<form  id="userInfo" type="account" data-ajax="false">
 					<div class="item">
 						<label>您的姓名：<span class="name-empty-error">不能为空</span></label>
-						<input type="text" name="name"/>
+						<input type="text" id="userName" name="userName" value="{{user_name}}"/>
 					</div>
 					<div class="item">
-						<label>您的邮箱：<span class="email-empty-error">不能为空</span></label>
-						<input type="text" name="email"/>
+						<label>您的邮箱：<span class="email-empty-error">不能为空或格式不对</span></label>
+						<input type="text" id="userEmail" name="userEmail" value="{{user_msg_email}}"/>
 					</div>
-					<div class="actions" style="float:right;margin-top: 0.7em;"> 
-						<button class="ladda-button small submit" style="background :rgba(239, 109, 68, 0.8);" type="submit">确定</button>
+					<div style="float:right;margin-top: 0.7em;"> 
+						<button class="ladda-button small" id="modifyInfo" style="background :rgba(239, 109, 68, 0.8);">提交</button>
 					</div>
-				</form>
 			</div>
 		</div>
 	</script>
@@ -90,15 +88,13 @@
 			</div>
 			<div id="companyBind" class="ui-content typo">
 					{{^company}}
-					<form id="companyInviteCode" type="company" data-ajax="false">
 					<div class="item">
 						<label>邀请码（必填）<span class="code-empty-error">不能为空</span></label>
-						<input type="text" name="code"/>
+						<input type="text" id="inviteCode" name="inviteCode"/>
 					</div>
 					<div style="float:right;margin-top: 0.7em;">                
-						<button class="ladda-button small submit" style="background :rgba(239, 109, 68, 0.8);" type="submit">确定</button>
+						<button class="ladda-button small" id="bindInviteCode" style="background :rgba(239, 109, 68, 0.8);">绑定</button>
 					</div>
-					</form>
 					{{/company}}
 					{{#company}}
 					<div>
@@ -113,6 +109,6 @@
 	<script type="text/javascript" src="../../js/weixinjs/jquery-1.11.1.min.js"></script>
 	<script type="text/javascript" src="../../js/weixinjs/libs/jquery.mobile-1.4.5/jquery.mobile-1.4.5.js"></script>
 	<script type="text/javascript" src="../../js/weixinjs/mustache.js"></script>
-	<script type="text/javascript" src="../../js/weixinjs/settings.js?201505121517111"></script>
+	<script type="text/javascript" src="../../js/weixinjs/settings.js?201505142036"></script>
 </body>
 </html>	

@@ -82,7 +82,9 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		Invoice invoice = new Invoice();
 		invoice.setExpenseTypeId(expenseTypeId);
 		invoice.setAmount(amount);
-		invoice.setStatus(1); //微信上传默认为草稿		
+		invoice.setStatus(1); //微信上传默认为草稿
+		log.debug("double amount : " + amount);
+		log.debug("params amount : " + params.get("amount"));
 		
 		log.debug("addInvoiceRevord");
 		Long invoiceId = addInvoiceRecord(invoice);
@@ -113,7 +115,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			return retMap;
 		}
 		
-		//先生成一条审批记录
+		/*//先生成一条审批记录
 		blRet = invoiceApprovalService.addInvoiceApprovalRecord(invoiceId,receiver,0);
 		if(!blRet){
 			log.error("add invoiceAppovalRecord failed");
@@ -131,7 +133,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		if(!blRet){
 			log.error("add dispatcher log error!" + "userId:" + userId + ",reciever:" + receiver + ",InvoiceId:" + invoice.getId());
 			return retMap;
-		}
+		}*/
 		//成功后put相关信息
 		retMap.put("invoiceId", invoice.getId());
 		retMap.put("receiver",receiver);
@@ -246,7 +248,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			log.debug("no bill existed");
 			return retMap;
 		}
-		
+		log.debug("UserInvoiceList : " + billList.size());
 		List<Map<String,Object>> processingList = new ArrayList<Map<String,Object>>(); 
 		List<Map<String,Object>> finishedList = new ArrayList<Map<String,Object>>(); 
 		List<Map<String,Object>> uploadedList = new ArrayList<Map<String,Object>>(); 
@@ -260,17 +262,21 @@ public class InvoiceServiceImpl implements IInvoiceService {
 					finishedList.add(billInfo);
 				}else{
 					Dispatcher dispatch = dispatcherService.getDispatcherByInvoiceId(invoice.getInvoiceId());
-					if(null != dispatch && dispatch.getStatus() == 1){
+					//if(null != dispatch && dispatch.getStatus() == 1){
+					if(null != dispatch){
 						billInfo.put("bill_status", "0");
 //						billInfo.put("approval_id",dispatch.getReciever());
 						processingList.add(billInfo);
-					}else if(null != dispatch && dispatch.getStatus() == 0){
+					} else {
+						uploadedList.add(billInfo);
+					}
+					/*}else if(null != dispatch && dispatch.getStatus() == 0){
 						billInfo.put("bill_status", "0");
 //						billInfo.put("approval_id",dispatch.getReciever());
 						uploadedList.add(billInfo);
 					}else{
 						uploadedList.add(billInfo);
-					}
+					}*/
 				}
 			}
 			if(uploadedList.size()>0)
@@ -302,6 +308,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		Invoice invoice =  getSingleInvoiceInfo(userInvoice.getInvoiceId());
 		if(null == invoice){
 			log.debug("invoice not exsisted");
+			map.clear();
 			return map;
 		}
 		map.put("bill_title", invoice.getTitle());
@@ -417,13 +424,13 @@ public class InvoiceServiceImpl implements IInvoiceService {
 	 */
 	@Override
 	@Transactional
-	public Map submitUserInvoice(String userId,long invoiceId){
+	public Map submitUserInvoice(String userId,long invoiceId, Map<String, String> params){
 		Map<String,Object> retMap = new HashMap<String,Object>();
 		retMap.put("success",false);
 		
 		UserInvoice userInvoice = userInvoiceService.getUserInvoiceByUserIdAndInvoiceId(userId, invoiceId);
 		if(null == userInvoice){
-			log.error("invoice not existed error");
+			log.error("invoice not existed error, userId :" + userId + ",invoiceId : " + invoiceId);
 			retMap.put("msg", "invoice not existed");
 			return retMap;
 		}
@@ -458,6 +465,9 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		}
 		
 		/*更新状态*/
+		if(params != null) {
+			singleInvoiceService.updateInvoiceInfo(params);
+		}
 		singleInvoiceService.updateInvoiceStatus(invoiceId,0);
 		userInvoiceService.updateInvoiceApprovalStatus(userId, receiver, invoiceId, ProcessStatus.PROCESSING, ApprovalStatus.APPROVALED);		
 		retMap.put("success", true);

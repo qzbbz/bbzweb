@@ -16,6 +16,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.wisdom.weixin.service.IExpenseAccountService;
+import com.wisdom.weixin.utils.SubmitAuditBillResultEntity;
+import com.wisdom.weixin.utils.SubmitAuditBillResultEntityWrapper;
+import com.wisdom.weixin.utils.SubmitBillEntity;
+import com.wisdom.weixin.utils.SubmitBillEntityWrapper;
 import com.wisdom.weixin.utils.UploadBillEntity;
 import com.wisdom.weixin.utils.UploadBillEntityWrapper;
 
@@ -83,25 +87,51 @@ public class ExpenseAccountController {
 		return retMap;
 	}
 
-	@RequestMapping("/approvalBill")
+	@RequestMapping(value="/approvalBill", method=RequestMethod.POST, consumes="application/json")
 	@ResponseBody
-	public Map<String, String> approvalBill(HttpServletRequest request) {
-		String approvalId = request.getParameter("approvalId");
-		String invoiceId = request.getParameter("invoiceId");
-		String userId = request.getParameter("userId");
-		String status = request.getParameter("status");
+	public Map<String, String> approvalBill(
+			@RequestBody SubmitAuditBillResultEntityWrapper wrapper, HttpServletRequest request) {
 		Map<String, String> retMap = new HashMap<>();
-		logger.debug("approvalId : {}", approvalId);
-		logger.debug("invoiceId : {}", invoiceId);
-		logger.debug("userId : {}", userId);
-		logger.debug("status : {}", status);
-		if (expenseAccounterService.approvalBill(approvalId, invoiceId, userId,
-				Integer.valueOf(status))) {
-			retMap.put("status", "success");
-		} else {
-			retMap.put("status", "fail");
+		String openId = request.getParameter("openId");
+		logger.debug("openid : {}", openId);
+		if(openId == null || openId.isEmpty()) {
+			retMap.put("error_code", "1");
+			retMap.put("error_message", "无法获取您微信的Openid，请稍后重新进入！");
 		}
-		logger.debug("retMap : {}", retMap.toString());
+		List<SubmitAuditBillResultEntity> sabr = wrapper.getSubmitAuditBillResultEntities();
+		if(sabr == null || sabr.size() == 0) {
+			retMap.put("error_code", "2");
+			retMap.put("error_message", "提交失败，服务器接收到的审批列表为空，请检查！");
+			logger.debug("auditList is null or size is 0");
+		}
+		int sum = 0;
+		StringBuffer sb = new StringBuffer();
+		for(SubmitAuditBillResultEntity bill : sabr) {
+			logger.debug("SubmitAuditBillResultEntity : {}", bill.toString());
+			String userId = bill.getUser_id();
+			String approvalId = bill.getApproval_id();
+			String invoiceId = bill.getInvoice_id();
+			int status = Integer.valueOf(bill.getApproval_status());
+			if(expenseAccounterService.approvalBill(approvalId, invoiceId, userId,
+					status)) {
+				sum++;
+				sb.append(bill.getInvoice_id());
+				sb.append(" ");
+			}
+		}
+		if(sum != sabr.size()) {
+			retMap.put("error_code", "3");
+			retMap.put("error_message", "您提交的审核结果只有部分提交成功，请稍后重试！");
+			retMap.put("submit_count", String.valueOf(sum) + "/" + String.valueOf(sabr.size()));
+		} else {
+			retMap.put("error_code", "0");
+			retMap.put("error_message", "全部提交成功！");
+		}	
+		logger.debug("IDS : {}", sb.toString());
+		if(sb.length() > 0) {
+			retMap.put("ids", sb.toString().substring(0, sb.length() - 1));
+		}
+		logger.debug("approvalBill result : {}", retMap.toString());
 		return retMap;
 	}
 
@@ -139,7 +169,7 @@ public class ExpenseAccountController {
 	@RequestMapping(value="/submitBillListAudit", method=RequestMethod.POST, consumes="application/json")
 	@ResponseBody
 	public Map<String, String> submitBillListAudit(
-			@RequestBody List<String> invoiceIdList, HttpServletRequest request) {
+			@RequestBody SubmitBillEntityWrapper wrapper, HttpServletRequest request) {
 		Map<String, String> retMap = new HashMap<>();
 		String openId = request.getParameter("openId");
 		logger.debug("openid : {}", openId);
@@ -147,24 +177,29 @@ public class ExpenseAccountController {
 			retMap.put("error_code", "1");
 			retMap.put("error_message", "无法获取您微信的Openid，请稍后重新进入！");
 		}
-		if(invoiceIdList == null || invoiceIdList.size() == 0) {
+		List<SubmitBillEntity> sbe = wrapper.getSubmitBillEntities();
+		if(sbe == null || sbe.size() == 0) {
 			retMap.put("error_code", "2");
 			retMap.put("error_message", "提交失败，服务器接收到的申请列表为空，请检查！");
 			logger.debug("invoiceIdList is null or size is 0");
 		}
 		int sum = 0;
 		StringBuffer sb = new StringBuffer();
-		for(String invoiceId : invoiceIdList) {
-			if(expenseAccounterService.submitBillAudit(invoiceId)) {
+		for(SubmitBillEntity bill : sbe) {
+			Map<String, String> params = new HashMap<>();
+			params.put("invoiceId", bill.getInvoice_id());
+			params.put("amount", bill.getBill_amount());
+			params.put("expenseTypeId", bill.getBill_expenseTypeId());
+			if(expenseAccounterService.submitBillAudit(openId, bill.getInvoice_id(), params)) {
 				sum++;
-				sb.append(invoiceId);
+				sb.append(bill.getInvoice_id());
 				sb.append(" ");
 			}
 		}
-		if(sum != invoiceIdList.size()) {
+		if(sum != sbe.size()) {
 			retMap.put("error_code", "3");
 			retMap.put("error_message", "您提交的审核申请只有部分提交成功，请稍后重试！");
-			retMap.put("submit_count", String.valueOf(sum) + "/" + String.valueOf(invoiceIdList.size()));
+			retMap.put("submit_count", String.valueOf(sum) + "/" + String.valueOf(sbe.size()));
 		} else {
 			retMap.put("error_code", "0");
 			retMap.put("error_message", "全部提交成功！");

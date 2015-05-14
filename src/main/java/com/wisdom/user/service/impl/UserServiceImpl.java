@@ -140,5 +140,16 @@ public class UserServiceImpl implements IUserService {
 		return false;
 	}
 
+	@Override
+	public String getUserMsgEmailByUserId(String userId) {
+		User user = userQueryDao.getUserByUserId(userId);
+		return user == null || user.getMsgEmail() == null ? "" : user.getMsgEmail();
+	}
+
+	@Override
+	public boolean updateUserMsgEmailByUserId(String msgEmail, String userId) {
+		return userOperationDao.updateUserMsgEmail(msgEmail, userId);
+	}
+
 }
 

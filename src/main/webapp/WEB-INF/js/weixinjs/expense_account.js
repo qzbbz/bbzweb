@@ -107,6 +107,7 @@ $(function(){
 
 	      },
 	      loading: function(content){
+	    	 $(window).bind( 'touchmove', touchScroll );
 	      	var self = this;
 	      	self.html(content);
 	      	self.enable = false;
@@ -250,12 +251,10 @@ $(function(){
 		main.empty().html(html);
 	}
 
-
-
-	$(document).on('scrollstart', '#content', function(event){
-		setTimeout(function(){
-			var cc =  $(window).scrollTop();
-			if(cc < 10){
+	$(document).on('scrollstart', '#content', function(event) {
+		setTimeout(function() {
+			var cc = $(window).scrollTop();
+			if (cc < 10) {
 				controler[curC] && controler[curC].refresh && controler[curC].refresh();
 			}
 		}, 100);
@@ -268,8 +267,53 @@ $(function(){
 			draftBillListview:null,
 			progressingAuditListview: null,
 			finishedAuditListview: null,
+			listDraftBill : function(shouldRefresh) {
+				var data = null;
+				if(draftBillList != null && draftBillList.length != 0) {
+					data = {draftBillList:draftBillList};
+				}
+				var template = getTemplate('draftBillList');
+				Mustache.parse(template)
+				var html = Mustache.render(template, data);
+
+				this.draftBillListview.html(html);
+				if(!shouldRefresh) {
+					this.draftBillListview.listview();
+				} else {
+					this.draftBillListview.listview('refresh');
+				}
+			},
+			listProgressingBill : function(shouldRefresh) {
+				var data = null;
+				if(progressingBillList != null && progressingBillList.length != 0) {
+					data = {progressingBillList:progressingBillList};
+				}
+				var template = getTemplate('progressingBillList');
+				Mustache.parse(template)
+				var html = Mustache.render(template, data);
+				this.progressingAuditListview.html(html);
+				if(!shouldRefresh) {
+					this.progressingAuditListview.listview();
+				} else {
+					this.progressingAuditListview.listview('refresh');
+				}
+			},
+			listFinishedBill : function(shouldRefresh) {
+				var data = null;
+				if(finishedBillList != null && finishedBillList.length != 0) {
+					data = {finishedBillList:finishedBillList};
+				}
+				var template = getTemplate('finishedBillList');
+				Mustache.parse(template)
+				var html = Mustache.render(template, data);
+				this.finishedAuditListview.html(html);
+				if(!shouldRefresh) {
+					this.finishedAuditListview.listview();
+				} else {
+					this.finishedAuditListview.listview('refresh');
+				}
+			},
 			render: function(){
-				var self = this;
 				var html = getTemplate('inbox');
 
 				appendTemplate(html);
@@ -278,59 +322,21 @@ $(function(){
 				this.progressingAuditListview = $('#progressing-audit-list');
 				this.finishedAuditListview = $('#finished-audit-list');
 
-				function listDraftBill(){
-					var data = null;
-					if(draftBillList != null && draftBillList.length != 0) {
-						data = {draftBillList:draftBillList};
-					}
-					var template = getTemplate('draftBillList');
-					Mustache.parse(template)
-					var html = Mustache.render(template, data);
-
-					self.draftBillListview.html(html);
-					self.draftBillListview.listview();
-				}
-				
-				function listProgressingBill(){
-					var data = null;
-					if(progressingBillList != null && progressingBillList.length != 0) {
-						alert(1.5);
-						data = {progressingBillList:progressingBillList};
-					}
-					var template = getTemplate('progressingBillList');
-					Mustache.parse(template)
-					var html = Mustache.render(template, data);
-					self.progressingAuditListview.html(html);
-					self.progressingAuditListview.listview();
-				}
-
-				function listFinishedBill(){
-					var data = null;
-					if(finishedBillList != null && finishedBillList.length != 0) {
-						data = {finishedBillList:finishedBillList};
-					}
-					var template = getTemplate('finishedBillList');
-					Mustache.parse(template)
-					var html = Mustache.render(template, data);
-					self.finishedAuditListview.html(html);
-					self.finishedAuditListview.listview();
-				}
-
-				listDraftBill();
-				listProgressingBill();
-				listFinishedBill();
+				this.listDraftBill(false);
+				this.listProgressingBill(false);
+				this.listFinishedBill(false);
 
 				$('[data-role="tabs"]').tabs();
 			},
 
 			refresh: function() {
-				alert("refresh");
 				box.wrap.addClass("box-wrap-gif");
 				box.content.addClass("box-content-gif");
 				box.loading('<html><body><img src="../../img/weixinimg/loading1.gif"></body></html>');
 				getInboxBills(false);
-				alert(JSON.stringify(draftBillList));
-				this.render();
+				this.listDraftBill(true);
+				this.listProgressingBill(true);
+				this.listFinishedBill(true);
 				box.wrap.removeClass("box-wrap-gif");
 				box.content.removeClass("box-content-gif");
 				box.clearLoading();
@@ -376,10 +382,15 @@ $(function(){
 							}
 						}
 						if(isValid) {
-							var jsonData = JSON.stringify(submitList);
+							var tmp = new Array();
+							for(var i=0; i<submitList.length; i++) {
+								var da = {"invoice_id":submitList[i].invoice_id, "bill_amount":submitList[i].bill_amount,"bill_expenseTypeId":submitList[i].bill_expenseTypeId};
+								tmp.push(da);
+							}
+							var jsonData = "{\"submitBillEntities\":" +  JSON.stringify(tmp) + "}";
 							$.ajax({ 
 						        type : "POST", 
-						        url  : "/submitBillListAudit?openId=" + userOpenId,  
+						        url  : "/submitBillListAudit?openId=" + userOpenId,
 						        cache : false,
 						        data : jsonData,
 						        headers : {  
@@ -409,7 +420,7 @@ $(function(){
 							} else if(data.error_code == "1" || data.error_code == "2"){
 								alert(data.error_message);
 							} else {
-								alert("data.error_message" + data.submit_count);
+								alert(data.error_message + data.submit_count);
 								var tmp = data.ids.split(" ");
 								if(tmp != null && tmp.length != 0) {
 									for(var i=0; i<tmp.length; i++) {
@@ -421,10 +432,10 @@ $(function(){
 									}
 								}
 							}
-							controler['inbox'].render();
 							box.wrap.removeClass("box-wrap-gif");
 							box.content.removeClass("box-content-gif");
 							box.clearLoading();
+							controler['inbox'].render();
 						}
 						function submitError() {
 							alert("提交审核失败，可能是网络原因，请检查！");
@@ -526,6 +537,12 @@ $(function(){
 							    	if(index == submitList.length) {
 							    		finishWeixinUpload();
 							    	}
+							    	index++;
+							    	if(index < submitList.length) {
+							    		syncUpload();
+							    	} else {
+							    		finishWeixinUpload();
+							    	}
 							    }
 							});
 						}
@@ -579,7 +596,7 @@ $(function(){
 						} else if(data.error_code == "1" || data.error_code == "3"){
 							alert(data.error_message);
 						} else {
-							alert("data.error_message" + data.upload_count);
+							alert(data.error_message + data.upload_count);
 							var tmp = data.ids.split(" ");
 							if(tmp != null && tmp.length != 0) {
 								for(var i=0; i<tmp.length; i++) {
@@ -591,10 +608,10 @@ $(function(){
 								}
 							}
 						}
-						controler['uploadBill'].init();
 						box.wrap.removeClass("box-wrap-gif");
 						box.content.removeClass("box-content-gif");
 						box.clearLoading();
+						controler['uploadBill'].init();
 					}
 					function submitError() {
 						alert("上传发票出错，请检查！");
@@ -623,86 +640,139 @@ $(function(){
 	}
 
 
-	//  发票审核
-	controler['ticketVerify'] = {
+//  发票审核
+	controler['auditBill'] = {
 
-		waitVerifyListview: null,
-
-		render: function(){
-			var self = this;
-			var html = getTemplate('ticketVerify');
-			appendTemplate(html);
-
-			this.waitVerifyListview = $('#verify-list');
-
-			function waitVerifyTicket(){
-				var data = self.getWaitVerifyTicket();
-				var template = getTemplate('ticketList');
-				Mustache.parse(template)
-				var html = Mustache.render(template, data);
-				self.waitVerifyListview.html(html);
-				self.waitVerifyListview.listview();
+		needAuditBillListview: null,
+		listAuditBills: function(shouldRefresh) {
+			var data = null;
+			if(needAuditBillList != null && needAuditBillList.length != 0) {
+				data = {needAuditBillList:needAuditBillList};
 			}
-
-			waitVerifyTicket();
+			var template = getTemplate('need-audit-bill-list');
+			Mustache.parse(template)
+			var html = Mustache.render(template, data);
+			this.needAuditBillListview.html(html);
+			if(!shouldRefresh) {
+				this.needAuditBillListview.listview();
+			} else {
+				this.needAuditBillListview.listview('refresh');
+			}
 		},
-
-		bindEvent: function(){
+		render: function() {
+			var html = getTemplate('auditBill');
+			appendTemplate(html);
+			this.needAuditBillListview = $('#audit-bill-list');
+			this.listAuditBills(false);
+		},
+		refresh: function() {
+			box.wrap.addClass("box-wrap-gif");
+			box.content.addClass("box-content-gif");
+			box.loading('<html><body><img src="../../img/weixinimg/loading1.gif"></body></html>');
+			getNeedAuditBills(false);
+			this.listAuditBills(true);
+			box.wrap.removeClass("box-wrap-gif");
+			box.content.removeClass("box-content-gif");
+			box.clearLoading();
+		},
+		bindEvent: function() {
 			var self = this;
-			$('#ticketVerify button').click(function(){
+			$('#onePressPass').click(function() {
 				var ids = [];
-				self.waitVerifyListview.find('li').each(function(index, obj){
-					var obj = $(obj), check = obj.find('input[type="checkbox"]');
-					if(check.is(':checked')){
+				self.needAuditBillListview.find('li').each(function(index, obj) {
+					var obj = $(obj),
+						check = obj.find('input[type="checkbox"]');
+					if (check.is(':checked')) {
 						ids.push(check.val());
 					}
 				})
-				self.verify(ids);
+				self.submitAudit(ids, "0");
+			});
+			$('#onePressReject').click(function() {
+				var ids = [];
+				self.needAuditBillListview.find('li').each(function(index, obj) {
+					var obj = $(obj),
+						check = obj.find('input[type="checkbox"]');
+					if (check.is(':checked')) {
+						ids.push(check.val());
+					}
+				})
+				self.submitAudit(ids, "1");
 			})
 		},
-
-		verify: function(ids){
-			console.log(ids);
+		
+		submitAudit: function(ids, status) {
+			var self = this;
+			if(ids == null || ids.length == 0) {
+				alert("请勾选需要提交审核的发票！");
+			} else {
+				box.wrap.addClass("box-wrap-gif");
+				box.content.addClass("box-content-gif");
+				box.loading('<html><body><img src="../../img/weixinimg/loading1.gif"></body></html>');
+				var tmp = new Array();
+				for(var i=0; i<ids.length; i++) {
+					for(var j=0; j<needAuditBillList.length; j++) {
+						if(needAuditBillList[j].invoice_id == ids[i]) {
+							var da = {"invoice_id":needAuditBillList[j].invoice_id, "approval_id":needAuditBillList[j].approval_id,"user_id":needAuditBillList[j].user_id, "approval_status": status};
+							tmp.push(da);
+						}
+					}
+				}
+				var jsonData = "{\"submitAuditBillResultEntities\":" +  JSON.stringify(tmp) + "}";
+				$.ajax({ 
+			        type : "POST", 
+			        url  : "/approvalBill?openId=" + userOpenId,
+			        cache : false,
+			        data : jsonData,
+			        headers : {  
+	                    'Content-Type' : 'application/json;charset=utf-8'  
+	                },
+			        success :  submitSuccess, 
+			        error : submitError 
+			    });
+				function submitSuccess(data) {
+					if (data.error_code == "0") {
+						alert("您提交的发票审核已经全部提交成功！");
+						var tmp = data.ids.split(" ");
+						if(tmp != null && tmp.length != 0) {
+							for(var i=0; i<tmp.length; i++) {
+								for(var j=0; j<needAuditBillList.length; j++) {
+									if(needAuditBillList[j].invoice_id == tmp[i]) {
+										needAuditBillList.splice(j,1);
+									}
+								}
+							}
+						}
+					} else if(data.error_code == "1" || data.error_code == "2"){
+						alert(data.error_message);
+					} else {
+						alert(data.error_message + data.submit_count);
+						var tmp = data.ids.split(" ");
+						if(tmp != null && tmp.length != 0) {
+							for(var i=0; i<tmp.length; i++) {
+								for(var j=0; j<needAuditBillList.length; j++) {
+									if(needAuditBillList[j].invoice_id == tmp[i]) {
+										needAuditBillList.splice(j,1);
+									}
+								}
+							}
+						}
+					}
+					box.wrap.removeClass("box-wrap-gif");
+					box.content.removeClass("box-content-gif");
+					box.clearLoading();
+					self.listAuditBills(true);
+				}
+				function submitError() {
+					alert("您提交的发票审核失败，可能是网络原因，请检查！");
+					box.wrap.removeClass("box-wrap-gif");
+					box.content.removeClass("box-content-gif");
+					box.clearLoading();
+				}
+			}
 		},
 
-		getWaitVerifyTicket: function(){
-			var test = {
-				audit: true,
-				verifyRet: false,
-				tickets : [{
-						price : 6400,
-						avatar : '../../img/weixinimg/60.jpeg',
-						name: 'aaa',
-						time: 'ccc'
-					},
-				{
-						price : 6400,
-						avatar : '../../img/weixinimg/60.jpeg',
-						name: 'aaa',
-						time: 'ccc'
-					}
-				,{
-						price : 6400,
-						avatar : '../../img/weixinimg/60.jpeg',
-						name: 'aaa',
-						time: 'ccc'
-					},{
-						price : 6400,
-						avatar : '../../img/weixinimg/60.jpeg',
-						name: 'aaa',
-						time: 'ccc'
-					}
-					,{
-						price : 6400,
-						avatar : '../../img/weixinimg/60.jpeg',
-						name: 'aaa',
-						time: 'ccc'
-					}]
-				};
-			return test;
-		},
-
-		init: function(){
+		init: function() {
 			this.render();
 			this.bindEvent();
 		}
@@ -939,7 +1009,10 @@ $(function(){
 		    });
 			function getNeedAuditBills(data){
 				if(data.processingList != null) {
-					needAuditBillList = data.processingList; 
+					needAuditBillList = data.processingList;
+					needAuditBillList.sort(function(a,b){return a.bill_date<b.bill_date?1:-1});
+				} else {
+					needAuditBillList = null;
 				}
 			}
 		}
@@ -956,13 +1029,22 @@ $(function(){
 		    });
 			function getInboxBills(data) {
 				if(data.uploadedList != null) {
-					draftBillList = data.uploadedList; 
+					draftBillList = data.uploadedList;
+					draftBillList.sort(function(a,b){return a.bill_date<b.bill_date?1:-1});
+				} else {
+					draftBillList = null;
 				}
-				if(data.uploadedList != null) {
-					progressingBillList = data.processingList; 
+				if(data.processingList != null) {
+					progressingBillList = data.processingList;
+					progressingBillList.sort(function(a,b){return a.bill_date<b.bill_date?1:-1});
+				}else {
+					progressingBillList = null;
 				}
-				if(data.uploadedList != null) {
-					finishedBillList = data.finishedList; 
+				if(data.finishedList != null) {
+					finishedBillList = data.finishedList;
+					finishedBillList.sort(function(a,b){return a.bill_date<b.bill_date?1:-1});
+				}else {
+					finishedBillList = null;
 				}
 			}
 		}

@@ -44,6 +44,7 @@ public class ExpenseAccountServiceImpl implements IExpenseAccountService {
 		if (userId != null && !userId.isEmpty()) {
 			retMap = invoiceService.getBillsList(userId);
 		}
+		logger.debug("retMap : {}", retMap.toString());
 		return retMap;
 	}
 
@@ -55,6 +56,7 @@ public class ExpenseAccountServiceImpl implements IExpenseAccountService {
 		if (userId != null && !userId.isEmpty()) {
 			retMap = invoiceService.getNeededAuditBillList(userId);
 		}
+		logger.debug("retMap : {}", retMap.toString());
 		return retMap;
 	}
 
@@ -207,8 +209,12 @@ public class ExpenseAccountServiceImpl implements IExpenseAccountService {
 	}
 
 	@Override
-	public boolean submitBillAudit(String invoiceId) {
-		return true;
+	public boolean submitBillAudit(String openId, String invoiceId, Map<String, String> params) {
+		String userId = userService.getUserIdByOpenId(openId);
+		logger.debug("user id : {}", userId);
+		Map ret = invoiceService.submitUserInvoice(userId, Long.valueOf(invoiceId), params);
+		logger.debug("retMap : {}", ret.toString());
+		return ret == null || !ret.containsKey("success") || !(boolean)ret.get("success") ? false : true;
 	}
 
 }

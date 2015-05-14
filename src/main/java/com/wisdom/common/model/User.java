@@ -17,6 +17,7 @@ public class User implements java.io.Serializable {
 	private Long id;
 	private String userId;
 	private String userName;
+	private String msgEmail;
 	private Integer typeId;
 	private Long companyId;
 	private Timestamp createTime;
@@ -28,11 +29,12 @@ public class User implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public User(Long id, String userName, String userId, Integer typeId, Long companyId,
+	public User(Long id, String userName, String msgEmail, String userId, Integer typeId, Long companyId,
 			Timestamp createTime) {
 		this.id = id;
 		this.userId = userId;
 		this.typeId = typeId;
+		this.msgEmail = msgEmail;
 		this.userName = userName;
 		this.companyId = companyId;
 		this.createTime = createTime;
@@ -42,6 +44,14 @@ public class User implements java.io.Serializable {
 
 	public Long getId() {
 		return this.id;
+	}
+
+	public String getMsgEmail() {
+		return msgEmail;
+	}
+
+	public void setMsgEmail(String msgEmail) {
+		this.msgEmail = msgEmail;
 	}
 
 	public void setId(Long id) {

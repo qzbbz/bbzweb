@@ -55,7 +55,7 @@ public class UserInvoiceDaoImpl implements IUserInvoiceDao {
 	
 	@Override
 	public UserInvoice getUserInvoiceByUserIdAndInvoiceId(String userId,long invoiceId){
-		String sql = "select * from user_invoice where user_id=? andinvoice_id = ?";
+		String sql = "select * from user_invoice where user_id=? and invoice_id = ?";
 		try {
 			UserInvoice userInvoice = jdbcTemplate.queryForObject(sql,
 					new Object[] { userId,invoiceId }, new UserInvoiceMapper());

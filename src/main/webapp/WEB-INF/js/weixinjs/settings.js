@@ -18,8 +18,18 @@ $(function(){
 	    return p.join('&');
 	};
 	
+	function isEmail(email) {  
+	    var pattern =   /^([\.a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/;  
+	    if (!pattern.test(email)) {
+	        return false;  
+	    }  
+	    return true;  
+	}
+	
 	var companyInfo = null;
 	var userOpenId = '';
+	var userName='';
+	var userMsgEmail='';
 	
 	var box = {
 	      overlay : null,
@@ -78,6 +88,7 @@ $(function(){
 
 	      },
 	      loading: function(content){
+	    	  $(window).bind( 'touchmove', touchScroll );
 	      	var self = this;
 	      	self.html(content);
 	      	self.enable = false;
@@ -117,6 +128,7 @@ $(function(){
 	        this.wrap.hide();
 	        self.overlay.hide();
 	        $(window).unbind('resize.fb');
+	        $(window).unbind( 'touchmove', touchScroll );
 	      },
 	      html : function(html){
 	        this.content.html(html);
@@ -132,6 +144,10 @@ $(function(){
 
 	box.init();
 
+	var touchScroll = function( event ) {
+    	event.preventDefault();
+	};
+	
 	var menu, Tcache = {}, curC;
 
 	function menu(){
@@ -214,63 +230,70 @@ $(function(){
 		main.empty().html(html);
 	}
 
-	$(document).on('submit', '#content form', function(event){
-		var obj = $(this), formName = $(this).attr('type');
-		var data = $(this).serializeArray();
-		if(controler[curC]){
-			controler[curC]['form'] && controler[curC]['form'][formName] && controler[curC]['form'][formName](obj, data);
-		}
-		event.preventDefault();
-		return false;
-	})
-
 	var controler = {};
 
 	controler['accountSet'] = {
 		render: function(){
 			var self = this;
+			var data = {user_name:userName, user_msg_email:userMsgEmail};
 			var template = getTemplate('accountSet');
-			var html = Mustache.render(template, null);
+			var html = Mustache.render(template, data);
 			appendTemplate(html);
 			$('[data-role="tabs"]').tabs();
 		},
-		form: {
-			account: function(form, args){
-				if(args[0].value == null || args[0].value == '') {
+		bindEvent: function() {
+			$('#modifyInfo').click(function() {
+				var userName = $('#userName').val();
+				var userEmail = $('#userEmail').val();
+				if(userName == null || userName == '') {
 					$('.name-empty-error').show();
-				}else if(args[1].value == null || args[1].value == ''){
+				}else if(userEmail == null || userEmail == '' || !isEmail(userEmail)){
 					$('.email-empty-error').show();
 				}else{
 					$('.name-empty-error').hide();
 					$('.email-empty-error').hide();
-					box.wrap.css({width:'32px',height:'32px',background:'transparent'});
-					box.content.css({width:'32px',height:'32px',background:'transparent'});
+					box.wrap.addClass("box-wrap-gif");
+					box.content.addClass("box-content-gif");
 					box.loading('<html><body><img src="../../img/weixinimg/loading1.gif"></body></html>');
 					$.ajax({ 
 				        type : "POST", 
 				        url  : "/updateUserInfo",  
 				        cache : false,
-				        data : Object.toparams({'openId': userOpenId, 'name' : args[0].value, 'email':args[1].value}), 
+				        data : Object.toparams({'openId': userOpenId, 'name' : userName, 'email':userEmail}), 
 				        success :  updateUserInfoSuccess, 
 				        error : updateUserInfoError 
 				    });
 				};
 				function updateUserInfoSuccess(data, status) {
+					box.wrap.removeClass("box-wrap-gif");
+					box.content.removeClass("box-content-gif");
 					box.clearLoading();
 					if (data.error_code != "0") {
 						alert(data.error_message);
 					} else {
 						alert("更新信息成功！");
+						userName=args[0].value;
+						userMsgEmail=args[1].value;
+						controler['accountSet'].init();
 					}
 				};
 				function updateUserInfoError() {
+					box.wrap.removeClass("box-wrap-gif");
+					box.content.removeClass("box-content-gif");
 					box.clearLoading();
 					alert("更新信息失败，请稍后重试！");
+					controler['accountSet'].init();
 				};
-			}
+			});
 		},
 		init: function(){
+			if(companyInfo == null) {
+				alert("您还没有绑定公司，请先绑定公司！");
+				setMenu('服务与帮助');
+				return;
+			}
 			this.render();
+			this.bindEvent();
 		}
 	}
 
@@ -283,26 +306,28 @@ $(function(){
 			appendTemplate(html);
 			$('[data-role="tabs"]').tabs();
 		},
-		form: {
-			company: function(form, args){
-				var self = this;
-				if(args[0].value == null || args[0].value == '') {
+		bindEvent: function() {
+			$('#bindInviteCode').click(function() {
+				var inviteCode = $('#inviteCode').val();
+				if(inviteCode == null || inviteCode == '') {
 					$('.code-empty-error').show();
 				}else{
 					$('.code-empty-error').hide();
-					box.wrap.css({width:'32px',height:'32px',background:'transparent'});
-					box.content.css({width:'32px',height:'32px',background:'transparent'});
+					box.wrap.addClass("box-wrap-gif");
+					box.content.addClass("box-content-gif");
 					box.loading('<html><body><img src="../../img/weixinimg/loading1.gif"></body></html>');
 					$.ajax({ 
 				        type : "POST", 
 				        url  : "/userBindCompany",  
 				        cache : false,
-				        data : Object.toparams({'openId': userOpenId, 'inviteCode' : args[0].value}), 
+				        data : Object.toparams({'openId': userOpenId, 'inviteCode' : inviteCode}), 
 				        success :  userBindCompanySuccess, 
 				        error : userBindCompanyError 
 				    });
 				};
 				function userBindCompanySuccess(data, status) {
+					box.wrap.removeClass("box-wrap-gif");
+					box.content.removeClass("box-content-gif");
 					box.clearLoading();
 					if (data.error_code != "0") {
 						alert("无法获取您的微信Openid,请稍后重试！");
@@ -311,18 +336,23 @@ $(function(){
 					} else {
 						alert("绑定公司成功！");
 						companyInfo={company:{name:data.companyName,branch:data.deptName}};
+						userName = data.userName;
+						userMsgEmail = data.userMsgEmail;
 					}
 					controler['bindAccount'].init();
 				};
 				function userBindCompanyError() {
+					box.wrap.removeClass("box-wrap-gif");
+					box.content.removeClass("box-content-gif");
 					box.clearLoading();
 					controler['bindAccount'].init();
 					alert("绑定公司失败，请稍后重试！");
 				};
-			}
+			});
 		},
 		init: function(){
 			this.render();
+			this.bindEvent();
 		}
 	}
 
@@ -371,6 +401,8 @@ $(function(){
 	function checkBindCompanySuccess(data, status) {
 		if(data.bind_status == "has_bind") {
 			companyInfo={company:{name:data.companyName,branch:data.deptName}};
+			userName = data.userName;
+			userMsgEmail = data.userMsgEmail;
 		}
 	}
 	

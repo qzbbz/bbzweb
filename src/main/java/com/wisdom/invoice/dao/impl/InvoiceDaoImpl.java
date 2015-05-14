@@ -69,6 +69,7 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 				new Timestamp(System.currentTimeMillis()).toString() : String.valueOf(invoice.getDate());
 		logger.debug("TITLE : " + title);
 		logger.debug("DATE:" + dateTime);
+		logger.debug("AMOUNT:" + invoice.getAmount());
 		try {
 			int id = jdbcTemplate.update(new PreparedStatementCreator() {
 				public PreparedStatement createPreparedStatement(
@@ -83,7 +84,7 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 							3,
 							invoice.getTitle() == null ? "" : invoice
 									.getTitle());
-					ps.setDouble(4, invoice.getAmount()==null?0:invoice.getAmount());
+					ps.setDouble(4, invoice.getAmount()==null?0.0:invoice.getAmount());
 					ps.setString(5, invoice.getDesc() == null?"":invoice.getDesc());
 					ps.setTimestamp(
 							6,
@@ -180,7 +181,7 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 		String sql = "update invoice set status=? where id=?";
 		try {
 			int affectedRows = jdbcTemplate.update(
-					sql,invoiceId,status);
+					sql,status,invoiceId);
 					
 			logger.debug("updateInvoice result : {}", affectedRows);
 			return affectedRows != 0;

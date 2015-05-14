@@ -2,7 +2,10 @@ package com.wisdom.invoice.service.impl;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +16,8 @@ import com.wisdom.invoice.service.ISingleInvoiceService;
 @Service("singleInvoiceService")
 public class SingleInvoiceServiceImpl implements ISingleInvoiceService {
 
+	private static final Log log = LogFactory.getLog(SingleInvoiceServiceImpl.class);
+	
 	@Autowired
 	private IInvoiceDao invoiceDao;
 	
@@ -43,6 +48,36 @@ public class SingleInvoiceServiceImpl implements ISingleInvoiceService {
 	@Override
 	public boolean updateInvoiceStatus(long invoiceId,int status){
 		return invoiceDao.updateInvoiceStatus(invoiceId,status);
+	}
+	@Override
+	public boolean updateInvoiceInfo(Map<String, String> params) {
+		if(params == null || !params.containsKey("invoiceId")) {
+			log.warn("params is null or invoice id is null.");
+			return false;
+		}
+		Invoice invoice = invoiceDao.getInvoiceById(Long.valueOf(params.get("invoiceId")));
+		if(invoice == null) {
+			log.error("invoice id is not found, id : " + params.get("invoiceId"));
+			return false;
+		}
+		boolean shouldUpdate = false;
+		if(params.containsKey("amount") && !params.get("amount").isEmpty()) {
+			invoice.setAmount(Double.valueOf(params.get("amount")));
+			shouldUpdate = true;
+		}
+		if(params.containsKey("expenseTypeId") && !params.get("expenseTypeId").isEmpty()) {
+			invoice.setExpenseTypeId(Integer.valueOf(params.get("expenseTypeId")));
+			shouldUpdate = true;
+		}
+		if(params.containsKey("detailDesc") && !params.get("detailDesc").isEmpty()) {
+			invoice.setDesc(params.get("detailDesc"));
+			shouldUpdate = true;
+		}
+		if(shouldUpdate) {
+			return invoiceDao.updateInvoice(invoice);
+		}
+		log.debug("no info need to update!");
+		return false;
 	}
 	
 }

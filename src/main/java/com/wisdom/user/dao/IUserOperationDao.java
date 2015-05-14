@@ -16,6 +16,8 @@ public interface IUserOperationDao {
 	
 	public boolean updateUser(User user);
 	
+	public boolean updateUserMsgEmail(String email, String userId);
+	
 	public boolean updateUserNameByUserId(String userName, String userId);
 	
 	public boolean addInviteCode(UserInviteCode userInvitecode);
