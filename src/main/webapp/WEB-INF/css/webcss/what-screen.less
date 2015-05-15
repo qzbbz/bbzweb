@@ -1,0 +1,46 @@
+@import "variables.less";
+
+#screen-what{
+	background: url(../../img/webimg/desk_background_small.jpg) no-repeat scroll center top/3760px 1088px;
+	min-height: 970px;
+	padding-top: @unit*2;
+	h1{
+		padding: @unit 0 @unit*2 0;
+	}
+	.row{
+		max-width: 1000px;
+		margin: 0 auto;
+		padding-top: @unit;
+	}
+	.column{
+		position: relative;
+		h3{
+			display: inline-block;
+			font-weight: 700;
+		}
+		p, h3{
+			text-align: left;
+			padding: 0 @unit-small;
+			font-size: @unit-small;
+		}
+		p {
+			margin-left: @unit;
+		}
+		display: inline-block;
+		vertical-align: top;
+		width: 33%;
+	}
+	.glyphicon{
+		display: inline-block;
+		font-size: @unit-small;
+	}
+}
+@media all and (max-width: 700px){
+	#screen-what{
+		.column{
+			display: block;
+			width: 100%;
+			padding: 0 @unit-small;
+		}
+	}
+}

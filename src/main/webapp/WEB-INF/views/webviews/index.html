@@ -1,0 +1,61 @@
+<!doctype html>
+<html ng-app="ywLanding">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<title>Qingzhi | Youngwisdom</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" type="text/css" href="../../css/webcss/normalize.css">
+		<link rel="stylesheet" type="text/css" href="../../css/webcss/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="../../css/webcss/youngwisdom.css">
+		<script type="text/javascript" src="../../js/webjs/main.page.utils.js"></script>
+		<script type="text/javascript" src="../../js/webjs/jquery-1.11.1.js"></script>
+		<script type="text/javascript" src="../../js/webjs/modernizr.custom.87166.js"></script>
+		<script type="text/javascript" src="../../js/webjs/angularjs/angular.min.js"></script>
+		<script type="text/javascript" src="../../js/webjs/angularjs/angular-route.min.js"></script>
+		<script type="text/javascript" src="../../js/webjs/angularjs/angular-animate.min.js"></script>
+		<script type="text/javascript" src="../../js/webjs/i18n/text-zh-CN.js"></script>
+		<script type="text/javascript" src="../../js/webjs/lodash.min.js"></script>
+		<script type="text/javascript" src="../../js/webjs/TweenMax.min.js"></script>
+		<script type="text/javascript" src="../../js/webjs/greensock/ScrollToPlugin.min.js"></script>
+		<script type="text/javascript" src="../../js/webjs/youngwisdom.js"></script>
+	</head>
+	<body ng-controller="main" yw-main >
+		<div class="header" ng-hide="hideHeader">
+			<a class="logo" href="/#/"><img src="../../img/webimg/logo.png"></a>
+			<div class="nav">
+				<a class="yw-link" href="/#/">{{t.home_page}}</a>
+				<a class="yw-link" href="/#/feature" >{{t.feature}}</a>
+				<a yw-button href="/#/signup" >{{t.signup}}</a>
+				<!-- <a class="yw-link" href="/#/community" >{{t.community}}</a> -->
+				<a class="yw-link" href="/#/signin" >{{t.signin}}</a>
+				<a class="yw-link" href="/#/team" >{{t.team}}</a>
+			</div>
+		</div>
+		<div ng-view class="lj-view yw-animation"></div>
+		
+		<div id="screen-contact" class="screen" ng-hide="hideContactScreen">
+			<span class="left">
+				<h3>上海元升财务咨询有限公司</h3>
+			</span><span class="right">
+				<span class="col"><i class="glyphicon glyphicon-home"></i>
+					<div class="feature-info">
+							中国上海市徐汇区
+					</div>
+				</span><span class="col"><i
+					class="glyphicon glyphicon-phone"></i>
+					<div class="feature-info">
+							18201897828
+					</div>
+				</span><span class="col"><i
+					class="glyphicon glyphicon-envelope"></i>
+					<div class="feature-info">
+							info@youngwisdom.com.cn
+					</div>
+				</span>
+			</span>
+		</div>
+		<div id="footer">
+			沪ICP备15012848号 | COPYRIGHT © 2014-2015, YOUNGWISDOM, ALL RIGHTS RESERVED
+		</div>		
+	</body>
+</html>
