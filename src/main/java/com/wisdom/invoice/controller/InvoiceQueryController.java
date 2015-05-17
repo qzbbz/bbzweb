@@ -30,28 +30,32 @@ public class InvoiceQueryController {
 	private IInvoiceService invoiceService;
 	@Autowired
 	private ISingleInvoiceService singleInvoiceService;
-	
+	/**
+	 * 根据发票号码搜索
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping("/action=searchInvoiceInfo")
 	@ResponseBody
 	public  Result getInvoiceInfoByInvoiceId(HttpServletRequest request){
 		Result result = new Result();
-		String strInvoiceId = (String)request.getParameter("invoiceId");
-		if(StringUtils.isEmpty(strInvoiceId)){
+		String strInvoiceCode = (String)request.getParameter("invoiceCode");
+		if(StringUtils.isEmpty(strInvoiceCode)){
 			result.setResultCode(ResultCode.paramError.code);
 			result.setMsg("发票号码不能为空!");
 			return result;
 		}
 		
-		long invoiceId;
-		try{
-			invoiceId = Long.parseLong(strInvoiceId);
-		}catch (Exception e) {
-			log.error("invoiceId not digit error!");
+		/*String userId = (String)request.getParameter("userId");
+		if(StringUtils.isEmpty(userId)){
 			result.setResultCode(ResultCode.paramError.code);
+			result.setMsg("用户名不能为空!");
 			return result;
 		}
-		log.debug("got invoiceId:"+ invoiceId);
-		InvoiceInfoVo vo = invoiceService.getInvoiceInfo(invoiceId);
+		*/
+		
+		log.debug("got invoiceCode:"+ strInvoiceCode);
+		InvoiceInfoVo vo = invoiceService.getInvoiceInfoByCode(strInvoiceCode);
 		result.addResult("invoiceInfo", vo);
 		result.setResultCode("0");
 		return result;
@@ -93,6 +97,28 @@ public class InvoiceQueryController {
 		result.setResultCode("0");
 		return result;
 	}
-	
+	/**
+	 * 获取我的收件箱的所有数据,支持分页
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/action=myInBox")
+	@ResponseBody
+	public  Result getMyBoxInvoice(HttpServletRequest request){
+		Result result = new Result();
+		String userId = (String)request.getParameter("userId");
+		String page = (String)request.getParameter("page");
+		String pageSize = (String)request.getParameter("pageSize");
+		String date = (String)request.getParameter("date");
+		
+		if(StringUtils.isEmpty(userId)){
+			result.setResultCode(ResultCode.paramError.code);
+			result.setMsg("参数空错误");
+			return result;
+		}
+		
+		
+		return result;
+	}
 	
 }
