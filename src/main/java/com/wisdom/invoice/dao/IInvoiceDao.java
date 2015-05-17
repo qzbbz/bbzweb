@@ -8,6 +8,7 @@ public interface IInvoiceDao {
 
 	public Invoice getInvoiceById(long id);
 	public Invoice getInvoiceByIdAndStatus(long invoiceId,int status);
+	public Invoice getInvoiceByCode(String invoiceCode);
 	
 	public long addInvoiceAndGetKey(Invoice invoice);
 	

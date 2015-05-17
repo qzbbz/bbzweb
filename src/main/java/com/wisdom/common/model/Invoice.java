@@ -15,6 +15,7 @@ public class Invoice implements java.io.Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	private Long id;
+	private String invoiceCode;
 	private String title;
 	private Integer expenseTypeId;
 	private Integer status;
@@ -36,10 +37,11 @@ public class Invoice implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public Invoice(Long id, String title, Integer expenseTypeId, Integer status, Double amount, 
+	public Invoice(Long id, String invoiceCode,String title, Integer expenseTypeId, Integer status, Double amount, 
 			String detailDesc,Timestamp date,String costCenter,
 			Timestamp createTime) {
 		this.id = id;
+		this.invoiceCode = invoiceCode;
 		this.title = title;
 		this.expenseTypeId = expenseTypeId;
 		this.status = status;
@@ -124,4 +126,21 @@ public class Invoice implements java.io.Serializable {
 		this.costCenter = costCenter;
 	}
 
+	public String getInvoiceCode() {
+		return invoiceCode;
+	}
+
+	public void setInvoiceCode(String invoiceCode) {
+		this.invoiceCode = invoiceCode;
+	}
+
+	public String getDetailDesc() {
+		return detailDesc;
+	}
+
+	public void setDetailDesc(String detailDesc) {
+		this.detailDesc = detailDesc;
+	}
+
+	
 }

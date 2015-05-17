@@ -10,6 +10,8 @@ import com.wisdom.invoice.domain.InvoiceInfoVo;
 public interface IInvoiceService {
 	public InvoiceInfoVo getInvoiceInfo(long invoiceId);
 	
+	public InvoiceInfoVo getInvoiceInfoByCode(String invoiceCode);
+	
 	/**
 	 * 根据userId查询该用户所有发票审批信息
 	 * @param userId

@@ -414,6 +414,30 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		return vo;
 	}
 	
+	@Override
+	public InvoiceInfoVo getInvoiceInfoByCode(String invoiceCode) {
+		Invoice invoice = singleInvoiceService.getSingleInvoiceInfoByCode(invoiceCode);
+		if(null == invoice){
+			log.info("no invoice existed!invoiceId:" + invoiceCode);
+			return null;
+		}
+		InvoiceInfoVo vo = new InvoiceInfoVo();
+		vo.setAmount(invoice.getAmount());
+		vo.setTitle(invoice.getTitle());
+		vo.setInvoiceId(invoice.getId());
+		vo.setCostCenter(invoice.getCostCenter());
+		vo.setDate(invoice.getDate());
+		vo.setDesc(invoice.getDesc());
+		vo.setInvoiceCode(invoiceCode);
+		
+		UserInvoice userInvoice = userInvoiceService.getUserInvoiceByInvoiceId(invoice.getId());
+		
+		vo.setProcessStatus(userInvoice.getStatus());
+		vo.setApprovalStatus(userInvoice.getApprovalStatus());
+		vo.setApprover(userInvoice.getApprovalId());
+		return vo;
+	}
+	
 	
 	/**
 	 * 批量提交处于草稿状态的发票

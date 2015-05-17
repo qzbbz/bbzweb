@@ -24,4 +24,5 @@ public interface ISingleInvoiceService {
 	
 	public Invoice getSingleInvoiceInfo(Long invoiceId);
 	public Invoice getSingleInvoiceInfoByStatus(Long invoiceId,int status);
+	public Invoice getSingleInvoiceInfoByCode(String invoiceCode);
 }

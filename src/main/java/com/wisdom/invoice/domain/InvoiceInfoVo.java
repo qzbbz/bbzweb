@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 
 public class InvoiceInfoVo {
 	private Long invoiceId;
+	private String invoiceCode;
 	private String title;
 	private Integer expenseTypeId;
 	private Double amount;
@@ -21,6 +22,13 @@ public class InvoiceInfoVo {
 	}
 	public void setInvoiceId(Long invoiceId) {
 		this.invoiceId = invoiceId;
+	}
+	
+	public String getInvoiceCode() {
+		return invoiceCode;
+	}
+	public void setInvoiceCode(String invoiceCode) {
+		this.invoiceCode = invoiceCode;
 	}
 	public String getTitle() {
 		return title;

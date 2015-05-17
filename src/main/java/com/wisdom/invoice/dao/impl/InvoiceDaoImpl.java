@@ -190,4 +190,17 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 		}
 		return false;
 	}
+	@Override
+	public Invoice getInvoiceByCode(String invoiceCode) {
+		String sql = "select * from invoice where invoice_code = ? ";
+		try {
+			Invoice invoice = jdbcTemplate.queryForObject(sql,
+					new Object[] { invoiceCode }, new InvoiceMapper());
+			logger.debug("getInvoiceByCode,invoiceId:" + invoiceCode );
+			return invoice;
+		} catch (DataAccessException e) {
+			logger.error("getInvoiceByCode error" + e.getMessage());
+		}
+		return null;
+	}
 }

@@ -95,4 +95,9 @@ public class SingleInvoiceServiceImpl implements ISingleInvoiceService {
 		return invoiceDao.getInvoiceById(invoiceId);
 	}
 	
+	@Override
+	public Invoice getSingleInvoiceInfoByCode(String invoiceCode) {
+		return invoiceDao.getInvoiceByCode(invoiceCode);
+	}
+	
 }
