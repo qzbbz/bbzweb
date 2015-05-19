@@ -5,9 +5,9 @@ import java.util.Map;
 
 public interface IUserValidateApi {
 
-	public Map<Integer, String> UserLoginValidate(String userId, String userPwd);
+	public Map<String, String> UserLoginValidate(String userId, String userPwd);
 	
-	public Map<Integer, String> UserRegisterValidate(String userId, String userPwd, int userTypeId);
+	public Map<String, String> UserRegisterValidate(String userId, String userPwd, int userTypeId);
 	
 	public int getUserTypeByUserId(String userId);
 	

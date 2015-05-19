@@ -12,4 +12,6 @@ public interface ICompanyDao {
 	
 	public boolean updateCompany(Company company);
 	
+	public boolean updateCompanyName(String companyName, long companyId);
+	
 }

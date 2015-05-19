@@ -18,6 +18,7 @@ public class Dept implements java.io.Serializable {
 	private String name;
 	private Long companyId;
 	private Long parentId;
+	private Long costCenterEncode;
 	private Timestamp createTime;
 
 	// Constructors
@@ -26,19 +27,12 @@ public class Dept implements java.io.Serializable {
 	public Dept() {
 	}
 
-	/** minimal constructor */
-	public Dept(Long id, String name, Long companyId, Long parentId) {
-		this.id = id;
-		this.name = name;
-		this.companyId = companyId;
-		this.parentId = parentId;
-	}
-
 	/** full constructor */
-	public Dept(Long id, String name, Long companyId, Long parentId,
+	public Dept(Long id, String name, Long costCenterEncode, Long companyId, Long parentId,
 			Timestamp createTime) {
 		this.id = id;
 		this.name = name;
+		this.costCenterEncode = costCenterEncode;
 		this.companyId = companyId;
 		this.parentId = parentId;
 		this.createTime = createTime;
@@ -52,6 +46,14 @@ public class Dept implements java.io.Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+	
+	public Long getCostCenterEncode() {
+		return this.costCenterEncode;
+	}
+
+	public void setCostCenterEncode(Long costCenterEncode) {
+		this.costCenterEncode = costCenterEncode;
 	}
 
 	public String getName() {

@@ -1,5 +1,7 @@
 package com.wisdom.user.dao.impl;
 
+import java.sql.Timestamp;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import com.wisdom.common.model.UserInviteCode;
 import com.wisdom.common.model.UserOpenid;
 import com.wisdom.common.model.UserPhone;
 import com.wisdom.common.model.UserPhoneType;
+import com.wisdom.common.model.UserPwd;
 import com.wisdom.common.model.UserRole;
 import com.wisdom.user.dao.IUserOperationDao;
 
@@ -26,10 +29,16 @@ public class UserOperationDaoImpl implements IUserOperationDao {
 
 	@Override
 	public boolean addUser(User user) {
-		String sql = "insert into user (user_id, type_id, company_id, create_time)"
-				+ " values (?, ?, ?, ?)";
-		int affectedRows = jdbcTemplate.update(sql, user.getUserId(),
-				user.getTypeId(), user.getCompanyId(), user.getCreateTime());
+		String sql = "insert into user (user_name, msg_email, user_id, type_id, company_id, user_encode, create_time)"
+				+ " values (?, ?, ?, ?, ?, ?, ?)";
+		int affectedRows = jdbcTemplate.update(sql,
+				user.getUserName() == null ? "" : user.getUserName(),
+				user.getMsgEmail() == null ? "" : user.getMsgEmail(),
+				user.getUserId() == null ? "" : user.getUserId(),
+				user.getTypeId() == null ? 0 : user.getTypeId(),
+				user.getCompanyId() == null ? -1 : user.getCompanyId(),
+				user.getUserEncode() == null ? "" : user.getUserEncode(),
+				user.getCreateTime()==null ? new Timestamp(System.currentTimeMillis()) : user.getCreateTime());
 		logger.debug("addUser result : {}", affectedRows);
 		return affectedRows != 0;
 
@@ -45,13 +54,18 @@ public class UserOperationDaoImpl implements IUserOperationDao {
 
 	@Override
 	public boolean updateUser(User user) {
-		String sql = "update user set type_id=?, company_id=? where user_id=?";
-		int affectedRows = jdbcTemplate.update(sql, user.getTypeId(),
-				user.getCompanyId(), user.getUserId());
+		String sql = "update user set user_name=?, msg_email=?, type_id=?, company_id=?, user_encode=? where user_id=?";
+		int affectedRows = jdbcTemplate.update(sql,
+				user.getUserName() == null ? "" : user.getUserName(),
+				user.getMsgEmail() == null ? "" : user.getMsgEmail(),
+				user.getTypeId() == null ? 0 : user.getTypeId(),
+				user.getCompanyId() == null ? -1 : user.getCompanyId(),
+				user.getUserEncode() == null ? "" : user.getUserEncode(),
+				user.getUserId() == null ? "" : user.getUserId());
 		logger.debug("updateUser result : {}", affectedRows);
 		return affectedRows != 0;
 	}
-	
+
 	@Override
 	public boolean updateUserMsgEmail(String email, String userId) {
 		String sql = "update user set msg_email=? where user_id=?";
@@ -67,7 +81,7 @@ public class UserOperationDaoImpl implements IUserOperationDao {
 		logger.debug("updateUserNameByUserId result : {}", affectedRows);
 		return affectedRows != 0;
 	}
-	
+
 	@Override
 	public boolean addInviteCode(UserInviteCode userInvitecode) {
 		String sql = "insert into user_invitecode (user_id, invite_code, create_time)"
@@ -127,7 +141,7 @@ public class UserOperationDaoImpl implements IUserOperationDao {
 		String sql = "insert into user_phone (user_id, phone, type, create_time)"
 				+ " values (?, ?, ?, ?)";
 		int affectedRows = jdbcTemplate.update(sql, userPhone.getUserId(),
-				userPhone.getClass(), userPhone.getType(),
+				userPhone.getPhone(), userPhone.getType(),
 				userPhone.getCreateTime());
 		logger.debug("addUserPhone result : {}", affectedRows);
 		return affectedRows != 0;
@@ -202,6 +216,40 @@ public class UserOperationDaoImpl implements IUserOperationDao {
 	public boolean updateUserRole(UserRole userRole) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public boolean updateUserRegStatus(int status, String userId) {
+		String sql = "update user set user_reg_status=? where user_id=?";
+		int affectedRows = jdbcTemplate.update(sql, status, userId);
+		logger.debug("updateUserRegStatus result : {}", affectedRows);
+		return affectedRows != 0;
+	}
+
+	@Override
+	public boolean addUserPwd(UserPwd userPwd) {
+		String sql = "insert into user_pwd (user_id, pwd, create_time)"
+				+ " values (?, ?, ?)";
+		int affectedRows = jdbcTemplate.update(sql, userPwd.getUserId(),
+				userPwd.getPwd(), new Timestamp(System.currentTimeMillis()));
+		logger.debug("addUserPwd result : {}", affectedRows);
+		return affectedRows != 0;
+	}
+
+	@Override
+	public boolean deleteUserPwd(String userId) {
+		String sql = "delete from user_pwd where user_id = ?";
+		int affectedRows = jdbcTemplate.update(sql, userId);
+		logger.debug("deleteUserPwd result : {}", affectedRows);
+		return affectedRows != 0;
+	}
+
+	@Override
+	public boolean updateUserPwd(UserPwd userPwd) {
+		String sql = "update user_pwd set pwd=? where user_id=?";
+		int affectedRows = jdbcTemplate.update(sql, userPwd);
+		logger.debug("updateUserPwd result : {}", affectedRows);
+		return affectedRows != 0;
 	}
 
 }

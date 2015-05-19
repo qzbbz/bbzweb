@@ -10,20 +10,21 @@
 -------------------------------------------------------------------------*/
 
 function centerModals() {
-	$('.modal').each(function(i) {
-		var $clone = $(this).clone().css('display', 'block').appendTo('body');
-		var top = Math.round(($clone.height() - $clone.find('.modal-content').height()) / 2);
-		top = top > 0 ? top : 0;
-		$clone.remove();
-		$(this).find('.modal-content').css("margin-top", top);
-	});
+	$('.modal').each(
+			function(i) {
+				var $clone = $(this).clone().css('display', 'block').appendTo(
+						'body');
+				var top = Math.round(($clone.height() - $clone.find(
+						'.modal-content').height()) / 2);
+				top = top > 0 ? top : 0;
+				$clone.remove();
+				$(this).find('.modal-content').css("margin-top", top);
+			});
 }
 $('.modal').on('show.bs.modal', centerModals);
 $(window).on('resize', centerModals);
 
 jQuery(document).ready(function($) {
-
-	
 
 	$('#step1-tip1').mouseover(function() {
 		$(this).tooltip('show');
@@ -41,20 +42,20 @@ jQuery(document).ready(function($) {
 	registerSelectPlanEvents();
 
 	/*------------------------------------------------------------------------*/
-	/*	1.	Plugins Init
-	/*------------------------------------------------------------------------*/
-
+	/*
+	 * 1. Plugins Init
+	 * /*------------------------------------------------------------------------
+	 */
 
 	/*-----------FLEXSLIDER INIT-------------*/
 
 	function initFlexSlider() {
 
-
 		$('.introduction-slider').flexslider({
-			animation: "fade",
-			controlNav: false,
-			directionNav: false,
-			start: function(slider) {
+			animation : "fade",
+			controlNav : false,
+			directionNav : false,
+			start : function(slider) {
 				$('body').removeClass('loading');
 			}
 		});
@@ -73,20 +74,19 @@ jQuery(document).ready(function($) {
 
 		// Testimonials Slide
 		$('.testimonials-slider').flexslider({
-			animation: "fade",
-			controlNav: true,
-			directionNav: false,
-			start: function(slider) {
+			animation : "fade",
+			controlNav : true,
+			directionNav : false,
+			start : function(slider) {
 				$('body').removeClass('loading');
 			}
 		});
 
 	}
 
-	//initFlexSlider();
+	// initFlexSlider();
 
 	/*-----------SCROLLTO INIT-------------*/
-
 
 	/*-----------PARALLAX INIT-------------*/
 	function initParallax() {
@@ -97,32 +97,29 @@ jQuery(document).ready(function($) {
 	}
 	initParallax();
 
-
-
-
 	/*-----------NICESCROLL INIT-------------*/
 
 	function niceScrollInit() {
 		$("html").niceScroll({
-			autohidemode: false,
-			cursorcolor: '#e04d47',
-			zindex: 9999,
-			cursorwidth: 6,
-			cursorborder: "0px solid #e04d47",
-			background: "#000000",
-			scrollspeed: 60,
-			mousescrollstep: 40
+			autohidemode : false,
+			cursorcolor : '#e04d47',
+			zindex : 9999,
+			cursorwidth : 6,
+			cursorborder : "0px solid #e04d47",
+			background : "#000000",
+			scrollspeed : 60,
+			mousescrollstep : 40
 		});
 	}
 
-	//niceScrollInit();
+	// niceScrollInit();
 
 	/*-----------SUPERFISH INIT-------------*/
 
 	function toolTipInit() {
 
 		$('.partner-logo img').tooltip({
-			placement: 'bottom'
+			placement : 'bottom'
 		});
 	}
 
@@ -135,21 +132,19 @@ jQuery(document).ready(function($) {
 		// init
 		$container.isotope({
 			// options
-			itemSelector: '.folio-item',
-			animationOptions: {
-				duration: 750,
-				easing: 'linear',
-				queue: false
+			itemSelector : '.folio-item',
+			animationOptions : {
+				duration : 750,
+				easing : 'linear',
+				queue : false
 			},
 		});
-
-
 
 		// filter items when filter link is clicked
 		jQuery('#filters a').click(function() {
 			var selector = $(this).attr('data-filter');
 			$container.isotope({
-				filter: selector
+				filter : selector
 			});
 			return false;
 		});
@@ -163,74 +158,62 @@ jQuery(document).ready(function($) {
 
 	isotopeInit();
 
-
 	// Portfolio window
-	/*jQuery('.folio-desc a').click(function() {
-		var target_portfolio = jQuery(this).attr('href');
-		$.ajax({
-			url: target_portfolio,
-			success: function(data) {
-				jQuery("#folio-content").html(data);
-				jQuery('#load-folio').fadeIn(400);
-				var top_window = jQuery(document).scrollTop() + 20;
-				jQuery('#folio-content').css('top',top_window);
-				jQuery('#folio-content').css('display', 'block');			
-			}
-		});
-		return false;
-	});
-		
-	jQuery('.portfolio-close').live('click', function() {
-		jQuery('#window').html('');
-		jQuery('#bg-fade').css('display','none');
-	});*/
+	/*
+	 * jQuery('.folio-desc a').click(function() { var target_portfolio =
+	 * jQuery(this).attr('href'); $.ajax({ url: target_portfolio, success:
+	 * function(data) { jQuery("#folio-content").html(data);
+	 * jQuery('#load-folio').fadeIn(400); var top_window =
+	 * jQuery(document).scrollTop() + 20;
+	 * jQuery('#folio-content').css('top',top_window);
+	 * jQuery('#folio-content').css('display', 'block'); } }); return false; });
+	 * 
+	 * jQuery('.portfolio-close').live('click', function() {
+	 * jQuery('#window').html(''); jQuery('#bg-fade').css('display','none'); });
+	 */
 
-	/***************** Magnific Popup *********************/
+	/** *************** Magnific Popup ******************** */
 
 	function initMagnificPopup() {
 
 		$('.folio-zoom').magnificPopup({
-			type: 'image',
-			closeOnContentClick: true,
-			closeBtnInside: false,
-			fixedContentPos: true,
-			mainClass: 'mfp-no-margins mfp-with-zoom', // class to remove default margin from left and right side
-			gallery: {
-				enabled: true
+			type : 'image',
+			closeOnContentClick : true,
+			closeBtnInside : false,
+			fixedContentPos : true,
+			mainClass : 'mfp-no-margins mfp-with-zoom', // class to remove
+			// default margin from
+			// left and right side
+			gallery : {
+				enabled : true
 			},
-			image: {
-				verticalFit: true
+			image : {
+				verticalFit : true
 			},
-			zoom: {
-				enabled: false,
-				duration: 300 // don't foget to change the duration also in CSS
+			zoom : {
+				enabled : false,
+				duration : 300
+			// don't foget to change the duration also in CSS
 			}
 
 		});
 	}
 
-
 	initMagnificPopup();
 
 	/*------------------------------------------------------------------------*/
-	/*	2.	Site Specific Functions
-	/*------------------------------------------------------------------------*/
+	/*
+	 * 2. Site Specific Functions
+	 * /*------------------------------------------------------------------------
+	 */
 
-	//$("#header").sticky({ topSpacing: 0 });
-
-	//var main_menu = jQuery('#header');
-
-
-
-
-	/*jQuery(window).scroll(function() {
-		if(jQuery('.is-sticky').length > 0) {
-			main_menu.css('height', '80px');
-		}
-		else {
-			main_menu.css('height', '130px');
-		}
-	});*/
+	// $("#header").sticky({ topSpacing: 0 });
+	// var main_menu = jQuery('#header');
+	/*
+	 * jQuery(window).scroll(function() { if(jQuery('.is-sticky').length > 0) {
+	 * main_menu.css('height', '80px'); } else { main_menu.css('height',
+	 * '130px'); } });
+	 */
 
 	/*-----------SETUP ANIMATIONS-------------*/
 
@@ -242,15 +225,13 @@ jQuery(document).ready(function($) {
 				$that.addClass('animated');
 			}, timeDelay);
 		}, {
-			accX: 0,
-			accY: -150
+			accX : 0,
+			accY : -150
 		});
 
 	});
 
-
 	/*-----------COUNTDOWN FOR OUR TEAM-------------*/
-
 
 	jQuery('.counter-item').appear(function() {
 		jQuery('.counter-number').countTo();
@@ -266,8 +247,6 @@ jQuery(document).ready(function($) {
 		});
 
 	});
-
-
 
 });
 
@@ -324,10 +303,13 @@ function exchangeHeader() {
 
 function checkRegInput() {
 	var success = false;
-	if (document.getElementById('userName').value == "" ||
-		document.getElementById('userPhone').value == "" ||
-		document.getElementById('userCompanyName').value == "" ||
-		document.getElementById('userCalledTime').value == "") {
+	var calledTime = $("#userCalledTime  option:selected").text();
+	var userPhone = $('#userPhone').val();
+	var userName = $('#userName').val();
+	var companyName = $('#userCompanyName').val();
+	if (userName == null || userName == "" || userPhone == null
+			|| userPhone == "" || !isTelephone(userPhone) || calledTime == null
+			|| calledTime == "") {
 		$('#step2-toip').unbind('mouseover');
 		$('#step2-toip').mouseover(function() {
 			$(this).tooltip('show');
@@ -339,6 +321,25 @@ function checkRegInput() {
 			$(this).tooltip('hide');
 		})
 		$('#step2_btn_next').removeClass('btn-disabled');
+		success = true;
+	}
+	return success;
+}
+
+function checkCompanyIncomesInput() {
+	var success = false;
+	var companyIncomes = $('#userCompanyIncomes').val();
+	if (companyIncomes == null || companyIncomes == '') {
+		$('#step3_btn_next').addClass('btn-disabled');
+		$('#step3-toip').mouseover(function() {
+			$(this).tooltip('show');
+		})
+	} else {
+		$('#step3-toip').unbind('mouseover');
+		$('#step3-toip').mouseover(function() {
+			$(this).tooltip('hide');
+		})
+		$('#step3_btn_next').removeClass('btn-disabled');
 		success = true;
 	}
 	return success;
@@ -362,35 +363,31 @@ function initSelectPlan() {
 	})
 	$('#step3_btn_next').addClass('btn-disabled');
 	$('#step2_btn_next').addClass('btn-disabled');
-	var addListener = window.addEventListener ?
-		function(el, type, fn) {
-			el.addEventListener(type, fn, false);
-		} :
-		function(el, type, fn) {
-			el.attachEvent('on' + type, fn);
-		};
+	var addListener = window.addEventListener ? function(el, type, fn) {
+		el.addEventListener(type, fn, false);
+	} : function(el, type, fn) {
+		el.attachEvent('on' + type, fn);
+	};
 	$('#userName').on('input', function() {
 		checkRegInput();
 	});
 	$('#userPhone').on('input', function() {
 		checkRegInput();
 	});
-	$('#userCompanyName').on('input', function() {
+	$('#userPhone').on('keyup', function() {
 		checkRegInput();
 	});
-	$('#userCalledTime').on('input', function() {
+	$('#userCompanyName').on('input', function() {
 		checkRegInput();
 	});
 }
 
 function registerSelectPlanEvents() {
-	var addListener = window.addEventListener ?
-		function(el, type, fn) {
-			el.addEventListener(type, fn, false);
-		} :
-		function(el, type, fn) {
-			el.attachEvent('on' + type, fn);
-		};
+	var addListener = window.addEventListener ? function(el, type, fn) {
+		el.addEventListener(type, fn, false);
+	} : function(el, type, fn) {
+		el.attachEvent('on' + type, fn);
+	};
 	var plan1 = document.getElementById('plan1');
 	var plan2 = document.getElementById('plan2');
 	var plan3 = document.getElementById('plan3');
@@ -462,34 +459,35 @@ function registerSelectPlanEvents() {
 }
 
 function showHiden(showId, hiddenId) {
-	currentStep = showId;
-	document.getElementById(hiddenId).style.display = 'none';
-	document.getElementById(showId).style.display = 'block';
+	$('#company_detail_reg_msg').hide();
+	var checkRet = checkRegInput();
 	if (showId == "step3") {
 		initSelectPlan();
+		$('#userCompanyIncomes').val('');
 	}
-	if (showId == "step2") {
-		checkRegInput();
-	}
+	document.getElementById(hiddenId).style.display = 'none';
+	document.getElementById(showId).style.display = 'block';
 }
 
-function finishRegister(){
+function finishRegister() {
 	$('#step2RegisterForm').submit();
 }
 
-
 function isEmail(email) {
-	var result=email.match(/^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/);
-	if(result==null) return false;
+	var result = email
+			.match(/^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/);
+	if (result == null)
+		return false;
 	return true;
 }
 
-function isTelephone(phoneNumber){
+function isTelephone(phoneNumber) {
 	var isPhone = /^([0-9]{3,4}-)?[0-9]{7,8}$/;
-	var isMob=/^((\+?86)|(\(\+86\)))?(13[012356789][0-9]{8}|15[012356789][0-9]{8}|18[02356789][0-9]{8}|147[0-9]{8}|1349[0-9]{7})$/;
-	if(isMob.test(phoneNumber)||isPhone.test(phoneNumber)){
+	var isMob = /^((\+?86)|(\(\+86\)))?(13[012356789][0-9]{8}|15[012356789][0-9]{8}|18[02356789][0-9]{8}|147[0-9]{8}|1349[0-9]{7})$/;
+	/* if(isMob.test(phoneNumber)||isPhone.test(phoneNumber)){ */
+	if (isMob.test(phoneNumber)) {
 		return true;
-	}else{
+	} else {
 		return false;
 	}
 }

@@ -7,18 +7,24 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.wisdom.web.api.controller.UserValidateController;
 import com.wisdom.web.utils.SessionConstant;
 
 public class SessionFilterService extends OncePerRequestFilter {
 
+	private static final Logger logger = LoggerFactory
+			.getLogger(SessionFilterService.class);
+	
 	private String[] filterUrls;
 
 	public SessionFilterService() {
-		filterUrls = new String[] { "/community", "/company", "/accounter",
-				"/companyUser" };
+		filterUrls = new String[] { "/admin/", "/company/", "/accounter/",
+				"/companyUser/"};
 	}
 
 	@Override
@@ -39,11 +45,8 @@ public class SessionFilterService extends OncePerRequestFilter {
 					SessionConstant.SESSION_USER_ID);
 			Object userTypeId = request.getSession().getAttribute(
 					SessionConstant.SESSION_USER_TYPE);
-			Object companyNotFinishRegister = request
-					.getSession()
-					.getAttribute(
-							SessionConstant.SESSION_COMPANY_NOT_FINISH_REGISTER);
 			if (null == userId) {
+				logger.debug("user id is null.");
 				boolean isAjaxRequest = isAjaxRequest(request);
 				if (isAjaxRequest) {
 					response.setCharacterEncoding("UTF-8");
@@ -51,34 +54,34 @@ public class SessionFilterService extends OncePerRequestFilter {
 							"Unauthorized!");
 					return;
 				}
-				response.sendRedirect("/views/webviews/no_login.html");
-				return;
-			} else if (companyNotFinishRegister != null) {
-				response.sendRedirect("/views/webviews/company_detail_register.html");
+				response.sendRedirect("/views/frontviews/no_login.html");
 				return;
 			} else {
 				boolean noAuth = false;
 				int typeId = (Integer) userTypeId;
 				switch (typeId) {
 				case 1:
-					if (uri.indexOf("/company") != -1
-							|| uri.indexOf("/companyUser") != -1)
+					if (uri.indexOf("/accounter/") == -1)
 						noAuth = true;
 					break;
 				case 2:
-					if (uri.indexOf("/accounter") != -1
-							|| uri.indexOf("/community") != -1)
+					if (uri.indexOf("/company/") == -1)
+						noAuth = true;
+					break;
+				case 3:
+					if (uri.indexOf("/admin/") == -1)
 						noAuth = true;
 					break;
 				case 5:
-					if (uri.indexOf("/accounter") != -1
-							|| uri.indexOf("/community") != -1
-							|| uri.indexOf("/companyUser") != -1)
+					if (uri.indexOf("/companyUser/") == -1)
 						noAuth = true;
 					break;
+				default:
+					noAuth = true;
 				}
 				if (noAuth) {
-					response.sendRedirect("/views/webviews/no_auth.html");
+					logger.debug("no auth.");
+					response.sendRedirect("/views/frontviews/no_login.html");
 					return;
 				}
 			}

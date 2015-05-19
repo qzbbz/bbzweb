@@ -1,5 +1,7 @@
 package com.wisdom.company.dao.impl;
 
+import java.sql.Timestamp;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,10 +37,19 @@ public class DeptDaoImpl implements IDeptDao {
 
 	@Override
 	public boolean addDept(Dept dept) {
-		String sql = "insert into dept (name, company_id, parent_id, create_time)"
-				+ " values (?, ?, ?, ?)";
-		int affectedRows = jdbcTemplate.update(sql, dept.getName(),
-				dept.getCompanyId(), dept.getParentId(), dept.getCreateTime());
+		String sql = "insert into dept (name, company_id, parent_id, cost_center_encode, create_time)"
+				+ " values (?, ?, ?, ?, ?)";
+		if(dept.getName()== null || 
+			dept.getCompanyId() == null || 
+			dept.getCostCenterEncode() == null) {
+			return false;
+		}
+		int affectedRows = jdbcTemplate.update(sql, 
+				dept.getName(),
+				dept.getCompanyId(),
+				dept.getParentId() == null ? 0 : dept.getParentId(),
+				dept.getCostCenterEncode(),
+				dept.getCreateTime() == null ? new Timestamp(System.currentTimeMillis()) : dept.getCreateTime());
 		logger.debug("addDept result : {}", affectedRows);
 		return affectedRows != 0;
 	}
@@ -53,9 +64,18 @@ public class DeptDaoImpl implements IDeptDao {
 
 	@Override
 	public boolean updateDept(Dept dept) {
-		String sql = "update dept set name=?, company_id=?, parent_id=? where id=?";
-		int affectedRows = jdbcTemplate.update(sql, dept.getName(),
-				dept.getCompanyId(), dept.getParentId(), dept.getId());
+		String sql = "update dept set name=?, company_id=?, parent_id=?, cost_center_encode=? where id=?";
+		if(dept.getName()== null || 
+				dept.getCompanyId() == null || 
+				dept.getCostCenterEncode() == null) {
+				return false;
+		}
+		int affectedRows = jdbcTemplate.update(sql,
+				dept.getName(),
+				dept.getCompanyId(),
+				dept.getParentId() == null ? 0 : dept.getParentId(),
+				dept.getCostCenterEncode(),
+				dept.getId());
 		logger.debug("updateDept result : {}", affectedRows);
 		return affectedRows != 0;
 	}

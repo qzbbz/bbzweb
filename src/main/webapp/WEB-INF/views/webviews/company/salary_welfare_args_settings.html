@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>参数设置</title>
+    <link rel="stylesheet" type="text/css" href="/css/webcss/bui.css">
+	<link rel="stylesheet" type="text/css" href="/css/webcss/golbal.css">
+	<link rel="stylesheet" type="text/css" href="/css/webcss/layout.css">
+</head>
+<body>
+	<div class="wrap">
+		<div class="side-bar">
+            <div class="side-bar-top">
+                <img src="/img/webimg/bss-logo.png" >
+                <h1>上海青智财务咨询有限公司</h1>
+            </div>
+            <div class="side-bar-content"></div>
+            <div class="side-bar-bottom">
+                <ul>
+                    <li><a href=""><i class="setting"></i>设置</a></li>
+                    <li><a href=""><i class="exit"></i>安全退出</a></li>
+                </ul>
+            </div>
+        </div>
+		<div class="main">
+			
+			<div class="menu"><h2>参数设置</h2></div>
+			<form name="argsSettings" id="argsSettings" action="/company/setSalarySocialSecurityInfo" method="POST">
+			<div class="well mt20">
+        		<label>选择城市</label><select class="input input-small ml10" id="province"></select><select id="city" class="input input-small ml10"></select><label class="ml10">选择户籍类型</label><select class="input input-small ml10" id="hujiType"><option value="0">城镇户籍</option><option value="1">农村户籍</option></select>
+        		<input type="hidden" id="currentCity" name="currentCity">
+        		<input type="hidden" id="currentType" name="currentType">
+        	</div>
+        	<table class="table table-bordered table-head-bordered center mt20">
+        		<colgroup>
+        			<col style="width:10%; background:#f9f9f9;">
+        			<col>
+        			<col>
+        			<col>
+        		</colgroup>
+        		<thead>
+        			<tr>
+        				<th>缴纳项目</th>
+        				<th>单位比例</th>
+        				<th>个人比例</th>
+        				<th>最低缴费基数</th>
+        			</tr>
+        		</thead>
+        		<tbody>
+        			<tr>
+        				<td>养老</td>
+        				<td><input id="pensionCratio" name="pensionCratio" class="input input-small" value="0"></td>
+        				<td><input id="pensionPratio" name="pensionPratio" class="input input-small" value="0"></td>
+        				<td><input id="pensionBase" name="pensionBase" class="input input-small" value="0"></td>
+        			</tr>
+        			<tr>
+        				<td>医疗</td>
+        				<td><input id="medicalCratio" name="medicalCratio" class="input input-small" value="0"></td>
+        				<td><input id="medicalPratio" name="medicalPratio" class="input input-small" value="0"></td>
+        				<td><input id="medicalBase" name="medicalBase" class="input input-small" value="0"></td>
+        			</tr>
+        			<tr>
+        				<td>失业</td>
+        				<td><input id="unemployCratio" name="unemployCratio" class="input input-small" value="0"></td>
+        				<td><input id="unemployPratio" name="unemployPratio" class="input input-small" value="0"></td>
+        				<td><input id="unemployBase" name="unemployBase" class="input input-small" value="0"></td>
+        			</tr>
+        			<tr>
+        				<td>工伤</td>
+        				<td><input id="injuryCratio" name="injuryCratio" class="input input-small" value="0"></td>
+        				<td><input id="injuryPratio" name="injuryPratio" class="input input-small" value="0"></td>
+        				<td><input id="injuryBase" name="injuryBase" class="input input-small" value="0"></td>
+        			</tr>
+        			<tr>
+        				<td>生育</td>
+        				<td><input id="birthCratio" name="birthCratio" class="input input-small" value="0"></td>
+        				<td><input id="birthPratio" name="birthPratio" class="input input-small" value="0"></td>
+        				<td><input id="birthBase" name="birthBase" class="input input-small" value="0"></td>
+        			</tr>
+        			<tr>
+        				<td>公积金</td>
+        				<td><input id="accfundCratio" name="accfundCratio" class="input input-small" value="0"></td>
+        				<td><input id="accfundPratio" name="accfundPratio" class="input input-small" value="0"></td>
+        				<td><input id="accfundBase" name="accfundBase" class="input input-small" value="0"></td>
+        			</tr>
+        			<tr>
+        				<td>工资</td>
+        				<td><input id="salaryCratio" name="salaryCratio" class="input input-small" value="0"></td>
+        				<td><input id="salaryPratio" name="salaryPratio" class="input input-small" value="0"></td>
+        				<td><input id="salaryBase" name="salaryBase" class="input input-small" value="0"></td>
+        			</tr>
+        			<tr>
+        				<td>大病医疗</td>
+        				<td><input id="bigmedicalCratio" name="bigmedicalCratio" class="input input-small" value="0"></td>
+        				<td><input id="bigmedicalPratio" name="bigmedicalPratio" class="input input-small" value="0"></td>
+        				<td><input id="bigmedicalBase" name="bigmedicalBase" class="input input-small" value="0"></td>
+        			</tr>
+        		</tbody>
+        	</table>
+        	<div class="tips mt20">
+                <a href="#" class="button button-primary button-long mr20">打印</a><a href="javascript:submitSettings()" class="button button-success button-long mr20">保存</a>
+            </div>
+            </form>
+		</div>
+	</div>
+	<!--该js需要修改js路径及修改seajs路径-->
+	<script src="http://g.tbcdn.cn/fi/bui/jquery-1.8.1.min.js"></script>
+	<script src="http://g.alicdn.com/bui/seajs/2.3.0/sea.js"></script>
+	<script src="http://g.alicdn.com/bui/bui/1.1.17/config.js"></script>
+	<script src="/js/webjs/bbzutils.js"></script>
+	<script type="text/javascript">
+		addProvince($('#province'));
+		$("#province").change(function(){
+			$("#city").empty();
+			addCity($('#city'), $('#province option:selected').val());
+		});
+		function addProvince(obj) {
+			$.ajax({
+				url : '/getAllProvinces',
+				type : "POST",
+				data : {},
+				success : function(data) {
+					$.each(data,function(name,value) {
+						obj.append("<option value='"+name+"'>"+value+"</option>");
+					});
+					addCity($('#city'), $('#province option:selected').val());
+				}
+			});
+		}
+		function addCity(obj, provinceId) {
+			obj.empty();
+			$.ajax({
+				url : '/getCities',
+				type : "POST",
+				data : {provinceId:provinceId},
+				success : function(data) {
+					$.each(data,function(name,value) {
+						obj.append("<option value='"+name+"'>"+value+"</option>");
+					});
+					$('#currentCity').val($('#province option:selected').text() + $('#city option:selected').text());
+				}
+			});
+		}
+		$('#currentType').val(0);
+		$("#hujiType").change(function(){
+			$('#currentType').val($('#hujiType option:selected').val());
+		});
+		function submitSettings() {
+			if(isNaN($('#pensionCratio').val()) || $('#pensionCratio').val() == '' ||
+					isNaN($('#pensionCratio').val()) || $('#pensionCratio').val() == '' ||
+					isNaN($('#pensionPratio').val()) || $('#pensionPratio').val() == '' ||
+					isNaN($('#pensionBase').val()) || $('#pensionBase').val() == '' ||
+					isNaN($('#medicalCratio').val()) || $('#medicalCratio').val() == '' ||
+					isNaN($('#medicalPratio').val()) || $('#medicalPratio').val() == '' ||
+					isNaN($('#medicalBase').val()) || $('#medicalBase').val() == '' ||
+					isNaN($('#unemployCratio').val()) || $('#unemployCratio').val() == '' ||
+					isNaN($('#unemployPratio').val()) || $('#unemployPratio').val() == '' ||
+					isNaN($('#unemployBase').val()) || $('#unemployBase').val() == '' ||
+					isNaN($('#injuryCratio').val()) || $('#injuryCratio').val() == '' ||
+					isNaN($('#injuryPratio').val()) || $('#injuryPratio').val() == '' ||
+					isNaN($('#injuryBase').val()) || $('#injuryBase').val() == '' ||
+					isNaN($('#birthCratio').val()) || $('#birthCratio').val() == '' ||
+					isNaN($('#birthPratio').val()) || $('#birthPratio').val() == '' ||
+					isNaN($('#birthBase').val()) || $('#birthBase').val() == '' ||
+					isNaN($('#accfundCratio').val()) || $('#accfundCratio').val() == '' ||
+					isNaN($('#accfundPratio').val()) || $('#accfundPratio').val() == '' ||
+					isNaN($('#accfundBase').val()) || $('#accfundBase').val() == '' ||
+					isNaN($('#salaryCratio').val()) || $('#salaryCratio').val() == '' ||
+					isNaN($('#salaryPratio').val()) || $('#salaryPratio').val() == '' ||
+					isNaN($('#salaryBase').val()) || $('#salaryBase').val() == '' ||
+					isNaN($('#bigmedicalCratio').val()) || $('#bigmedicalCratio').val() == '' ||
+					isNaN($('#bigmedicalPratio').val()) || $('#bigmedicalPratio').val() == '' ||
+					isNaN($('#bigmedicalBase').val()) || $('#bigmedicalBase').val() == '') {
+				alert("所有输入必须为数字，请检查！");
+			} else {
+				$('#argsSettings').submit();
+			}
+		}
+		//侧栏高度
+        (function(){
+            var H=$(window).height();
+            var h1=$(".side-bar-top").height()+$(".side-bar-bottom").height();
+            $(".side-bar-content").height(H-h1);
+            $(window).resize(function(){
+                H=$(window).height();
+                $(".side-bar-content").height(H-h1);
+            });
+        })()
+		//竖状菜单
+	    BUI.use('bui/tree',function (Tree) {
+	        var menu = new Tree.TreeMenu({
+	        render : '.side-bar-content',
+
+	        elCls : 'bui-side-menu', 
+	        itemCls : 'bui-menu-item',
+	        expandAnimate : true,
+	        showIcons : false,
+
+	        dirTpl : '<li class="menu-leaf menu-second"><div class="bui-menu-title"><s></s><span class="bui-menu-title-text"><a href="{href}">{text}</a></span></div></li>',
+	        leafTpl : '<li class="menu-leaf"><a href="{href}">{text}</a></li>',
+
+	        nodes : [
+	 				{text : '发票',id : '',href:"#",leaf : true, children: [
+	 					{text : '发票上传',id : '',href:"/views/webviews/company/expense_account_upload.html"},
+	 					{text : '发票历史记录',id : '',href:"/views/webviews/company/expense_account_history.html"}                                                      
+	 				]},
+	 				{text : '银行对账单',id : '',href:"#",expanded : false,children: [
+	 					{text : '上传对账单',id : '',href:"/views/webviews/company/bank_statement_upload.html"},
+	 					{text : '对账单历史记录',id : '',href:"/views/webviews/company/bank_statement_history.html"}                                                       
+	 				]},
+	 	            {text : '工资社保',id : '',href:"#",expanded : false,children : [
+	 					{text : '参数设置',id : '',href:"/views/webviews/company/salary_welfare_args_settings.html"},
+	 					{text : '下载工资计算模板',id : '',href:"/views/webviews/company/salary_welfare_template_download.html"},
+	 					{text : '上传本月工资',id : '',href:"/views/webviews/company/salary_welfare_upload.html"}
+	 				]},
+	 	            {text : '预约取发票',id : '',href:"#",leaf : false,children: [
+	 					{text : '方式选择',id : '',href:"/views/webviews/company/take_expense_account_mode_select.html"},
+	 					{text : '进度跟踪',id : '',href:"/views/webviews/company/take_expense_account_progress_track.html"}
+	 				]},
+	 	            {text : '组织架构',id : '',href:"#",expanded : false,children : [
+	 	                 {text : '基本信息设置',id : '',href:"/views/webviews/company/organization_information_settings.html"},
+ 	                	{text : '组织架构设置',id : '',href:"/views/webviews/company/organization_structure_settings.html"}
+	 	            ]}
+	 	            ]
+	 	    	});
+	   		menu.render();
+			$.each($("li.menu-second"),function(){
+				var that = $(this);
+				if(that.next().hasClass("menu-second")){
+					that.find("s").remove();
+				}
+			})
+	        menu.on('itemclick',function(ev){
+	            $('.log').text(ev.item.text);
+	        }); 
+	    });
+	</script>
+</body>
+</html>

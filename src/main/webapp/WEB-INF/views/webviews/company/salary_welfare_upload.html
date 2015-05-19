@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>上传工资单</title>
+    <link rel="stylesheet" type="text/css" href="/css/webcss/bui.css">
+	<link rel="stylesheet" type="text/css" href="/css/webcss/golbal.css">
+	<link rel="stylesheet" type="text/css" href="/css/webcss/layout.css">
+</head>
+<body>
+	<div class="wrap">
+		<div class="side-bar">
+			<div class="side-bar-top">
+				<img src="/img/webimg/bss-logo.png" >
+				<h1>上海元升财务咨询有限公司</h1>
+			</div>
+            <div class="side-bar-content"></div>
+			<div class="side-bar-bottom">
+				<ul>
+					<li><a href=""><i class="setting"></i>设置</a></li>
+					<li><a href="/logout"><i class="exit"></i>安全退出</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="main">
+			<div class="zero-state">
+				<div class="form-window">
+					<div class="hd">
+						<i class="iconfont">&#xe627;</i>
+					</div>
+					<div class="bd">
+						<h2>本月工资单上传</h2>
+						<p>
+							请在这里上传您本月的工资单
+						</p>
+						<form id="salaryUpload" action="/company/uploadSalary" method="POST"	enctype="multipart/form-data">
+							<input type="file" id="salaryFile" name="files" class="ml10">
+							<a href="javascript:submitUpload();" class="button button-success">工资单上传</a>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--该js需要修改js路径及修改seajs路径-->
+	<script src="http://g.tbcdn.cn/fi/bui/jquery-1.8.1.min.js"></script>
+	<script src="http://g.alicdn.com/bui/seajs/2.3.0/sea.js"></script>
+	<script src="http://g.alicdn.com/bui/bui/1.1.17/config.js"></script>
+	<script src="../js/layer.js"></script>
+	<script type="text/javascript">
+		function submitUpload() {
+			if($('#salaryFile').val() == null || $('#salaryFile').val() == '') {
+				alert("请先选择文件，再上传！");
+			} else {
+				$('#salaryUpload').submit();
+			}
+		}	
+		//侧栏高度
+        (function(){
+            var H=$(window).height();
+            var h1=$(".side-bar-top").height()+$(".side-bar-bottom").height();
+            $(".side-bar-content").height(H-h1);
+            $(window).resize(function(){
+                H=$(window).height();
+                $(".side-bar-content").height(H-h1);
+            });
+        })()
+		//竖状菜单
+	    BUI.use('bui/tree',function (Tree) {
+	        var menu = new Tree.TreeMenu({
+	        render : '.side-bar-content',
+
+	        elCls : 'bui-side-menu', 
+	        itemCls : 'bui-menu-item',
+	        expandAnimate : true,
+	        showIcons : false,
+
+	        dirTpl : '<li class="menu-leaf menu-second"><div class="bui-menu-title"><s></s><span class="bui-menu-title-text"><a href="{href}">{text}</a></span></div></li>',
+	        leafTpl : '<li class="menu-leaf"><a href="{href}">{text}</a></li>',
+
+	        nodes : [
+	 				{text : '发票',id : '',href:"#",leaf : true, children: [
+	 					{text : '发票上传',id : '',href:"/views/webviews/company/expense_account_upload.html"},
+	 					{text : '发票历史记录',id : '',href:"/views/webviews/company/expense_account_history.html"}                                                      
+	 				]},
+	 				{text : '银行对账单',id : '',href:"#",expanded : false,children: [
+	 					{text : '上传对账单',id : '',href:"/views/webviews/company/bank_statement_upload.html"},
+	 					{text : '对账单历史记录',id : '',href:"/views/webviews/company/bank_statement_history.html"}                                                       
+	 				]},
+	 	            {text : '工资社保',id : '',href:"#",expanded : false,children : [
+	 					{text : '参数设置',id : '',href:"/views/webviews/company/salary_welfare_args_settings.html"},
+	 					{text : '下载工资计算模板',id : '',href:"/views/webviews/company/salary_welfare_template_download.html"},
+	 					{text : '上传本月工资',id : '',href:"/views/webviews/company/salary_welfare_upload.html"}
+	 				]},
+	 	            {text : '预约取发票',id : '',href:"#",leaf : false,children: [
+	 					{text : '方式选择',id : '',href:"/views/webviews/company/take_expense_account_mode_select.html"},
+	 					{text : '进度跟踪',id : '',href:"/views/webviews/company/take_expense_account_progress_track.html"}
+	 				]},
+	 	            {text : '组织架构',id : '',href:"#",expanded : false,children : [
+	 	                 {text : '基本信息设置',id : '',href:"/views/webviews/company/organization_information_settings.html"},
+ 	                	{text : '组织架构设置',id : '',href:"/views/webviews/company/organization_structure_settings.html"}
+	 	            ]}
+	 	            ]
+	 	    	});
+	   		menu.render();
+			$.each($("li.menu-second"),function(){
+				var that = $(this);
+				if(that.next().hasClass("menu-second")){
+					that.find("s").remove();
+				}
+			})
+	        menu.on('itemclick',function(ev){
+	            $('.log').text(ev.item.text);
+	        }); 
+	    });
+        //弹层
+        BUI.use(['bui/overlay','bui/form'],function(Overlay,Form){
+    
+			var form = new Form.Form({
+				srcNode : '#form'
+			}).render();
+
+			var dialog = new Overlay.Dialog({
+				title:'标题',
+				width:500,
+				height:320,
+				//配置DOM容器的编号
+				contentId:'content',
+				success:function () {
+					alert('确认');
+					this.close();
+				}
+			});
+			//dialog.show();
+ 
+	        $('#btnGroup .button').on('click',function () {
+	          var sender = $(this),
+	            type = sender.text(),
+	            effect = {
+	              effect : type,
+	              duration : 400// 
+	              //callback : function(){} ,callback 回调函数
+	            };
+	 
+	          dialog.set('effect',effect);
+	          dialog.show();
+	 
+	        });
+	    });
+	</script>
+</body>
+</html>

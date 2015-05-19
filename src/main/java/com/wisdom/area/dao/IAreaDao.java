@@ -14,4 +14,10 @@ public interface IAreaDao {
 	
 	public List<ShxProvince> getAllProvince();
 	
+	public String getProvinceNameByProvinceId(String provinceId);
+	
+	public String getCityNameByCityId(String cityId);
+	
+	public String getAreaNameByAreaId(String areaId);
+	
 }

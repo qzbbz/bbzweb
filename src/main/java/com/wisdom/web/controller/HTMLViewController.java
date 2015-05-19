@@ -14,12 +14,17 @@ public class HTMLViewController {
 	//门户网站
 	@RequestMapping("/frontpage/{page}")
 	public String getFrontPages(@PathVariable String page) {
-		return "redirect:/views/webviews/" + page + ".html";
+		return "redirect:/views/frontviews/" + page + ".html";
 	}
 	
 	@RequestMapping("/")
 	public String getRootHtml() {
-		return "redirect:/views/webviews/index.html";
+		return "redirect:/views/frontviews/index.html";
+	}
+	
+	@RequestMapping("/error")
+	public String getErrorHtml() {
+		return "redirect:/views/frontviews/error.html";
 	}
 	
 	//后台网站	
@@ -28,6 +33,6 @@ public class HTMLViewController {
 		httpSession.removeAttribute(SessionConstant.SESSION_USER_ID);
 		httpSession.removeAttribute(SessionConstant.SESSION_COMPANY_NOT_FINISH_REGISTER);
 		httpSession.removeAttribute(SessionConstant.SESSION_USER_TYPE);
-		return "redirect:/views/webviews/index.html";
+		return "redirect:/views/frontviews/index.html";
 	}
 }

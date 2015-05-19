@@ -55,4 +55,19 @@ public class AreaServiceImpl implements IAreaService {
 		return provinceMap;
 	}
 
+	@Override
+	public String getProvinceNameByProvinceId(String provinceId) {
+		return areaDao.getProvinceNameByProvinceId(provinceId);
+	}
+
+	@Override
+	public String getCityNameByCityId(String cityId) {
+		return areaDao.getCityNameByCityId(cityId);
+	}
+
+	@Override
+	public String getAreaNameByAreaId(String areaId) {
+		return areaDao.getAreaNameByAreaId(areaId);
+	}
+
 }

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>输入客户信息批量开票</title>
+    <link rel="stylesheet" type="text/css" href="/css/webcss/bui.css">
+	<link rel="stylesheet" type="text/css" href="/css/webcss/golbal.css">
+	<link rel="stylesheet" type="text/css" href="/css/webcss/layout.css">
+</head>
+<body>
+	<div class="wrap">
+		<div class="side-bar">
+			<div class="side-bar-top">
+				<img src="/img/webimg/bss-logo.png" >
+				<h1>上海青智财务咨询有限公司</h1>
+			</div>
+            <div class="side-bar-content"></div>
+			<div class="side-bar-bottom">
+				<ul>
+					<li><a href=""><i class="setting"></i>设置</a></li>
+					<li><a href=""><i class="exit"></i>安全退出</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="main">
+			<!--浮窗效果-->
+			<!-- <div class="zero-state">
+				<div class="form-window">
+					<div class="hd"><i class="iconfont">&#xe627;</i></div>
+					<div class="bd">
+						<h2>输入客户信息批量开票</h2>
+						<p>每月月末，在本月开票结束后，请将销项票信息导出，打开你的税控机，点击发票管理-发票查询-查看明细，并导出Excel</p>
+					</div>
+				</div>
+			</div> -->
+			<!--弹层Tabs效果-->
+			<div class="graphic-wrap">
+				<ul>
+					<li><a href="javascript:void(0)" class="btnTabFade"><i class="iconfont">&#xe61a;</i>输入客户信息批量开票</a></li>
+					<li><a href="javascript:void(0)" class="btnTabFade"><i class="iconfont">&#xe61d;</i>导出金税卡销售清单</a></li>
+					<li><a href="javascript:void(0)" class="btnTabFade"><i class="iconfont">&#xe620;</i>上传金税卡销售清单</a></li>
+					<li><a href="javascript:void(0)" class="btnTabFade"><i class="iconfont">&#xe61e;</i>历史记录</a></li>
+					<li><a href="javascript:void(0)" class="btnTabFade"><i class="iconfont">&#xe60d;</i>客户信息管理</a></li>
+				</ul>
+				<div id="tabContent" class="hide">
+		            <div id="tabDiv" class="mt10 clearfix layer-tabs">
+		                <div class="tabs-menu">
+		                </div>
+		                <div class="tabs-box">
+		                </div>
+		            </div>
+                </div>
+			</div>
+		</div>
+	</div>
+	<!--该js需要修改js路径及修改seajs路径-->
+	<script src="http://g.tbcdn.cn/fi/bui/jquery-1.8.1.min.js"></script>
+	<script src="http://g.alicdn.com/bui/seajs/2.3.0/sea.js"></script>
+	<script src="http://g.alicdn.com/bui/bui/1.1.17/config.js"></script>
+	<script type="text/javascript">
+		//侧栏高度
+        (function(){
+            var H=$(window).height();
+            var h1=$(".side-bar-top").height()+$(".side-bar-bottom").height();
+            $(".side-bar-content").height(H-h1);
+            $(window).resize(function(){
+                H=$(window).height();
+                $(".side-bar-content").height(H-h1);
+            });
+        })()
+		//竖状菜单
+	    BUI.use('bui/tree',function (Tree) {
+	        var menu = new Tree.TreeMenu({
+	        render : '.side-bar-content',
+
+	        elCls : 'bui-side-menu', 
+	        itemCls : 'bui-menu-item',
+	        expandAnimate : true,
+	        showIcons : false,
+
+	        dirTpl : '<li class="menu-leaf menu-second"><div class="bui-menu-title"><s></s><span class="bui-menu-title-text"><a href="{href}">{text}</a></span></div></li>',
+	        leafTpl : '<li class="menu-leaf"><a href="{href}">{text}</a></li>',
+
+	        nodes : [
+	            {text : '组织权限',id : '',href:"javascript:void(0)",expanded : true,children : [
+	                {text : '组织架构设置',id : '',href:"#"},
+	                {text : '基本资料设置',id : '',href:"#"},
+	                {text : '供应商和客户信息',id : '',href:"#"}
+	            ]},
+	            {text : '收件箱',id : '',href:"#",leaf : false,children: []},
+	            {text : '销售清单',id : '',href:"#",leaf : false,children: []},
+	            {text : '发票',id : '',href:"#",leaf : false,children: []},
+	            {text : '费用报销',id : '',href:"javascript:void(0)",expanded : true,children : [
+	                {text : '收件箱',id : '',href:"#"},
+	                {text : '新建报销单',id : '',href:"#"},
+	                {text : '草稿',id : '',href:"#"},
+	                {text : '待审核报销单',id : '',href:"#"},
+	                {text : '已审核报销单',id : '',href:"#"},
+	                {text : '我的历史报销单记录',id : '',href:"#"},
+	                {text : '报销费用分析',id : '',href:"#"}
+	            ]},
+	            {text : '工资社保单',id : '',href:"#",leaf : false,children: []},
+	            {text : '银行对账单',id : '',href:"#",leaf : false,children: []},
+	            {text : '网上抄税',id : '',href:"#",leaf : false,children: []},
+	            {text : '预约取发票',id : '',href:"#",leaf : false,children: []},
+	            {text : '报表分析',id : '',href:"#",leaf : false,children: []}
+	            ]
+	    	});
+	   		menu.render();
+			$.each($("li.menu-second"),function(){
+				var that = $(this);
+				if(that.next().hasClass("menu-second")){
+					that.find("s").remove();
+				}
+			})
+	        menu.on('itemclick',function(ev){
+	            $('.log').text(ev.item.text);
+	        }); 
+	    });
+		//选项卡
+        BUI.use('bui/tab',function(Tab){
+            var tab = new Tab.Tab({
+                render : '.tabs-menu',
+                elCls : 'button-tabs',
+                autoRender: true,
+                children:[
+                  {text:'输入客户信息批量开票',value:'1'},
+                  {text:'导出金税卡销售清单',value:'2'},
+                  {text:'上传金税卡销售清单',value:'3'},
+                  {text:'历史记录',value:'4'},
+                  {text:'客户信息管理',value:'5'}
+                ]
+            });
+            tab.on('selectedchange',function (ev) {
+                var item = ev.item;
+                $('.tabs-box').text(item.get('text') + ' ' + item.get('value'));
+            });
+            tab.setSelected(tab.getItemAt(0));
+        });
+        //弹层
+        BUI.use(['bui/overlay','bui/form'],function(Overlay,Form){
+    
+			var form = new Form.Form({
+				srcNode : '#form'
+			}).render();
+
+			var dialog = new Overlay.Dialog({
+				title:'标题',
+				width:500,
+				height:320,
+				//配置DOM容器的编号
+				contentId:'content',
+				success:function () {
+					alert('确认');
+					this.close();
+				}
+			});
+			//dialog.show();
+ 
+	        $('#btnGroup .button').on('click',function () {
+	          var sender = $(this),
+	            type = sender.text(),
+	            effect = {
+	              effect : type,
+	              duration : 400// 
+	              //callback : function(){} ,callback 回调函数
+	            };
+	 
+	          dialog.set('effect',effect);
+	          dialog.show();
+	 
+	        });
+	    });
+        //弹tab层
+        BUI.use(['bui/overlay','bui/form'],function(Overlay,Form){
+
+	        var tabForm = new Form.Form({
+				srcNode : '#tabDiv'
+			}).render();
+
+			var tabDialog = new Overlay.Dialog({
+				// title:'标题',
+				width:800,
+				height:480,
+				//配置DOM容器的编号
+				contentId:'tabContent',
+				success:function () {
+					alert('确认');
+					this.close();
+				}
+			});
+	        $('.btnTabFade').on('click',function () {
+	          var sender = $(this),
+	            type = sender.text(),
+	            effect = {
+	              effect : type,
+	              duration : 400// 
+	              //callback : function(){} ,callback 回调函数
+	            };
+	 
+				tabDialog.set('effect',effect);
+				tabDialog.show();
+				var tabPar=$("#tabDiv").parent();
+				tabPar.prev().remove();
+				tabPar.next().remove();
+				tabPar.css({"padding":"0","margin-top":"-10px"});
+				tabPar.parent().find(".bui-ext-close").css({
+					"left" : "0",
+					"top" : "420px",
+					"width" : "120px",
+					"height" : "60px",
+                    "border-top" : "1px solid #212326",
+					"background-color":"#35383b"
+				})
+				tabPar.parent().find(".bui-ext-close-x").css({
+					"background":"none",
+				})
+				tabPar.parent().find(".x-icon").css({
+					"height":"60px",
+					"line-height":"60px",
+					"width":"120px",
+					"text-align":"center",
+					"color":"#fff",
+					"font-weight":"normal",
+					"font-size":"30px"
+				})
+	        });
+	    });
+	</script>
+</body>
+</html>

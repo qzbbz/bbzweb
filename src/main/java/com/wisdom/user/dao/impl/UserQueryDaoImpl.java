@@ -75,19 +75,6 @@ public class UserQueryDaoImpl implements IUserQueryDao {
 	}
 
 	@Override
-	public UserType getUserTypeByUserId(String userId) {
-		String sql = "select * from user_type where user_id = ?";
-		UserType userType = null;
-		try {
-			userType = jdbcTemplate.queryForObject(sql,
-					new Object[] { userId }, new UserTypeMapper());
-		} catch (Exception e) {
-			logger.info("resuly is 0.");
-		}
-		return userType;
-	}
-
-	@Override
 	public UserPhone getUserPhoneByUserId(String userId) {
 		String sql = "select * from user_phone where user_id = ?";
 		UserPhone userPhone = null;

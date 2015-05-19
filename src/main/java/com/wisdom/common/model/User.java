@@ -20,6 +20,7 @@ public class User implements java.io.Serializable {
 	private String msgEmail;
 	private Integer typeId;
 	private Long companyId;
+	private String userEncode;
 	private Timestamp createTime;
 
 	// Constructors
@@ -29,7 +30,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public User(Long id, String userName, String msgEmail, String userId, Integer typeId, Long companyId,
+	public User(Long id, String userName, String msgEmail, String userEncode, String userId, Integer typeId, Long companyId,
 			Timestamp createTime) {
 		this.id = id;
 		this.userId = userId;
@@ -38,6 +39,7 @@ public class User implements java.io.Serializable {
 		this.userName = userName;
 		this.companyId = companyId;
 		this.createTime = createTime;
+		this.userEncode = userEncode;
 	}
 
 	// Property accessors
@@ -80,6 +82,14 @@ public class User implements java.io.Serializable {
 
 	public void setTypeId(Integer typeId) {
 		this.typeId = typeId;
+	}
+	
+	public String getUserEncode() {
+		return this.userEncode;
+	}
+
+	public void setUserEncode(String userEncode) {
+		this.userEncode = userEncode;
 	}
 
 	public Long getCompanyId() {

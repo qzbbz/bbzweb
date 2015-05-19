@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.wisdom.web.api.IUserValidateApi;
-import com.wisdom.web.utils.ErrorCode;
 import com.wisdom.web.utils.SessionConstant;
 
 @Controller
@@ -28,32 +27,34 @@ public class UserValidateController {
 
 	@RequestMapping("/checkUserLogin")
 	@ResponseBody
-	public Map<Integer, String> checkUserLogin(HttpSession httpSession,
+	public Map<String, String> checkUserLogin(HttpSession httpSession,
 			HttpServletRequest request) {
 		String userId = request.getParameter("userId");
 		String userPwd = request.getParameter("userPwd");
-		Map<Integer, String> retMap = new HashMap<>();
+		Map<String, String> retMap = new HashMap<>();
 		logger.debug("checkUserLogin");
 		if (userId != null && !userId.isEmpty() && userPwd != null
 				&& !userPwd.isEmpty()) {
 			retMap = userValidateApi.UserLoginValidate(userId, userPwd);
-			if (retMap.containsKey(ErrorCode.NO_ERROR_CODE)) {
-				httpSession.setAttribute(SessionConstant.SESSION_USER_ID,
-						userId);
+			if (("0").equals(retMap.get("error_code"))) {
 				int userTypeId = userValidateApi.getUserTypeByUserId(userId);
-				httpSession.setAttribute(SessionConstant.SESSION_USER_TYPE,
-						userTypeId);
-				if (userTypeId == 2
+				if(userTypeId == 0) {
+					retMap.put("error_code", "100");
+					retMap.put("error_message", "服务器系统出错了，请您稍后重试！");
+				} else if (userTypeId == 2
 						&& !userValidateApi.companyHasFinishRegister(userId)) {
-					httpSession
-							.setAttribute(
-									SessionConstant.SESSION_COMPANY_NOT_FINISH_REGISTER,
-									userId);
+					retMap.put("error_code", "4");
+				} else {
+					httpSession.setAttribute(SessionConstant.SESSION_USER_ID,
+							userId);
+					httpSession.setAttribute(SessionConstant.SESSION_USER_TYPE,
+							userTypeId);
+					retMap.put("error_code", "0");
+					retMap.put("user_type", String.valueOf(userTypeId));
 				}
 			}
 		} else {
-			retMap.put(ErrorCode.USER_ID_OR_PWD_EMPTY_ERROR_CODE,
-					ErrorCode.USER_ID_OR_PWD_EMPTY_ERROR_MESSAGE);
+			retMap.put("error_code", "-1");
 		}
 		logger.debug("finish checkUserLogin");
 		return retMap;
@@ -61,11 +62,11 @@ public class UserValidateController {
 
 	@RequestMapping("/checkUserRegister")
 	@ResponseBody
-	public Map<Integer, String> checkUserRegister(HttpServletRequest request) {
+	public Map<String, String> checkUserRegister(HttpServletRequest request) {
 		String userId = request.getParameter("userId");
 		String userPwd = request.getParameter("userPwd");
 		String userTypeId = request.getParameter("userTypeId");
-		Map<Integer, String> retMap = new HashMap<>();
+		Map<String, String> retMap = new HashMap<>();
 		logger.debug("checkUserRegister");
 		if (userId != null && !userId.isEmpty() && userPwd != null
 				&& !userPwd.isEmpty() && userTypeId != null
@@ -74,10 +75,29 @@ public class UserValidateController {
 			retMap = userValidateApi
 					.UserRegisterValidate(userId, userPwd, utId);
 		} else {
-			retMap.put(ErrorCode.USER_ID_OR_PWD_EMPTY_ERROR_CODE,
-					ErrorCode.USER_ID_OR_PWD_EMPTY_ERROR_MESSAGE);
+			retMap.put("error_code", "-1");
 		}
 		logger.debug("finish checkUserRegister");
 		return retMap;
+	}
+	
+	@RequestMapping("/accounter/admin")
+	public String getAccounterAdminHtml(HttpSession httpSession) {
+		return "redirect:/views/webviews/accounter/admin.html";
+	}
+	
+	@RequestMapping("/company/expenseAccountUpload")
+	public String getCompanyAdminHtml(HttpSession httpSession) {
+		return "redirect:/views/webviews/company/expense_account_upload.html";
+	}
+	
+	@RequestMapping("/companyUser/inbox")
+	public String getCompanyUserAdminHtml(HttpSession httpSession) {
+		return "redirect:/views/webviews/companyUser/inbox.html";
+	}
+	
+	@RequestMapping("/admin/admin")
+	public String getAdminAdminHtml(HttpSession httpSession) {
+		return "redirect:/views/webviews/admin/admin.html";
 	}
 }

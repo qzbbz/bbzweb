@@ -2693,6 +2693,7 @@ body, button, input, select, textarea, h1, h2, h3, h4, h5, h6 {
 .reg-detail-button {
 	cursor: pointer;
 	color: #FFF;
+	height: 47px;
 	font-weight: 700;
 	border-radius: 2px;
 	border-bottom: 2px solid #AF5B42;

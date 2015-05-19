@@ -1,0 +1,45 @@
+<div class="signup-page">
+	<div class="background-people">
+		<form class="form" name="signupPageForm">
+			<h3>青智专业服务</h3>
+			<p>
+			欢迎您注册
+			我们将为您提供专业的服务，并提供一个月的免费试用
+			</p>
+			<div class="field">
+				<i class="glyphicon glyphicon-envelope"></i>
+				<input type="text" name="account-reg-email" id="account-reg-email" placeholder="邮箱"/>
+				<div class="validation-msg yw-animation" id="account-reg-error-email-msg" style="display:none;">请输入正确的邮箱地址</div>
+			</div><div class="field">
+				<i class="glyphicon glyphicon-lock"></i>
+				<input type="password" name="account-reg-pwd" id="account-reg-pwd" placeholder="密码" yw-password="text"/>
+				<div class="validation-msg yw-animation" id="account-reg-error-pwd-msg" style="display:none;">密码不能为空</div>
+			</div>
+			<div class="validation-msg yw-animation" id="account-error-msg"></div>
+			<button yw-button ng-click="accountSignup()"><span>注册</span></button><!-- <button class="btn-question"><span>问题</span> <span class="question-char">?</span></button> -->
+		</form>
+	</div>
+</div>
+<script type="text/javascript">
+	function checkInput() {
+		$("#account-reg-email").on('input',function(e){
+			$("#account-error-msg").hide();
+			var email = $("#account-reg-email").val();
+			if(email == null || !isEmail(email)) {
+				$("#account-reg-error-email-msg").show();
+			} else {
+				$("#account-reg-error-email-msg").hide();
+			}
+		}); 
+		$("#account-reg-pwd").on('input',function(e){
+			$("#account-error-msg").hide();
+			var pwd = $("#account-reg-pwd").val();
+			if(pwd == null || pwd == '') {
+				$("#account-reg-error-pwd-msg").show();
+			} else {
+				$("#account-reg-error-pwd-msg").hide();
+			}
+		});
+	}
+	checkInput();
+</script>

@@ -58,7 +58,7 @@ public class CompanyDaoImpl implements ICompanyDao {
 	        }  
 	    }, keyHolder);
 		logger.debug("addCompany result : {}", keyHolder.getKey().longValue());
-		return id;
+		return keyHolder.getKey().longValue();
 	}
 
 	@Override
@@ -76,6 +76,14 @@ public class CompanyDaoImpl implements ICompanyDao {
 				company.getParentId(), company.getMonthExpense(),
 				company.getPerfectMoment(), company.getId());
 		logger.debug("updateCompany result : {}", affectedRows);
+		return affectedRows != 0;
+	}
+
+	@Override
+	public boolean updateCompanyName(String companyName, long companyId) {
+		String sql = "update company name set name=? where id=?";
+		int affectedRows = jdbcTemplate.update(sql, companyName, companyId);
+		logger.debug("updateCompanyName result : {}", affectedRows);
 		return affectedRows != 0;
 	}
 

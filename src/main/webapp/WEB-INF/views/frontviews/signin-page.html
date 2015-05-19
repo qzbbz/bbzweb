@@ -1,0 +1,45 @@
+<div class="signin-page">
+	<div class="background-people">
+		<form class="form" name="signupPageForm">
+			<h3>青智专业服务</h3>
+			<p>
+			欢迎您登录
+			我们将为您提供专业的服务
+			</p>
+			<div class="field">
+				<i class="glyphicon glyphicon-envelope"></i>
+				<input  type="text" name="userLoginEmail" id="userLoginEmail" placeholder="邮箱" ng-pattern="emailFormat"/>
+				<div class="validation-msg yw-animation" id="userLoginEmailError" style="display:none;">请输入正确的邮箱地址</div>
+			</div><div class="field">
+				<i class="glyphicon glyphicon-lock"></i>
+				<input  type="password" name="userLoginPwd" id="userLoginPwd" placeholder="密码" ng-trim="true" yw-password="text"/>
+				<div class="validation-msg yw-animation" id="userLoginPwdError" style="display:none;">密码不能为空</div>
+			</div>
+			<div class="validation-msg yw-animation" id="user-login-error-msg"></div>
+			<button yw-button ng-click="userLogin()"><span>登录</span></button>
+		</form>
+	</div>
+</div>
+<script type="text/javascript">
+	function checkInput() {
+		$("#userLoginEmail").on('input',function(e){
+			$("#user-login-error-msg").hide();
+			var email = $("#userLoginEmail").val();
+			if(email == null || !isEmail(email)) {
+				$("#userLoginEmailError").show();
+			} else {
+				$("#userLoginEmailError").hide();
+			}
+		}); 
+		$("#userLoginPwd").on('input',function(e){
+			$("#user-login-error-msg").hide();
+			var pwd = $("#userLoginPwd").val();
+			if(pwd == null || pwd == '') {
+				$("#userLoginPwdError").show();
+			} else {
+				$("#userLoginPwdError").hide();
+			}
+		});
+	}
+	checkInput();
+</script>

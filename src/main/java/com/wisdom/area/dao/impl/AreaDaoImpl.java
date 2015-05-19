@@ -67,4 +67,46 @@ public class AreaDaoImpl implements IAreaDao {
 		return list;
 	}
 
+	@Override
+	public String getProvinceNameByProvinceId(String provinceId) {
+		logger.debug("provinceId : {}", provinceId);
+		String sql = "select * from shx_province where provinceID = ?";
+		ShxProvince sp = null;
+		try {
+			sp = jdbcTemplate.queryForObject(sql,
+				new Object[] { provinceId }, new ShxProvinceMapper());
+		} catch(Exception e) {
+			logger.debug("result is 0. exception : {}" + e.toString());
+		}
+		return sp == null ? "" : sp.getProvince();
+	}
+
+	@Override
+	public String getCityNameByCityId(String cityId) {
+		logger.debug("cityId : {}", cityId);
+		String sql = "select * from shx_city where cityID = ?";
+		ShxCity sc = null;
+		try {
+			sc = jdbcTemplate.queryForObject(sql,
+				new Object[] { cityId }, new ShxCityMapper());
+		} catch(Exception e) {
+			logger.debug("result is 0. exception : {}" + e.toString());
+		}
+		return sc == null ? "" : sc.getCity();
+	}
+
+	@Override
+	public String getAreaNameByAreaId(String areaId) {
+		logger.debug("areaId : {}", areaId);
+		String sql = "select * from shx_area where areaID = ?";
+		ShxArea sa = null;
+		try {
+			sa = jdbcTemplate.queryForObject(sql,
+				new Object[] { areaId }, new ShxAreaMapper());
+		} catch(Exception e) {
+			logger.debug("result is 0. exception : {}" + e.toString());
+		}
+		return sa == null ? "" : sa.getArea();
+	}
+
 }

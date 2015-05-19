@@ -4,16 +4,196 @@ angular.module('ywLanding',['ngRoute', 'ywText','ywWidgets']);
 
 
 angular.module('ywLanding')
-.controller('main', ['$scope', 't', function($scope, msg){
+.controller('main', ['$scope', 't', '$location', '$http', function($scope, msg, $location, $http){
 	$scope.t = msg;
+	$scope.companyUserEmail = '';
+	$scope.companyUserPwd = '';
 	$scope.hideHeader = false;
 	$scope.hideContactScreen = false;
-	
 	$scope.setHideHeader = function(b){
 		$scope.hideHeader = b;
 	};
 	$scope.setHideContactScreen = function(b){
 		$scope.hideContactScreen = b;
+	};
+	
+	$scope.companySignup2 = function() {
+		var userEmail = $('#sign-up2-screen-email').val();
+		var userPwd = $('#sign-up2-screen-pwd').val();
+		var userType = 2;
+		if(userEmail == null || !isEmail(userEmail)) {
+			$("#sign-up2-screen-email-error").show();
+			return;
+		} else {
+			$("#sign-up2-screen-email-error").hide();
+		}
+		if(userPwd == null || userPwd == '') {
+			$("#sign-up2-screen-pwd-error").show();
+			return;
+		} else {
+			$("#sign-up2-screen-pwd-error").hide();
+		}
+		$scope.userReg(userEmail, userPwd, userType, $('#signup2-error-msg'));
+	};
+	
+	$scope.accountSignup = function() {
+		var userEmail = $('#account-reg-email').val();
+		var userPwd = $('#account-reg-pwd').val();
+		var userType = 1;
+		if(userEmail == null || !isEmail(userEmail)) {
+			$("#account-reg-error-email-msg").show();
+			return;
+		} else {
+			$("#account-reg-error-email-msg").hide();
+		}
+		if(userPwd == null || userPwd == '') {
+			$("#account-reg-error-pwd-msg").show();
+			return;
+		} else {
+			$("#account-reg-error-pwd-msg").hide();
+		}
+		$scope.userReg(userEmail, userPwd, userType, $('#account-error-msg'));
+	};
+	
+	$scope.userLogin = function() {
+		var userEmail = $('#userLoginEmail').val();
+		var userPwd = $('#userLoginPwd').val();
+		var loginErrorMsg = $('#user-login-error-msg');
+		if(userEmail == null || !isEmail(userEmail)) {
+			$("#userLoginEmailError").show();
+			return;
+		} else {
+			$("#userLoginEmailError").hide();
+		}
+		if(userPwd == null || userPwd == '') {
+			$("#userLoginPwdError").show();
+			return;
+		} else {
+			$("#userLoginPwdError").hide();
+		}
+		loginErrorMsg.html("<p style='color: white;'>正在向服务器提交您的信息，请稍后......</p>");
+		loginErrorMsg.show();
+		$.ajax({
+			url : '../../checkUserLogin',
+			type : "POST",
+			data : {
+				userId : userEmail,
+				userPwd : userPwd
+			},
+			cache : false,
+			success : function(data) {
+				if(data.error_code == '-1') {
+					loginErrorMsg.html("<p style='color: #FD7A50;'>用户名或密码不能为空！</p>");
+				} else if(data.error_code == '0') {
+					var userType = parseInt(data.user_type);
+					var path = '';
+					switch(userType) {
+					case 1:
+						path = "../../accounter/admin";
+						break;
+					case 2:
+						path = "../../company/expenseAccountUpload";
+						break;
+					case 3:
+						path = "../../admin/admin";
+						break;
+					case 5:
+						path = "../../companyUser/inbox";
+						break;
+					default:
+						path = "../../error";
+						break;
+					}
+					loginErrorMsg.html("<p style='color: #419088;'>登陆成功！3秒后系统将自动转向后台页面......</p>");
+					setTimeout(function(){loginErrorMsg.hide();window.location=path;}, 3000);
+				} else if(data.error_code == '4') {
+					$scope.companyUserEmail = userEmail;
+					$scope.companyUserPwd = userPwd;
+					loginErrorMsg.html("<p style='color: #419088;'>登陆成功，您还没有完成信息录入，5秒后系统将自动转向信息录入页面......</p>");
+					setTimeout(function(){$location.path('/signup-steps');$scope.$apply();loginErrorMsg.hide();}, 3000);
+				} else  if(data.error_code == '1' || data.error_code == '2') {
+					loginErrorMsg.html("<p style='color: #FD7A50;'>" + data.error_message + "</p>");
+				}
+			},
+			error : function() {
+				loginErrorMsg.html("<p style='color: #FD7A50;'>服务器暂时不可用，请稍后重试！</p>");
+			}
+		});
+	};
+	
+	$scope.userReg = function(email, pwd, type, errorMsgObj) {
+		errorMsgObj.html("<p style='color: white;'>正在向服务器提交您的信息，请稍后......</p>");
+		errorMsgObj.show();
+		if(type == 2) {
+			$scope.companyUserEmail = email;
+			$scope.companyUserPwd = pwd;
+		}
+		$.ajax({
+			url : '../../checkUserRegister',
+			type : "POST",
+			data : {
+				userId : email,
+				userPwd : pwd,
+				userTypeId : type
+			},
+			cache : false,
+			success : function(data) {
+				if(data.error_code == '-1') {
+					errorMsgObj.html("<p style='color: #FD7A50;'>用户名或密码不能为空！</p>");
+				} else if(data.error_code == '0') {
+					if(type == 2) {
+						errorMsgObj.hide();
+						$location.path('/signup-steps');
+						$scope.$apply();
+					} else if(type == 1) {
+						errorMsgObj.html("<p style='color: #419088;'>注册成功！3秒后系统将自动转向登陆界面......</p>");
+						setTimeout(function(){$location.path('/signin');$scope.$apply();errorMsgObj.hide();}, 3000);
+					}
+				} else {
+					errorMsgObj.html("<p style='color: #FD7A50;'>" + data.error_message + "</p>");
+				}
+			},
+			error : function() {
+				errorMsgObj.html("<p style='color: #FD7A50;'>服务器暂时不可用，请稍后重试！</p>");
+			}
+		});
+		
+	};
+	
+	$scope.companyDetailReg = function(email, pwd, type) {
+		$('#company_detail_reg_msg').html("<p style='color: #419088;'>正在向服务器提交您的信息，请稍后......</p>");
+		$('#company_detail_reg_msg').show();
+		var userName = $('#userName').val();
+		var userCompanyName = $('#userCompanyName').val();
+		var userCalledTime = $('#userCalledTime option:selected').text();
+		var userPhone = $('#userPhone').val();
+		var userCompanyIncomes = $('#userCompanyIncomes').val();
+		$.ajax({
+			url : '../../comDetailRegister',
+			type : "POST",
+			data : {
+				userName : userName,
+				userCompanyName : userCompanyName,
+				userCompanyIncomes : userCompanyIncomes,
+				userCalledTime : userCalledTime,
+				userPhone : userPhone,
+				userEmail : $scope.companyUserEmail,
+				userPwd : $scope.companyUserPwd
+			},
+			cache : false,
+			//dataType : 'json',
+			success : function(data) {
+				if(data.error_code == '1' || data.error_code == '2') {
+					$('#company_detail_reg_msg').html("<p style='color: #FD7A50;'>"+data.error_message+"</p>");
+				} else {
+					$('#company_detail_reg_msg').html("<p style='color: #419088;'>信息提交成功！3秒后系统将自动转向登陆界面......</p>");
+					setTimeout(function(){$location.path('/signin');$scope.$apply();$('#company_detail_reg_msg').hide();}, 3000);
+				}			
+			},
+			error : function() {
+				$('#company_detail_reg_msg').html("<p style='color: #FD7A50;'>服务器暂时不可用，请稍后重试！</p>");
+			}
+		});
 	};
 	
 	$scope.emailFormat = /[a-zA-Z0-9_.]+@[a-zA-Z0-9_.]+/;
@@ -26,7 +206,7 @@ angular.module('ywLanding')
 		{text: 'MMMMMMMMMMMMMMMMMMMMMMMMMM。'}
 	];
 }])
-.controller('homeController', ['$scope','t', '$location', '$q', function($scope, msg, $location, $q){
+.controller('homeController', ['$scope','t', '$location', '$q', '$http', function($scope, msg, $location, $q, $http){
 	$scope.signupScreenReady = $q.defer();
 	$scope.introScreenReady = $q.defer();
 	$scope.whatScreenReady = $q.defer();
@@ -36,51 +216,25 @@ angular.module('ywLanding')
 	$scope.setHideHeader(false);
 	$scope.setHideContactScreen(false);
 	$scope.scroll2Top();
-	$scope.companySignup = function(){
-		var email = $('#sign-up-screen-email').val();
-		var pwd = $('#sign-up-screen-pwd').val();
-		if(email == null || !isEmail(email)) {
-			$('#sign-up-screen-email-error').show();
-			return;
-		}
-		if(pwd == null || pwd == '') {
-			$('#sign-up-screen-pwd-error').show();
-			return;
-		}
-		//$location.path('/signup-steps');
-	};
-	$scope.companySignup2 = function(){
-		var email = $('#sign-up2-screen-email').val();
-		var pwd = $('#sign-up2-screen-pwd').val();
-		alert(email);
-		alert(pwd);
-		if(email == null || !isEmail(email)) {
-			$('#sign-up2-screen-email-error').show();
-			return;
-		}
-		if(pwd == null || pwd == '') {
-			$('#sign-up2-screen-pwd-error').show();
-			return;
-		}
-		//$location.path('/signup-steps');
-	};
 	
-	$scope.companySignup2 = function(){
-		var email = $('#sign-up2-screen-email').val();
-		var pwd = $('#sign-up2-screen-pwd').val();
-		alert(email);
-		alert(pwd);
-		if(email == null || !isEmail(email)) {
-			$('#sign-up2-screen-email-error').show();
+	$scope.companySignup = function() {
+		var userEmail = $('#sign-up-screen-email').val();
+		var userPwd = $('#sign-up-screen-pwd').val();
+		var userType = 2;
+		if(userEmail == null || !isEmail(userEmail)) {
+			$("#sign-up-screen-email-error").show();
 			return;
+		} else {
+			$("#sign-up-screen-email-error").hide();
 		}
-		if(pwd == null || pwd == '') {
-			$('#sign-up2-screen-pwd-error').show();
+		if(userPwd == null || userPwd == '') {
+			$("#sign-up-screen-pwd-error").show();
 			return;
+		} else {
+			$("#sign-up-screen-pwd-error").hide();
 		}
-		//$location.path('/signup-steps');
+		$scope.userReg(userEmail, userPwd, userType, $('#signup-error-msg'));
 	};
-	
 }])
 .controller('featureController', ['$scope','t','$route', '$routeParams', '$q','$location',
 		function($scope, msg,
@@ -144,36 +298,7 @@ angular.module('ywLanding')
 	$scope.setHideHeader(false);
 	$scope.setHideContactScreen(false);
 	
-	$scope.teams = [
-		{
-			title: '我们的财税团队',
-			members:[
-				{
-					image:'team_jzz.jpg',
-					intro:'蒋中植'
-				},
-				{	image: 'team_csy.jpg',
-					intro:'陈抒元'
-				}
-				,{	image: 'team_yjl.jpg',
-					intro:'姚嘉伦'
-				}
-			]
-		},
-		{
-			title: '我们的IT团队',
-			members:[
-				{
-					image:'team_ckz.jpg',
-					intro: '柴快长'
-				},
-				{
-					image:'team_dxj.jpg',
-					intro: '段行健'
-				}
-			]
-		}
-	];
+	$scope.teams = [{}];
 }])
 .config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
 	$routeProvider.when('/', {

@@ -6,6 +6,7 @@ import com.wisdom.common.model.UserInviteCode;
 import com.wisdom.common.model.UserOpenid;
 import com.wisdom.common.model.UserPhone;
 import com.wisdom.common.model.UserPhoneType;
+import com.wisdom.common.model.UserPwd;
 import com.wisdom.common.model.UserRole;
 
 public interface IUserOperationDao {
@@ -15,6 +16,8 @@ public interface IUserOperationDao {
 	public boolean deleteUser(User user);
 	
 	public boolean updateUser(User user);
+	
+	public boolean updateUserRegStatus(int status, String userId);
 	
 	public boolean updateUserMsgEmail(String email, String userId);
 	
@@ -31,6 +34,12 @@ public interface IUserOperationDao {
 	public boolean deleteOpenid(UserOpenid userOpenid);
 	
 	public boolean updateOpenid(UserOpenid userOpenid);
+	
+	public boolean addUserPwd(UserPwd userPwd);
+	
+	public boolean deleteUserPwd(String userId);
+	
+	public boolean updateUserPwd(UserPwd userPwd);
 	
 	public boolean addUserPhone(UserPhone userPhone);
 	

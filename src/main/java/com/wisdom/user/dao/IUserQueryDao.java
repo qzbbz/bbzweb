@@ -16,8 +16,6 @@ public interface IUserQueryDao {
 	
 	public UserPwd getUserPwdByUserId(String userId);
 	
-	public UserType getUserTypeByUserId(String userId);
-	
 	public UserType getUserTypeById(long id);
 	
 	public UserInviteCode getUserInvitecodeByInviteCode(String inviteCode);

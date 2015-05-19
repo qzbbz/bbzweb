@@ -10,4 +10,9 @@ public interface IAreaService {
 	
 	public Map<String, String> getAllProvince();
 	
+	public String getProvinceNameByProvinceId(String provinceId);
+	
+	public String getCityNameByCityId(String cityId);
+	
+	public String getAreaNameByAreaId(String areaId);
 }

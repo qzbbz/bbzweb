@@ -1,5 +1,6 @@
 package com.wisdom.user.service.impl;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import com.wisdom.common.model.AmountLimit;
 import com.wisdom.common.model.User;
 import com.wisdom.common.model.UserDept;
 import com.wisdom.common.model.UserOpenid;
+import com.wisdom.common.model.UserPhone;
 import com.wisdom.common.model.UserPwd;
 import com.wisdom.common.model.UserRole;
 import com.wisdom.common.model.UserType;
@@ -51,8 +53,8 @@ public class UserServiceImpl implements IUserService {
 
 	@Override
 	public int getUserTypeIdByUserId(String userId) {
-		UserType userType = userQueryDao.getUserTypeByUserId(userId);
-		return userType != null ? userType.getId() : 0;
+		User user = userQueryDao.getUserByUserId(userId);
+		return user != null ? user.getTypeId() : 0;
 	}
 
 	@Override
@@ -149,6 +151,29 @@ public class UserServiceImpl implements IUserService {
 	@Override
 	public boolean updateUserMsgEmailByUserId(String msgEmail, String userId) {
 		return userOperationDao.updateUserMsgEmail(msgEmail, userId);
+	}
+
+	@Override
+	public boolean updateUserRegStatusByUserId(int status, String userId) {
+		return userOperationDao.updateUserRegStatus(status, userId);
+	}
+
+	@Override
+	public boolean setUserPwdByUserId(String userPwd, String userId) {
+		UserPwd uPwd = new UserPwd();
+		uPwd.setPwd(userPwd);
+		uPwd.setUserId(userId);
+		return userOperationDao.addUserPwd(uPwd);
+	}
+
+	@Override
+	public boolean addUserPhone(String userId, String userPhone, int phoneTypeId) {
+		UserPhone up = new UserPhone();
+		up.setPhone(userPhone);
+		up.setUserId(userId);
+		up.setType(phoneTypeId);
+		up.setCreateTime(new Timestamp(System.currentTimeMillis()));
+		return userOperationDao.addUserPhone(up);
 	}
 
 }

@@ -12,4 +12,6 @@ public interface ICompanyService {
 	
 	public String getCompanyName(long companyId);
 	
+	public boolean updateCompanyName(String companyName, long companyId);
+	
 }

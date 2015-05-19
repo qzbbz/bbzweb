@@ -3,6 +3,7 @@ package com.wisdom.user.service;
 import java.util.List;
 
 import com.wisdom.common.model.User;
+import com.wisdom.common.model.UserPhone;
 
 public interface IUserService {
 	
@@ -14,9 +15,13 @@ public interface IUserService {
 	
 	public int getUserTypeIdByUserId(String userId);
 	
+	public boolean updateUserRegStatusByUserId(int status, String userId);
+	
 	public boolean userIdExist(String userId);
 	
 	public boolean addUser(User user);
+	
+	public boolean addUserPhone(String userId, String userPhone, int phoneTypeId);
 	
 	public long getCompanyIdByUserId(String userId);
 	
@@ -27,6 +32,8 @@ public interface IUserService {
 	public String getUserNameByUserId(String userId);
 	
 	public boolean setUserNameByUserId(String userName, String userId);
+	
+	public boolean setUserPwdByUserId(String userPwd, String userId);
 	
 	public boolean checkUserAuth(String userId,String appovalUser);
 	

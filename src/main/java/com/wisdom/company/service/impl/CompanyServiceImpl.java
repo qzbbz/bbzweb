@@ -46,5 +46,10 @@ public class CompanyServiceImpl implements ICompanyService {
 		Company company = companyDao.getCompanyByCompanyId(companyId);
 		return company != null ? company.getName() : "";
 	}
+
+	@Override
+	public boolean updateCompanyName(String companyName, long companyId) {
+		return companyDao.updateCompanyName(companyName, companyId);
+	}
 	
 }
