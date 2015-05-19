@@ -16,5 +16,4 @@ public class UserDeptServiceImpl implements IUserDeptService {
 	public long getDeptIdByUserId(String userId) {
 		return userDeptDao.getUserDeptByUserId(userId).getDeptId();
 	}
-
 }

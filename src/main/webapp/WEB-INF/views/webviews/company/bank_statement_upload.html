@@ -82,29 +82,28 @@
 	        leafTpl : '<li class="menu-leaf"><a href="{href}">{text}</a></li>',
 
 	        nodes : [
-	 				{text : '发票',id : '',href:"#",leaf : true, children: [
-	 					{text : '发票上传',id : '',href:"/views/webviews/company/expense_account_upload.html"},
-	 					{text : '发票历史记录',id : '',href:"/views/webviews/company/expense_account_history.html"}                                                      
-	 				]},
-	 				{text : '银行对账单',id : '',href:"#",expanded : false,children: [
-	 					{text : '上传对账单',id : '',href:"/views/webviews/company/bank_statement_upload.html"},
-	 					{text : '对账单历史记录',id : '',href:"/views/webviews/company/bank_statement_history.html"}                                                       
-	 				]},
-	 	            {text : '工资社保',id : '',href:"#",expanded : false,children : [
-	 					{text : '参数设置',id : '',href:"/views/webviews/company/salary_welfare_args_settings.html"},
-	 					{text : '下载工资计算模板',id : '',href:"/views/webviews/company/salary_welfare_template_download.html"},
-	 					{text : '上传本月工资',id : '',href:"/views/webviews/company/salary_welfare_upload.html"}
-	 				]},
-	 	            {text : '预约取发票',id : '',href:"#",leaf : false,children: [
-	 					{text : '方式选择',id : '',href:"/views/webviews/company/take_expense_account_mode_select.html"},
-	 					{text : '进度跟踪',id : '',href:"/views/webviews/company/take_expense_account_progress_track.html"}
-	 				]},
-	 	            {text : '组织架构',id : '',href:"#",expanded : false,children : [
-	 	                 {text : '基本信息设置',id : '',href:"/views/webviews/company/organization_information_settings.html"},
- 	                	{text : '组织架构设置',id : '',href:"/views/webviews/company/organization_structure_settings.html"}
-	 	            ]}
-	 	            ]
-	 	    	});
+	  				{text : '发票',id : '',href:"#",leaf : true, children: [
+	  					{text : '发票上传',id : '',href:"/views/webviews/company/expense_account_upload.html"},
+	  					{text : '发票历史记录',id : '',href:"/views/webviews/company/expense_account_history.html"}                                                      
+	  				]},
+	  				{text : '银行对账单',id : '',href:"#",expanded : false,children: [
+	  					{text : '上传对账单',id : '',href:"/views/webviews/company/bank_statement_upload.html"},
+	  					{text : '对账单历史记录',id : '',href:"/views/webviews/company/bank_statement_history.html"}                                                       
+	  				]},
+	  	            {text : '工资社保',id : '',href:"#",expanded : false,children : [
+	  					{text : '参数设置',id : '',href:"/views/webviews/company/salary_welfare_args_settings.html"},
+	  					{text : '下载工资计算模板',id : '',href:"/views/webviews/company/salary_welfare_template_download.html"},
+	  					{text : '上传本月工资',id : '',href:"/views/webviews/company/salary_welfare_upload.html"}
+	  				]},
+	  	            {text : '预约取发票',id : '',href:"#",leaf : false,children: [
+	  					{text : '方式选择',id : '',href:"/views/webviews/company/take_expense_account_mode_select.html"}
+	  				]},
+	  	            {text : '组织架构',id : '',href:"#",expanded : false,children : [
+	  	                {text : '基本信息设置',id : '',href:"/views/webviews/company/organization_information_settings.html"},
+	  	                {text : '组织架构设置',id : '',href:"/views/webviews/company/organization_structure_settings.html"}
+	  	            ]}
+	  	            ]
+	  	    	});
 	   		menu.render();
 			$.each($("li.menu-second"),function(){
 				var that = $(this);

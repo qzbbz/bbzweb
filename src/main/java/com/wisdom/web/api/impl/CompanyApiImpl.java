@@ -3,7 +3,9 @@ package com.wisdom.web.api.impl;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -381,5 +383,44 @@ public class CompanyApiImpl implements ICompanyApi {
 			retMap.put("error_message", "上传对账单失败，请稍后重试！");
 		}
 		return retMap;
+	}
+	
+	@Override
+	public List<Map<String, String>> getCompanyBankStaByCondition(Map<String, String> params) {
+		String userId = params.get("userId");
+		if(userId == null || userId.isEmpty()) return null;
+		long companyId = userService.getCompanyIdByUserId(userId);
+		if(companyId <= 0) return null;
+		if(params.get("conditionType") == null || params.get("conditionType").isEmpty() ||
+				("0").equals(params.get("conditionType")) ||
+				params.get("conditionValue") == null || params.get("conditionValue").isEmpty()) {
+			List<CompanyBankSta> list = companyBankStaService.getAllCompanyBankSta(companyId);
+			return createCompanyBankStaList(list); 
+		}
+		if(("1").equals(params.get("conditionType")) && params.get("conditionValue") != null) {
+			List<CompanyBankSta> list = companyBankStaService.getAllCompanyBankStaByDate(companyId, params.get("conditionValue"));
+			return createCompanyBankStaList(list);
+		}
+		if(("2").equals(params.get("conditionType")) && params.get("conditionValue") != null) {
+			List<CompanyBankSta> list = companyBankStaService.getAllCompanyBankStaByIdentifyStatus(companyId, Integer.valueOf(params.get("conditionValue")));
+			return createCompanyBankStaList(list);
+		}
+		return null;
+	}
+	
+	private List<Map<String, String>> createCompanyBankStaList(List<CompanyBankSta> list) {
+		List<Map<String, String>> retList = new ArrayList<>();
+		if(list == null) return null;
+		for(CompanyBankSta cbs : list) {
+			Map<String, String> map = new HashMap<>();
+			map.put("date", cbs.getDate());
+			map.put("ide_name", cbs.getIdeName() == null ? "" : cbs.getIdeName());
+			map.put("ide_account", cbs.getIdeAccount() == null ? "" : cbs.getIdeAccount());
+			map.put("ide_bank_name", cbs.getIdeBankName() == null ? "" : cbs.getIdeBankName());
+			map.put("file_name", cbs.getFileName() == null ? "" : cbs.getFileName());
+			map.put("status", String.valueOf(cbs.getIdentifyStatus() == null ? 0 : cbs.getIdentifyStatus()));
+			retList.add(map);
+		}
+		return retList.size() > 0 ? retList : null;
 	}
 }

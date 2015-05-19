@@ -98,7 +98,7 @@ angular.module('ywLanding')
 						path = "../../admin/admin";
 						break;
 					case 5:
-						path = "../../companyUser/inbox";
+						path = "../../companyUser/expenseAccountUpload";
 						break;
 					default:
 						path = "../../error";

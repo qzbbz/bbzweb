@@ -14,6 +14,10 @@ public class CompanyBankSta implements java.io.Serializable {
 	private Long id;
 	private Long companyId;
 	private String date;
+	private String ideName;
+	private String ideBankName;
+	private String ideAccount;
+	private String ideDate;
 	private String fileName;
 	private Integer identifyStatus;
 	private Timestamp createTime;
@@ -29,12 +33,19 @@ public class CompanyBankSta implements java.io.Serializable {
 		this.id = id;
 	}
 
-	public CompanyBankSta(Long id, Long companyId, String date,
+	
+
+	public CompanyBankSta(Long id, Long companyId, String date, String ideName,
+			String ideBankName, String ideAccount, String ideDate,
 			String fileName, Integer identifyStatus, Timestamp createTime) {
 		super();
 		this.id = id;
 		this.companyId = companyId;
 		this.date = date;
+		this.ideName = ideName;
+		this.ideBankName = ideBankName;
+		this.ideAccount = ideAccount;
+		this.ideDate = ideDate;
 		this.fileName = fileName;
 		this.identifyStatus = identifyStatus;
 		this.createTime = createTime;
@@ -43,9 +54,10 @@ public class CompanyBankSta implements java.io.Serializable {
 	@Override
 	public String toString() {
 		return "CompanyBankSta [id=" + id + ", companyId=" + companyId
-				+ ", date=" + date + ", fileName=" + fileName
-				+ ", identifyStatus=" + identifyStatus + ", createTime="
-				+ createTime + "]";
+				+ ", date=" + date + ", ideName=" + ideName + ", ideBankName="
+				+ ideBankName + ", ideAccount=" + ideAccount + ", ideDate="
+				+ ideDate + ", fileName=" + fileName + ", identifyStatus="
+				+ identifyStatus + ", createTime=" + createTime + "]";
 	}
 
 	public Long getId() {
@@ -70,6 +82,38 @@ public class CompanyBankSta implements java.io.Serializable {
 
 	public void setDate(String date) {
 		this.date = date;
+	}
+
+	public String getIdeName() {
+		return ideName;
+	}
+
+	public void setIdeName(String ideName) {
+		this.ideName = ideName;
+	}
+
+	public String getIdeBankName() {
+		return ideBankName;
+	}
+
+	public void setIdeBankName(String ideBankName) {
+		this.ideBankName = ideBankName;
+	}
+
+	public String getIdeAccount() {
+		return ideAccount;
+	}
+
+	public void setIdeAccount(String ideAccount) {
+		this.ideAccount = ideAccount;
+	}
+
+	public String getIdeDate() {
+		return ideDate;
+	}
+
+	public void setIdeDate(String ideDate) {
+		this.ideDate = ideDate;
 	}
 
 	public String getFileName() {

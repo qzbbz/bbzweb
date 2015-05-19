@@ -1,5 +1,7 @@
 package com.wisdom.company.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +16,8 @@ public class CompanyBankStaServiceImpl implements ICompanyBankStaService {
 	private ICompanyBankStaDao companyBankStaDao;
 	
 	@Override
-	public CompanyBankSta getCompanyBankStaByCompanyId(long companyId) {
-		return companyBankStaDao.getCompanyBankStaByCompanyId(companyId);
+	public CompanyBankSta getCompanyBankStaById(long id) {
+		return companyBankStaDao.getCompanyBankStaById(id);
 	}
 
 	@Override
@@ -24,8 +26,8 @@ public class CompanyBankStaServiceImpl implements ICompanyBankStaService {
 	}
 
 	@Override
-	public boolean deleteCompanyBankStaByCompanyId(long companyId) {
-		return companyBankStaDao.deleteCompanyBankStaByCompanyId(companyId);
+	public boolean deleteCompanyBankStaByCompanyId(long id) {
+		return companyBankStaDao.deleteCompanyBankStaById(id);
 	}
 
 	@Override
@@ -36,6 +38,22 @@ public class CompanyBankStaServiceImpl implements ICompanyBankStaService {
 	@Override
 	public boolean updateCompanyBankStaIdentifyStatusById(long id, int status) {
 		return companyBankStaDao.updateCompanyBankStaIdentifyStatusById(id, status);
+	}
+
+	@Override
+	public List<CompanyBankSta> getAllCompanyBankSta(long companyId) {
+		return companyBankStaDao.getAllCompanyBankSta(companyId);
+	}
+
+	@Override
+	public List<CompanyBankSta> getAllCompanyBankStaByDate(long companyId, String date) {
+		return companyBankStaDao.getAllCompanyBankStaByDate(companyId, date);
+	}
+
+	@Override
+	public List<CompanyBankSta> getAllCompanyBankStaByIdentifyStatus(
+			long companyId, int status) {
+		return companyBankStaDao.getAllCompanyBankStaByIdentifyStatus(companyId, status);
 	}
 
 }

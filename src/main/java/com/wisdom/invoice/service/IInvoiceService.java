@@ -31,6 +31,8 @@ public interface IInvoiceService {
 	public Map<String,Object> createInvoiceProcess(String userId,String image,String channelType,
 			String objectTypeId,Map<String,Object> params);
 	
+	public Map<String,Object> createDraftInvoice(String userId, String image, String costCenterCode);
+	
 	/**
 	 * 执行审批流程 for weixin
 	 * @param userId

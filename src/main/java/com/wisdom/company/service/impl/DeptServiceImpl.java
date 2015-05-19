@@ -25,4 +25,10 @@ public class DeptServiceImpl implements IDeptService {
 		return dept == null ? -1 : dept.getParentId();
 	}
 
+	@Override
+	public String getCostCenterCodeById(long id) {
+		Dept dept = deptDao.getDeptByDeptId(id);
+		return dept == null ? "" : String.valueOf(dept.getCostCenterEncode());
+	}
+
 }

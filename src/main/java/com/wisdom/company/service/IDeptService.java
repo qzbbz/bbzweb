@@ -6,4 +6,6 @@ public interface IDeptService {
 	
 	public long getParentDeptIdById(long id);
 	
+	public String getCostCenterCodeById(long id);
+	
 }

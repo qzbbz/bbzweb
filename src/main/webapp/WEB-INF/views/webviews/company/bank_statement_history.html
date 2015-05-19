@@ -28,13 +28,13 @@
 				<div class="form-horizontal onlineTools">
 					<div class="row show-grid">
 						<label class="control-label control-label-small"></label>
-                        <div class="controls"><select name="" id="" class="input input-normal"><option>请选择</option></select><input type="text" class="input input-normal ml10"><button class="button button-success ml10">搜索</button></div>
+                        <div class="controls"><select name="condition" id="condition" class="input input-normal"><option value='0'>所有</option><option value='1'>按日期检索</option><option value='2'>按识别状态检索</option></select><input type="text" id="content" class="input input-normal ml10"><button onclick="searchData();" class="button button-success ml10">搜索</button></div>
 					</div>
 				</div>
 			</div>
 			<table class="table center">
 	    		<colgroup>
-	    			<col>
+	    			<col style="width:16%;">
 	    			<col style="width:16%;">
 	    			<col style="width:16%;">
 	    			<col style="width:16%;">
@@ -44,45 +44,14 @@
 	    		<thead>
 	    			<tr>
 	    				<th>对账单日期</th>
-	    				<th></th>
-	    				<th>申请人</th>
-	    				<th>成本中心</th>
-	    				<th>状态</th>
+	    				<th>对账单户名</th>
+	    				<th>对账单账号</th>
+	    				<th>对账单银行</th>
+	    				<th>识别状态</th>
+	    				<th>对账单预览</th>
 	    			</tr>
 	    		</thead>
-	    		<tbody>
-	    			<tr>
-	    				<td><a href="">860000</a></td>
-	    				<td>2015-08-09</td>
-	    				<td>&yen; 3600.00</td>
-	    				<td>类型内</td>
-	    				<td>交通费</td>
-	    				<td><span class="text-danger">待完成</span></td>
-	    			</tr>
-	    			<tr>
-	    				<td><a href="">860000</a></td>
-	    				<td>2015-08-09</td>
-	    				<td>&yen; 3600.00</td>
-	    				<td>类型内</td>
-	    				<td>交通费</td>
-	    				<td><span class="text-success">已完成</span></td>
-	    			</tr>
-	    			<tr>
-	    				<td><a href="">860000</a></td>
-	    				<td>2015-08-09</td>
-	    				<td>&yen; 3600.00</td>
-	    				<td>类型内</td>
-	    				<td>交通费</td>
-	    				<td><span class="text-info">处理中</span></td>
-	    			</tr>
-	    			<tr>
-	    				<td><a href="">860000</a></td>
-	    				<td>2015-08-09</td>
-	    				<td>&yen; 3600.00</td>
-	    				<td>类型内</td>
-	    				<td>交通费</td>
-	    				<td><span class="text-warning">其他</span></td>
-	    			</tr>
+	    		<tbody id='retData'>
 	    		</tbody>
 	    	</table>
 	    	<div class="pagination"></div>
@@ -93,6 +62,55 @@
 <script src="http://g.alicdn.com/bui/seajs/2.3.0/sea.js"></script>
 <script src="http://g.alicdn.com/bui/bui/1.1.17/config.js"></script>
 <script type="text/javascript">
+	$.ajax({
+		url : '/company/getAllCompanyBankSta',
+		type : "POST",
+		data : {},
+		success : function(data) {
+			if(data == null) return;
+			$('#retData').empty();
+			for(var i=0; i<data.length; i++) {
+				if(data[i].status == '0') {
+					$('#retData').append("<tr><td>"+data[i].date+"</td><td>"+data[i].ide_name+"</td><td>"+data[i].ide_account+"</td><td>"+data[i].ide_bank_name+"</td><td><span class='text-info'>待识别</span></td><td><a href='/files/company/"+data[i].file_name+"'>点击查看对账单图片</a></td></tr>");
+				} else if(data[i].status == '1') {
+					$('#retData').append("<tr><td>"+data[i].date+"</td><td>"+data[i].ide_name+"</td><td>"+data[i].ide_account+"</td><td>"+data[i].ide_bank_name+"</td><td><span class='text-success'>识别成功</span></td><td><a href='/files/company/"+data[i].file_name+"'>点击查看对账单图片</a></td></tr>");
+				} else {
+					$('#retData').append("<tr><td>"+data[i].date+"</td><td>"+data[i].ide_name+"</td><td>"+data[i].ide_account+"</td><td>"+data[i].ide_bank_name+"</td><td><span class='text-danger'>识别失败</span></td><td><a href='/files/company/"+data[i].file_name+"'>点击查看对账单图片</a></td></tr>");
+				}
+			}
+		}
+	});
+	function searchData() {
+		var conditionType = $('#condition option:selected').val();
+		var conditionValue = $('#content').val();
+		if(conditionType != '0' && (conditionValue == null || conditionValue == '')) {
+			alert('请输入检索内容！');
+			return;
+		}
+		if(conditionType == '2') {
+			if(conditionValue == '待识别') conditionValue = '0';
+			if(conditionValue == '识别成功') conditionValue = '1';
+			if(conditionValue == '识别失败') conditionValue = '2';
+		}
+		$.ajax({
+			url : '/company/getAllCompanyBankSta',
+			type : "POST",
+			data : {conditionType : conditionType, conditionValue : conditionValue},
+			success : function(data) {
+				if(data == null) return;
+				$('#retData').empty();
+				for(var i=0; i<data.length; i++) {
+					if(data[i].status == '0') {
+						$('#retData').append("<tr><td>"+data[i].date+"</td><td>"+data[i].ide_name+"</td><td>"+data[i].ide_account+"</td><td>"+data[i].ide_bank_name+"</td><td><span class='text-info'>待识别</span></td><td><a href='/files/company/"+data[i].file_name+"'>点击查看对账单图片</a></td></tr>");
+					} else if(data[i].status == '1') {
+						$('#retData').append("<tr><td>"+data[i].date+"</td><td>"+data[i].ide_name+"</td><td>"+data[i].ide_account+"</td><td>"+data[i].ide_bank_name+"</td><td><span class='text-success'>识别成功</span></td><td><a href='/files/company/"+data[i].file_name+"'>点击查看对账单图片</a></td></tr>");
+					} else {
+						$('#retData').append("<tr><td>"+data[i].date+"</td><td>"+data[i].ide_name+"</td><td>"+data[i].ide_account+"</td><td>"+data[i].ide_bank_name+"</td><td><span class='text-danger'>识别失败</span></td><td><a href='/files/company/"+data[i].file_name+"'>点击查看对账单图片</a></td></tr>");
+					}
+				}
+			}
+		});
+	}
 	//侧栏高度
     (function(){
         var H=$(window).height();
@@ -131,8 +149,7 @@
  					{text : '上传本月工资',id : '',href:"/views/webviews/company/salary_welfare_upload.html"}
  				]},
  	            {text : '预约取发票',id : '',href:"#",leaf : false,children: [
- 					{text : '方式选择',id : '',href:"/views/webviews/company/take_expense_account_mode_select.html"},
- 					{text : '进度跟踪',id : '',href:"/views/webviews/company/take_expense_account_progress_track.html"}
+ 					{text : '方式选择',id : '',href:"/views/webviews/company/take_expense_account_mode_select.html"}
  				]},
  	            {text : '组织架构',id : '',href:"#",expanded : false,children : [
  	                {text : '基本信息设置',id : '',href:"/views/webviews/company/organization_information_settings.html"},

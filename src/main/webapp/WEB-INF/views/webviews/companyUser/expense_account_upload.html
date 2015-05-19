@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>公司发票</title>
+<title>发票上传</title>
 <link rel="stylesheet" type="text/css"
 	href="../../../css/webcss/bui.css">
 <link rel="stylesheet" type="text/css"
@@ -34,11 +34,11 @@
 					<div class="bd">
 						<h2>上传发票</h2>
 						<p>
-							这里您可以上传除增值税和员工报销以外的发票
+							这里您可以上传需要审核的发票
 						</p>
-						<form id="billUpload" action="/company/uploadCompanyBill" method="POST"	enctype="multipart/form-data">
+						<form id="billUpload" action="/companyUser/uploadCompanyUserBill" method="POST"	enctype="multipart/form-data">
 							<input type="file" id="billFile" name="files" class="ml10">
-							<a href="javascript:uploadCompanyBill();" class="button button-success">拍照上传发票</a> <a href="javascript:uploadCompanyBill();"
+							<a href="javascript:uploadCompanyUserBill();" class="button button-success">拍照上传发票</a> <a href="javascript:uploadCompanyUserBill();"
 							class="button button-success">扫描上传发票</a>
 						</form>
 					</div>
@@ -61,7 +61,7 @@
 	<script src="http://g.alicdn.com/bui/seajs/2.3.0/sea.js"></script>
 	<script src="http://g.alicdn.com/bui/bui/1.1.17/config.js"></script>
 	<script type="text/javascript">
-		function uploadCompanyBill() {
+		function uploadCompanyUserBill() {
 			if($('#billFile').val() == null || $('#billFile').val() == '') {
 				alert('请先选择文件再上传！');
 				return;
@@ -92,26 +92,17 @@
 	        leafTpl : '<li class="menu-leaf"><a href="{href}">{text}</a></li>',
 
 	        nodes : [
-	  				{text : '发票',id : '',href:"#",leaf : true, children: [
-	  					{text : '发票上传',id : '',href:"/views/webviews/company/expense_account_upload.html"},
-	  					{text : '发票历史记录',id : '',href:"/views/webviews/company/expense_account_history.html"}                                                      
+	  				{text : '发票上传',id : '',href:"#", leaf:true, children: []},
+	  				{text : '发票草稿箱',id : '',href:"#", leaf:true, children: []},
+	  				{text : '新建报销单',id : '',href:"#", leaf:true, children: []},
+	  				{text : '待审核报销单',id : '',href:"#", leaf:true, children: []},
+	  				{text : '已审核报销单',id : '',href:"#", leaf:true, children: []},
+	  				{text : '报销单历史',id : '',href:"#", leaf:true, children: []},
+	  				{text : '审核发票',id : '',href:"#",  leaf:false, expanded : false,children: [
+	  					{text : '待审核发票',id : '', href:"#"},
+	  					{text : '已审核发票',id : '', href:"#"}                                                   
 	  				]},
-	  				{text : '银行对账单',id : '',href:"#",expanded : false,children: [
-	  					{text : '上传对账单',id : '',href:"/views/webviews/company/bank_statement_upload.html"},
-	  					{text : '对账单历史记录',id : '',href:"/views/webviews/company/bank_statement_history.html"}                                                       
-	  				]},
-	  	            {text : '工资社保',id : '',href:"#",expanded : false,children : [
-	  					{text : '参数设置',id : '',href:"/views/webviews/company/salary_welfare_args_settings.html"},
-	  					{text : '下载工资计算模板',id : '',href:"/views/webviews/company/salary_welfare_template_download.html"},
-	  					{text : '上传本月工资',id : '',href:"/views/webviews/company/salary_welfare_upload.html"}
-	  				]},
-	  	            {text : '预约取发票',id : '',href:"#",leaf : false,children: [
-	  					{text : '方式选择',id : '',href:"/views/webviews/company/take_expense_account_mode_select.html"}
-	  				]},
-	  	            {text : '组织架构',id : '',href:"#",expanded : false,children : [
-	  	                {text : '基本信息设置',id : '',href:"/views/webviews/company/organization_information_settings.html"},
-	  	                {text : '组织架构设置',id : '',href:"/views/webviews/company/organization_structure_settings.html"}
-	  	            ]}
+	  				
 	  	            ]
 	  	    	});
 	   		menu.render();

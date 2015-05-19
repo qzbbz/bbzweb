@@ -14,8 +14,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.wisdom.company.service.IDeptService;
 import com.wisdom.company.service.IExpenseTypeService;
 import com.wisdom.invoice.service.IInvoiceService;
+import com.wisdom.user.service.IUserDeptService;
 import com.wisdom.user.service.IUserService;
 import com.wisdom.web.utils.Base64Converter;
 import com.wisdom.weixin.service.IExpenseAccountService;
@@ -35,6 +37,12 @@ public class ExpenseAccountServiceImpl implements IExpenseAccountService {
 
 	@Autowired
 	private IExpenseTypeService expenseTypeService;
+	
+	@Autowired
+	private IDeptService deptService;
+	
+	@Autowired
+	private IUserDeptService userDeptService;
 
 	@Override
 	public Map<String, List<Map<String, Object>>> getInboxBillsByOpenId(String openId) {
@@ -171,6 +179,10 @@ public class ExpenseAccountServiceImpl implements IExpenseAccountService {
 		String weixinFileURL = "http://file.api.weixin.qq.com/cgi-bin/media/get?access_token=ACCESS_TOKEN&media_id=MEDIA_ID";
 		if (params == null || !params.containsKey("mediaId"))
 			return base64ImageStr;
+		String userId = userService.getUserIdByOpenId((String)params.get("openId"));
+		long deptId = userDeptService.getDeptIdByUserId(userId);
+		String costCenterCode = deptService.getCostCenterCodeById(deptId);
+		params.put("costCenterCode", costCenterCode);
 		weixinFileURL = weixinFileURL.replace("ACCESS_TOKEN",
 				WeixinCache.getAccessToken()).replace("MEDIA_ID",
 				(String) params.get("mediaId"));
@@ -189,7 +201,6 @@ public class ExpenseAccountServiceImpl implements IExpenseAccountService {
 			FileUtils.copyInputStreamToFile(in, new File((String) params.get("realPath"), fileName));
 			base64ImageStr = fileName;
 			logger.debug("uploadBillFilePath : {}", base64ImageStr);
-			String userId = userService.getUserIdByOpenId((String) params.get("openId"));
 			logger.debug("userId : {}", userId);
 			if (userId != null && !userId.isEmpty()) {
 				Map<String, Object> retMap = invoiceService

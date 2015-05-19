@@ -1,6 +1,7 @@
 package com.wisdom.web.api.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -181,6 +182,17 @@ public class CompanyController {
 		params.put("realPath", realPath);
 		params.put("date", date);
 		return companyApi.uploadCompanyBankSta(file, params);
+	}
+	
+	@RequestMapping("/company/getAllCompanyBankSta")
+	@ResponseBody
+	public List<Map<String, String>> getAllCompanyBankSta(HttpServletRequest request) {
+		String userId = (String) request.getSession().getAttribute("userId");
+		Map<String, String> params = new HashMap<>();
+		params.put("conditionValue", request.getParameter("conditionValue"));
+		params.put("conditionType", request.getParameter("conditionType"));
+		params.put("userId", userId);
+		return companyApi.getCompanyBankStaByCondition(params);
 	}
 	
 	@RequestMapping("/company/downloadSalarySocialSecurityTemplate")

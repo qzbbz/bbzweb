@@ -10,6 +10,8 @@ public interface IInvoiceDao {
 	public Invoice getInvoiceByIdAndStatus(long invoiceId,int status);
 	public Invoice getInvoiceByCode(String invoiceCode);
 	
+	public boolean updateInvoiceIdentifyStatus(long invoiceId, int status);
+	
 	public long addInvoiceAndGetKey(Invoice invoice);
 	
 	public boolean deleteInvoice(Invoice invoice);

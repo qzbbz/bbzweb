@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>表格</title>
+	<title>公司发票</title>
     <link rel="stylesheet" type="text/css" href="/css/webcss/bui.css">
 	<link rel="stylesheet" type="text/css" href="/css/webcss/golbal.css">
 	<link rel="stylesheet" type="text/css" href="/css/webcss/layout.css">
@@ -18,7 +18,7 @@
 			<div class="side-bar-bottom">
 				<ul>
 					<li><a href=""><i class="setting"></i>设置</a></li>
-					<li><a href=""><i class="exit"></i>安全退出</a></li>
+					<li><a href="/logout"><i class="exit"></i>安全退出</a></li>
 				</ul>
 			</div>
 		</div>
@@ -28,62 +28,24 @@
 				<div class="form-horizontal onlineTools">
 					<div class="row show-grid">
 						<label class="control-label control-label-small"></label>
-                        <div class="controls"><select name="" id="" class="input input-normal"><option>请选择</option></select><input type="text" class="input input-normal ml10"><button class="button button-success ml10">搜索</button></div>
+                        <div class="controls"><select name="condition" id="condition" class="input input-normal"><option value='0'>所有</option><option value='1'>按日期检索</option></select><input type="text" id="content" class="input input-normal ml10"><button onclick="searchData();" class="button button-success ml10">搜索</button></div>
 					</div>
 				</div>
 			</div>
 			<table class="table center">
 	    		<colgroup>
-	    			<col>
-	    			<col style="width:16%;">
-	    			<col style="width:16%;">
 	    			<col style="width:16%;">
 	    			<col style="width:16%;">
 	    			<col style="width:16%;">
 	    		</colgroup>
 	    		<thead>
 	    			<tr>
-	    				<th>报销单号</th>
-	    				<th>报销单日期</th>
-	    				<th>费用类型</th>
-	    				<th>申请人</th>
-	    				<th>成本中心</th>
-	    				<th>状态</th>
+	    				<th>发票日期</th>
+	    				<th>公司名称</th>
+	    				<th>发票预览</th>
 	    			</tr>
 	    		</thead>
-	    		<tbody>
-	    			<tr>
-	    				<td><a href="">860000</a></td>
-	    				<td>2015-08-09</td>
-	    				<td>&yen; 3600.00</td>
-	    				<td>类型内</td>
-	    				<td>交通费</td>
-	    				<td><span class="text-danger">待完成</span></td>
-	    			</tr>
-	    			<tr>
-	    				<td><a href="">860000</a></td>
-	    				<td>2015-08-09</td>
-	    				<td>&yen; 3600.00</td>
-	    				<td>类型内</td>
-	    				<td>交通费</td>
-	    				<td><span class="text-success">已完成</span></td>
-	    			</tr>
-	    			<tr>
-	    				<td><a href="">860000</a></td>
-	    				<td>2015-08-09</td>
-	    				<td>&yen; 3600.00</td>
-	    				<td>类型内</td>
-	    				<td>交通费</td>
-	    				<td><span class="text-info">处理中</span></td>
-	    			</tr>
-	    			<tr>
-	    				<td><a href="">860000</a></td>
-	    				<td>2015-08-09</td>
-	    				<td>&yen; 3600.00</td>
-	    				<td>类型内</td>
-	    				<td>交通费</td>
-	    				<td><span class="text-warning">其他</span></td>
-	    			</tr>
+	    		<tbody id="retData">
 	    		</tbody>
 	    	</table>
 	    	<div class="pagination"></div>
@@ -94,6 +56,38 @@
 <script src="http://g.alicdn.com/bui/seajs/2.3.0/sea.js"></script>
 <script src="http://g.alicdn.com/bui/bui/1.1.17/config.js"></script>
 <script type="text/javascript">
+	$.ajax({
+		url : '/company/getAllCompanyBill',
+		type : "POST",
+		data : {},
+		success : function(data) {
+			if(data == null) return;
+			$('#retData').empty();
+			for(var i=0; i<data.length; i++) {
+				$('#retData').append("<tr><td>"+data[i].date+"</td><td>"+data[i].company_name+"</td><td><a href='/files/company/"+data[i].file_name+"'>点击查看发票图片</a></td></tr>");
+			}
+		}
+	});
+	function searchData() {
+		var conditionType = $('#condition option:selected').val();
+		var conditionValue = $('#content').val();
+		if(conditionType != '0' && (conditionValue == null || conditionValue == '')) {
+			alert('请输入检索内容！');
+			return;
+		}
+		$.ajax({
+			url : '/company/getAllCompanyBill',
+			type : "POST",
+			data : {conditionType : conditionType, conditionValue : conditionValue},
+			success : function(data) {
+				if(data == null) return;
+				$('#retData').empty();
+				for(var i=0; i<data.length; i++) {
+					$('#retData').append("<tr><td>"+data[i].date+"</td><td>"+data[i].company_name+"</td><td><a href='/files/company/"+data[i].file_name+"'>点击查看发票图片</a></td></tr>");
+				}
+			}
+		});
+	}
 	//侧栏高度
     (function(){
         var H=$(window).height();
@@ -118,29 +112,28 @@
         leafTpl : '<li class="menu-leaf"><a href="{href}">{text}</a></li>',
 
         nodes : [
- 				{text : '发票',id : '',href:"#",leaf : true, children: [
- 					{text : '发票上传',id : '',href:"/views/webviews/company/expense_account_upload.html"},
- 					{text : '发票历史记录',id : '',href:"/views/webviews/company/expense_account_history.html"}                                                      
- 				]},
- 				{text : '银行对账单',id : '',href:"#",expanded : false,children: [
- 					{text : '上传对账单',id : '',href:"/views/webviews/company/bank_statement_upload.html"},
- 					{text : '对账单历史记录',id : '',href:"/views/webviews/company/bank_statement_history.html"}                                                       
- 				]},
- 	            {text : '工资社保',id : '',href:"#",expanded : false,children : [
- 					{text : '参数设置',id : '',href:"/views/webviews/company/salary_welfare_args_settings.html"},
- 					{text : '下载工资计算模板',id : '',href:"/views/webviews/company/salary_welfare_template_download.html"},
- 					{text : '上传本月工资',id : '',href:"/views/webviews/company/salary_welfare_upload.html"}
- 				]},
- 	            {text : '预约取发票',id : '',href:"#",leaf : false,children: [
- 					{text : '方式选择',id : '',href:"/views/webviews/company/take_expense_account_mode_select.html"},
- 					{text : '进度跟踪',id : '',href:"/views/webviews/company/take_expense_account_progress_track.html"}
- 				]},
- 	            {text : '组织架构',id : '',href:"#",expanded : false,children : [
-					{text : '基本信息设置',id : '',href:"/views/webviews/company/organization_information_settings.html"},
-					{text : '组织架构设置',id : '',href:"/views/webviews/company/organization_structure_settings.html"}
- 	            ]}
- 	            ]
- 	    	});
+  				{text : '发票',id : '',href:"#",leaf : true, children: [
+  					{text : '发票上传',id : '',href:"/views/webviews/company/expense_account_upload.html"},
+  					{text : '发票历史记录',id : '',href:"/views/webviews/company/expense_account_history.html"}                                                      
+  				]},
+  				{text : '银行对账单',id : '',href:"#",expanded : false,children: [
+  					{text : '上传对账单',id : '',href:"/views/webviews/company/bank_statement_upload.html"},
+  					{text : '对账单历史记录',id : '',href:"/views/webviews/company/bank_statement_history.html"}                                                       
+  				]},
+  	            {text : '工资社保',id : '',href:"#",expanded : false,children : [
+  					{text : '参数设置',id : '',href:"/views/webviews/company/salary_welfare_args_settings.html"},
+  					{text : '下载工资计算模板',id : '',href:"/views/webviews/company/salary_welfare_template_download.html"},
+  					{text : '上传本月工资',id : '',href:"/views/webviews/company/salary_welfare_upload.html"}
+  				]},
+  	            {text : '预约取发票',id : '',href:"#",leaf : false,children: [
+  					{text : '方式选择',id : '',href:"/views/webviews/company/take_expense_account_mode_select.html"}
+  				]},
+  	            {text : '组织架构',id : '',href:"#",expanded : false,children : [
+  	                {text : '基本信息设置',id : '',href:"/views/webviews/company/organization_information_settings.html"},
+  	                {text : '组织架构设置',id : '',href:"/views/webviews/company/organization_structure_settings.html"}
+  	            ]}
+  	            ]
+  	    	});
    		menu.render();
 		$.each($("li.menu-second"),function(){
 			var that = $(this);

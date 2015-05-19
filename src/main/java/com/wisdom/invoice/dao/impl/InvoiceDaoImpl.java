@@ -203,4 +203,18 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 		}
 		return null;
 	}
+	@Override
+	public boolean updateInvoiceIdentifyStatus(long invoiceId, int status) {
+		String sql = "update invoice set identify_status=? where id=?";
+		try {
+			int affectedRows = jdbcTemplate.update(
+					sql,status,invoiceId);
+					
+			logger.debug("updateInvoiceIdentifyStatus result : {}", affectedRows);
+			return affectedRows != 0;
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 }

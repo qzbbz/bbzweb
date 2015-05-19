@@ -1,5 +1,6 @@
 package com.wisdom.web.api;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
@@ -22,5 +23,7 @@ public interface ICompanyApi {
 	public Map<String, String> uploadCompanySalary(String userId, String realPath, MultipartFile file);
 	
 	public Map<String, String> uploadCompanyBankSta(MultipartFile file, Map<String, String> params);
+	
+	public List<Map<String, String>> getCompanyBankStaByCondition(Map<String, String> params);
 		
 }

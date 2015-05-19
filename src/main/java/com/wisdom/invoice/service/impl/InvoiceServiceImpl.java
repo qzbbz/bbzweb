@@ -76,11 +76,18 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			retMap.put("message", "lost amount param!");
 			return retMap;
 		}
+		if(null == params || null == (String)params.get("costCenterCode")){
+			log.error("costCenterCode not exsited");
+			retMap.put("message", "lost costCenterCode param!");
+			return retMap;
+		}
 		int expenseTypeId = (Integer)params.get("expenseTypeId");
 		double amount = (Double)params.get("amount");
+		String costCenterCode = (String)params.get("costCenterCode");
 		Invoice invoice = new Invoice();
 		invoice.setExpenseTypeId(expenseTypeId);
 		invoice.setAmount(amount);
+		invoice.setCostCenter(costCenterCode);
 		invoice.setStatus(InvoiceStatus.DRAFT); //微信上传默认为草稿
 		log.debug("double amount : " + amount);
 		log.debug("params amount : " + params.get("amount"));
@@ -141,7 +148,55 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		return retMap;
 	}
 	
-	
+	@Transactional
+	@Override
+	public Map<String,Object> createDraftInvoice(String userId, String image, String costCenterCode) {
+		Map<String,Object> retMap = new HashMap<String,Object>();
+		retMap.put("success", false);
+		log.debug("createInvoiceProcess");
+		if(StringUtils.isEmpty(userId)||StringUtils.isEmpty(image)){
+			log.error("null pointor error");
+			return retMap;
+		}
+		Invoice invoice = new Invoice();
+		invoice.setCostCenter(costCenterCode);
+		invoice.setStatus(InvoiceStatus.DRAFT); //微信上传默认为草稿
+		
+		log.debug("addInvoiceRevord");
+		Long invoiceId = singleInvoiceService.addInvoiceRecord(invoice);
+		if(null == invoiceId || invoiceId.longValue() == -1){
+			log.error("addInvoiceRecord failed");
+			return retMap;
+		}
+		log.debug("addAttachMentRecord");
+		boolean blRet = attachmentService.addAttachMentRecord(invoiceId,image);
+		if(!blRet){
+			log.error("addAttachMentRecord error");
+			return retMap;
+		}
+		
+		//TODO 获取当前用户的审批信息。
+		String receiver = new String("");
+		receiver = getApprovalUserList(userId);
+		if(StringUtils.isEmpty(receiver)){
+			log.error("get approval user error");
+			retMap.put("message", "获取审批人信息失败!");
+			return retMap;
+		}
+		
+		log.debug("addUserInvoiceRecord");
+		blRet = userInvoiceService.addUserInvoiceRecord(invoiceId,userId,receiver,ProcessStatus.PROCESSING);
+		if(!blRet){
+			log.error("addUserInvoiceRecord error! userId=" + userId + ",invoiceId:" + invoice.getId());
+			return retMap;
+		}
+		
+		retMap.put("invoiceId", invoice.getId());
+		retMap.put("receiver",receiver);
+		retMap.put("success", true);
+		retMap.put("message", "提交审批流程成功!");
+		return retMap;
+	}	
 	
 	@Override
 	@Transactional

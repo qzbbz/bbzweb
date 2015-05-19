@@ -5,12 +5,14 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -29,13 +31,13 @@ public class CompanyBankStaDaoImpl implements ICompanyBankStaDao {
 	private JdbcTemplate jdbcTemplate;
 	
 	@Override
-	public CompanyBankSta getCompanyBankStaByCompanyId(long companyId) {
-		logger.debug("companyId : {}", companyId);
+	public CompanyBankSta getCompanyBankStaById(long id) {
+		logger.debug("companyId : {}", id);
 		String sql = "select * from company_bank_sta where id = ?";
 		CompanyBankSta companyBankSta = null;
 		try {
 			companyBankSta = jdbcTemplate.queryForObject(sql,
-				new Object[] { companyId }, new CompanyBankStaMapper());
+				new Object[] { id }, new CompanyBankStaMapper());
 		} catch(Exception e) {
 			logger.debug("result is 0. exception : {}", e.toString());
 		}
@@ -45,7 +47,7 @@ public class CompanyBankStaDaoImpl implements ICompanyBankStaDao {
 	@Override
 	public long addCompanyBankSta(CompanyBankSta companyBankSta) {
 		KeyHolder keyHolder = new GeneratedKeyHolder();
-		long id = jdbcTemplate.update(new PreparedStatementCreator() {  
+		jdbcTemplate.update(new PreparedStatementCreator() {  
 	        public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {  
 	        	String sql = "insert into company_bank_sta (company_id, date, file_name, identify_status, create_time)"
 	    				+ " values (?, ?, ?, ?, ?)";
@@ -63,16 +65,25 @@ public class CompanyBankStaDaoImpl implements ICompanyBankStaDao {
 	}
 
 	@Override
-	public boolean deleteCompanyBankStaByCompanyId(long companyId) {
-		String sql = "delete from company_bank_sta where company_id = ?";
-		int affectedRows = jdbcTemplate.update(sql, companyId);
+	public boolean deleteCompanyBankStaById(long id) {
+		String sql = "delete from company_bank_sta where id = ?";
+		int affectedRows = jdbcTemplate.update(sql, id);
 		logger.debug("deleteCompanyBankStaByCompanyId result : {}", affectedRows);
 		return affectedRows != 0;
 	}
 
 	@Override
 	public boolean updateCompanyBankSta(CompanyBankSta companyBankSta) {
-		return false;
+		String sql = "update company_bank_sta set ide_name=?, id_bank_name=?, ide_account=?, ide_date=? where id=?";
+		logger.debug("updateCompanyBankSta : {}", companyBankSta.toString());
+		int affectedRows = jdbcTemplate.update(sql,
+				companyBankSta.getIdeName() == null ? "" : companyBankSta.getIdeName(),
+				companyBankSta.getIdeBankName() == null ? "" : companyBankSta.getIdeBankName(),
+				companyBankSta.getIdeAccount() == null ? "" : companyBankSta.getIdeAccount(),
+				companyBankSta.getIdeDate() == null ? "" : companyBankSta.getIdeDate(),
+				companyBankSta.getId());
+		logger.debug("updateCompanyBankSta result : {}", affectedRows);
+		return affectedRows != 0;
 	}
 
 	@Override
@@ -82,6 +93,49 @@ public class CompanyBankStaDaoImpl implements ICompanyBankStaDao {
 		int affectedRows = jdbcTemplate.update(sql, status, id);
 		logger.debug("updateCompanyBankStaIdentifyStatusById result : {}", affectedRows);
 		return affectedRows != 0;
+	}
+
+	@Override
+	public List<CompanyBankSta> getAllCompanyBankSta(long companyId) {
+		List<CompanyBankSta> list = null;
+		try {
+			String sql = "select * from company_bank_sta where company_id=?";
+			list = jdbcTemplate.query(sql, new Object[]{companyId}, 
+					new RowMapperResultSetExtractor<CompanyBankSta>(
+							new CompanyBankStaMapper()));
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return list;
+	}
+
+	@Override
+	public List<CompanyBankSta> getAllCompanyBankStaByDate(long companyId, String date) {
+		List<CompanyBankSta> list = null;
+		try {
+			String sql = "select * from company_bank_sta where date like'%"+date+"%' and company_id=?";
+			list = jdbcTemplate.query(sql, new Object[]{companyId},
+					new RowMapperResultSetExtractor<CompanyBankSta>(
+							new CompanyBankStaMapper()));
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return list;
+	}
+
+	@Override
+	public List<CompanyBankSta> getAllCompanyBankStaByIdentifyStatus(
+			long companyId, int status) {
+		List<CompanyBankSta> list = null;
+		try {
+			String sql = "select * from company_bank_sta where identify_status =? and company_id=?";
+			list = jdbcTemplate.query(sql, new Object[]{status, companyId},
+					new RowMapperResultSetExtractor<CompanyBankSta>(
+							new CompanyBankStaMapper()));
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return list;
 	}
 
 }
