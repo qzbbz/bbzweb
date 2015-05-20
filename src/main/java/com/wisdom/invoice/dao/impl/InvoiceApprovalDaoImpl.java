@@ -10,11 +10,13 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import com.wisdom.accounter.mapper.AccounterCareerMapper;
 import com.wisdom.common.model.AccounterCareer;
 import com.wisdom.common.model.InvoiceApproval;
 import com.wisdom.invoice.dao.IInvoiceApprovalDao;
+import com.wisdom.invoice.domain.InvoiceInfoVo;
 import com.wisdom.invoice.mapper.InvoiceApprovalMapper;
 import com.wisdom.invoice.mapper.UserInvoiceMapper;
 
@@ -114,5 +116,4 @@ public class InvoiceApprovalDaoImpl implements IInvoiceApprovalDao {
 		}
 		return false;
 	}
-
 }

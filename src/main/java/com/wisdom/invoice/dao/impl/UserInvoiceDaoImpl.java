@@ -10,11 +10,15 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import com.wisdom.common.model.Employment;
+import com.wisdom.common.model.InvoiceInfo;
 import com.wisdom.common.model.UserInvoice;
 import com.wisdom.company.mapper.EmploymentMapper;
 import com.wisdom.invoice.dao.IUserInvoiceDao;
+import com.wisdom.invoice.domain.InvoiceInfoVo;
+import com.wisdom.invoice.mapper.InvoiceInfoMapper;
 import com.wisdom.invoice.mapper.UserInvoiceMapper;
 
 @Repository("userInvoiceDao")
@@ -127,6 +131,73 @@ public class UserInvoiceDaoImpl implements IUserInvoiceDao {
 			e.printStackTrace();
 		}
 		return false;
+	}
+
+	/**
+	 * 我的收件箱使用：默认按照我是审批人搜索
+	 */
+	@Override
+	public List<InvoiceInfo> getInvoiceInfoByCondition(String userId,
+			String date, String submitter, Double amount, Integer expenseType,Integer page,Integer pageSize) {
+		if(StringUtils.isEmpty(userId)){
+			logger.debug("input param error: {}",userId);
+			return null;
+		}
+		Object[] objs = new Object[5];
+		StringBuilder sql = new StringBuilder();
+		sql.append("select invoice_id,invoice_code,title,expense_type_id,amount,detail_desc,date,cost_center,"
+				+ "process_status,approval_status,approval_id,user_id ");
+		sql.append(" from user_invoice,invoice ");
+		sql.append(" where user_invoice.approval_id=?");
+		objs[0] = userId;
+		
+		sql.append(" and user_invoice.invoice_id=invoice.id ");
+		
+		int index=0;
+		if(!StringUtils.isEmpty(date)){
+			sql.append(" and date=?");
+			index++;
+			objs[index] = date;
+		}
+
+		if(!StringUtils.isEmpty(submitter)){
+			sql.append(" and user_invoice.user_id=?");
+			index++;
+			objs[index] = submitter;
+		}
+//		if(!StringUtils.isEmpty(amount)){
+		if(null != amount && amount > 0){
+			sql.append(" and invoice.amount=?");
+			index++;
+			objs[index] = amount;
+		}
+		
+		if(null != expenseType){
+			sql.append(" and invoice.expense_type_id=?");
+			index++;
+			objs[index] = expenseType;
+		}
+		
+		if(null != page && null != pageSize && pageSize > 0 && page > 0){
+			int start = (page-1)*pageSize;
+			int end = page*pageSize;
+			sql.append(" limit ? and ?");
+			index++;
+			objs[index] = start;
+			index++;
+			objs[index] = end;
+		}
+		
+		
+		List<InvoiceInfo> list = null;
+		try {
+			list = jdbcTemplate.query(sql.toString(), objs,
+					new RowMapperResultSetExtractor<InvoiceInfo>(
+							new InvoiceInfoMapper()));
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return list;
 	}
 
 }

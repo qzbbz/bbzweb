@@ -4,15 +4,23 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import com.wisdom.common.model.InvoiceInfo;
 import com.wisdom.common.model.UserInvoice;
 import com.wisdom.invoice.dao.IUserInvoiceDao;
+import com.wisdom.invoice.dao.impl.UserInvoiceDaoImpl;
 import com.wisdom.invoice.service.IUserInvoiceService;
 
 @Service("userInvoiceService")
 public class UserInvoiceServiceImpl implements IUserInvoiceService {
+	private static final Logger logger = LoggerFactory
+			.getLogger(UserInvoiceServiceImpl.class);
+	
 	@Autowired
 	private IUserInvoiceDao userInvoiceDao; 
 
@@ -55,4 +63,14 @@ public class UserInvoiceServiceImpl implements IUserInvoiceService {
 		return userInvoiceDao.getUserInvoiceByUserIdAndInvoiceId(userId, invoiceId);
 	}
 
+	@Override
+	public List<InvoiceInfo> getInvoiceInfoByCondition(String userId,
+			String date, String submitter, Double amount, Integer expenseType,Integer page,Integer pageSize){
+		if(StringUtils.isEmpty(userId)){
+			logger.error("input userId empty error");
+			return null;
+		}
+		return userInvoiceDao.getInvoiceInfoByCondition(userId, date, submitter, amount, 
+				expenseType, page, pageSize);
+	}
 }
