@@ -31,8 +31,12 @@ a:hover{ text-decoration: none;}
 /*弹层选项卡*/
 .layer-tabs{ width: 800px; height: 480px;}
 .layer-tabs .tabs-menu{ width: 120px; float: left;}
-.layer-tabs .tabs-menu i{ width: 20px; height: 20px; background: #f00;}
-.layer-tabs .tabs-box{ float: left;}
+.layer-tabs .tabs-menu li{}
+.layer-tabs .tabs-menu i{ width: 20px; height: 20px; position: absolute; top: 10px;left: 50%; margin-left: -10%;}
+.layer-tabs .tabs-menu span{}
+.layer-tabs .tabs-menu .bui-tab-item-text{ padding: 30px 0 10px; height: 20px; width: 120px;}
+.layer-tabs .tabs-box{ float: left; padding: 20px;}
+.layer-tabs .tabs-box .tabs-box-content{ width: 640px;}
 /**/
 .form-window{ width: 560px; height: 300px; border: 3px solid #bbe9c7; border-radius: 3px; padding: 50px 20px; text-align: center; background: rgba(255,255,255,1); margin: 0 auto; position: relative; top: 100px;}
 .form-window .hd i{ width: 80px; height: 80px; border-radius: 40px; background: #ef6d44; text-align: center; font-size: 36px; line-height: 80px; overflow: hidden; color: #fff; display: block; margin: 0 auto;}
@@ -127,11 +131,11 @@ transform: translate3d(0, 0, 0);
 /**/
 @font-face {
   font-family: "iconfont";
-  src: url('../../font/webfont/iconfont.eot'); /* IE9*/
-  src: url('../../font/webfont/iconfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-  url('../../font/webfont/iconfont.woff') format('woff'), /* chrome、firefox */
-  url('../../font/webfont/iconfont.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
-  url('../../font/webfont/iconfont.svg#iconfont') format('svg'); /* iOS 4.1- */
+  src: url('../../fonts/webfonts/iconfont.eot'); /* IE9*/
+  src: url('../../fonts/webfonts/iconfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('../../fonts/webfonts/iconfont.woff') format('woff'), /* chrome、firefox */
+  url('../../fonts/webfonts/iconfont.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+  url('../../fonts/webfonts/iconfont.svg#iconfont') format('svg'); /* iOS 4.1- */
 }
 .iconfont {
   font-family:"iconfont" !important;
@@ -167,3 +171,53 @@ transform: translate3d(0, 0, 0);
 .checkbox-con .checkbox i{ width: 40px; height: 40px; display: block; background: url(../../img/webimg/icon-bg.png) 0 -102px no-repeat;top: 10px; right: 10px; position: absolute;}
 .checkbox-con .cur i{ background-position: 0 -142px;}
 .checkbox-con .ipt-hide{position: absolute;width: 0;height: 0;border: none; top: -50px; right: 0;}
+/*模拟表格样式*/
+.text-hide{}/*
+.th{ border-bottom: 1px solid #e6e6e6; padding: 5px;}
+.td{ border-bottom: 1px solid #e6e6e6; background: #fff; padding: 5px;}
+.td a{ margin-left: 10px;}
+.td a:first-child{ margin-left: 0;}*/
+.table .th,
+.table .td {
+  padding: 10px 0;
+  line-height: 20px;
+  vertical-align: top;
+  border-bottom: 1px solid #e5e5e5;
+}
+.table .th a,
+.table .td a {
+  margin-left: 10px;
+}
+.table .th a:first-child,
+.table .td a:first-child {
+  margin-left: 0;
+}
+.table .th input,
+.table .td input,
+.table .th select,
+.table .td select{
+  padding: 1px 5px;
+  width: 90%;
+}
+.table .th textarea,
+.table .td textarea {
+  padding: 1px 5px;
+  width: 99%;
+}
+.table .th select,
+.table .td select {
+  height: 24px;
+}
+.table .th textarea,
+.table .td textarea {
+  height: 20px;
+}
+.table .th {
+  font-weight: bold;
+  vertical-align: bottom;
+  border-bottom: 2px solid #e5e5e5; 
+  background: #f5f5f5;
+}
+/*竖表单布局*/
+.control-btn .control-label{ min-height: 30px}
+.control-btn .controls{ padding: 10px 0;}

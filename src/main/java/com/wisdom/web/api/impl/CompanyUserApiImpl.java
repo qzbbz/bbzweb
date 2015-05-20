@@ -3,19 +3,32 @@ package com.wisdom.web.api.impl;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.wisdom.common.model.Invoice;
+import com.wisdom.common.utils.ResultCode;
+import com.wisdom.company.service.ICompanyService;
 import com.wisdom.company.service.IDeptService;
+import com.wisdom.company.service.IExpenseTypeService;
+import com.wisdom.invoice.service.IAttachmentService;
 import com.wisdom.invoice.service.IInvoiceService;
+import com.wisdom.invoice.service.ISingleInvoiceService;
 import com.wisdom.user.service.IUserDeptService;
 import com.wisdom.user.service.IUserService;
 import com.wisdom.web.api.ICompanyUserApi;
@@ -31,12 +44,24 @@ public class CompanyUserApiImpl implements ICompanyUserApi {
 
 	@Autowired
 	private IDeptService deptService;
-
+	
+	@Autowired
+	private ICompanyService companyService;
+	
 	@Autowired
 	private IUserDeptService userDeptService;
 
 	@Autowired
 	private IInvoiceService invoiceService;
+	
+	@Autowired
+	private ISingleInvoiceService singleInvoiceService;
+	
+	@Autowired
+	private IExpenseTypeService expenseTypeService;
+	
+	@Autowired
+	private IAttachmentService attachmentService;
 
 	@Override
 	public Map<String, String> uploadCompanyUserBill(
@@ -51,7 +76,7 @@ public class CompanyUserApiImpl implements ICompanyUserApi {
 					params.get("realPath"), fileName));
 			Map<String, Object> invoiceRetMap = invoiceService
 					.createDraftInvoice(userId,
-							"../../img/billImg/" + fileName, costCenterCode);
+							"/img/billImg/" + fileName, costCenterCode);
 			if (invoiceRetMap != null && (boolean) invoiceRetMap.get("success")) {
 				retMap.put("error_code", "0");
 			} else {
@@ -72,5 +97,102 @@ public class CompanyUserApiImpl implements ICompanyUserApi {
 				file.getOriginalFilename().indexOf(".") + 1);
 		return userId + System.currentTimeMillis() + Math.abs(rdm.nextInt())
 				% 1000 + (extendName == null ? ".unknown" : "." + extendName);
+	}
+
+	@Override
+	public List<Map<String, String>> getCompanyUserInvoiceByStatus(
+			Map<String, String> params) {
+		List<Map<String, String>> retList = new ArrayList<>();		
+		String status = params.get("status");
+		String page = params.get("page");
+		String pageSize = params.get("pageSize");
+		String userId = params.get("userId");
+		if(StringUtils.isEmpty(status)||StringUtils.isEmpty(userId)){
+			logger.debug("params are wrong!");
+			return retList;
+		}
+		List<Invoice> list = new ArrayList<Invoice>();
+		if("1".equals(status)){//草稿状态
+			list = singleInvoiceService.getUserInvoiceByStatus(userId, status);
+		}else{//提交状态
+			int iPage = 1;
+			int iPageSize = 10;
+			try{
+				 iPage = Integer.parseInt(page);
+				 iPageSize = Integer.parseInt(pageSize);
+			}catch(Exception e){
+				logger.error("parse page pagesize error, exception : {}", e.toString());
+				iPage =1 ;
+				iPageSize = 10;
+			}
+			list = singleInvoiceService.getUserInvoiceByStatusByPage(userId, status,iPage,iPageSize);
+		}
+		if(list == null || list.size() == 0) return null;
+		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		for(Invoice invoice : list) {
+			Map<String, String> invoiceMap = new HashMap<>();
+			Timestamp stamp = invoice.getCreateTime();
+			invoiceMap.put("create_time", sdf.format(stamp));
+			invoiceMap.put("title", invoice.getTitle());
+			invoiceMap.put("invoice_id", String.valueOf(invoice.getId()));
+			stamp = invoice.getDate();
+			invoiceMap.put("date", sdf.format(invoice.getDate()));
+			invoiceMap.put("desc", invoice.getDesc());
+			invoiceMap.put("amount", String.valueOf(invoice.getAmount()));
+			String expenseName = expenseTypeService.getExpenseTypeNameById(invoice.getExpenseTypeId());
+			if(expenseName == null || expenseName.isEmpty()) {
+				expenseName = "未设置";
+			}
+			invoiceMap.put("expense_type_name", expenseName);
+			invoiceMap.put("cost_center", invoice.getCostCenter());
+			invoiceMap.put("invoice_code", invoice.getInvoiceCode());
+			invoiceMap.put("identify_status", invoice.getIdentifyStatus() == 0 ? "识别中" : "已识别");
+			String fileName = attachmentService.getAttachMentByInvoiceId(invoice.getId()).getImage();
+			invoiceMap.put("file_name", fileName);
+			retList.add(invoiceMap);
+		}
+		return retList;
+	}
+
+	@Override
+	public Map<String, String> getUserInfo(String userId) {
+		Map<String, String> retMap = new HashMap<>();
+		String userName = userService.getUserNameByUserId(userId);
+		long companyId= userService.getCompanyIdByUserId(userId);
+		String companyName = companyService.getCompanyName(companyId);
+		long deptId = userDeptService.getDeptIdByUserId(userId);
+		String deptName = deptService.getDeptNameById(deptId);
+		String costCenterCode = deptService.getCostCenterCodeById(deptId);
+		String approvalName = "";
+		List<String> userList = userService.getApprovalUserList(userId);
+		for(String uId : userList) {
+			String uName = userService.getUserNameByUserId(uId);
+			approvalName += uName + ",";
+		}
+		if(!approvalName.isEmpty()) approvalName = approvalName.substring(0, approvalName.length() -1);
+		retMap.put("user_name", userName);
+		retMap.put("company_name", companyName);
+		retMap.put("approval_name", approvalName);
+		retMap.put("user_dept_name", deptName);
+		retMap.put("cost_center_code", costCenterCode);
+		logger.debug("retMap : {}", retMap.toString());
+		return retMap;
+	}
+
+	@Override
+	public boolean updateInvoiceInfo(Map<String, String> params) {
+		return singleInvoiceService.updateInvoiceInfo(params);
+	}
+
+	@Override
+	public boolean submitInvoiceAudit(String userId, String idList) {
+		String[] ids = idList.split(",");
+		Map<String, String> params = new HashMap<>();
+		params.put("date", new Timestamp(System.currentTimeMillis()).toString());
+		if(ids == null || ids.length == 0) return false;
+		for(String invoiceId : ids) {
+			invoiceService.submitUserInvoice(userId, Long.valueOf(invoiceId), params);
+		}
+		return true;
 	}
 }

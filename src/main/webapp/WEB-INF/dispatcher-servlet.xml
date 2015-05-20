@@ -50,8 +50,8 @@ class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer
 		<property name="exceptionMappings">
 			<props>
 				<prop
-					key="org.springframework.web.multipart.MaxUploadSizeExceededException">upload_file_error</prop>
-				<prop key="org.springframework.web.multipart.MultipartException">exception</prop>
+					key="org.springframework.web.multipart.MaxUploadSizeExceededException">upload_exceed_max_error.html</prop>
+				<prop key="org.springframework.web.multipart.MultipartException">global_exception.html</prop>
 			</props>
 		</property>
 	</bean>

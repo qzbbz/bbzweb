@@ -18,7 +18,7 @@ public class Invoice implements java.io.Serializable {
 	private String invoiceCode;
 	private String title;
 	private Integer expenseTypeId;
-	private Integer status;
+	private Integer commitStatus;
 	private Double amount;
 	private String detailDesc;
 	private Timestamp date;
@@ -45,7 +45,7 @@ public class Invoice implements java.io.Serializable {
 		this.invoiceCode = invoiceCode;
 		this.title = title;
 		this.expenseTypeId = expenseTypeId;
-		this.status = status;
+		this.commitStatus = status;
 		this.amount = amount;
 		this.detailDesc = detailDesc;
 		this.date = date;
@@ -81,11 +81,11 @@ public class Invoice implements java.io.Serializable {
 	}
 	
 	public Integer getStatus() {
-		return this.status;
+		return this.commitStatus;
 	}
 
 	public void setStatus(Integer status) {
-		this.status = status;
+		this.commitStatus = status;
 	}
 
 	public String getTitle() {

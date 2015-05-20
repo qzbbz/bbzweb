@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>公司发票</title>
+<link rel="stylesheet" type="text/css"
+	href="../../../css/webcss/bui.css">
+<link rel="stylesheet" type="text/css"
+	href="../../../css/webcss/golbal.css">
+<link rel="stylesheet" type="text/css"
+	href="../../../css/webcss/layout.css">
+</head>
+<body>
+	<div class="wrap">
+		<div class="side-bar">
+			<div class="side-bar-top">
+				<img src="/img/webimg/bss-logo.png">
+				<h1>上海元升财务咨询有限公司</h1>
+			</div>
+			<div class="side-bar-content" id="menuTree"></div>
+			<div class="side-bar-bottom">
+				<ul>
+					<li><a href="javascript:void(0)" id="sysSettings"><i class="setting"></i>设置</a></li>
+					<li><a href="/logout"><i class="exit"></i>安全退出</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="main">
+			<div class="zero-state">
+				<div class="form-window">
+					<div class="hd">
+						<i class="iconfont">&#xe627;</i>
+					</div>
+					<div class="bd">
+						<h2>上传发票</h2>
+						<p>
+							这里您可以上传除增值税和员工报销以外的发票
+						</p>
+						<form id="billUpload" action="/company/uploadCompanyBill" method="POST"	enctype="multipart/form-data">
+							<input type="file" id="billFile" name="files" class="ml10">
+							<a href="javascript:uploadCompanyBill();" class="button button-success">拍照上传发票</a> <a href="javascript:uploadCompanyBill();"
+							class="button button-success">扫描上传发票</a>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="mt20">
+           <div id="tabContents" class="hide">
+                                <div id="tabDiv" class="mt10 clearfix layer-tabs">                      
+                                    <div id="tab" class="tabs-menu"></div>
+                                    <div id="panel" class="tabs-box">
+                                        <div class="tabs-box-content">
+                                            <div class="form-horizontal">
+                                                <div class="control-group">
+                                                    <label class="control-label control-label-small">城市：</label>
+                                                    <div class="controls bui-form-group-select" data-type="city">
+                                                      <select class="input-small" value="山东省"><option>省份</option></select>&nbsp;&nbsp;
+                                                      <select class="input-small"><option>城市</option></select>
+                                                    </div>
+                                                </div>
+                                                <div class="control-group">
+                                                    <label class="control-label control-label-small"><s>*</s>店铺名称：</label>
+                                                    <div class="controls">
+                                                      <input name="sname" type="text" class="input-large" data-rules="{required : true}">
+                                                    </div>
+                                                </div>
+                                                <div class="control-group">
+                                                    <label class="control-label control-label-small"><s>*</s>地址：</label>
+                                                    <div class="controls">
+                                                      <input type="text" class="input-large" data-rules="{required : true}">
+                                                    </div>
+                                                </div>
+                                                <div class="control-group">
+                                                    <label class="control-label control-label-small"><s>*</s>电话：</label>
+                                                    <div class="controls">
+                                                      <input type="text" class="input-large" data-rules="{required : true}">
+                                                    </div>
+                                                </div>
+                                                <div class="control-group">
+                                                    <label class="control-label control-label-small">公交：</label>
+                                                    <div class="controls control-row-auto">
+                                                      <textarea name="" id="" class="control-row4 input-large"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="control-group control-btn"> 
+                                                    <label class="control-label control-label-small"></label>
+                                                    <div class="controls">
+                                                        <button type="submit" class="button button-normal button-primary">保存</button><button type="reset" class="button button-normal ml10">重置</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tabs-box-content"> 第二个面板 </div>
+                                        <div class="tabs-box-content">第三个面板</div>
+                                    </div>
+                                </div>
+                            </div>
+        </div>
+	</div>
+	<!--该js需要修改js路径及修改seajs路径-->
+	<script src="http://g.tbcdn.cn/fi/bui/jquery-1.8.1.min.js"></script>
+	<script src="http://g.alicdn.com/bui/seajs/2.3.0/sea.js"></script>
+	<script src="http://g.alicdn.com/bui/bui/1.1.17/config.js"></script>
+	<script src="/js/webjs/menuTree.js"></script>
+	<script type="text/javascript">
+		function uploadCompanyBill() {
+			if($('#billFile').val() == null || $('#billFile').val() == '') {
+				alert('请先选择文件再上传！');
+				return;
+			}
+			$('#billUpload').submit();
+		}
+		//侧栏高度
+        (function(){
+            var H=$(window).height();
+            var h1=$(".side-bar-top").height()+$(".side-bar-bottom").height();
+            $(".side-bar-content").height(H-h1);
+            $(window).resize(function(){
+                H=$(window).height();
+                $(".side-bar-content").height(H-h1);
+            });
+        })()
+		
+        BUI.use(['bui/tab','bui/mask'],function(Tab){
+            var tab = new Tab.TabPanel({
+                render : '#tab',
+                elCls : 'button-tabs',
+                panelContainer : '#panel',
+                panelTpl : '<div class="panel"><p>{title}:{value}</p></div>',
+                autoRender: true,
+                children:[
+                    {title:'标签一',value:'1',selected : true},
+                    {title:'标签二',value:'2',selected : false},
+                    {title:'标签三',value:'3',selected : false}
+                ]
+            });
+            tab.setSelected(tab.getItemAt(0));
+        });
+        BUI.use(['bui/overlay','bui/form'],function(Overlay,Form){
+            var tabForm = new Form.Form({
+                srcNode : '#tabDiv'
+            }).render();
+            var tabDialog = new Overlay.Dialog({
+                // title:'标题',
+                width:800,
+                height:480,
+                //配置DOM容器的编号
+                contentId:'tabContents',
+                buttons:[],
+                success:function () {
+                    alert('确认');
+                    this.close();
+                }
+            });
+            $('#sysSettings').on('click',function () {
+              	var sender = $(this),
+                type = sender.text(),
+                effect = {
+                  effect : type,
+                  duration : 400// 
+                  //callback : function(){} ,callback 回调函数
+                };
+                tabDialog.set('effect',effect);
+                tabDialog.show();
+                var tabPar=$("#tabDiv").parent();
+                tabPar.prev().remove();
+                tabPar.find(".bui-stdmod-footer").remove();
+                tabPar.css({"padding":"0","margin-top":"-10px"});
+                console.log(tabPar.parent().find(".bui-ext-close"));
+                tabPar.parent().find(".bui-ext-close").css({
+                    "left" : "0",
+                    "top" : "435px",
+                    "width" : "120px",
+                    "height" : "60px",
+                    "border-top" : "1px solid #212326",
+                    "background-color":"#35383b"
+                })
+                tabPar.parent().find(".bui-ext-close-x").css({
+                    "background":"none",
+                })
+                tabPar.parent().find(".x-icon").css({
+                    "height":"60px",
+                    "line-height":"60px",
+                    "width":"120px",
+                    "text-align":"center",
+                    "color":"#fff",
+                    "font-weight":"normal",
+                    "font-size":"30px"
+                })
+                // icon css
+                var icon=['<i class="iconfont">&#xe634;</i>','<i class="iconfont">&#xe634;</i>','<i class="iconfont">&#xe634;</i>']
+                var ul_list = $("#tabDiv").find(".tab-panel-inner").find("ul").find("li");
+                $.each(ul_list,function(i){
+                    $(this).append(icon[i]);
+                })
+            });
+        });
+        
+      //竖状菜单
+        var menu = new menuTree(
+            {"nodes" : [
+                {text : '组织权限',id : '',href:"javascript:void(0)",expanded : true,children : [
+                    {text : '组织架构设置',id : '',href:"#"},
+                    {text : '基本资料设置',id : '',href:"#"},
+                    {text : '供应商和客户信息',id : '',href:"#"}
+                ]},
+                {text : '费用报销',id : '',href:"javascript:void(0)",expanded : true,children : [
+                    {text : '收件箱',id : '',href:"#"},
+                    {text : '新建报销单',id : '',href:"#"},
+                    {text : '草稿',id : '',href:"#"},
+                    {text : '待审核报销单',id : '',href:"#"},
+                    {text : '已审核报销单',id : '',href:"#"},
+                    {text : '我的历史报销单记录',id : '',href:"#"},
+                    {text : '报销费用分析',id : '',href:"#"}
+                ]},
+                {text : '收件箱',id : '',href:"#",leaf : false,children: []},
+                {text : '销售清单',id : '',href:"#",leaf : false,children: []},
+                {text : '发票',id : '',href:"#",leaf : false,children: []},
+                {text : '工资社保单',id : '',href:"#",leaf : false,children: []},
+                {text : '银行对账单',id : '',href:"#",leaf : false,children: []},
+                {text : '网上抄税',id : '',href:"#",leaf : false,children: []},
+                {text : '预约取发票',id : '',href:"#",leaf : false,children: []},
+                {text : '报表分析',id : '',href:"#",leaf : false,children: []}
+                ]
+            },"menuTree"
+        );
+	</script>
+</body>
+</html>

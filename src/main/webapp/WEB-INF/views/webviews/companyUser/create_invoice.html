@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>上海元升财务咨询有限公司</title>
+<!--基础-->
+<link rel="stylesheet" type="text/css" href="/css/webcss/bui.css">
+<link rel="stylesheet" type="text/css" href="/css/webcss/golbal.css">
+<link rel="stylesheet" type="text/css" href="/css/webcss/layout.css">
+</head>
+<body>
+	<div class="wrap">
+		<div class="side-bar">
+			<div class="side-bar-top">
+				<img src="/img/webimg/bss-logo.png">
+				<h1>上海元升财务咨询有限公司</h1>
+			</div>
+			<div class="side-bar-content" id="menuTree"></div>
+			<div class="side-bar-bottom">
+				<ul>
+					<li><a href="javascript:void(0);"><i class="setting"></i>设置</a></li>
+					<li><a href="/logout"><i class="exit"></i>安全退出</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="main">
+			<div class="menu">
+				<a href="javascript:void(0)" class="active">新建报销单</a>
+			</div>
+			<div class="panel mt20">
+				<div class="panel-header">申请人信息</div>
+				<div class="panel-body">
+					<div class="form-horizontal onlineTools">
+						<div class="row-fluid show-grid">
+							<div class="span7">
+								<label class="control-label control-label-small">申请人</label>
+								<div class="controls">
+									<input id="user_name" type="text" class="input input-small" disabled>
+								</div>
+							</div>
+							<div class="span7">
+								<label class="control-label control-label-small">成本中心</label>
+								<div class="controls">
+									<input id="cost_center_code" type="text" class="input input-small" disabled>
+								</div>
+							</div>
+							<div class="span7">
+								<label class="control-label control-label-small">审批人</label>
+								<div class="controls">
+									<input id="approval_name" type="text" class="input input-small" disabled>
+								</div>
+							</div>
+						</div>
+						<div class="row-fluid show-grid mt10">
+							<div class="span7">
+								<label class="control-label control-label-small">所在部门</label>
+								<div class="controls">
+									<input id="user_dept_name" type="text" class="input input-small" disabled>
+								</div>
+							</div>
+							<div class="span14">
+								<label class="control-label control-label-small">所在公司</label>
+								<div class="controls">
+									<input id="company_name" type="text" class="input input-large" disabled>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="panel mt20" style="min-height: 600px;">
+				<div class="panel-header">发票草稿</div>
+				<div class="panel-body">
+					<div class="well">
+						<div class="form-horizontal onlineTools">
+							<div class="row show-grid">
+								<label class="control-label control-label-small"></label>
+								<div class="controls">
+									<select name="condition" id="condition"
+										class="input input-normal"><option value='0'>所有</option></select><input
+										type="text" id="content" class="input input-normal ml10">
+									<button onclick="searchData();"
+										class="button button-success ml10">搜索</button>
+									<button onclick="onePressSubmit();"
+										class="button button-success ml10">一键提交审核</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="table text-center">
+						<div class="row-fluid show-grid th">
+							<div class="span1">&nbsp;</div>
+							<div class="span3">ID号</div>
+							<div class="span3">上传日期</div>
+							<div class="span3">发票号</div>
+							<div class="span3">费用类型</div>
+							<div class="span3">金额</div>
+							<div class="span4">详细描述</div>
+							<div class="span3">操作</div>
+						</div>
+						<div id="retData"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="http://g.alicdn.com/bui/jquery-1.8.1.min.js"></script>
+	<script src="http://g.alicdn.com/bui/seajs/2.3.0/sea.js"></script>
+	<script src="http://g.alicdn.com/bui/bui/1.1.17/config.js"></script>
+	<script src="/js/webjs/menuTree.js"></script>
+	<script type="text/javascript">
+		var page = 1;
+		var pageSize = 1000;
+		var expenseTypeSelect = "<select id='expenseSelect' name='expenseSelect' class='input input-small'></select>";
+		var invoiceIdList = new Array();
+		$.ajax({
+			url : '/companyUser/getUserInfo',
+			type : "POST",
+			data : {},
+			success : function(data) {
+				if(data == null) return;
+				$('#user_name').val(data.user_name);
+				$('#company_name').val(data.company_name);
+				$('#approval_name').val(data.approval_name);
+				$('#user_dept_name').val(data.user_dept_name);
+				$('#cost_center_code').val(data.cost_center_code);
+			}
+		});
+		$.ajax({
+			url : '/companyUser/getAllCompanyUserDraftBill',
+			type : "POST",
+			data : {status:1, page:page, pageSize:pageSize},
+			success : function(data) {
+				if(data == null) return;
+				$('#retData').empty();
+				data.sort(function(a,b){return a.create_time<b.create_time?1:-1});
+				for(var i=0; i<data.length; i++) {
+					$('#retData').append("<div class='row-fluid show-grid td'><div class='span1'><p class='text-hide data-checkbox'><input type='checkbox' value='"+data[i].invoice_id+"' class='data-check-invoice-id'></p></div><div class='span3'><p class='text-hide data-invoice-id'>"+data[i].invoice_id+"</p></div><div class='span3'><p class='text-hide data-create-time'>"+data[i].create_time+"</p></div><div class='span3'><p class='text-hide data-invoice-code'>"+(data[i].invoice_code == null || data[i].invoice_code == '' ? "无" : data[i].invoice_code)+"</p></div><div class='span3'><p class='text-hide data-type-name'>"+data[i].expense_type_name+"</p></div><div class='span3'><p class='text-hide data-amount'>"+data[i].amount+"</p></div><div class='span4'><p class='text-hide data-desc'>"+(data[i].desc == null || data[i].desc == '' ? "无" : data[i].desc)+"</p></div><div class='span3'><a href='javascript:void(0)' class='dataEdit'>修改</a><a href='javascript:void(0)' class='dataDel'>删除</a></div></div>");
+				}
+				bindOperation();
+				bindCheck();
+			}
+		});
+		$.ajax({
+			url : '/getAllExpenseType',
+			type : "POST",
+			data : {},
+			success : function(data) {
+				if(data == null) return;
+				var options = '';
+				for(var i=0; i<data.length; i++) {
+					options += "<option value='"+data[i].value+"'>"+data[i].name+"</option>";
+				}
+				expenseTypeSelect = "<select id='expenseSelect' name='expenseSelect' class='input input-small'>"+options+"</select>";
+			}
+		});
+		
+		function bindCheck() {
+			$(".data-check-invoice-id").die().live("click",function(){
+				var invoiceId = $(this).val();
+				if ($(this).is(':checked')) {
+					invoiceIdList.push(invoiceId);
+				} else {
+					for(var i=0; i<invoiceIdList.length; i++) {
+						if(invoiceIdList[i] === invoiceId) {
+							invoiceIdList.splice(i, 1);
+							break;
+						}
+					}
+				}
+			})
+		}
+		
+		function onePressSubmit() {
+			if(invoiceIdList.length == 0) {
+				alert('请先勾选需要提交审核的发票！');
+				return;
+			}
+			$.ajax({
+				url : '/companyUser/submitInvoiceAudit',
+				type : "POST",
+				data : {invoiceIdList:invoiceIdList.join(",")},
+				success : function(data) {
+					if(data == null) return;
+					var options = '';
+					for(var i=0; i<data.length; i++) {
+						options += "<option value='"+data[i].value+"'>"+data[i].name+"</option>";
+					}
+					expenseTypeSelect = "<select id='expenseSelect' name='expenseSelect' class='input input-small'>"+options+"</select>";
+				}
+			});
+		}
+		
+		function bindOperation() {
+			// 编辑
+            $(".dataEdit").die().live("click",function(){
+                var par=$(this).parent().parent(),d={};
+
+                d={
+                    'invoice_id' : par.find(".data-invoice-id").text(),
+                    "create_time" : par.find(".data-create-time").text(),
+                    "invoice_code" : par.find(".data-invoice-code").text(),
+                    "amount" : par.find(".data-amount").text(),
+                    "expense_type_name" : par.find(".data-type-name").text(),
+                    "desc" : par.find(".data-desc").text()
+                }
+                var tempHtml = par.html();
+                par.empty().append(txtTemplate(d,false));
+                $("select[name='costType']").val(d.costType);
+
+                $("#cancelEdit").on("click",function(){
+                    par.empty().append(tempHtml);
+                })
+            })
+            // 保存
+            $(".dataSave").die().live("click",function(){
+                var par=$(this).parent().parent(),d={};
+
+                d={
+                    'invoice_id' : par.find("input[name='invoice-id']").val(),
+                    "create_time" : par.find("input[name='create-time']").val(),
+                    "invoice_code" : par.find("input[name='invoice-code']").val(),
+                    "amount" : par.find("input[name='amount']").val(),
+                    "expense_type_name" : par.find("select[name='expenseSelect'] option:selected").text(),
+                    "expense_type_val" : par.find("select[name='expenseSelect'] option:selected").val(),
+                    "desc" : par.find("textarea[name='desc']").val(),
+                }
+                var re = /^\d+(\.\d)?$/;
+                if(!re.test(d.amount)) {
+                	alert('金额只能是数字，请检查！');
+                	return;
+				}
+                var tempHtml = par.html();
+                par.empty().append(txtTemplate(d,true));
+                $.ajax({
+        			url : '/companyUser/updateInvoiceInfo',
+        			type : "POST",
+        			data : {amount:d.amount,expenseTypeId:d.expense_type_val,detailDesc:d.desc,invoiceCode:d.invoice_code,invoiceId:d.invoice_id},
+        			success : function(data) {
+        				if(data == null) return;
+        				var options = '';
+        				for(var i=0; i<data.length; i++) {
+        					options += "<option value='"+data[i].value+"'>"+data[i].name+"</option>";
+        				}
+        				expenseTypeSelect = "<select id='expenseSelect' name='expenseSelect' class='input input-small'>"+options+"</select>";
+        			}
+        		});
+            });
+            // 删除
+            $(".dataDel").die().live("click",function(){
+            	var par=$(this).parent().parent();
+            	var parParent=$(this).parent().parent().parent();
+            	if(confirm('确定删除吗?')){
+            		par.remove();
+                }
+            })
+		}
+		
+        //侧栏高度
+        (function(){
+            var H=$(window).height();
+            var h1=$(".side-bar-top").height()+$(".side-bar-bottom").height();
+            $(".side-bar-content").height(H-h1);
+            $(window).resize(function(){
+                H=$(window).height();
+                $(".side-bar-content").height(H-h1);
+            });
+        })()
+        function txtTemplate(d,txt){
+            return txt ? $('<div class="span1"><p class="text-hide data-checkbox"><input type="checkbox"></p></div>' +
+            '<div class="span3">'+
+            '<p class="text-hide data-invoice-id">'+d.invoice_id+'</p>'+
+            '</div>'+
+            '<div class="span3">'+
+            '<p class="text-hide data-create-time">'+d.create_time+'</p>'+
+            '</div>'+
+            '<div class="span3">'+
+            '<p class="text-hide data-invoice-code">'+d.invoice_code+'</p>'+
+            '</div>'+
+            '<div class="span3">'+
+            '<p class="text-hide data-costType">'+d.expense_type_name+'</p>'+
+            '</div>'+
+            '<div class="span3">'+
+            '<p class="text-hide data-amount">'+d.amount+'</p>'+
+            '</div>'+
+            '<div class="span4">'+
+            '<p class="text-hide data-desc">'+d.desc+'</p>'+
+            '</div>'+
+            '<div class="span3">'+
+            '<a href="javascript:void(0)" class="dataEdit">修改</a>'+
+            '<a href="javascript:void(0)" class="dataDel">删除</a>'+
+            '</div>') : $('<div class="span1"><p class="text-hide data-checkbox"><input type="checkbox"></p></div>' +
+            '<div class="span3">'+
+            '<input type="text" name="invoice-id" class="input input-small" value="'+d.invoice_id+'" disabled>'+
+            '</div>'+
+            '<div class="span3">'+
+            '<input type="text" name="create-time" class="input input-small calendar" value="'+d.create_time+'" disabled>'+
+            '</div>'+
+            '<div class="span3">'+
+            '<input type="text" name="invoice-code" class="input input-small" value="'+d.invoice_code+'" >'+
+            '</div>'+
+            '<div class="span3">'+ expenseTypeSelect +
+            '</div>'+
+            '<div class="span3">'+
+            '<input type="text" name="amount" class="input input-small" value="'+d.amount+'" >'+
+            '</div>'+
+            '<div class="span5">'+
+            '<textarea name="desc" class="input span23">'+d.desc+'</textarea>'+
+            '</div>'+
+            '<div class="span3">'+
+            '<a href="javascript:void(0)" class="button button-success button-mini dataSave">保存</a>'+
+            '<a href="javascript:void(0)" id="cancelEdit">取消</a>'+
+            '</div>');
+        }
+        //竖状菜单
+        var menu = new menuTree(
+            {"nodes" : [
+					{text : '发票上传',id : '',href:"/views/webviews/companyUser/expense_account_upload.html", leaf:true, children: []},
+					{text : '发票草稿箱',id : '',href:"/views/webviews/companyUser/expense_account_history.html", leaf:true, children: []},
+					{text : '新建报销单',id : '',href:"/views/webviews/companyUser/create_invoice.html", leaf:true, children: []},
+					{text : '待审核报销单',id : '',href:"/views/webviews/companyUser/", leaf:true, children: []},
+					{text : '已审核报销单',id : '',href:"/views/webviews/companyUser/", leaf:true, children: []},
+					{text : '报销单历史',id : '',href:"/views/webviews/companyUser/", leaf:true, children: []},
+					{text : '审核发票',id : '',href:"javascript:void(0);",  leaf:false, expanded : true,children: [
+						{text : '待审核发票',id : '', href:"/views/webviews/companyUser/"},
+						{text : '已审核发票',id : '', href:"/views/webviews/companyUser/"}                                                   
+					]}
+                ]
+            },"menuTree"
+        );
+	</script>
+</body>
+</html>

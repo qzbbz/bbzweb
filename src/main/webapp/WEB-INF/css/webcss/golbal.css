@@ -277,7 +277,8 @@ h6,
   font-size: 12px;
 }
 p {
-  margin: 0 0 10px;
+  padding: 0;
+  margin: 0;
 }
 .lead {
   margin-bottom: 20px;
@@ -552,7 +553,6 @@ a {
 a:hover,
 a:focus {
   color: #086b9d;
-  text-decoration: underline;
 }
 a:focus {
   outline: thin dotted;
@@ -2018,7 +2018,6 @@ fieldset[disabled] .x-icon-question.active {
   color: #333333;
 }
 .panel {
-  margin-bottom: 20px;
   background-color: #ffffff;
   border: 2px solid transparent;
   border-radius: 3px;
@@ -2974,7 +2973,6 @@ fieldset[disabled] .button-link {
 .button-link:hover,
 .button-link:focus {
   color: #086b9d;
-  text-decoration: underline;
   background-color: transparent;
 }
 .button-link[disabled]:hover,
@@ -3526,6 +3524,7 @@ input.calendar-time {
 }
 .form-horizontal .control-group {
   *zoom: 1;
+  padding: 5px 0;
 }
 .form-horizontal .control-group:before,
 .form-horizontal .control-group:after {
@@ -3595,7 +3594,6 @@ input.calendar-time {
 }
 .form-horizontal .control-row-auto {
   height: auto;
-  padding-bottom: 20px;
 }
 .form-horizontal .control-row-auto .well {
   margin-bottom: 0;

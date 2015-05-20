@@ -48,7 +48,7 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 	}
 	@Override
 	public Invoice getInvoiceByIdAndStatus(long invoiceId,int status){
-		String sql = "select * from invoice where id = ? and status = ?";
+		String sql = "select * from invoice where id = ? and commit_status = ?";
 		try {
 			Invoice invoice = jdbcTemplate.queryForObject(sql,
 					new Object[] { invoiceId,status }, new InvoiceMapper());
@@ -74,7 +74,7 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 			int id = jdbcTemplate.update(new PreparedStatementCreator() {
 				public PreparedStatement createPreparedStatement(
 						Connection connection) throws SQLException {
-					String sql = "insert into invoice (expense_type_id,status,title,amount,detail_desc,date,cost_center,create_time)"
+					String sql = "insert into invoice (expense_type_id,commit_status,title,amount,detail_desc,date,cost_center,create_time)"
 							+ " values (?, ?, ?, ?, ?, ?, ?, ?)";
 					PreparedStatement ps = connection.prepareStatement(sql,
 							Statement.RETURN_GENERATED_KEYS);
@@ -122,11 +122,12 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 
 	@Override
 	public boolean updateInvoice(Invoice invoice) {
-		String sql = "update invoice set title=?, amount=?, date=? ,detail_desc=? ,expense_type_id=? where id=?";
+		String sql = "update invoice set title=?, invoice_code=?, amount=?, date=? ,detail_desc=? ,expense_type_id=? where id=?";
 		try {
 			int affectedRows = jdbcTemplate.update(
 					sql,
 					invoice.getTitle() == null ? "" : invoice.getTitle(),
+					invoice.getInvoiceCode() == null ? "" : invoice.getInvoiceCode(),
 					invoice.getAmount()==null?0:invoice.getAmount(),
 					invoice.getDate() == null ? new Timestamp(System
 							.currentTimeMillis()) : invoice.getDate(), 
@@ -144,8 +145,7 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 	
 	@Override
 	public List<Invoice> getUserInvoiceByStatus(String userId,String status){
-		String sql = "select a.id id,expense_type_id,status,title,amount,detail_desc,date " +
-					" from user_invoice b, invoice a where b.user_id=? and b.invoice_id = a.id and a.status=?";
+		String sql = "select a.id, a.commit_status, a.invoice_code, a.expense_type_id, a.title, a.amount, a.detail_desc, a.date, a.cost_center, a.identify_status, a.create_time from user_invoice b, invoice a where b.user_id=? and b.invoice_id = a.id and a.commit_status=?";
 		try {
 			List list = jdbcTemplate.query(sql,
 					new Object[] { userId,status },new RowMapperResultSetExtractor<Invoice>(
@@ -162,8 +162,8 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 	public List<Invoice> getUserInvoiceByStatusByPage(String userId,
 			String status, int begin, int end) {
 		
-		String sql = "select a.id id,expense_type_id,status,title,amount,detail_desc,date " +
-				" from user_invoice b, invoice a where b.user_id=? and b.invoice_id = a.id and a.status=? limit ? and ?";
+		String sql = "select a.id id,expense_type_id,commit_status,title,amount,detail_desc,date " +
+				" from user_invoice b, invoice a where b.user_id=? and b.invoice_id = a.id and a.commit_status=? limit ? and ?";
 	try {
 		List list = jdbcTemplate.query(sql,
 				new Object[] { userId,status,begin,end },new RowMapperResultSetExtractor<Invoice>(
@@ -178,7 +178,7 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 	
 	@Override
 	public boolean updateInvoiceStatus(long invoiceId,int status) {
-		String sql = "update invoice set status=? where id=?";
+		String sql = "update invoice set commit_status=? where id=?";
 		try {
 			int affectedRows = jdbcTemplate.update(
 					sql,status,invoiceId);

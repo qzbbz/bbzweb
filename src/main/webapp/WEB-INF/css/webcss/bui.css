@@ -210,8 +210,6 @@
 }
 .button-tabs .bui-tab-item,
 .button-tabs li {
-  width: 120px;
-  height: 60px;
   display: block;
   margin: 0;
   border-top: 1px solid #212326;
@@ -222,20 +220,16 @@
 .button-tabs .bui-tab-item-text {
   position: relative;
   display: block;
-  width: 120px;
-  height: 60px;
 }
 .button-tabs .bui-tab-item-hover {
   background-color: #212326;
   border-left: 3px solid #bbe9c7;
   margin-left: -3px;
-  border-top: 0;
-  padding-top: 1px;
+  border-top: 1px solid #212326;
 }
 .button-tabs .bui-tab-item-selected {
   color: #ffffff;
-  border-top: 0;
-  padding-top: 1px;
+  border-top: 1px solid #212326;
   border-left: 3px solid #bbe9c7;
   margin-left: -3px;
 }
@@ -612,14 +606,14 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  background: #fafafa;
 }
 .bui-dialog .bui-stdmod-body {
   padding: 15px;
 }
 .bui-dialog .bui-stdmod-footer {
-  padding: 15px;
+  padding: 0 15px 15px;
   text-align: right;
-  border-top: 1px solid #e5e5e5;
   *zoom: 1;
 }
 .bui-dialog .bui-stdmod-footer:before,

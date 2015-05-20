@@ -1,5 +1,6 @@
 package com.wisdom.invoice.controller;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -89,7 +90,9 @@ public class InvoiceUpdateController {
 		for(String s:invoiceList){
 			long invoiceId = Long.parseLong(s);
 			Map retMap = new HashMap<String,Object>();
-			retMap = invoiceService.submitUserInvoice(userId, invoiceId, null);
+			Map<String, String> params = new HashMap<>();
+			params.put("date", new Timestamp(System.currentTimeMillis()).toString());
+			retMap = invoiceService.submitUserInvoice(userId, invoiceId, params);
 			if(null != retMap && ((Boolean)retMap.get("success")).booleanValue()){
 				log.info("invoiceId:" + invoiceId +" submit success");
 				result.setResultCode(ResultCode.success.code);

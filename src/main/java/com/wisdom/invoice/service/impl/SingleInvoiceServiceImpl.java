@@ -24,7 +24,8 @@ public class SingleInvoiceServiceImpl implements ISingleInvoiceService {
 	@Override
 	public boolean updateInvoiceInfo(long invoiceId,String desc,String title,double amount ,long expenseType,
 				int status,String date){
-		Invoice invoice = new Invoice();
+		Invoice invoice = invoiceDao.getInvoiceById(invoiceId);
+		if(invoice == null) invoice = new Invoice();
 		invoice.setAmount(amount);
 		invoice.setTitle(title);
 		invoice.setDesc(desc);
@@ -71,6 +72,14 @@ public class SingleInvoiceServiceImpl implements ISingleInvoiceService {
 		}
 		if(params.containsKey("detailDesc") && !params.get("detailDesc").isEmpty()) {
 			invoice.setDesc(params.get("detailDesc"));
+			shouldUpdate = true;
+		}
+		if(params.containsKey("invoiceCode") && !params.get("invoiceCode").isEmpty()) {
+			invoice.setInvoiceCode(params.get("invoiceCode"));
+			shouldUpdate = true;
+		}
+		if(params.containsKey("date") && !params.get("date").isEmpty()) {
+			invoice.setDate(new Timestamp(System.currentTimeMillis()));
 			shouldUpdate = true;
 		}
 		if(shouldUpdate) {

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>上海元升财务咨询有限公司</title>
+    <link rel="stylesheet" type="text/css" href="/css/webcss/bui.css">
+	<link rel="stylesheet" type="text/css" href="/css/webcss/golbal.css">
+	<link rel="stylesheet" type="text/css" href="/css/webcss/layout.css">
+</head>
+<body>
+	<div class="wrap">
+		<div class="side-bar">
+			<div class="side-bar-top">
+				<img src="/img/webimg/bss-logo.png" >
+				<h1>上海元升财务咨询有限公司</h1>
+			</div>
+            <div class="side-bar-content"></div>
+			<div class="side-bar-bottom">
+				<ul>
+					<li><a href=""><i class="setting"></i>设置</a></li>
+					<li><a href="/logout"><i class="exit"></i>安全退出</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="main">
+			<div class="menu"><a href="javascript:void(0)" class="active">待审核报销单</a></div>
+			<div class="well mt20">
+				<div class="form-horizontal onlineTools">
+					<div class="row show-grid">
+						<label class="control-label control-label-small"></label>
+                        <div class="controls"><select name="condition" id="condition" class="input input-normal"><option value='0'>所有</option></select><input type="text" id="content" class="input input-normal ml10"><button onclick="searchData();" class="button button-success ml10">搜索</button></div>
+					</div>
+				</div>
+			</div>
+			<table class="table center">
+	    		<colgroup>
+	    			<col style="width:16%;">
+	    			<col style="width:16%;">
+	    			<col style="width:16%;">
+	    			<col style="width:16%;">
+	    			<col style="width:16%;">
+	    		</colgroup>
+	    		<thead>
+	    			<tr>
+	    				<th>ID号</th>
+	    				<th>上传日期</th>
+	    				<th>成本中心</th>
+	    				<th>识别状态</th>
+	    				<th>发票预览</th>
+	    			</tr>
+	    		</thead>
+	    		<tbody id="retData">
+	    		</tbody>
+	    	</table>
+	    	<div class="pagination"></div>
+		</div>
+	</div>
+<!--该js需要修改js路径及修改seajs路径-->
+<script src="http://g.tbcdn.cn/fi/bui/jquery-1.8.1.min.js"></script>
+<script src="http://g.alicdn.com/bui/seajs/2.3.0/sea.js"></script>
+<script src="http://g.alicdn.com/bui/bui/1.1.17/config.js"></script>
+<script type="text/javascript">
+	var page = 1;
+	var pageSize = 1000;
+	$.ajax({
+		url : '/companyUser/getAllCompanyUserDraftBill',
+		type : "POST",
+		data : {status:1, page:page, pageSize:pageSize},
+		success : function(data) {
+			if(data == null) return;
+			$('#retData').empty();
+			data.sort(function(a,b){return a.create_time<b.create_time?1:-1});
+			for(var i=0; i<data.length; i++) {
+				$('#retData').append("<tr><td>"+data[i].invoice_id+"</td><td>"+data[i].create_time+"</td><td>"+data[i].cost_center+"</td><td>"+data[i].identify_status+"</td><td><a href='"+data[i].file_name+"'>点击预览发票</a></td></tr>");
+			}
+		}
+	});
+	function searchData() {
+		var conditionType = $('#condition option:selected').val();
+		var conditionValue = $('#content').val();
+		if(conditionType != '0' && (conditionValue == null || conditionValue == '')) {
+			alert('请输入检索内容！');
+			return;
+		}
+	}
+	//侧栏高度
+    (function(){
+        var H=$(window).height();
+        var h1=$(".side-bar-top").height()+$(".side-bar-bottom").height();
+        $(".side-bar-content").height(H-h1);
+        $(window).resize(function(){
+            H=$(window).height();
+            $(".side-bar-content").height(H-h1);
+        });
+    })()
+	//竖状菜单
+    BUI.use('bui/tree',function (Tree) {
+        var menu = new Tree.TreeMenu({
+        render : '.side-bar-content',
+
+        elCls : 'bui-side-menu', 
+        itemCls : 'bui-menu-item',
+        expandAnimate : true,
+        showIcons : false,
+
+        dirTpl : '<li class="menu-leaf menu-second"><div class="bui-menu-title"><s></s><span class="bui-menu-title-text"><a href="{href}">{text}</a></span></div></li>',
+        leafTpl : '<li class="menu-leaf"><a href="{href}">{text}</a></li>',
+
+        nodes : [
+	  				{text : '发票上传',id : '',href:"/views/webviews/companyUser/expense_account_upload.html", leaf:true, children: []},
+	  				{text : '发票草稿箱',id : '',href:"/views/webviews/companyUser/expense_account_history.html", leaf:true, children: []},
+	  				{text : '新建报销单',id : '',href:"#", leaf:true, children: []},
+	  				{text : '待审核报销单',id : '',href:"#", leaf:true, children: []},
+	  				{text : '已审核报销单',id : '',href:"#", leaf:true, children: []},
+	  				{text : '报销单历史',id : '',href:"#", leaf:true, children: []},
+	  				{text : '审核发票',id : '',href:"#",  leaf:false, expanded : false,children: [
+	  					{text : '待审核发票',id : '', href:"#"},
+	  					{text : '已审核发票',id : '', href:"#"}                                                   
+	  				]},
+	  				
+	  	            ]
+	  	    	});
+   		menu.render();
+		$.each($("li.menu-second"),function(){
+			var that = $(this);
+			if(that.next().hasClass("menu-second")){
+				that.find("s").remove();
+			}
+		})
+        menu.on('itemclick',function(ev){
+            $('.log').text(ev.item.text);
+        }); 
+    });
+</script>
+</body>
+</html>
