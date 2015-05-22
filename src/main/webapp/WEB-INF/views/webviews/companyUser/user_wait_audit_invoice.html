@@ -76,7 +76,7 @@
 			$('#retData').empty();
 			data.sort(function(a,b){return a.bill_date<b.bill_date?1:-1});
 			for(var i=0; i<data.length; i++) {
-				$('#retData').append("<tr><td>"+data[i].invoice_id+"</td><td>"+data[i].bill_date+"</td><td>"+data[i].approval_name+"</td><td>"+data[i].bill_expenseTypeName+"</td><td>"+data[i].bill_amount+"</td><td>"+data[i].bill_desc+"</td><td><a href='"+data[i].bill_img+"'>点击预览发票</a></td></tr>");
+				$('#retData').append("<tr><td>"+data[i].invoice_id+"</td><td>"+data[i].bill_date+"</td><td>"+data[i].approval_name+"</td><td>"+data[i].bill_expenseTypeName+"</td><td>"+data[i].bill_amount+"</td><td><p title='"+data[i].bill_desc+"'>"+(data[i].bill_desc.length>8?data[i].bill_desc.substr(0,8)+"...":data[i].bill_desc)+"</p></td><td><a href='"+data[i].bill_img+"'>点击预览发票</a></td></tr>");
 			}
 		}
 	});

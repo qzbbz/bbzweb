@@ -51,7 +51,7 @@ a:hover{ text-decoration: none;}
 .bui-menu-item-expanded { background: #ff0;}
 
 /**/
-.form-window{ width: 560px; height: 300px; border: 3px solid #bbe9c7; border-radius: 3px; padding: 50px 20px; text-align: center; background: rgba(255,255,255,1); margin: 0 auto; position: relative;}
+.form-window{ width: 560px; height: 300px; border: 3px solid #bbe9c7; border-radius: 3px; padding: 50px 20px; text-align: center; background: rgba(255,255,255,1); margin: 0 auto; position: relative; top: 100px; }
 .form-window .hd i{ width: 80px; height: 80px; border-radius: 40px; background: #ef6d44; text-align: center; font-size: 36px; line-height: 80px; overflow: hidden; color: #fff; display: block; margin: 0 auto;}
 .form-window .bd{ padding: 20px 0 0;}
 .form-window .bd h2{ font-size: 18px; line-height: 30px; color: #4d4d4d; padding: 10px 0;}
@@ -91,7 +91,7 @@ a:hover{ text-decoration: none;}
 .graphic-wrap i{ font-size: 30px; position: absolute; left: 30px; top: 25px;}
 .graphic-wrap a{ color: #4d4d4d; display: inline-block; padding: 20px 60px; border-radius: 3px; background: none; transition: background 0.6s;}
 /*动画背景*/
-.zero-state { position: relative; height: 100%; padding: 0 40px; background-color: #ffffff; background-image: url(../../img/webimg/zero-state-bg1.svg), url(../../img/webimg/zero-state-bg2.svg); background-size: 2000px 400px; background-position: 0px 40px, 0px 40px; background-repeat: repeat-x, repeat-x;
+.zero-state { position: relative;/* height: 100%;*/ height: auto; padding: 0 50px 100px; background-color: #ffffff; background-image: url(../../img/webimg/zero-state-bg1.svg), url(../../img/webimg/zero-state-bg2.svg); background-size: 2000px 400px; background-position: 0px 40px, 0px 40px; background-repeat: repeat-x, repeat-x;
 -webkit-transform: translate3d(0, 0, 0);
 -moz-transform: translate3d(0, 0, 0);
 -o-transform: translate3d(0, 0, 0);
@@ -177,7 +177,8 @@ transform: translate3d(0, 0, 0);
 #playBox .smalltitle ul{ width:120px; margin:0 auto;}
 #playBox .smalltitle ul li{ width:10px; height:10px; margin:0 5px; border-radius:10px; background:#e6e6e6; float:left; overflow:hidden;*display:inline;*zoom:1; cursor: pointer;}
 #playBox .smalltitle .thistitle{ background:#5da09a;}
-
+/*文字隐藏*/
+.text-hide{ height: 20px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 /*模拟checkbox*/
 .checkbox-con{ position: absolute; width: 200px; height: 200px; top: 0; right: 0; z-index: 99999;}
 .checkbox-con .checkbox,.checkbox-con .cur{ width: 200px; height: 200px; display: block;}
@@ -185,8 +186,7 @@ transform: translate3d(0, 0, 0);
 .checkbox-con .cur i{ background-position: 0 -142px;}
 .checkbox-con .ipt-hide{position: absolute;width: 0;height: 0;border: none; top: -50px; right: 0;}
 /*模拟表格样式*/
-.text-hide{}/*
-.th{ border-bottom: 1px solid #e6e6e6; padding: 5px;}
+/*.th{ border-bottom: 1px solid #e6e6e6; padding: 5px;}
 .td{ border-bottom: 1px solid #e6e6e6; background: #fff; padding: 5px;}
 .td a{ margin-left: 10px;}
 .td a:first-child{ margin-left: 0;}*/
@@ -201,8 +201,6 @@ transform: translate3d(0, 0, 0);
 /*表单布局*/
 .control-btn .control-label{ min-height: 30px}
 .control-btn .controls{ padding: 10px 0;}
-
-
 /*上传控件*/
 .file { position: relative; display: inline-block; background: #e5e5e5; border: 1px solid #ccc; border-radius: 3px;    padding: 4px 12px; overflow: hidden; color: #4d4d4d; text-decoration: none; text-indent: 0; line-height: 20px; cursor: pointer;}
 .file input { position: absolute; font-size: 100px; right: 0; top: 0; opacity: 0; cursor: pointer;}

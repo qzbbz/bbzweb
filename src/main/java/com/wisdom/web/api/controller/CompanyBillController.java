@@ -31,15 +31,19 @@ public class CompanyBillController {
 	private IUserService userService;
 	
 	@RequestMapping("/company/uploadCompanyBill")
-	@ResponseBody
-	public Map<String, String> uploadCompanyBill(@RequestParam("files") MultipartFile file, HttpServletRequest request) {
+	public String uploadCompanyBill(@RequestParam("files") MultipartFile file, HttpServletRequest request) {
 		String userId = (String) request.getSession().getAttribute("userId");
 		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/files/company");
 		Map<String, String> params = new HashMap<>();
 		params.put("userId", userId);
 		params.put("realPath", realPath);
 		logger.debug("params : {}", params.toString());
-		return companyBillApi.uploadCompanySalary(params, file);
+		Map<String, String> retMap = companyBillApi.uploadCompanySalary(params, file); 
+		if(("0").equals(retMap.get("error_code"))) {
+			return "redirect:/views/webviews/company/operate_success.html";
+		} else {
+			return "redirect:/views/webviews/company/operate_fail.html";
+		}
 	}
 	
 	@RequestMapping("/company/getAllCompanyBill")

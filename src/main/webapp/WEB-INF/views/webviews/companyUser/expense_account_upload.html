@@ -20,7 +20,8 @@
 			<div class="side-bar-content" id="menuTree"></div>
 			<div class="side-bar-bottom">
 				<ul>
-					<li><a href="javascript:void(0)" id="sysSettings"><i class="setting"></i>设置</a></li>
+					<li><a href="javascript:void(0)" id="sysSettings"><i
+							class="setting"></i>设置</a></li>
 					<li><a href="/logout"><i class="exit"></i>安全退出</a></li>
 				</ul>
 			</div>
@@ -32,71 +33,43 @@
 						<i class="iconfont">&#xe627;</i>
 					</div>
 					<div class="bd">
-						<h2>上传发票</h2>
-						<p>
-							这里您可以上传需要报销的发票
-						</p>
-						<form id="billUpload" action="/companyUser/uploadCompanyUserBill" method="POST"	enctype="multipart/form-data">
-							<input type="file" id="billFile" name="files" class="ml10">
-							<a href="javascript:uploadCompanyBill();" class="button button-success">拍照上传发票</a> <a href="javascript:uploadCompanyBill();"
-							class="button button-success">扫描上传发票</a>
+						<h2>您可以在这里上传您的发票图片文件</h2>
+						<p>请先选择文件，再点击上传按钮</p>
+						<form id="billUpload" action="/companyUser/uploadCompanyUserBill"
+							method="POST" enctype="multipart/form-data">
+							<div id="fileInfo" style="height: 50px;" class="text-primary"></div>
+							<a href="javascript:;" class="file button button-success">选择发票图片文件
+								<input type="file" id="billFile" name="files">
+							</a> <a href="javascript:uploadCompanyUserBill();"
+								class="button button-success">上传发票图片文件</a>
 						</form>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="mt20">
-           <div id="tabContents" class="hide">
-                                <div id="tabDiv" class="mt10 clearfix layer-tabs">                      
-                                    <div id="tab" class="tabs-menu"></div>
-                                    <div id="panel" class="tabs-box">
-                                        <div class="tabs-box-content">
-                                            <div class="form-horizontal">
-                                                <div class="control-group">
-                                                    <label class="control-label control-label-small">城市：</label>
-                                                    <div class="controls bui-form-group-select" data-type="city">
-                                                      <select class="input-small" value="山东省"><option>省份</option></select>&nbsp;&nbsp;
-                                                      <select class="input-small"><option>城市</option></select>
-                                                    </div>
-                                                </div>
-                                                <div class="control-group">
-                                                    <label class="control-label control-label-small"><s>*</s>店铺名称：</label>
-                                                    <div class="controls">
-                                                      <input name="sname" type="text" class="input-large" data-rules="{required : true}">
-                                                    </div>
-                                                </div>
-                                                <div class="control-group">
-                                                    <label class="control-label control-label-small"><s>*</s>地址：</label>
-                                                    <div class="controls">
-                                                      <input type="text" class="input-large" data-rules="{required : true}">
-                                                    </div>
-                                                </div>
-                                                <div class="control-group">
-                                                    <label class="control-label control-label-small"><s>*</s>电话：</label>
-                                                    <div class="controls">
-                                                      <input type="text" class="input-large" data-rules="{required : true}">
-                                                    </div>
-                                                </div>
-                                                <div class="control-group">
-                                                    <label class="control-label control-label-small">公交：</label>
-                                                    <div class="controls control-row-auto">
-                                                      <textarea name="" id="" class="control-row4 input-large"></textarea>
-                                                    </div>
-                                                </div>
-                                                <div class="control-group control-btn"> 
-                                                    <label class="control-label control-label-small"></label>
-                                                    <div class="controls">
-                                                        <button type="submit" class="button button-normal button-primary">保存</button><button type="reset" class="button button-normal ml10">重置</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="tabs-box-content"> 第二个面板 </div>
-                                        <div class="tabs-box-content">第三个面板</div>
-                                    </div>
-                                </div>
-                            </div>
-        </div>
+
+		<div id="contentTabs" class="hide">
+			<div id="tabDiv" class="clearfix layer-tabs">
+				<div id="tab" class="tabs-menu"></div>
+				<div id="panel" class="tabs-box">
+					<div class="layer-wrap layer-wrap-simple">
+						<div class="layer-wrap-menu">邮箱密码修改</div>
+						<div class="layer-wrap-content">
+							<div class="bd">
+								<p>
+									<input class="input" placeholder="请输入常用邮箱">
+								</p>
+								<p>
+									<a href="" class="button button-success">确定提交</a>
+								</p>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
 	</div>
 	<!--该js需要修改js路径及修改seajs路径-->
 	<script src="http://g.tbcdn.cn/fi/bui/jquery-1.8.1.min.js"></script>
@@ -104,13 +77,23 @@
 	<script src="http://g.alicdn.com/bui/bui/1.1.17/config.js"></script>
 	<script src="/js/webjs/menuTree.js"></script>
 	<script type="text/javascript">
-		function uploadCompanyBill() {
+		function uploadCompanyUserBill() {
 			if($('#billFile').val() == null || $('#billFile').val() == '') {
-				alert('请先选择文件再上传！');
+				BUI.use('bui/overlay',function(overlay){
+					  function show () {
+					    BUI.Message.Alert('请先选择需要上传的图片文件。',function(){
+					    },'warning');
+					  }
+					  show();
+					      
+					});
 				return;
 			}
 			$('#billUpload').submit();
 		}
+		$("#billFile").attr('onChange', $.browser.msie ? "$(this).data('onChange').apply(this)" : "")
+		.change( function(){if(!$.browser.msie)$(this).data('onChange').apply(this)} )
+		.data('onChange',function(){$("#fileInfo").html($("#billFile").val());});
 		//侧栏高度
         (function(){
             var H=$(window).height();
@@ -121,7 +104,7 @@
                 $(".side-bar-content").height(H-h1);
             });
         })()
-		
+		 //Tabs
         BUI.use(['bui/tab','bui/mask'],function(Tab){
             var tab = new Tab.TabPanel({
                 render : '#tab',
@@ -130,9 +113,7 @@
                 panelTpl : '<div class="panel"><p>{title}:{value}</p></div>',
                 autoRender: true,
                 children:[
-                    {title:'标签一',value:'1',selected : true},
-                    {title:'标签二',value:'2',selected : false},
-                    {title:'标签三',value:'3',selected : false}
+                    {title:'密码修改',value:'1',selected : true}
                 ]
             });
             tab.setSelected(tab.getItemAt(0));
@@ -143,10 +124,10 @@
             }).render();
             var tabDialog = new Overlay.Dialog({
                 // title:'标题',
-                width:800,
-                height:480,
+                width:720,
+                //height:400,
                 //配置DOM容器的编号
-                contentId:'tabContents',
+                contentId:'contentTabs',
                 buttons:[],
                 success:function () {
                     alert('确认');
@@ -154,7 +135,7 @@
                 }
             });
             $('#sysSettings').on('click',function () {
-              	var sender = $(this),
+              var sender = $(this),
                 type = sender.text(),
                 effect = {
                   effect : type,
@@ -166,11 +147,11 @@
                 var tabPar=$("#tabDiv").parent();
                 tabPar.prev().remove();
                 tabPar.find(".bui-stdmod-footer").remove();
-                tabPar.css({"padding":"0","margin-top":"-10px"});
+                tabPar.css({"padding":"0"});
                 console.log(tabPar.parent().find(".bui-ext-close"));
                 tabPar.parent().find(".bui-ext-close").css({
                     "left" : "0",
-                    "top" : "435px",
+                    "top" : "420px",
                     "width" : "120px",
                     "height" : "60px",
                     "border-top" : "1px solid #212326",
@@ -189,7 +170,7 @@
                     "font-size":"30px"
                 })
                 // icon css
-                var icon=['<i class="iconfont">&#xe634;</i>','<i class="iconfont">&#xe634;</i>','<i class="iconfont">&#xe634;</i>']
+                var icon=['<i class="iconfont">&#xe634;</i>','<i class="iconfont">&#xe634;</i>','<i class="iconfont">&#xe634;</i>','<i class="iconfont">&#xe634;</i>','<i class="iconfont">&#xe634;</i>','<i class="iconfont">&#xe634;</i>']
                 var ul_list = $("#tabDiv").find(".tab-panel-inner").find("ul").find("li");
                 $.each(ul_list,function(i){
                     $(this).append(icon[i]);

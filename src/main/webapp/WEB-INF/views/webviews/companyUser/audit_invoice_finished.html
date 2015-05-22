@@ -23,7 +23,7 @@
 			</div>
 		</div>
 		<div class="main">
-			<div class="menu"><a href="javascript:void(0)" class="active">待审核报销单</a></div>
+			<div class="menu"><a href="javascript:void(0)" class="active">审核报销单历史</a></div>
 			<div class="well mt20">
 				<div class="form-horizontal onlineTools">
 					<div class="row show-grid">
@@ -46,10 +46,11 @@
 	    			<tr>
 	    				<th>ID号</th>
 	    				<th>提交日期</th>
-	    				<th>审批人</th>
+	    				<th>申请人</th>
 	    				<th>费用类型</th>
 	    				<th>金额</th>
 	    				<th>详细描述</th>
+	    				<th>审核理由</th>
 	    				<th>发票预览</th>
 	    			</tr>
 	    		</thead>
@@ -68,15 +69,15 @@
 	var page = 1;
 	var pageSize = 1000;
 	$.ajax({
-		url : '/companyUser/getWaitInvoiceList',
+		url : '/companyUser/getFinishAuditInvoiceList',
 		type : "POST",
 		data : {},
 		success : function(data) {
 			if(data == null || data == '') return;
 			$('#retData').empty();
-			data.sort(function(a,b){return a.bill_date<b.bill_date?1:-1});
+			data.sort(function(a,b){return a.submit_time<b.submit_time?1:-1});
 			for(var i=0; i<data.length; i++) {
-				$('#retData').append("<tr><td>"+data[i].invoice_id+"</td><td>"+data[i].bill_date+"</td><td>"+data[i].approval_name+"</td><td>"+data[i].bill_expenseTypeName+"</td><td>"+data[i].bill_amount+"</td><td>"+data[i].bill_desc+"</td><td><a href='"+data[i].bill_img+"'>点击预览发票</a></td></tr>");
+				$('#retData').append("<tr><td>"+data[i].invoice_id+"</td><td>"+data[i].submit_time.substr(0, 10)+"</td><td>"+data[i].user_name+"</td><td>"+data[i].bill_expenseTypeName+"</td><td>"+data[i].bill_amount+"</td><td><p title='"+data[i].desc+"'>"+(data[i].desc.length>8?data[i].desc.substr(0,8)+"...":data[i].desc)+"</p></td><td><p title='"+data[i].reasons+"'>"+(data[i].reasons.length>8?data[i].reasons.substr(0,8)+"...":data[i].reasons)+"</p></td><td><a href='"+data[i].bill_img+"'>点击预览发票</a></td></tr>");
 			}
 		}
 	});

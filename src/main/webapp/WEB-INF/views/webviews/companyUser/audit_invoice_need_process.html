@@ -40,9 +40,9 @@
 										type="text" id="content" class="input input-normal ml10">
 									<button onclick="searchData();"
 										class="button button-success ml10">搜索</button>
-									<button onclick="onePressReject();"
+									<button onclick="onePressAudit(1);"
 										class="button button-danger ml10">一键审核拒绝</button>
-									<button onclick="onePressPass();"
+									<button onclick="onePressAudit(0);"
 										class="button button-success ml10">一键审核通过</button>
 								</div>
 							</div>
@@ -51,8 +51,8 @@
 					<div class="table text-center">
 						<div class="row-fluid show-grid th">
 							<div class="span1">&nbsp;</div>
-							<div class="span3">ID号</div>
 							<div class="span3">提交日期</div>
+							<div class="span3">提交人</div>
 							<div class="span3">费用类型</div>
 							<div class="span3">金额</div>
 							<div class="span3">详细描述</div>
@@ -72,7 +72,7 @@
 	<script type="text/javascript">
 		var page = 1;
 		var pageSize = 1000;
-		var invoiceIdList = new Array();
+		var invoiceList = new Array();
 		$.ajax({
 			url : '/companyUser/getNeedAuditInvoiceList',
 			type : "POST",
@@ -80,10 +80,10 @@
 			success : function(data) {
 				if(data == null || data == '') return;
 				$('#retData').empty();
-				alert(JSON.stringify(data));
+				//alert(JSON.stringify(data));
 				data.sort(function(a,b){return a.submit_time<b.submit_time?1:-1});
 				for(var i=0; i<data.length; i++) {
-					$('#retData').append("<div class='row-fluid show-grid td'><div class='span1'><p class='text-hide data-checkbox'><input type='checkbox' value='"+data[i].invoice_id+"' class='data-check-invoice-id'></p></div><div class='span3'><p class='text-hide data-invoice-id'>"+data[i].invoice_id+"</p></div><div class='span3'><p class='text-hide data-submit-time'>"+data[i].submit_time.substr(0, 10)+"</p></div><div class='span3'><p class='text-hide data-type-name'>"+(data[i].bill_expenseTypeName == null || data[i].bill_expenseTypeName == '' ? "无" : data[i].bill_expenseTypeName)+"</p></div><div class='span3'><p class='text-hide data-amount'>"+data[i].bill_amount+"</p></div><div class='span3'><p class='text-hide data-desc' title='"+(data[i].desc == null || data[i].desc == '' ? "无" : data[i].desc)+"'>"+(data[i].desc == null || data[i].desc == '' ? "无" : (data[i].desc.length > 8 ? data[i].desc.substr(0, 8) + "...":data[i].desc))+"</p></div><div class='span3'><p class='text-hide data-reasons' title='"+data[i].reasons+"'>"+(data[i].reasons > 8 ? data[i].reasons.substr(0,8)+"...":data[i].reasons)+"</p></div><div class='span2'><a class='data-img' href='"+data[i].bill_img+"'>点击查看</a></div><div class='span2'><a class='text-hide data-add-reasons' href='javascript:void(0)'>添加审核理由</a></div></div>");
+					$('#retData').append("<div class='row-fluid show-grid td'><div class='span1'><input type='checkbox' value='"+ data[i].invoice_id + "&" + data[i].user_id + "' class='data-check-invoice-id'></div><div class='span3'><p class='text-hide data-submit-time'>"+data[i].submit_time.substr(0, 10)+"</p></div><div class='span3'><p class='text-hide data-user-name'>"+data[i].user_name+"</p></div><div class='span3'><p class='text-hide data-type-name'>"+(data[i].bill_expenseTypeName == null || data[i].bill_expenseTypeName == '' ? "无" : data[i].bill_expenseTypeName)+"</p></div><div class='span3'><p class='text-hide data-amount'>"+data[i].bill_amount+"</p></div><div class='span3'><p class='text-hide data-desc' title='"+(data[i].desc == null || data[i].desc == '' ? "无" : data[i].desc)+"'>"+(data[i].desc == null || data[i].desc == '' ? "无" : (data[i].desc.length > 8 ? data[i].desc.substr(0, 8) + "...":data[i].desc))+"</p></div><div class='span3'><p class='text-hide data-reasons' title='"+data[i].reasons+"'>"+(data[i].reasons.length > 8 ? data[i].reasons.substr(0,8)+"...":data[i].reasons)+"</p></div><div class='span2'><a class='data-img' href='"+data[i].bill_img+"'>点击查看</a></div><div class='span2'><a class='text-hide data-add-reasons' href='javascript:void(0)'>添加审核理由</a></div></div>");
 				}
 				bindOperation();
 				bindCheck();
@@ -94,11 +94,11 @@
 			$(".data-check-invoice-id").die().live("click",function(){
 				var invoiceId = $(this).val();
 				if ($(this).is(':checked')) {
-					invoiceIdList.push($(this));
+					invoiceList.push($(this).parent().parent());
 				} else {
-					for(var i=0; i<invoiceIdList.length; i++) {
-						if($(invoiceIdList[i]).val() === invoiceId) {
-							invoiceIdList.splice(i, 1);
+					for(var i=0; i<invoiceList.length; i++) {
+						if($(invoiceList[i]).find(".data-check-invoice-id").val() === invoiceId) {
+							invoiceList.splice(i, 1);
 							break;
 						}
 					}
@@ -106,64 +106,53 @@
 			})
 		}
 		
-		function onePressPass() {
-			if(invoiceIdList.length == 0) {
-				alert('请先勾选需要提交审核的发票！');
+		function onePressAudit(status) {
+			if(invoiceList.length == 0) {
+				BUI.use('bui/overlay',function(overlay){
+				  function show () {
+				    BUI.Message.Alert('您还没有勾选审核的发票',function(){
+				    },'warning');
+				  }
+				  show();
+				      
+				});
 				return;
 			}
 			var temp = new Array();
-			for(var i=0; i<invoiceIdList.length; i++) {
-				temp.push($(invoiceIdList[i]).val());
-				$(invoiceIdList[i]).parent().parent().parent().remove();
+			for(var i=0; i<invoiceList.length; i++) {
+				var reasons = $(invoiceList[i]).find(".data-reasons").attr('title');
+				temp.push($(invoiceList[i]).find(".data-check-invoice-id").val() + "&" + reasons);
+				$(invoiceList[i]).remove();
 			}
 			$.ajax({
-				url : '/companyUser/submitInvoiceAudit',
+				url : '/companyUser/submitAuditResult',
 				type : "POST",
-				data : {invoiceIdList:temp.join(",")},
+				data : {invoiceIdList:temp.join(","), status:status},
 				success : function(data) {
-					if(data == null) return;
 				}
 			});
 		}
-		
-		function onePressReject() {
-			if(invoiceIdList.length == 0) {
-				alert('请先勾选需要提交审核的发票！');
-				return;
-			}
-			var temp = new Array();
-			for(var i=0; i<invoiceIdList.length; i++) {
-				temp.push($(invoiceIdList[i]).val());
-				$(invoiceIdList[i]).parent().parent().parent().remove();
-			}
-			$.ajax({
-				url : '/companyUser/submitInvoiceAudit',
-				type : "POST",
-				data : {invoiceIdList:temp.join(",")},
-				success : function(data) {
-					if(data == null) return;
-				}
-			});
-		}
-		
+		var checkInfo = '';
 		function bindOperation() {
 			// 编辑
-            $(".dataEdit").die().live("click",function(){
+            $(".data-add-reasons").die().live("click",function(){
                 var par=$(this).parent().parent(),d={};
 
                 d={
-                    'invoice_id' : par.find(".data-invoice-id").text(),
+                    'user_name' : par.find(".data-user-name").text(),
+                    'invoice_check__id' : par.find(".data-check-invoice-id").val(),
                     "submit_time" : par.find(".data-submit-time").text(),
                     "invoice_img" : par.find(".data-img").text(),
                     "amount" : par.find(".data-amount").text(),
                     "expense_type_name" : par.find(".data-type-name").text(),
-                    "desc" : par.find(".data-desc").text(),
-                    "reasons" : par.find(".data-reasons").text()
+                    "desc_snap" : par.find(".data-desc").text(),
+                    "desc" : par.find(".data-desc").attr('title'),
+                    "reasons_snap" : par.find(".data-reasons").text(),
+                    "reasons" : par.find(".data-reasons").attr('title'),
                 }
+                checkInfo = d.invoice_check__id;
                 var tempHtml = par.html();
                 par.empty().append(txtTemplate(d,false));
-                $("select[name='costType']").val(d.costType);
-
                 $("#cancelEdit").on("click",function(){
                     par.empty().append(tempHtml);
                 })
@@ -171,47 +160,20 @@
             // 保存
             $(".dataSave").die().live("click",function(){
                 var par=$(this).parent().parent(),d={};
-
                 d={
-                    'invoice_id' : par.find("input[name='invoice-id']").val(),
-                    "submit_time" : par.find("input[name='create-time']").val(),
+                    'user_name' : par.find("input[name='user-name']").val(),
+                    "submit_time" : par.find("input[name='submit-time']").val(),
                     "invoice_img" : par.find("input[name='invoice-code']").val(),
                     "amount" : par.find("input[name='amount']").val(),
-                    "expense_type_name" : par.find("input[name='expenseTypeName']").val(),
+                    "expense_type_name" : par.find("input[name='type-name']").val(),
                     "desc" : par.find("input[name='desc']").val(),
-                    "reasons" : par.find("input[name='reasons']").val()
+                    "reasons" : par.find("input[name='reasons']").val(),
+                    "desc_snap" : par.find("input[name='desc']").val().length > 8 ? par.find("input[name='desc']").val().substr(0,8)+"..." : par.find("input[name='desc']").val(),
+                    "reasons_snap" : par.find("input[name='reasons']").val().length > 8 ? par.find("input[name='reasons']").val().substr(0,8)+"...":par.find("input[name='reasons']").val()
                 }
                 var tempHtml = par.html();
                 par.empty().append(txtTemplate(d,true));
-                $.ajax({
-        			url : '/companyUser/updateInvoiceReasons',
-        			type : "POST",
-        			data : {userId:d.amount,expenseTypeId:d.expense_type_val,detailDesc:d.desc,invoiceCode:d.invoice_code,invoiceId:d.invoice_id},
-        			success : function(data) {
-        				if(data == null) return;
-        				var options = '';
-        				for(var i=0; i<data.length; i++) {
-        					options += "<option value='"+data[i].value+"'>"+data[i].name+"</option>";
-        				}
-        				expenseTypeSelect = "<select id='expenseSelect' name='expenseSelect' class='input input-small'>"+options+"</select>";
-        			}
-        		});
             });
-            // 删除
-            $(".dataDel").die().live("click",function(){
-            	var par=$(this).parent().parent();
-            	alert(par.html())
-            	var invoiceId=par.find(".data-invoice-id").text();
-            	if(confirm('确定删除吗?')){
-            		par.remove();
-            		$.ajax({
-            			url : '/companyUser/deleteInvoice',
-            			type : "POST",
-            			data : {invoiceId:invoiceId},
-            			success : function(data) {}
-            		});
-                }
-            })
 		}
 		
         //侧栏高度
@@ -225,47 +187,50 @@
             });
         })()
         function txtTemplate(d,txt){
-            return txt ? $('<div class="span1"><p class="text-hide data-checkbox"><input type="checkbox"></p></div>' +
+            return txt ? $('<div class="span1"><input type="checkbox" value="'+ checkInfo +'" class="data-check-invoice-id"></div>' +
             '<div class="span3">'+
-            '<p class="text-hide data-invoice-id">'+d.invoice_id+'</p>'+
+            '<p class="text-hide data-submit-time">'+d.submit_time+'</p>'+
             '</div>'+
             '<div class="span3">'+
-            '<p class="text-hide data-create-time">'+d.create_time+'</p>'+
+            '<p class="text-hide data-user-name">'+d.user_name+'</p>'+
             '</div>'+
             '<div class="span3">'+
-            '<p class="text-hide data-invoice-code">'+d.invoice_code+'</p>'+
-            '</div>'+
-            '<div class="span3">'+
-            '<p class="text-hide data-costType">'+d.expense_type_name+'</p>'+
+            '<p class="text-hide data-type-name">'+d.expense_type_name+'</p>'+
             '</div>'+
             '<div class="span3">'+
             '<p class="text-hide data-amount">'+d.amount+'</p>'+
             '</div>'+
-            '<div class="span4">'+
-            '<p class="text-hide data-desc">'+d.desc+'</p>'+
+            '<div class="span3">'+
+            '<p class="text-hide data-desc" title="'+ d.desc +'">'+d.desc_snap+'</p>'+
             '</div>'+
             '<div class="span3">'+
-            '<a href="javascript:void(0)" class="dataEdit">修改</a>'+
-            '<a href="javascript:void(0)" class="dataDel">删除</a>'+
+            '<p class="text-hide data-reasons" title="'+ d.reasons +'">'+(d.reasons == "" ? "无" : d.reasons)+'</p>'+
+            '</div>'+
+            '<div class="span2">'+
+            '<a class="data-img" href="' +d.bill_img+ '">点击查看</a>'+
+            '</div>' + 
+            '<div class="span2">'+
+            '<a class="text-hide data-add-reasons" href="javascript:void(0)">添加审核理由</a>'+
             '</div>') : $('<div class="span1"><p class="text-hide data-checkbox"><input type="checkbox"></p></div>' +
             '<div class="span3">'+
-            '<input type="text" name="invoice-id" class="input input-small" value="'+d.invoice_id+'" disabled>'+
+            '<input type="text" name="submit-time" class="input input-small calendar" value="'+d.submit_time+'" disabled>'+
             '</div>'+
             '<div class="span3">'+
-            '<input type="text" name="create-time" class="input input-small calendar" value="'+d.create_time+'" disabled>'+
+            '<input type="text" name="user-name" class="input input-small" value="'+d.user_name+'" disabled>'+
             '</div>'+
             '<div class="span3">'+
-            '<input type="text" name="invoice-code" class="input input-small" value="'+d.invoice_code+'" >'+
-            '</div>'+
-            '<div class="span3">'+ expenseTypeSelect +
+            '<input type="text" name="type-name" class="input input-small" value="'+d.expense_type_name+'" disabled>'+
             '</div>'+
             '<div class="span3">'+
-            '<input type="text" name="amount" class="input input-small" value="'+d.amount+'" >'+
+            '<input type="text" name="amount" class="input input-small" value="'+d.amount+'" disabled>'+
             '</div>'+
-            '<div class="span5">'+
-            '<textarea name="desc" class="input span23">'+d.desc+'</textarea>'+
+            '<div class="span4">'+
+            '<input name="desc" class="input input-small" disabled value="'+d.desc+'">'+
             '</div>'+
-            '<div class="span3">'+
+            '<div class="span4">'+
+            '<input name="reasons" class="input input-small" value="'+d.reasons+'">'+
+            '</div>'+
+            '<div class="span2">'+
             '<a href="javascript:void(0)" class="button button-success button-mini dataSave">保存</a>'+
             '<a href="javascript:void(0)" id="cancelEdit">取消</a>'+
             '</div>');

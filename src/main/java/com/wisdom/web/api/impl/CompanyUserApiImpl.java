@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,22 +42,22 @@ public class CompanyUserApiImpl implements ICompanyUserApi {
 
 	@Autowired
 	private IDeptService deptService;
-	
+
 	@Autowired
 	private ICompanyService companyService;
-	
+
 	@Autowired
 	private IUserDeptService userDeptService;
 
 	@Autowired
 	private IInvoiceService invoiceService;
-	
+
 	@Autowired
 	private ISingleInvoiceService singleInvoiceService;
-	
+
 	@Autowired
 	private IExpenseTypeService expenseTypeService;
-	
+
 	@Autowired
 	private IAttachmentService attachmentService;
 
@@ -72,8 +73,8 @@ public class CompanyUserApiImpl implements ICompanyUserApi {
 			FileUtils.copyInputStreamToFile(file.getInputStream(), new File(
 					params.get("realPath"), fileName));
 			Map<String, Object> invoiceRetMap = invoiceService
-					.createDraftInvoice(userId,
-							"/img/billImg/" + fileName, costCenterCode);
+					.createDraftInvoice(userId, "/img/billImg/" + fileName,
+							costCenterCode);
 			if (invoiceRetMap != null && (boolean) invoiceRetMap.get("success")) {
 				retMap.put("error_code", "0");
 			} else {
@@ -99,34 +100,37 @@ public class CompanyUserApiImpl implements ICompanyUserApi {
 	@Override
 	public List<Map<String, String>> getCompanyUserInvoiceByStatus(
 			Map<String, String> params) {
-		List<Map<String, String>> retList = new ArrayList<>();		
+		List<Map<String, String>> retList = new ArrayList<>();
 		String status = params.get("status");
 		String page = params.get("page");
 		String pageSize = params.get("pageSize");
 		String userId = params.get("userId");
-		if(StringUtils.isEmpty(status)||StringUtils.isEmpty(userId)){
+		if (StringUtils.isEmpty(status) || StringUtils.isEmpty(userId)) {
 			logger.debug("params are wrong!");
 			return retList;
 		}
 		List<Invoice> list = new ArrayList<Invoice>();
-		if("1".equals(status)){//草稿状态
+		if ("1".equals(status)) {// 草稿状态
 			list = singleInvoiceService.getUserInvoiceByStatus(userId, status);
-		}else{//提交状态
+		} else {// 提交状态
 			int iPage = 1;
 			int iPageSize = 10;
-			try{
-				 iPage = Integer.parseInt(page);
-				 iPageSize = Integer.parseInt(pageSize);
-			}catch(Exception e){
-				logger.error("parse page pagesize error, exception : {}", e.toString());
-				iPage =1 ;
+			try {
+				iPage = Integer.parseInt(page);
+				iPageSize = Integer.parseInt(pageSize);
+			} catch (Exception e) {
+				logger.error("parse page pagesize error, exception : {}",
+						e.toString());
+				iPage = 1;
 				iPageSize = 10;
 			}
-			list = singleInvoiceService.getUserInvoiceByStatusByPage(userId, status,iPage,iPageSize);
+			list = singleInvoiceService.getUserInvoiceByStatusByPage(userId,
+					status, iPage, iPageSize);
 		}
-		if(list == null || list.size() == 0) return null;
+		if (list == null || list.size() == 0)
+			return null;
 		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		for(Invoice invoice : list) {
+		for (Invoice invoice : list) {
 			Map<String, String> invoiceMap = new HashMap<>();
 			Timestamp stamp = invoice.getCreateTime();
 			invoiceMap.put("create_time", sdf.format(stamp));
@@ -136,15 +140,18 @@ public class CompanyUserApiImpl implements ICompanyUserApi {
 			invoiceMap.put("date", sdf.format(invoice.getDate()));
 			invoiceMap.put("desc", invoice.getDesc());
 			invoiceMap.put("amount", String.valueOf(invoice.getAmount()));
-			String expenseName = expenseTypeService.getExpenseTypeNameById(invoice.getExpenseTypeId());
-			if(expenseName == null || expenseName.isEmpty()) {
+			String expenseName = expenseTypeService
+					.getExpenseTypeNameById(invoice.getExpenseTypeId());
+			if (expenseName == null || expenseName.isEmpty()) {
 				expenseName = "未设置";
 			}
 			invoiceMap.put("expense_type_name", expenseName);
 			invoiceMap.put("cost_center", invoice.getCostCenter());
 			invoiceMap.put("invoice_code", invoice.getInvoiceCode());
-			invoiceMap.put("identify_status", invoice.getIdentifyStatus() == 0 ? "识别中" : "已识别");
-			String fileName = attachmentService.getAttachMentByInvoiceId(invoice.getId()).getImage();
+			invoiceMap.put("identify_status",
+					invoice.getIdentifyStatus() == 0 ? "识别中" : "已识别");
+			String fileName = attachmentService.getAttachMentByInvoiceId(
+					invoice.getId()).getImage();
 			invoiceMap.put("file_name", fileName);
 			retList.add(invoiceMap);
 		}
@@ -155,18 +162,19 @@ public class CompanyUserApiImpl implements ICompanyUserApi {
 	public Map<String, String> getUserInfo(String userId) {
 		Map<String, String> retMap = new HashMap<>();
 		String userName = userService.getUserNameByUserId(userId);
-		long companyId= userService.getCompanyIdByUserId(userId);
+		long companyId = userService.getCompanyIdByUserId(userId);
 		String companyName = companyService.getCompanyName(companyId);
 		long deptId = userDeptService.getDeptIdByUserId(userId);
 		String deptName = deptService.getDeptNameById(deptId);
 		String costCenterCode = deptService.getCostCenterCodeById(deptId);
 		String approvalName = "";
 		List<String> userList = userService.getApprovalUserList(userId);
-		for(String uId : userList) {
+		for (String uId : userList) {
 			String uName = userService.getUserNameByUserId(uId);
 			approvalName += uName + ",";
 		}
-		if(!approvalName.isEmpty()) approvalName = approvalName.substring(0, approvalName.length() -1);
+		if (!approvalName.isEmpty())
+			approvalName = approvalName.substring(0, approvalName.length() - 1);
 		retMap.put("user_name", userName);
 		retMap.put("company_name", companyName);
 		retMap.put("approval_name", approvalName);
@@ -186,9 +194,11 @@ public class CompanyUserApiImpl implements ICompanyUserApi {
 		String[] ids = idList.split(",");
 		Map<String, String> params = new HashMap<>();
 		params.put("date", new Timestamp(System.currentTimeMillis()).toString());
-		if(ids == null || ids.length == 0) return false;
-		for(String invoiceId : ids) {
-			invoiceService.submitUserInvoice(userId, Long.valueOf(invoiceId), params);
+		if (ids == null || ids.length == 0)
+			return false;
+		for (String invoiceId : ids) {
+			invoiceService.submitUserInvoice(userId, Long.valueOf(invoiceId),
+					params);
 		}
 		return true;
 	}
@@ -200,49 +210,76 @@ public class CompanyUserApiImpl implements ICompanyUserApi {
 
 	@Override
 	public List<Map<String, Object>> getWaitInvoiceList(String userId) {
-		Map<String, List<Map<String, Object>>> retMap = invoiceService.getBillsList(userId);
+		Map<String, List<Map<String, Object>>> retMap = invoiceService
+				.getBillsList(userId);
 		return retMap.get("processingList");
 	}
 
 	@Override
 	public List<Map<String, Object>> getFinishInvoiceList(String userId) {
-		Map<String, List<Map<String, Object>>> retMap = invoiceService.getBillsList(userId);
+		Map<String, List<Map<String, Object>>> retMap = invoiceService
+				.getBillsList(userId);
 		return retMap.get("finishedList");
 	}
 
 	@Override
 	public List<Map<String, Object>> getNeedAuditInvoiceList(String userId) {
-		Map<String, List<Map<String, Object>>> retMap = invoiceService.getNeededAuditBillList(userId);
+		Map<String, List<Map<String, Object>>> retMap = invoiceService
+				.getNeededAuditBillList(userId);
 		return retMap.get("processingList");
 	}
 
 	@Override
 	public List<Map<String, Object>> getFinishAuditInvoiceList(String userId) {
-		Map<String, List<Map<String, Object>>> retMap = invoiceService.getNeededAuditBillList(userId);
+		Map<String, List<Map<String, Object>>> retMap = invoiceService
+				.getNeededAuditBillList(userId);
 		return retMap.get("finishedList");
 	}
 
 	@Override
 	public List<Map<String, Object>> getInvoiceHistory(String userId) {
 		List<Map<String, Object>> retList = null;
-		Map<String, List<Map<String, Object>>> retMap = invoiceService.getBillsList(userId);
-		if(retMap.get("processingList") != null && retMap.get("processingList").size() > 0) {
-			retList = retMap.get("processingList"); 
+		Map<String, List<Map<String, Object>>> retMap = invoiceService
+				.getBillsList(userId);
+		if (retMap.get("processingList") != null
+				&& retMap.get("processingList").size() > 0) {
+			retList = retMap.get("processingList");
 		}
-		if(retMap.get("finishedList") != null && retMap.get("finishedList").size() > 0) {
-			if(retList == null) {
-				retList = retMap.get("finishedList"); 
+		if (retMap.get("finishedList") != null
+				&& retMap.get("finishedList").size() > 0) {
+			if (retList == null) {
+				retList = retMap.get("finishedList");
 			} else {
-				retList.addAll(retMap.get("finishedList")); 
+				retList.addAll(retMap.get("finishedList"));
 			}
 		}
-		if(retMap.get("uploadedList") != null && retMap.get("uploadedList").size() > 0) {
-			if(retList == null) {
-				retList = retMap.get("uploadedList"); 
+		if (retMap.get("uploadedList") != null
+				&& retMap.get("uploadedList").size() > 0) {
+			if (retList == null) {
+				retList = retMap.get("uploadedList");
 			} else {
-				retList.addAll(retMap.get("uploadedList")); 
+				retList.addAll(retMap.get("uploadedList"));
 			}
 		}
 		return retList;
+	}
+
+	@Override
+	public boolean submitAuditResult(String userId, String invoiceList, int status) {
+		if(invoiceList == null || invoiceList.isEmpty()) return false;
+		boolean allSuccess = true;
+		List<String> invoiceIdAndUserIdList = (List<String>)Arrays.asList(invoiceList.split(","));
+		for(String invoiceInfo : invoiceIdAndUserIdList) {
+			String[] infos = invoiceInfo.split("&");
+			if(infos.length != 3) continue;
+			String invoiceId = infos[0];
+			String invoiceUserId = infos[1];
+			String reasons = infos[2];
+			Map<String, Object> retMap = invoiceService.excuteApproval(invoiceUserId, userId, invoiceId, status, reasons);
+			if(retMap.get("success") == null || !(boolean)retMap.get("success")) {
+				allSuccess = false;
+			}
+		}
+		return allSuccess;
 	}
 }

@@ -135,7 +135,7 @@
 				$('#retData').empty();
 				data.sort(function(a,b){return a.create_time<b.create_time?1:-1});
 				for(var i=0; i<data.length; i++) {
-					$('#retData').append("<div class='row-fluid show-grid td'><div class='span1'><p class='text-hide data-checkbox'><input type='checkbox' value='"+data[i].invoice_id+"' class='data-check-invoice-id'></p></div><div class='span3'><p class='text-hide data-invoice-id'>"+data[i].invoice_id+"</p></div><div class='span3'><p class='text-hide data-create-time'>"+data[i].create_time+"</p></div><div class='span3'><p class='text-hide data-invoice-code'>"+(data[i].invoice_code == null || data[i].invoice_code == '' ? "无" : data[i].invoice_code)+"</p></div><div class='span3'><p class='text-hide data-type-name'>"+data[i].expense_type_name+"</p></div><div class='span3'><p class='text-hide data-amount'>"+data[i].amount+"</p></div><div class='span4'><p class='text-hide data-desc'>"+(data[i].desc == null || data[i].desc == '' ? "无" : data[i].desc)+"</p></div><div class='span3'><a href='javascript:void(0)' class='dataEdit'>修改</a><a href='javascript:void(0)' class='dataDel'>删除</a></div></div>");
+					$('#retData').append("<div class='row-fluid show-grid td'><div class='span1'><p class='text-hide data-checkbox'><input type='checkbox' value='"+data[i].invoice_id+"' class='data-check-invoice-id'></p></div><div class='span3'><p class='text-hide data-invoice-id'>"+data[i].invoice_id+"</p></div><div class='span3'><p class='text-hide data-create-time'>"+data[i].create_time+"</p></div><div class='span3'><p class='text-hide data-invoice-code'>"+(data[i].invoice_code == null || data[i].invoice_code == '' ? "无" : data[i].invoice_code)+"</p></div><div class='span3'><p class='text-hide data-type-name'>"+data[i].expense_type_name+"</p></div><div class='span3'><p class='text-hide data-amount'>"+data[i].amount+"</p></div><div class='span4'><p class='text-hide data-desc' title='"+(data[i].desc == null || data[i].desc == '' ? "无" : data[i].desc)+"'>"+(data[i].desc == null || data[i].desc == '' ? "无" : (data[i].desc.length>8?data[i].desc.substr(0,8)+"...":data[i].desc))+"</p></div><div class='span3'><a href='javascript:void(0)' class='dataEdit'>修改</a><a href='javascript:void(0)' class='dataDel'>删除</a></div></div>");
 				}
 				bindOperation();
 				bindCheck();
@@ -190,7 +190,7 @@
 				}
 			});
 		}
-		
+		var checkInfo = '';
 		function bindOperation() {
 			// 编辑
             $(".dataEdit").die().live("click",function(){
@@ -198,12 +198,15 @@
 
                 d={
                     'invoice_id' : par.find(".data-invoice-id").text(),
+                    'invoice_check__id' : par.find(".data-check-invoice-id").val(),
                     "create_time" : par.find(".data-create-time").text(),
                     "invoice_code" : par.find(".data-invoice-code").text(),
                     "amount" : par.find(".data-amount").text(),
                     "expense_type_name" : par.find(".data-type-name").text(),
-                    "desc" : par.find(".data-desc").text()
+                    "desc" : par.find(".data-desc").attr('title'),
+                    "desc_snap" : par.find(".data-desc").text()
                 }
+                checkInfo = d.invoice_check__id;
                 var tempHtml = par.html();
                 par.empty().append(txtTemplate(d,false));
                 $("select[name='costType']").val(d.costType);
@@ -223,7 +226,8 @@
                     "amount" : par.find("input[name='amount']").val(),
                     "expense_type_name" : par.find("select[name='expenseSelect'] option:selected").text(),
                     "expense_type_val" : par.find("select[name='expenseSelect'] option:selected").val(),
-                    "desc" : par.find("textarea[name='desc']").val(),
+                    "desc" : par.find("input[name='desc']").val(),
+                    "desc_snap" : par.find("input[name='desc']").val().length > 8 ? par.find("input[name='desc']").val().substr(0,8)+"..." : par.find("input[name='desc']").val(),
                 }
                 var re = /^\d+(\.\d)?$/;
                 if(!re.test(d.amount)) {
@@ -274,7 +278,7 @@
             });
         })()
         function txtTemplate(d,txt){
-            return txt ? $('<div class="span1"><p class="text-hide data-checkbox"><input type="checkbox"></p></div>' +
+            return txt ? $('<div class="span1"><p class="text-hide data-checkbox"><input type="checkbox" value="'+ checkInfo +'" class="data-check-invoice-id"></p></div>' +
             '<div class="span3">'+
             '<p class="text-hide data-invoice-id">'+d.invoice_id+'</p>'+
             '</div>'+
@@ -291,7 +295,7 @@
             '<p class="text-hide data-amount">'+d.amount+'</p>'+
             '</div>'+
             '<div class="span4">'+
-            '<p class="text-hide data-desc">'+d.desc+'</p>'+
+            '<p class="text-hide data-desc" title="'+ d.desc +'">'+d.desc_snap+'</p>'+
             '</div>'+
             '<div class="span3">'+
             '<a href="javascript:void(0)" class="dataEdit">修改</a>'+
@@ -312,7 +316,7 @@
             '<input type="text" name="amount" class="input input-small" value="'+d.amount+'" >'+
             '</div>'+
             '<div class="span5">'+
-            '<textarea name="desc" class="input span23">'+d.desc+'</textarea>'+
+            '<input name="desc" class="input input-small" value="'+d.desc+'">'+
             '</div>'+
             '<div class="span3">'+
             '<a href="javascript:void(0)" class="button button-success button-mini dataSave">保存</a>'+

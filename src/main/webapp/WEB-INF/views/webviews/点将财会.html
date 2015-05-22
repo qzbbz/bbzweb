@@ -490,15 +490,15 @@
             leafTpl : '<li class="menu-leaf"><a href="{href}">{text}</a></li>',
 
             nodes : [
-	            {text : '组织权限',id : '11',href:"javascript:void(0)",expanded : true,children : [
-	                {text : '组织架构设置',id : '33',href:"/views/webviews/company/bank_statement_upload.html"},
-	                {text : '基本资料设置',id : '44',href:"/views/webviews/company/bank_statement_upload.html"},
-	                {text : '供应商和客户信息',id : '55',href:"/views/webviews/company/bank_statement_upload.html"}
+	            {text : '组织权限',id : '',href:"javascript:void(0)",expanded : true,children : [
+	                {text : '组织架构设置',id : '',href:"#"},
+	                {text : '基本资料设置',id : '',href:"#"},
+	                {text : '供应商和客户信息',id : '',href:"#"}
 	            ]},
-	            {text : '收件箱',id : '22',href:"/views/webviews/点将财会.html",leaf : false, children: []},
-	            {text : '销售清单',id : '66',href:"/views/webviews/点将财会.html",children: []},
+	            {text : '收件箱',id : '',href:"#",leaf : false,children: []},
+	            {text : '销售清单',id : '',href:"#",leaf : false,children: []},
 	            {text : '发票',id : '',href:"#",leaf : false,children: []},
-	            {text : '费用报销',id : '',href:"javascript:void(0)",expanded : false,children : [
+	            {text : '费用报销',id : '',href:"javascript:void(0)",expanded : true,children : [
 	                {text : '收件箱',id : '',href:"#"},
 	                {text : '新建报销单',id : '',href:"#"},
 	                {text : '草稿',id : '',href:"#"},
@@ -524,8 +524,6 @@
             menu.on('itemclick',function(ev){
                 $('.log').text(ev.item.text);
             });
-            var firstLeaf = menu.findNode('66'); //获取第一个叶子节点
-            menu.setSelected(firstLeaf);
         });
 		//模拟checkbox
 		$(function () {

@@ -45,22 +45,12 @@ class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer
 		<property name="defaultEncoding" value="UTF-8" />
 		<property name="maxUploadSize" value="2048000"></property>
 	</bean>
-	<bean id="exceptionResolver"
-		class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
-		<property name="exceptionMappings">
-			<props>
-				<prop
-					key="org.springframework.web.multipart.MaxUploadSizeExceededException">upload_exceed_max_error.html</prop>
-				<prop key="org.springframework.web.multipart.MultipartException">global_exception.html</prop>
-			</props>
-		</property>
-	</bean>
 
-	<!-- <bean
+	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<property name= "contentType" value= "text/html"/>  
-		<property name="prefix" value="/WEB-INF/views/" />
-	</bean> -->
+		<property name="prefix" value="/WEB-INF/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
 	
 	<bean
 		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
@@ -100,6 +90,7 @@ class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer
 	<mvc:resources mapping="/views/webviews/company/**" location="/WEB-INF/views/webviews/company/" cache-period="0" />
 	<mvc:resources mapping="/views/webviews/companyUser/**" location="/WEB-INF/views/webviews/companyUser/" cache-period="0" />
 	<mvc:resources mapping="/views/frontviews/**" location="/WEB-INF/views/frontviews/" cache-period="0" />
+	<mvc:resources mapping="/views/webviews/error/**" location="/WEB-INF/views/webviews/error/" cache-period="0" />
 	
 	<mvc:resources mapping="/files/company/**" location="/WEB-INF/files/company/" cache-period="0" />
 	<mvc:resources mapping="/files/accounter/**" location="/WEB-INF/files/accounter/" cache-period="0" />

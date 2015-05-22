@@ -149,4 +149,25 @@ public class CompanyUserController {
 		String userId = (String) request.getSession().getAttribute("userId");
 		return companyUserService.getInvoiceHistory(userId);
 	}
+	
+	@RequestMapping("/companyUser/submitAuditResult")
+	@ResponseBody
+	public Map<String, String> submitAuditResult(HttpServletRequest request) {
+		Map<String, String> retMap = new HashMap<>();
+		String userId = (String) request.getSession().getAttribute("userId");
+		String invoiceList = (String)request.getParameter("invoiceIdList");
+		String status = (String)request.getParameter("status");
+		if(invoiceList == null || invoiceList.isEmpty()) {
+			retMap.put("error_code", "1");
+			retMap.put("error_message", "提交的审核结果列表为空，请检查！");
+			return retMap;
+		}
+		if(companyUserService.submitAuditResult(userId, invoiceList, Integer.valueOf(status))) {
+			retMap.put("error_code", "0");
+		} else {
+			retMap.put("error_code", "2");
+			retMap.put("error_message", "提交审核结果失败，请稍后重试！");
+		}
+		return retMap;
+	}
 }

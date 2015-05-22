@@ -28,4 +28,6 @@ public interface ICompanyUserApi {
 	public List<Map<String, Object>> getFinishAuditInvoiceList(String userId);
 	
 	public List<Map<String, Object>> getInvoiceHistory(String userId);
+	
+	public boolean submitAuditResult(String userId, String invoiceList, int status);
 }
