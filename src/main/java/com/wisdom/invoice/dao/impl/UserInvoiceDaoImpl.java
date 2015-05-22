@@ -144,55 +144,56 @@ public class UserInvoiceDaoImpl implements IUserInvoiceDao {
 			logger.debug("input param error: {}",userId);
 			return null;
 		}
-		Object[] objs = new Object[5];
+		Object[] objs = new Object[8];
 		StringBuilder sql = new StringBuilder();
 		sql.append("select invoice_id,invoice_code,title,expense_type_id,amount,detail_desc,date,cost_center,"
-				+ "process_status,approval_status,approval_id,user_id ");
+				+ "status process_status,approval_status,approval_id,user_id ");
 		sql.append(" from user_invoice,invoice ");
 		sql.append(" where user_invoice.approval_id=?");
 		objs[0] = userId;
 		
 		sql.append(" and user_invoice.invoice_id=invoice.id ");
 		
-		int index=0;
+		int index=1;
 		if(!StringUtils.isEmpty(date)){
 			sql.append(" and date=?");
-			index++;
 			objs[index] = date;
+			index++;
 		}
 
 		if(!StringUtils.isEmpty(submitter)){
 			sql.append(" and user_invoice.user_id=?");
-			index++;
 			objs[index] = submitter;
+			index++;
 		}
 //		if(!StringUtils.isEmpty(amount)){
 		if(null != amount && amount > 0){
 			sql.append(" and invoice.amount=?");
-			index++;
 			objs[index] = amount;
+			index++;
 		}
 		
 		if(null != expenseType){
 			sql.append(" and invoice.expense_type_id=?");
-			index++;
 			objs[index] = expenseType;
+			index++;
 		}
 		
 		if(null != page && null != pageSize && pageSize > 0 && page > 0){
 			int start = (page-1)*pageSize;
 			int end = page*pageSize;
-			sql.append(" limit ? and ?");
-			index++;
+			sql.append(" limit ? , ? ");
 			objs[index] = start;
 			index++;
 			objs[index] = end;
+			index++;
 		}
 		
-		
+		Object[] paramsEnd = new Object[index];  
+        System.arraycopy(objs, 0, paramsEnd, 0, index); 
 		List<InvoiceInfo> list = null;
 		try {
-			list = jdbcTemplate.query(sql.toString(), objs,
+			list = jdbcTemplate.query(sql.toString(), paramsEnd,
 					new RowMapperResultSetExtractor<InvoiceInfo>(
 							new InvoiceInfoMapper()));
 		} catch (Exception e) {

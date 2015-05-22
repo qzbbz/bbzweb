@@ -29,8 +29,8 @@ public class InvoiceInfoMapper implements RowMapper<InvoiceInfo>{
 				rs.getInt("expense_type_id"),rs.getDouble("amount"),rs.getString("detail_desc"),
 				rs.getTimestamp("date"),rs.getString("cost_center"),rs.getInt("process_status"),
 				rs.getInt("approval_status"),
-				rs.getString("approver"),
-				rs.getString("submitter"));
+				rs.getString("approval_id"),
+				rs.getString("user_id"));
 		return u;
 	}
 
