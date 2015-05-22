@@ -20,6 +20,7 @@ public class UserInvoice implements java.io.Serializable {
 	private Integer status;
 	private Integer approvalStatus;
 	private String approvalId;
+	private String reasons;
 	private Timestamp updateTime;
 	private Timestamp createTime;
 
@@ -29,30 +30,30 @@ public class UserInvoice implements java.io.Serializable {
 	public UserInvoice() {
 	}
 
-	/** minimal constructor */
 	public UserInvoice(Long id, String userId, Long invoiceId, Integer status,
-			Timestamp updateTime) {
-		this.id = id;
-		this.userId = userId;
-		this.invoiceId = invoiceId;
-		this.status = status;
-		this.updateTime = updateTime;
-	}
-
-	/** full constructor */
-	public UserInvoice(Long id, String userId, Long invoiceId, Integer status,Integer approvalStatus,
-			String approvalId,Timestamp updateTime, Timestamp createTime) {
+			Integer approvalStatus, String approvalId, String reasons,
+			Timestamp updateTime, Timestamp createTime) {
+		super();
 		this.id = id;
 		this.userId = userId;
 		this.invoiceId = invoiceId;
 		this.status = status;
 		this.approvalStatus = approvalStatus;
 		this.approvalId = approvalId;
+		this.reasons = reasons;
 		this.updateTime = updateTime;
 		this.createTime = createTime;
 	}
 
 	// Property accessors
+
+	public String getReasons() {
+		return reasons;
+	}
+
+	public void setReasons(String reasons) {
+		this.reasons = reasons;
+	}
 
 	public Long getId() {
 		return this.id;

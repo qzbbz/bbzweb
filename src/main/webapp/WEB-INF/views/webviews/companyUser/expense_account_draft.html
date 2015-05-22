@@ -23,7 +23,7 @@
 			</div>
 		</div>
 		<div class="main">
-			<div class="menu"><a href="javascript:void(0)" class="active">已审核报销单</a></div>
+			<div class="menu"><a href="javascript:void(0)" class="active">发票草稿箱</a></div>
 			<div class="well mt20">
 				<div class="form-horizontal onlineTools">
 					<div class="row show-grid">
@@ -39,15 +39,13 @@
 	    			<col style="width:16%;">
 	    			<col style="width:16%;">
 	    			<col style="width:16%;">
-	    			<col style="width:16%;">
 	    		</colgroup>
 	    		<thead>
 	    			<tr>
 	    				<th>ID号</th>
-	    				<th>审核日期</th>
-	    				<th>审核人</th>
-	    				<th>审核结果</th>
-	    				<th>审核理由</th>
+	    				<th>上传日期</th>
+	    				<th>成本中心</th>
+	    				<th>识别状态</th>
 	    				<th>发票预览</th>
 	    			</tr>
 	    		</thead>
@@ -66,15 +64,15 @@
 	var page = 1;
 	var pageSize = 1000;
 	$.ajax({
-		url : '/companyUser/getFinishInvoiceList',
+		url : '/companyUser/getAllCompanyUserDraftBill',
 		type : "POST",
 		data : {status:1, page:page, pageSize:pageSize},
 		success : function(data) {
 			if(data == null || data == '') return;
 			$('#retData').empty();
-			data.sort(function(a,b){return a.update_time<b.update_time?1:-1});
+			data.sort(function(a,b){return a.create_time<b.create_time?1:-1});
 			for(var i=0; i<data.length; i++) {
-				$('#retData').append("<tr><td>"+data[i].invoice_id+"</td><td>"+data[i].update_time+"</td><td>"+data[i].approval_name+"</td><td class='"+(data[i].approval_status == true ? "text-success" : "text-danger")+"'>"+(data[i].approval_status == true ? "审核通过" : "审核拒绝")+"</td><td>"+data[i].reasons+"</td><td><a href='"+data[i].bill_img+"'>点击预览发票</a></td></tr>");
+				$('#retData').append("<tr><td>"+data[i].invoice_id+"</td><td>"+data[i].create_time+"</td><td>"+data[i].cost_center+"</td><td>"+data[i].identify_status+"</td><td><a href='"+data[i].file_name+"'>点击预览发票</a></td></tr>");
 			}
 		}
 	});
@@ -96,45 +94,45 @@
             $(".side-bar-content").height(H-h1);
         });
     })()
-	//竖状菜单
-        BUI.use('bui/tree',function (Tree) {
-            var menu = new Tree.TreeMenu({
-            render : '.side-bar-content',
+	 //竖状菜单
+       BUI.use('bui/tree',function (Tree) {
+           var menu = new Tree.TreeMenu({
+           render : '.side-bar-content',
 
-            elCls : 'bui-side-menu', 
-            itemCls : 'bui-menu-item',
-            expandAnimate : true,
-            showIcons : false,
+           elCls : 'bui-side-menu', 
+           itemCls : 'bui-menu-item',
+           expandAnimate : true,
+           showIcons : false,
 
-            dirTpl : '<li class="menu-leaf menu-second"><div class="bui-menu-title"><s></s><span class="bui-menu-title-text"><a href="{href}">{text}</a></span></div></li>',
-            leafTpl : '<li class="menu-leaf"><a href="{href}">{text}</a></li>',
+           dirTpl : '<li class="menu-leaf menu-second"><div class="bui-menu-title"><s></s><span class="bui-menu-title-text"><a href="{href}">{text}</a></span></div></li>',
+           leafTpl : '<li class="menu-leaf"><a href="{href}">{text}</a></li>',
 
-            nodes : [
-   					{text : '发票上传',id : '10',href:"/views/webviews/companyUser/expense_account_upload.html"},
-   					{text : '发票草稿箱',id : '20',href:"/views/webviews/companyUser/expense_account_draft.html"},
-   					{text : '新建报销单',id : '30',href:"/views/webviews/companyUser/create_invoice.html"},
-   					{text : '待审核报销单',id : '40',href:"/views/webviews/companyUser/user_wait_audit_invoice.html"},
-   					{text : '已审核报销单',id : '50',href:"/views/webviews/companyUser/user_finish_audit_invoice.html"},
-   					{text : '报销单历史',id : '60',href:"/views/webviews/companyUser/expense_account_history.html"},
-   					{text : '审核发票',id : '70',href:"javascript:void(0);",  leaf:false, expanded : false,children: [
-   						{text : '待审核发票',id : '71', href:"/views/webviews/companyUser/audit_invoice_need_process.html"},
-   						{text : '已审核发票',id : '72', href:"/views/webviews/companyUser/audit_invoice_finished.html"}                                               
-   					]}
-             ]
-        	});
-       		menu.render();
-            $.each($("li.menu-second"),function(){
-                var that = $(this);
-                if(that.next().hasClass("menu-second")){
-                    that.find("s").remove();
-                }
-            })
-            menu.on('itemclick',function(ev){
-                $('.log').text(ev.item.text);
-            });
-            var firstLeaf = menu.findNode('50'); //获取第一个叶子节点
-            menu.setSelected(firstLeaf);
-        });
+           nodes : [
+  					{text : '发票上传',id : '10',href:"/views/webviews/companyUser/expense_account_upload.html"},
+  					{text : '发票草稿箱',id : '20',href:"/views/webviews/companyUser/expense_account_draft.html"},
+  					{text : '新建报销单',id : '30',href:"/views/webviews/companyUser/create_invoice.html"},
+  					{text : '待审核报销单',id : '40',href:"/views/webviews/companyUser/user_wait_audit_invoice.html"},
+  					{text : '已审核报销单',id : '50',href:"/views/webviews/companyUser/user_finish_audit_invoice.html"},
+  					{text : '报销单历史',id : '60',href:"/views/webviews/companyUser/expense_account_history.html"},
+  					{text : '审核发票',id : '70',href:"javascript:void(0);",  leaf:false, expanded : false,children: [
+  						{text : '待审核发票',id : '71', href:"/views/webviews/companyUser/audit_invoice_need_process.html"},
+   						{text : '已审核发票',id : '72', href:"/views/webviews/companyUser/audit_invoice_finished.html"}                                           
+  					]}
+            ]
+       	});
+      		menu.render();
+           $.each($("li.menu-second"),function(){
+               var that = $(this);
+               if(that.next().hasClass("menu-second")){
+                   that.find("s").remove();
+               }
+           })
+           menu.on('itemclick',function(ev){
+               $('.log').text(ev.item.text);
+           });
+           var firstLeaf = menu.findNode('20'); //获取第一个叶子节点
+           menu.setSelected(firstLeaf);
+       });
 </script>
 </body>
 </html>

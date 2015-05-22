@@ -14,7 +14,7 @@
 				<img src="/img/webimg/bss-logo.png" >
 				<h1>上海元升财务咨询有限公司</h1>
 			</div>
-            <div class="side-bar-content"></div>
+            <div class="side-bar-content" id="menuTree"></div>
 			<div class="side-bar-bottom">
 				<ul>
 					<li><a href=""><i class="setting"></i>设置</a></li>
@@ -34,18 +34,22 @@
 			</div>
 			<table class="table center">
 	    		<colgroup>
-	    			<col style="width:16%;">
-	    			<col style="width:16%;">
-	    			<col style="width:16%;">
-	    			<col style="width:16%;">
-	    			<col style="width:16%;">
+	    			<col style="width:13%;">
+	    			<col style="width:13%;">
+	    			<col style="width:13%;">
+	    			<col style="width:13%;">
+	    			<col style="width:13%;">
+	    			<col style="width:13%;">
+	    			<col style="width:13%;">
 	    		</colgroup>
 	    		<thead>
 	    			<tr>
 	    				<th>ID号</th>
-	    				<th>上传日期</th>
-	    				<th>成本中心</th>
-	    				<th>识别状态</th>
+	    				<th>提交日期</th>
+	    				<th>审批人</th>
+	    				<th>费用类型</th>
+	    				<th>金额</th>
+	    				<th>详细描述</th>
 	    				<th>发票预览</th>
 	    			</tr>
 	    		</thead>
@@ -59,29 +63,30 @@
 <script src="http://g.tbcdn.cn/fi/bui/jquery-1.8.1.min.js"></script>
 <script src="http://g.alicdn.com/bui/seajs/2.3.0/sea.js"></script>
 <script src="http://g.alicdn.com/bui/bui/1.1.17/config.js"></script>
+<script src="/js/webjs/menuTree.js"></script>
 <script type="text/javascript">
 	var page = 1;
 	var pageSize = 1000;
 	$.ajax({
-		url : '/companyUser/getAllCompanyUserDraftBill',
+		url : '/companyUser/getWaitInvoiceList',
 		type : "POST",
-		data : {status:1, page:page, pageSize:pageSize},
+		data : {},
 		success : function(data) {
-			if(data == null) return;
+			if(data == null || data == '') return;
 			$('#retData').empty();
-			data.sort(function(a,b){return a.create_time<b.create_time?1:-1});
+			data.sort(function(a,b){return a.bill_date<b.bill_date?1:-1});
 			for(var i=0; i<data.length; i++) {
-				$('#retData').append("<tr><td>"+data[i].invoice_id+"</td><td>"+data[i].create_time+"</td><td>"+data[i].cost_center+"</td><td>"+data[i].identify_status+"</td><td><a href='"+data[i].file_name+"'>点击预览发票</a></td></tr>");
+				$('#retData').append("<tr><td>"+data[i].invoice_id+"</td><td>"+data[i].bill_date+"</td><td>"+data[i].approval_name+"</td><td>"+data[i].bill_expenseTypeName+"</td><td>"+data[i].bill_amount+"</td><td>"+data[i].bill_desc+"</td><td><a href='"+data[i].bill_img+"'>点击预览发票</a></td></tr>");
 			}
 		}
 	});
 	function searchData() {
-		var conditionType = $('#condition option:selected').val();
+		/* var conditionType = $('#condition option:selected').val();
 		var conditionValue = $('#content').val();
 		if(conditionType != '0' && (conditionValue == null || conditionValue == '')) {
 			alert('请输入检索内容！');
 			return;
-		}
+		} */
 	}
 	//侧栏高度
     (function(){
@@ -93,44 +98,120 @@
             $(".side-bar-content").height(H-h1);
         });
     })()
-	//竖状菜单
-    BUI.use('bui/tree',function (Tree) {
-        var menu = new Tree.TreeMenu({
-        render : '.side-bar-content',
+	BUI.use(['bui/tab','bui/mask'],function(Tab){
+            var tab = new Tab.TabPanel({
+                render : '#tab',
+                elCls : 'button-tabs',
+                panelContainer : '#panel',
+                panelTpl : '<div class="panel"><p>{title}:{value}</p></div>',
+                autoRender: true,
+                children:[
+                    {title:'标签一',value:'1',selected : true},
+                    {title:'标签二',value:'2',selected : false},
+                    {title:'标签三',value:'3',selected : false}
+                ]
+            });
+            tab.setSelected(tab.getItemAt(0));
+        });
+        BUI.use(['bui/overlay','bui/form'],function(Overlay,Form){
+            var tabForm = new Form.Form({
+                srcNode : '#tabDiv'
+            }).render();
+            var tabDialog = new Overlay.Dialog({
+                // title:'标题',
+                width:800,
+                height:480,
+                //配置DOM容器的编号
+                contentId:'tabContents',
+                buttons:[],
+                success:function () {
+                    alert('确认');
+                    this.close();
+                }
+            });
+            $('#sysSettings').on('click',function () {
+              	var sender = $(this),
+                type = sender.text(),
+                effect = {
+                  effect : type,
+                  duration : 400// 
+                  //callback : function(){} ,callback 回调函数
+                };
+                tabDialog.set('effect',effect);
+                tabDialog.show();
+                var tabPar=$("#tabDiv").parent();
+                tabPar.prev().remove();
+                tabPar.find(".bui-stdmod-footer").remove();
+                tabPar.css({"padding":"0","margin-top":"-10px"});
+                console.log(tabPar.parent().find(".bui-ext-close"));
+                tabPar.parent().find(".bui-ext-close").css({
+                    "left" : "0",
+                    "top" : "435px",
+                    "width" : "120px",
+                    "height" : "60px",
+                    "border-top" : "1px solid #212326",
+                    "background-color":"#35383b"
+                })
+                tabPar.parent().find(".bui-ext-close-x").css({
+                    "background":"none",
+                })
+                tabPar.parent().find(".x-icon").css({
+                    "height":"60px",
+                    "line-height":"60px",
+                    "width":"120px",
+                    "text-align":"center",
+                    "color":"#fff",
+                    "font-weight":"normal",
+                    "font-size":"30px"
+                })
+                // icon css
+                var icon=['<i class="iconfont">&#xe634;</i>','<i class="iconfont">&#xe634;</i>','<i class="iconfont">&#xe634;</i>']
+                var ul_list = $("#tabDiv").find(".tab-panel-inner").find("ul").find("li");
+                $.each(ul_list,function(i){
+                    $(this).append(icon[i]);
+                })
+            });
+        });
+        
+      //竖状菜单
+        BUI.use('bui/tree',function (Tree) {
+            var menu = new Tree.TreeMenu({
+            render : '.side-bar-content',
 
-        elCls : 'bui-side-menu', 
-        itemCls : 'bui-menu-item',
-        expandAnimate : true,
-        showIcons : false,
+            elCls : 'bui-side-menu', 
+            itemCls : 'bui-menu-item',
+            expandAnimate : true,
+            showIcons : false,
 
-        dirTpl : '<li class="menu-leaf menu-second"><div class="bui-menu-title"><s></s><span class="bui-menu-title-text"><a href="{href}">{text}</a></span></div></li>',
-        leafTpl : '<li class="menu-leaf"><a href="{href}">{text}</a></li>',
+            dirTpl : '<li class="menu-leaf menu-second"><div class="bui-menu-title"><s></s><span class="bui-menu-title-text"><a href="{href}">{text}</a></span></div></li>',
+            leafTpl : '<li class="menu-leaf"><a href="{href}">{text}</a></li>',
 
-        nodes : [
-	  				{text : '发票上传',id : '',href:"/views/webviews/companyUser/expense_account_upload.html", leaf:true, children: []},
-	  				{text : '发票草稿箱',id : '',href:"/views/webviews/companyUser/expense_account_history.html", leaf:true, children: []},
-	  				{text : '新建报销单',id : '',href:"#", leaf:true, children: []},
-	  				{text : '待审核报销单',id : '',href:"#", leaf:true, children: []},
-	  				{text : '已审核报销单',id : '',href:"#", leaf:true, children: []},
-	  				{text : '报销单历史',id : '',href:"#", leaf:true, children: []},
-	  				{text : '审核发票',id : '',href:"#",  leaf:false, expanded : false,children: [
-	  					{text : '待审核发票',id : '', href:"#"},
-	  					{text : '已审核发票',id : '', href:"#"}                                                   
-	  				]},
-	  				
-	  	            ]
-	  	    	});
-   		menu.render();
-		$.each($("li.menu-second"),function(){
-			var that = $(this);
-			if(that.next().hasClass("menu-second")){
-				that.find("s").remove();
-			}
-		})
-        menu.on('itemclick',function(ev){
-            $('.log').text(ev.item.text);
-        }); 
-    });
+            nodes : [
+   					{text : '发票上传',id : '10',href:"/views/webviews/companyUser/expense_account_upload.html"},
+   					{text : '发票草稿箱',id : '20',href:"/views/webviews/companyUser/expense_account_draft.html"},
+   					{text : '新建报销单',id : '30',href:"/views/webviews/companyUser/create_invoice.html"},
+   					{text : '待审核报销单',id : '40',href:"/views/webviews/companyUser/user_wait_audit_invoice.html"},
+   					{text : '已审核报销单',id : '50',href:"/views/webviews/companyUser/user_finish_audit_invoice.html"},
+   					{text : '报销单历史',id : '60',href:"/views/webviews/companyUser/expense_account_history.html"},
+   					{text : '审核发票',id : '70',href:"javascript:void(0);",  leaf:false, expanded : false,children: [
+   						{text : '待审核发票',id : '71', href:"/views/webviews/companyUser/audit_invoice_need_process.html"},
+   						{text : '已审核发票',id : '72', href:"/views/webviews/companyUser/audit_invoice_finished.html"}                                                   
+   					]}
+             ]
+        	});
+       		menu.render();
+            $.each($("li.menu-second"),function(){
+                var that = $(this);
+                if(that.next().hasClass("menu-second")){
+                    that.find("s").remove();
+                }
+            })
+            menu.on('itemclick',function(ev){
+                $('.log').text(ev.item.text);
+            });
+            var firstLeaf = menu.findNode('40'); //获取第一个叶子节点
+            menu.setSelected(firstLeaf);
+        });
 </script>
 </body>
 </html>

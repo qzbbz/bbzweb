@@ -13,7 +13,7 @@ public class SubmitAuditBillResultEntity implements Serializable {
 	private String approval_id;
 	
 	private String approval_status;
-
+	
 	public String getUser_id() {
 		return user_id;
 	}

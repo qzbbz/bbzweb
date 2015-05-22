@@ -313,6 +313,12 @@ mark,
 .auxiliary-text {
   color: #999999;
 }
+.text-muted {
+  color: #999999;
+}
+a.text-muted:hover {
+  color: #808080;
+}
 .text-primary {
   color: #0b9de6;
 }
@@ -633,6 +639,7 @@ hr {
 .row {
   margin-left: -10px;
   *zoom: 1;
+  margin-bottom: 10px;
 }
 .row:before,
 .row:after {
@@ -806,6 +813,7 @@ hr {
 .row-fluid {
   width: 100%;
   *zoom: 1;
+  margin-bottom: 10px;
 }
 .row-fluid:before,
 .row-fluid:after {
@@ -2321,6 +2329,7 @@ fieldset[disabled] .x-icon-question.active {
 }
 table {
   background-color: transparent;
+  table-layout: fixed;
 }
 .center {
   text-align: center;
@@ -3570,6 +3579,7 @@ input.calendar-time {
   *zoom: 1;
   height: 28px;
   position: relative;
+  line-height: 28px;
 }
 .form-horizontal .controls .checkbox {
   position: relative;

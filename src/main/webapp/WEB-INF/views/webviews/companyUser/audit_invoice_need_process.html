@@ -25,51 +25,10 @@
 		</div>
 		<div class="main">
 			<div class="menu">
-				<a href="javascript:void(0)" class="active">新建报销单</a>
-			</div>
-			<div class="panel mt20">
-				<div class="panel-header">申请人信息</div>
-				<div class="panel-body">
-					<div class="form-horizontal onlineTools">
-						<div class="row-fluid show-grid">
-							<div class="span7">
-								<label class="control-label control-label-small">申请人</label>
-								<div class="controls">
-									<input id="user_name" type="text" class="input input-small" disabled>
-								</div>
-							</div>
-							<div class="span7">
-								<label class="control-label control-label-small">成本中心</label>
-								<div class="controls">
-									<input id="cost_center_code" type="text" class="input input-small" disabled>
-								</div>
-							</div>
-							<div class="span7">
-								<label class="control-label control-label-small">审批人</label>
-								<div class="controls">
-									<input id="approval_name" type="text" class="input input-small" disabled>
-								</div>
-							</div>
-						</div>
-						<div class="row-fluid show-grid mt10">
-							<div class="span7">
-								<label class="control-label control-label-small">所在部门</label>
-								<div class="controls">
-									<input id="user_dept_name" type="text" class="input input-small" disabled>
-								</div>
-							</div>
-							<div class="span14">
-								<label class="control-label control-label-small">所在公司</label>
-								<div class="controls">
-									<input id="company_name" type="text" class="input input-large" disabled>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
+				<a href="javascript:void(0)" class="active">审核报销单</a>
 			</div>
 			<div class="panel mt20" style="min-height: 600px;">
-				<div class="panel-header">发票草稿</div>
+				<div class="panel-header">待审核报销单列表</div>
 				<div class="panel-body">
 					<div class="well">
 						<div class="form-horizontal onlineTools">
@@ -81,8 +40,10 @@
 										type="text" id="content" class="input input-normal ml10">
 									<button onclick="searchData();"
 										class="button button-success ml10">搜索</button>
-									<button onclick="onePressSubmit();"
-										class="button button-success ml10">一键提交审核</button>
+									<button onclick="onePressReject();"
+										class="button button-danger ml10">一键审核拒绝</button>
+									<button onclick="onePressPass();"
+										class="button button-success ml10">一键审核通过</button>
 								</div>
 							</div>
 						</div>
@@ -91,12 +52,13 @@
 						<div class="row-fluid show-grid th">
 							<div class="span1">&nbsp;</div>
 							<div class="span3">ID号</div>
-							<div class="span3">上传日期</div>
-							<div class="span3">发票号</div>
+							<div class="span3">提交日期</div>
 							<div class="span3">费用类型</div>
 							<div class="span3">金额</div>
-							<div class="span4">详细描述</div>
-							<div class="span3">操作</div>
+							<div class="span3">详细描述</div>
+							<div class="span3">审核理由</div>
+							<div class="span2">发票查看</div>
+							<div class="span2">操作</div>
 						</div>
 						<div id="retData"></div>
 					</div>
@@ -107,51 +69,24 @@
 	<script src="http://g.alicdn.com/bui/jquery-1.8.1.min.js"></script>
 	<script src="http://g.alicdn.com/bui/seajs/2.3.0/sea.js"></script>
 	<script src="http://g.alicdn.com/bui/bui/1.1.17/config.js"></script>
-	<script src="/js/webjs/menuTree.js"></script>
 	<script type="text/javascript">
 		var page = 1;
 		var pageSize = 1000;
-		var expenseTypeSelect = "<select id='expenseSelect' name='expenseSelect' class='input input-small'></select>";
 		var invoiceIdList = new Array();
 		$.ajax({
-			url : '/companyUser/getUserInfo',
-			type : "POST",
-			data : {},
-			success : function(data) {
-				if(data == null || data == '') return;
-				$('#user_name').val(data.user_name);
-				$('#company_name').val(data.company_name);
-				$('#approval_name').val(data.approval_name);
-				$('#user_dept_name').val(data.user_dept_name);
-				$('#cost_center_code').val(data.cost_center_code);
-			}
-		});
-		$.ajax({
-			url : '/companyUser/getAllCompanyUserDraftBill',
+			url : '/companyUser/getNeedAuditInvoiceList',
 			type : "POST",
 			data : {status:1, page:page, pageSize:pageSize},
 			success : function(data) {
 				if(data == null || data == '') return;
 				$('#retData').empty();
-				data.sort(function(a,b){return a.create_time<b.create_time?1:-1});
+				alert(JSON.stringify(data));
+				data.sort(function(a,b){return a.submit_time<b.submit_time?1:-1});
 				for(var i=0; i<data.length; i++) {
-					$('#retData').append("<div class='row-fluid show-grid td'><div class='span1'><p class='text-hide data-checkbox'><input type='checkbox' value='"+data[i].invoice_id+"' class='data-check-invoice-id'></p></div><div class='span3'><p class='text-hide data-invoice-id'>"+data[i].invoice_id+"</p></div><div class='span3'><p class='text-hide data-create-time'>"+data[i].create_time+"</p></div><div class='span3'><p class='text-hide data-invoice-code'>"+(data[i].invoice_code == null || data[i].invoice_code == '' ? "无" : data[i].invoice_code)+"</p></div><div class='span3'><p class='text-hide data-type-name'>"+data[i].expense_type_name+"</p></div><div class='span3'><p class='text-hide data-amount'>"+data[i].amount+"</p></div><div class='span4'><p class='text-hide data-desc'>"+(data[i].desc == null || data[i].desc == '' ? "无" : data[i].desc)+"</p></div><div class='span3'><a href='javascript:void(0)' class='dataEdit'>修改</a><a href='javascript:void(0)' class='dataDel'>删除</a></div></div>");
+					$('#retData').append("<div class='row-fluid show-grid td'><div class='span1'><p class='text-hide data-checkbox'><input type='checkbox' value='"+data[i].invoice_id+"' class='data-check-invoice-id'></p></div><div class='span3'><p class='text-hide data-invoice-id'>"+data[i].invoice_id+"</p></div><div class='span3'><p class='text-hide data-submit-time'>"+data[i].submit_time.substr(0, 10)+"</p></div><div class='span3'><p class='text-hide data-type-name'>"+(data[i].bill_expenseTypeName == null || data[i].bill_expenseTypeName == '' ? "无" : data[i].bill_expenseTypeName)+"</p></div><div class='span3'><p class='text-hide data-amount'>"+data[i].bill_amount+"</p></div><div class='span3'><p class='text-hide data-desc' title='"+(data[i].desc == null || data[i].desc == '' ? "无" : data[i].desc)+"'>"+(data[i].desc == null || data[i].desc == '' ? "无" : (data[i].desc.length > 8 ? data[i].desc.substr(0, 8) + "...":data[i].desc))+"</p></div><div class='span3'><p class='text-hide data-reasons' title='"+data[i].reasons+"'>"+(data[i].reasons > 8 ? data[i].reasons.substr(0,8)+"...":data[i].reasons)+"</p></div><div class='span2'><a class='data-img' href='"+data[i].bill_img+"'>点击查看</a></div><div class='span2'><a class='text-hide data-add-reasons' href='javascript:void(0)'>添加审核理由</a></div></div>");
 				}
 				bindOperation();
 				bindCheck();
-			}
-		});
-		$.ajax({
-			url : '/getAllExpenseType',
-			type : "POST",
-			data : {},
-			success : function(data) {
-				if(data == null || data == '') return;
-				var options = '';
-				for(var i=0; i<data.length; i++) {
-					options += "<option value='"+data[i].value+"'>"+data[i].name+"</option>";
-				}
-				expenseTypeSelect = "<select id='expenseSelect' name='expenseSelect' class='input input-small'>"+options+"</select>";
 			}
 		});
 		
@@ -171,7 +106,27 @@
 			})
 		}
 		
-		function onePressSubmit() {
+		function onePressPass() {
+			if(invoiceIdList.length == 0) {
+				alert('请先勾选需要提交审核的发票！');
+				return;
+			}
+			var temp = new Array();
+			for(var i=0; i<invoiceIdList.length; i++) {
+				temp.push($(invoiceIdList[i]).val());
+				$(invoiceIdList[i]).parent().parent().parent().remove();
+			}
+			$.ajax({
+				url : '/companyUser/submitInvoiceAudit',
+				type : "POST",
+				data : {invoiceIdList:temp.join(",")},
+				success : function(data) {
+					if(data == null) return;
+				}
+			});
+		}
+		
+		function onePressReject() {
 			if(invoiceIdList.length == 0) {
 				alert('请先勾选需要提交审核的发票！');
 				return;
@@ -198,11 +153,12 @@
 
                 d={
                     'invoice_id' : par.find(".data-invoice-id").text(),
-                    "create_time" : par.find(".data-create-time").text(),
-                    "invoice_code" : par.find(".data-invoice-code").text(),
+                    "submit_time" : par.find(".data-submit-time").text(),
+                    "invoice_img" : par.find(".data-img").text(),
                     "amount" : par.find(".data-amount").text(),
                     "expense_type_name" : par.find(".data-type-name").text(),
-                    "desc" : par.find(".data-desc").text()
+                    "desc" : par.find(".data-desc").text(),
+                    "reasons" : par.find(".data-reasons").text()
                 }
                 var tempHtml = par.html();
                 par.empty().append(txtTemplate(d,false));
@@ -218,24 +174,19 @@
 
                 d={
                     'invoice_id' : par.find("input[name='invoice-id']").val(),
-                    "create_time" : par.find("input[name='create-time']").val(),
-                    "invoice_code" : par.find("input[name='invoice-code']").val(),
+                    "submit_time" : par.find("input[name='create-time']").val(),
+                    "invoice_img" : par.find("input[name='invoice-code']").val(),
                     "amount" : par.find("input[name='amount']").val(),
-                    "expense_type_name" : par.find("select[name='expenseSelect'] option:selected").text(),
-                    "expense_type_val" : par.find("select[name='expenseSelect'] option:selected").val(),
-                    "desc" : par.find("textarea[name='desc']").val(),
+                    "expense_type_name" : par.find("input[name='expenseTypeName']").val(),
+                    "desc" : par.find("input[name='desc']").val(),
+                    "reasons" : par.find("input[name='reasons']").val()
                 }
-                var re = /^\d+(\.\d)?$/;
-                if(!re.test(d.amount)) {
-                	alert('金额只能是数字，请检查！');
-                	return;
-				}
                 var tempHtml = par.html();
                 par.empty().append(txtTemplate(d,true));
                 $.ajax({
-        			url : '/companyUser/updateInvoiceInfo',
+        			url : '/companyUser/updateInvoiceReasons',
         			type : "POST",
-        			data : {amount:d.amount,expenseTypeId:d.expense_type_val,detailDesc:d.desc,invoiceCode:d.invoice_code,invoiceId:d.invoice_id},
+        			data : {userId:d.amount,expenseTypeId:d.expense_type_val,detailDesc:d.desc,invoiceCode:d.invoice_code,invoiceId:d.invoice_id},
         			success : function(data) {
         				if(data == null) return;
         				var options = '';
@@ -355,9 +306,9 @@
    					{text : '待审核报销单',id : '40',href:"/views/webviews/companyUser/user_wait_audit_invoice.html"},
    					{text : '已审核报销单',id : '50',href:"/views/webviews/companyUser/user_finish_audit_invoice.html"},
    					{text : '报销单历史',id : '60',href:"/views/webviews/companyUser/expense_account_history.html"},
-   					{text : '审核发票',id : '70',href:"javascript:void(0);",  leaf:false, expanded : false,children: [
+   					{text : '审核发票',id : '70',href:"javascript:void(0);",  leaf:false, expanded : true,children: [
    						{text : '待审核发票',id : '71', href:"/views/webviews/companyUser/audit_invoice_need_process.html"},
-   						{text : '已审核发票',id : '72', href:"/views/webviews/companyUser/audit_invoice_finished.html"}                                                
+   						{text : '已审核发票',id : '72', href:"/views/webviews/companyUser/audit_invoice_finished.html"}                                                 
    					]}
              ]
         	});
@@ -371,7 +322,7 @@
             menu.on('itemclick',function(ev){
                 $('.log').text(ev.item.text);
             });
-            var firstLeaf = menu.findNode('30'); //获取第一个叶子节点
+            var firstLeaf = menu.findNode('71'); //获取第一个叶子节点
             menu.setSelected(firstLeaf);
         });
 	</script>

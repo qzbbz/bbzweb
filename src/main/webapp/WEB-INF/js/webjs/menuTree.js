@@ -18,10 +18,9 @@
 			arr.push('</span></div></li>');
 			if(isParent(v.children.length)){
 				if(v.expanded)
-					arr.push('<ul class="child-list" style="display:none">')
-				else
 					arr.push('<ul class="child-list">');
-
+				else
+					arr.push('<ul class="child-list" style="display:none">')
 				$.each(v.children,function(j,v){
 					arr.push('<li class="menu-leaf bui-menu-item">')
 					arr.push('<a href="'+v.href+'">'+v.text+'</a></li>');
@@ -60,7 +59,7 @@
 	window.menuTree = menuTree;
 
 	function isExpanded(exp){
-		return exp ? ' ':'bui-menu-item-expanded';
+		return exp ? 'bui-menu-item-expanded':' ';
 	}
 	function isParent(len){
 		if(len > 0)

@@ -30,8 +30,9 @@ public class UserInvoiceServiceImpl implements IUserInvoiceService {
 	}
 	
 	@Override
-	public boolean updateInvoiceApprovalStatus(String userId,String approvalUserId,long invoiceId,int status,int approvalStatus){
+	public boolean updateInvoiceApprovalStatus(String userId, String approvalUserId,long invoiceId,int status,int approvalStatus, String reasons){
 		UserInvoice userInvoice = new UserInvoice();
+		userInvoice.setReasons(reasons);
 		userInvoice.setInvoiceId(invoiceId);
 		userInvoice.setStatus(status);
 		userInvoice.setApprovalStatus(approvalStatus);

@@ -11,7 +11,7 @@ public interface IExpenseAccountService {
 	
 	List<Map<String, String>> getAllExpenseType();
 	
-	boolean approvalBill(String approvalId, String invoiceId, String userId, int status);
+	boolean approvalBill(String approvalId, String invoiceId, String userId, int status, String reasons);
 	
 	public boolean submitExpenseAccount(String openId,String image);
 	

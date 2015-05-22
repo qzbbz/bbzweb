@@ -29,7 +29,7 @@
   position: relative;
 }
 .bui-side-menu .menu-leaf a {
-  padding: 8px 0;
+  padding: 10px 0;
   color: #808080;
   outline: none;
 }
@@ -49,9 +49,9 @@
   position: relative;
 }
 .bui-side-menu .menu-second a {
-  display: block;
   padding: 10px 0;
-  color: #cccccc;
+  color: #dddddd;
+  font-weight: 600;
   outline: none;
 }
 .bui-side-menu .menu-second a:hover {
@@ -62,16 +62,17 @@
 }
 .bui-side-menu .menu-second .bui-menu-item-selected a {
   color: #ffffff;
+  outline: none;
 }
 .bui-side-menu .bui-menu-title-text {
   overflow: hidden;
   display: block;
 }
 .bui-side-menu .bui-menu-title {
-  color: #cccccc;
-  font-weight: bold;
-  overflow: hidden;
-  vertical-align: middle;
+  /*color: @menuColor;
+        font-weight: bold;
+        overflow: hidden;
+        vertical-align: middle;*/
 }
 .bui-side-menu .bui-menu-title s {
   width: 18px;
@@ -203,8 +204,6 @@
 }
 .button-tabs {
   background: #35383b;
-  width: 120px;
-  height: 480px;
   float: left;
   position: relative;
 }
@@ -213,7 +212,7 @@
   display: block;
   margin: 0;
   border-top: 1px solid #212326;
-  color: #cccccc;
+  color: #dddddd;
   position: relative;
   text-align: center;
 }
@@ -612,7 +611,7 @@
   padding: 15px;
 }
 .bui-dialog .bui-stdmod-footer {
-  padding: 0 15px 15px;
+  padding: 0 15px;
   text-align: right;
   *zoom: 1;
 }
@@ -625,8 +624,7 @@
   clear: both;
 }
 .bui-dialog .bui-stdmod-footer .button + .button {
-  margin-left: 5px;
-  margin-bottom: 0;
+  margin: 15px 5px;
 }
 .bui-dialog .bui-stdmod-footer .button-group .button + .button {
   margin-left: -1px;

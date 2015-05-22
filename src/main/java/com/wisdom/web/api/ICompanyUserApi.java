@@ -17,4 +17,15 @@ public interface ICompanyUserApi {
 	
 	public boolean submitInvoiceAudit(String userId, String idList);
 	
+	public boolean deleteInvoice(long invoiceId);
+	
+	public List<Map<String, Object>> getWaitInvoiceList(String userId);
+	
+	public List<Map<String, Object>> getFinishInvoiceList(String userId);
+	
+	public List<Map<String, Object>> getNeedAuditInvoiceList(String userId);
+	
+	public List<Map<String, Object>> getFinishAuditInvoiceList(String userId);
+	
+	public List<Map<String, Object>> getInvoiceHistory(String userId);
 }

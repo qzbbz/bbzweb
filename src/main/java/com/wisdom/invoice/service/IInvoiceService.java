@@ -41,7 +41,7 @@ public interface IInvoiceService {
 	 * @param approavalStatus
 	 * @return 
 	 */
-	public Map<String,Object> excuteApproval(String userId,String approvalUerId,String invoiceId,int approvalStatus);
+	public Map<String,Object> excuteApproval(String userId,String approvalUerId,String invoiceId,int approvalStatus, String reasons);
 	
 	public Map<String, List<Map<String, Object>>> getNeededAuditBillList(String userId);
 	/**
@@ -51,4 +51,6 @@ public interface IInvoiceService {
 	 * @return
 	 */
 	public Map submitUserInvoice(String userId,long invoiceId, Map<String, String> params);
+	
+	public boolean deleteInvoiceByInvoiceId(long invoiceId);
 }

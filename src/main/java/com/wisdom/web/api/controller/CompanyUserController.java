@@ -100,4 +100,53 @@ public class CompanyUserController {
 		}
 		return retMap;
 	}
+	
+	@RequestMapping("/companyUser/deleteInvoice")
+	@ResponseBody
+	public Map<String, String> deleteInvoice(HttpServletRequest request) {
+		Map<String, String> retMap = new HashMap<>();
+		Long invoiceId  = Long.valueOf(request.getParameter("invoiceId"));		
+		if(companyUserService.deleteInvoice(invoiceId)) {
+			retMap.put("error_code", "0");
+		} else {
+			retMap.put("error_code", "1");
+			retMap.put("error_message", "删除发票信息失败！");
+		}
+		return retMap;
+	}
+	
+	@RequestMapping("/companyUser/getWaitInvoiceList")
+	@ResponseBody
+	public List<Map<String, Object>> getWaitInvoiceList(HttpServletRequest request) {
+		String userId = (String) request.getSession().getAttribute("userId");
+		return companyUserService.getWaitInvoiceList(userId);
+	}
+	
+	@RequestMapping("/companyUser/getFinishInvoiceList")
+	@ResponseBody
+	public List<Map<String, Object>>  getFinishInvoiceList(HttpServletRequest request) {
+		String userId = (String) request.getSession().getAttribute("userId");
+		return companyUserService.getFinishInvoiceList(userId);
+	}
+	
+	@RequestMapping("/companyUser/getNeedAuditInvoiceList")
+	@ResponseBody
+	public List<Map<String, Object>>  getNeedAuditInvoiceList(HttpServletRequest request) {
+		String userId = (String) request.getSession().getAttribute("userId");
+		return companyUserService.getNeedAuditInvoiceList(userId);
+	}
+	
+	@RequestMapping("/companyUser/getFinishAuditInvoiceList")
+	@ResponseBody
+	public List<Map<String, Object>>  getFinishAuditInvoiceList(HttpServletRequest request) {
+		String userId = (String) request.getSession().getAttribute("userId");
+		return companyUserService.getFinishAuditInvoiceList(userId);
+	}
+	
+	@RequestMapping("/companyUser/getInvoiceHistory")
+	@ResponseBody
+	public List<Map<String, Object>>  getInvoiceHistory(HttpServletRequest request) {
+		String userId = (String) request.getSession().getAttribute("userId");
+		return companyUserService.getInvoiceHistory(userId);
+	}
 }

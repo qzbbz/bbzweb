@@ -44,6 +44,8 @@ public class InvoiceServiceImpl implements IInvoiceService {
 	@Autowired
 	private IUserService userService;
 	@Autowired
+	private IInvoiceDao invoiceDao;
+	@Autowired
 	private IAttachmentService attachmentService;
 	@Autowired
 	private IUserInvoiceService userInvoiceService;
@@ -201,7 +203,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 	@Override
 	@Transactional
 	public Map<String, Object> excuteApproval(String userId,
-			String approvalUserId, String invoiceId,int approvalStatus) {
+			String approvalUserId, String invoiceId,int approvalStatus, String reasons) {
 		Map<String,Object> retMap = new HashMap<String,Object>();
 		retMap.put("success", false);
 		if(StringUtils.isEmpty(invoiceId) || StringUtils.isEmpty(userId)||StringUtils.isEmpty(approvalUserId)){
@@ -239,7 +241,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		
 		//执行审批：拒绝时候，直接结束
 		if(1 == approvalStatus && invoiceApprovalService.updateApprovalRecord(userId,longId,1,approvalStatus)){
-			userInvoiceService.updateInvoiceApprovalStatus(userId,approvalUserId,longId,1,approvalStatus);
+			userInvoiceService.updateInvoiceApprovalStatus(userId,approvalUserId,longId,1,approvalStatus, reasons);
 			log.error("审批成功，审批拒绝!");
 			retMap.put("message","审批成功，审批拒绝！");
 			retMap.put("success", true);
@@ -249,7 +251,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		//是否需要上一级审批
 		if(!ifNeedSuperApproval(userId,approvalUserId,invoice.getAmount())){
 			//更改发票审批状态
-			userInvoiceService.updateInvoiceApprovalStatus(userId,approvalUserId,longId,1,approvalStatus);
+			userInvoiceService.updateInvoiceApprovalStatus(userId,approvalUserId,longId,1,approvalStatus, reasons);
 			invoiceApprovalService.updateApprovalRecord(userId,longId,1,approvalStatus);
 			retMap.put("success", true);
 			retMap.put("message", "发票审批成功！");
@@ -308,7 +310,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		List<Map<String,Object>> uploadedList = new ArrayList<Map<String,Object>>(); 
 		
 		try {
-			for(UserInvoice invoice:billList){
+			for(UserInvoice invoice:billList) {
 				Map<String,Object> billInfo = new HashMap<String,Object>();
 				billInfo = getBillInfo(billInfo,invoice);
 				if(1 == invoice.getStatus()){
@@ -354,6 +356,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		map.put("invoice_id", userInvoice.getInvoiceId());
 		map.put("user_id", userInvoice.getUserId());
 		map.put("processStatus",userInvoice.getStatus());
+		map.put("reasons",userInvoice.getReasons() == null || userInvoice.getReasons().isEmpty() ? "无" : userInvoice.getReasons());
 		map.put("approval_status", userInvoice.getApprovalStatus() == 0?true:false);
 		map.put("approval_id", userInvoice.getApprovalId());
 		String userName = userService.getUserNameByUserId(userInvoice.getUserId());
@@ -366,13 +369,17 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			return map;
 		}
 		map.put("bill_title", invoice.getTitle());
+		map.put("bill_commit_status", invoice.getStatus());
 		map.put("bill_amount", invoice.getAmount());
+		map.put("bill_desc", invoice.getDetailDesc() == null || invoice.getDetailDesc().isEmpty() ? "无" : invoice.getDetailDesc());
 		map.put("bill_expenseTypeId", invoice.getExpenseTypeId());
-		map.put("bill_expenseTypeName", expenseTypeService.getExpenseTypeNameById(invoice.getExpenseTypeId()));
+		String exTypeName = expenseTypeService.getExpenseTypeNameById(invoice.getExpenseTypeId());
+		map.put("bill_expenseTypeName", exTypeName == null || exTypeName.isEmpty() ? "未设置" : exTypeName);
 		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
-		Timestamp stamp = invoice.getCreateTime();
+		Timestamp stamp = invoice.getDate();
 		map.put("bill_date", sdf.format(stamp));
-		
+		stamp = userInvoice.getUpdateTime();
+		map.put("update_time",sdf.format(stamp));
 		if(!StringUtils.isEmpty((String)map.get("approval_id"))){
 			String approvalName = userService.getUserNameByUserId((String)map.get("approval_id"));
 			map.put("approval_name", approvalName);
@@ -406,17 +413,20 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			map.put("invoice_id", invoiceApproval.getInvoiceId());
 			map.put("approval_status", invoiceApproval.getApprovalStatus());
 			map.put("approval_id", approvalId);
+			DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
+			Timestamp stamp = invoiceApproval.getUpdateTime();
+			map.put("submit_time", sdf.format(stamp));
 			UserInvoice userInvoice = userInvoiceService.getUserInvoiceByInvoiceId(invoiceApproval.getInvoiceId());
 			if(null != userInvoice){
-				map.put("user_id", userInvoice.getUserId());
-				DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");  
-				Timestamp stamp = userInvoice.getCreateTime();
+				map.put("user_id", userInvoice.getUserId());  
+				stamp = userInvoice.getCreateTime();
 				map.put("bill_date", sdf.format(stamp));
 				String userName = userService.getUserNameByUserId(userInvoice.getUserId());
 				map.put("user_name", userName);
 				map.put("bill_status", userInvoice.getStatus());
 				String approvalName = userService.getUserNameByUserId(userInvoice.getUserId());
 				map.put("approval_name", approvalName);
+				map.put("reasons", userInvoice.getReasons() == null || userInvoice.getReasons().isEmpty() ? "无" : userInvoice.getReasons());
 			}		
 			map.put("approval_id", approvalId);
 			Invoice invoice =  singleInvoiceService.getSingleInvoiceInfo(invoiceApproval.getInvoiceId());
@@ -427,6 +437,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			map.put("bill_title", invoice.getTitle());
 			map.put("bill_amount", invoice.getAmount());
 			map.put("bill_expenseTypeId", invoice.getExpenseTypeId());
+			map.put("desc", invoice.getDetailDesc());
 			map.put("bill_expenseTypeName", expenseTypeService.getExpenseTypeNameById(invoice.getExpenseTypeId()));
 			Attachment attach = attachmentService.getAttachMentByInvoiceId(invoice.getId());
 			if(null != attach){
@@ -547,7 +558,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			singleInvoiceService.updateInvoiceInfo(params);
 		}
 		singleInvoiceService.updateInvoiceStatus(invoiceId,InvoiceStatus.SUBMITTED);
-		userInvoiceService.updateInvoiceApprovalStatus(userId, receiver, invoiceId, ProcessStatus.PROCESSING, ApprovalStatus.APPROVALED);		
+		userInvoiceService.updateInvoiceApprovalStatus(userId, receiver, invoiceId, ProcessStatus.PROCESSING, ApprovalStatus.APPROVALED, "");		
 		retMap.put("success", true);
 		return retMap;
 	}
@@ -572,6 +583,11 @@ public class InvoiceServiceImpl implements IInvoiceService {
 	public boolean ifNeedSuperApproval(String userId,String approvalId,double amount){
 		
 		return userService.ifNeedSuperApproval( userId,  approvalId, amount);
+	}
+
+	@Override
+	public boolean deleteInvoiceByInvoiceId(long invoiceId) {
+		return invoiceDao.deleteInvoiceByInvoiceId(invoiceId);
 	}
 
 }

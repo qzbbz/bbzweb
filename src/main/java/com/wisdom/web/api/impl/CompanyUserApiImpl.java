@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +20,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.wisdom.common.model.Invoice;
-import com.wisdom.common.utils.ResultCode;
 import com.wisdom.company.service.ICompanyService;
 import com.wisdom.company.service.IDeptService;
 import com.wisdom.company.service.IExpenseTypeService;
@@ -194,5 +191,58 @@ public class CompanyUserApiImpl implements ICompanyUserApi {
 			invoiceService.submitUserInvoice(userId, Long.valueOf(invoiceId), params);
 		}
 		return true;
+	}
+
+	@Override
+	public boolean deleteInvoice(long invoiceId) {
+		return invoiceService.deleteInvoiceByInvoiceId(invoiceId);
+	}
+
+	@Override
+	public List<Map<String, Object>> getWaitInvoiceList(String userId) {
+		Map<String, List<Map<String, Object>>> retMap = invoiceService.getBillsList(userId);
+		return retMap.get("processingList");
+	}
+
+	@Override
+	public List<Map<String, Object>> getFinishInvoiceList(String userId) {
+		Map<String, List<Map<String, Object>>> retMap = invoiceService.getBillsList(userId);
+		return retMap.get("finishedList");
+	}
+
+	@Override
+	public List<Map<String, Object>> getNeedAuditInvoiceList(String userId) {
+		Map<String, List<Map<String, Object>>> retMap = invoiceService.getNeededAuditBillList(userId);
+		return retMap.get("processingList");
+	}
+
+	@Override
+	public List<Map<String, Object>> getFinishAuditInvoiceList(String userId) {
+		Map<String, List<Map<String, Object>>> retMap = invoiceService.getNeededAuditBillList(userId);
+		return retMap.get("finishedList");
+	}
+
+	@Override
+	public List<Map<String, Object>> getInvoiceHistory(String userId) {
+		List<Map<String, Object>> retList = null;
+		Map<String, List<Map<String, Object>>> retMap = invoiceService.getBillsList(userId);
+		if(retMap.get("processingList") != null && retMap.get("processingList").size() > 0) {
+			retList = retMap.get("processingList"); 
+		}
+		if(retMap.get("finishedList") != null && retMap.get("finishedList").size() > 0) {
+			if(retList == null) {
+				retList = retMap.get("finishedList"); 
+			} else {
+				retList.addAll(retMap.get("finishedList")); 
+			}
+		}
+		if(retMap.get("uploadedList") != null && retMap.get("uploadedList").size() > 0) {
+			if(retList == null) {
+				retList = retMap.get("uploadedList"); 
+			} else {
+				retList.addAll(retMap.get("uploadedList")); 
+			}
+		}
+		return retList;
 	}
 }

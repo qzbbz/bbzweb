@@ -113,7 +113,7 @@ public class ExpenseAccountController {
 			String invoiceId = bill.getInvoice_id();
 			int status = Integer.valueOf(bill.getApproval_status());
 			if(expenseAccounterService.approvalBill(approvalId, invoiceId, userId,
-					status)) {
+					status, "")) {
 				sum++;
 				sb.append(bill.getInvoice_id());
 				sb.append(" ");
