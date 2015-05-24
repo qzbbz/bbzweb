@@ -17,10 +17,10 @@ a:hover{ text-decoration: none;}
 .side-bar-content{ position: relative;  top: 121px; overflow-y: auto; overflow-x: hidden;}
 /*正文*/
 .main{ padding: 20px 20px 0; /*height: 96%;*/ position: relative;}
-.menu{ border-bottom: 2px solid #e6e6e6; position: relative; height: 30px; margin-top: -8px;}
-.menu a{ border-bottom: 2px solid #e6e6e6; position: relative; line-height: 20px; height: 20px; font-size: 14px; padding: 0 20px 10px; margin-right: 10px; color: #4d4d4d; overflow: hidden;}
-.menu a:hover{ border-color: #5da09a; color: #5da09a;}
-.menu a.active{ border-color: #5da09a; color: #5da09a; font-weight: bold;}
+.menu,.layer-wrap-menu{ border-bottom: 2px solid #e6e6e6; position: relative; height: 30px; margin-top: -8px;}
+.menu a,.layer-wrap-menu a{ border-bottom: 2px solid #e6e6e6; position: relative; line-height: 20px; height: 20px; font-size: 14px; padding: 0 20px 10px; margin-right: 10px; color: #4d4d4d; overflow: hidden;}
+.menu a:hover,.layer-wrap-menu a:hover{ border-color: #5da09a; color: #5da09a;}
+.menu a.active,.layer-wrap-menu a.active{ border-color: #5da09a; color: #5da09a; font-weight: bold;}
 
 .waiting-submit{ padding-left: 70px; position: relative;}
 .waiting-submit label{ position: absolute; left: 0;}
@@ -28,18 +28,22 @@ a:hover{ text-decoration: none;}
 .waiting-submit li{ float: left; width: 11.5789%; position: relative; padding: 5px 0;}
 .waiting-submit li input{ position: relative; top: 2px;}
 /*弹层选项卡*/
-.layer-tabs{ width: 720px; height: 480px;}
+.layer-tabs{ width: 720px; height: 480px; position: relative;}
 .layer-tabs .tabs-menu{ width: 120px; float: left; position: relative; height: 100%; background: #35383b;}
 .layer-tabs .tabs-menu li{}
 .layer-tabs .tabs-menu i{ width: 20px; height: 20px; position: absolute; top: 10px;left: 50%; margin-left: -10%;}
 .layer-tabs .tabs-menu span{}
 .layer-tabs .tabs-menu .bui-tab-item-text{ padding: 39px 0 10px; height: 20px; width: 120px;}
 .layer-tabs .tabs-menu .button-tabs{ width: 120px; height: 410px;}
-.layer-tabs .tabs-box{ padding: 0 20px 20px; width: 560px; height: 460px; background: #fff; float: left;}
-.layer-tabs .tabs-box .tabs-box-content{}
+.layer-tabs .tabs-box{ padding: 20px; width: 560px; height: 440px; background: #fff; float: left;}
 
-.layer-wrap-menu{ border-bottom: 1px solid #e6e6e6; padding: 15px 0 14px; margin-bottom: 20px;}
-.layer-wrap-content{ height: 390px; overflow: auto; overflow-x: hidden;}
+.layer-wrap-menu{ position: relative;}
+.layer-wrap-menu{ border-bottom: 1px solid #e6e6e6; position: relative; height: 30px; margin-top: -8px;}
+.layer-wrap-menu a{ border-bottom: 1px solid #e6e6e6; position: relative; line-height: 20px; height: 20px; font-size: 14px; padding: 0 20px 10px; margin-right: 10px; color: #4d4d4d; overflow: hidden;}
+.layer-wrap-menu a:hover{ border-color: #5da09a; color: #5da09a;}
+.layer-wrap-menu a.active{ border-color: #5da09a; color: #5da09a; font-weight: bold;}
+
+.layer-wrap-content{ height: 355px; padding: 10px 0; overflow: auto; overflow-x: hidden;}
 .layer-wrap-simple{}
 .layer-wrap-simple .hd{ padding: 0 0 30px;}
 .layer-wrap-simple .bd{ text-align: center;}
@@ -47,6 +51,8 @@ a:hover{ text-decoration: none;}
 .layer-wrap-simple .bd input{ width: 60%; height: 36px; line-height: 36px; border-radius: 3px; border: 1px solid #e6e6e6; padding: 5px 10px;}
 .layer-wrap-simple .bd .button{ padding: 10px 60px;}
 .layer-wrap-complex{}
+
+.layer-wrap-footer{ position: absolute; width: 560px; bottom: 0; border-top: 1px solid #ddd; height: 44px; padding-top: 15px; text-align: right;}
 
 .bui-menu-item-expanded { background: #ff0;}
 
@@ -78,13 +84,19 @@ a:hover{ text-decoration: none;}
 .add-content .hd{ padding: 10px 0 20px; text-align: center;}
 .add-content .hd h2{ font-size: 14px; padding-top: 10px;}
 /*组织架构*/
+.framework{ border: 1px solid #ddd; border-radius: 3px;}
 .framework td{ padding: 0;}
-.fk-tree ul{ padding: 10px;}
+.framework table td .fk-content-info input{ padding: 5px 10px;}
+.framework table td .fk-content-info select{ height: 30px;}
+.fk-tree ul{ /*padding: 0 10px;*/}
 .fk-tree h2{ border-bottom: 1px solid #e6e6e6; font-size: 14px; text-indent: 15px; padding: 10px 0; height: 24px;}
 .fk-content-menu{ border-bottom: 1px solid #e6e6e6; padding: 10px 10px 10px 15px; font-size: 14px;}
-.fk-content-info{ padding: 10px 20px;}
+.fk-content-info{ padding: 10px 0;}
 .fk-content-info .row{ margin-left: 20px; padding: 5px 0;}
+.fk-content{ padding: 21px 20px 0;}
 .fk-content td{ padding: 5px;}
+.highlight{ height: 15px; line-height: 15px; overflow: hidden; padding: 1px 5px; background: #d9534f; color: #fff; display: inline; margin-left: 10px; border-radius: 3px;}
+.mtt5{ margin-top: -5px;}
 /**/
 .graphic-wrap{ padding: 0 20px;}
 .graphic-wrap li{ margin: 20px 0; position: relative;}
@@ -202,6 +214,14 @@ transform: translate3d(0, 0, 0);
 .control-btn .control-label{ min-height: 30px}
 .control-btn .controls{ padding: 10px 0;}
 /*上传控件*/
-.file { position: relative; display: inline-block; background: #e5e5e5; border: 1px solid #ccc; border-radius: 3px;    padding: 4px 12px; overflow: hidden; color: #4d4d4d; text-decoration: none; text-indent: 0; line-height: 20px; cursor: pointer;}
+.file { position: relative; display: inline-block; background: #e5e5e5; border: 1px solid #ccc; border-radius: 3px; padding: 4px 12px; overflow: hidden; color: #4d4d4d; text-decoration: none; text-indent: 0; line-height: 20px; cursor: pointer;}
 .file input { position: absolute; font-size: 100px; right: 0; top: 0; opacity: 0; cursor: pointer;}
 .file:hover { background: #fff; border-color: #ccc; color: #4d4d4d; text-decoration: none; cursor: pointer;}
+.file-green { position: relative; display: inline-block; background: #7db3ae; border: 1px solid #6daaa4; border-radius: 3px; padding: 4px 12px; overflow: hidden; color: #fff; text-decoration: none; text-indent: 0; line-height: 20px; cursor: pointer;}
+.file-green input { position: absolute; font-size: 100px; right: 0; top: 0; opacity: 0; cursor: pointer;}
+.file-green:hover { background: #5da09a; border-color: #508984; color: #fff; text-decoration: none; cursor: pointer;}
+/*图片浏览*/
+.imgviewwrap{ position: relative;}
+.controls-wrap{ position: absolute; left: 810px; top: 14px;}
+.resume,.zoom,.micrify{ position: relative; line-height: 40px; height: 40px; position: relative; cursor: pointer; border: 1px solid #ddd; background: #fafafa; padding: 0 10px 0 40px; display: block; margin-top: 10px;}
+.resume i,.zoom i,.micrify i{ font-size: 24px; top: 0; position: absolute; left: 10px;}

@@ -1,5 +1,7 @@
 package com.wisdom.company.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +31,11 @@ public class DeptServiceImpl implements IDeptService {
 	public String getCostCenterCodeById(long id) {
 		Dept dept = deptDao.getDeptByDeptId(id);
 		return dept == null ? "" : String.valueOf(dept.getCostCenterEncode());
+	}
+
+	@Override
+	public List<Dept> getDeptListByCompanyId(long companyId) {
+		return deptDao.getDeptListByCompanyId(companyId);
 	}
 
 }

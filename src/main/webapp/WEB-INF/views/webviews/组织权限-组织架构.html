@@ -18,7 +18,7 @@
 				<img src="/img/webimg/bss-logo.png" >
 				<h1>上海青智财务咨询有限公司</h1>
 			</div>
-            <div class="side-bar-content"></div>
+            <div class="side-bar-content" id="menuTree"></div>
 			<div class="side-bar-bottom">
 				<ul>
 					<li><a href=""><i class="setting"></i>设置</a></li>
@@ -42,281 +42,271 @@
 						</td>
 						<td>
 							<div class="fk-content">
-								<div class="fk-content-menu clearfix">
-									<div class="fl"><label for="">当前组织：</label>XXXXX财务咨询有限公司</div>
-									<div class="fr"><a href="" class="button button-mini button-success">添加</a><a href="" class="button button-mini button-danger ml10">删除</a></div>
-								</div>
+								<div class="menu"><a href="" class="active">当前总公司信息</a></div>
 								<div class="fk-content-info">
 									<div class="form-horizontal onlineTools">
-                        				<div class="row detail-row">
-                        					<label>上级组织：</label><span class="detail-text">XXXXX财务咨询有限公司</span>
+                        				<div class="row-fluid show-grid">
+                        					<div class="span12">
+                        						<label>公司名称：</label><span class="detail-text">XXXXX财务咨询有限公司</span>
+                        					</div>
+                        					<div class="span12">
+                        						<label>上级组织：</label><span class="detail-text">财务咨询</span>
+                        					</div>
                         				</div>
-                        				<div class="row detail-row">
-                        					<label>组织名称：</label><span class="detail-text">财务咨询</span>
+                        				<div class="row-fluid show-grid">
+                        					<div class="span12">
+                        						<label>组织代码：</label><span class="detail-text">财务咨询</span>
+                        					</div>
+                        					<div class="span12">
+                        						<label>组织代码：</label><span class="detail-text">12584863145</span>
+                        					</div>
                         				</div>
-                        				<div class="row detail-row">
-                        					<label>组织代码：</label><span class="detail-text">12584863145</span>
-                        				</div>
-                        				<div class="row detail-row">
-                        					<label>组织类型：</label><span class="detail-text">部门</span>
+                        				<div class="row-fluid show-grid">
+                        					<div class="span12">
+                        						<label>组织类型：</label><span class="detail-text">部门</span>
+                        					</div>
                         				</div>
                         			</div>
-                        			<div class="nav-tabs mt10">
-						                <ul>
-						                    <li class="active"><a href="">组织成员</a></li>
-						                    <li><a href="">负责人</a></li>
-						                </ul>
-						            </div>
-						            <div class="mt10 clearfix">
-						            	<div class="fl">
-						            		<input type="text" class="input input-normal"><button class="button button-mini button-success ml10">搜索</button>
-						            	</div>
-						            	<div class="fr"><a href="" class="button button-mini button-success">添加员工</a><a href="" class="button button-mini button-danger ml10">删除</a></div>
-						            </div>
-						            <table class="table table-bordered table-head-bordered center mt10">
-				                        <colgroup>
-				                            <col style="width: 40px;">
-				                            <col style="width: 19%;">
-				                            <col style="width: 19%;">
-				                            <col style="width: 19%;">
-				                            <col style="width: 19%;">
-				                            <col>
-				                        </colgroup>
-				                        <thead>
-				                        	<tr>
-				                        		<th></th>
-				                        		<th>员工姓名</th>
-				                        		<th>所在部门</th>
-				                        		<th>员工编号</th>
-				                        		<th>员工职级</th>
-				                        		<th>操作</th>
-				                        	</tr>
-				                        </thead>
-				                        <tbody>
-				                        	<tr>
-				                        		<td><input type="checkbox"></td>
-				                        		<td>李萌萌</td>
-				                        		<td>客服部</td>
-				                        		<td>6001</td>
-				                        		<td>客服经理</td>
-				                        		<td><a href="">修改</a><a href="">删除</a></td>
-				                        	</tr>
-				                        	<tr>
-				                        		<td><input type="checkbox"></td>
-				                        		<td>李萌萌</td>
-				                        		<td>客服部</td>
-				                        		<td>6001</td>
-				                        		<td>客服经理</td>
-				                        		<td><a href="">修改</a><a href="">删除</a></td>
-				                        	</tr>
-				                        </tbody>
-									</table>
+                        			<div class="well mt10">
+                        				<label for="">添加一级部门：</label>
+                        				<select class="input input-normal"><option>选择一级部门</option></select><button class="button button-success ml10">确定添加</button>
+                        			</div>
+									<div class="well mt10">
+										<p>您当前选择的是：<b class="text-danger mr20">客服部</b><a href="">修改</a><a href="">删除</a></p>
+										<p class="mt10"><label for="">你还可以增加子部门：</label><input type="text" class="input input-normal"><button class="button button-success ml10">确定添加</button></p>
+									</div>
 								</div>
-								<div class="page-item">
-				                    <span href="" class="prev-disabled">首页</span>
-				                    <a href="" class="prev"><em class="iconfont">&#xe631;</em>上一页</a>
-				                    <a href="">1</a>
-				                    <span class="iconfont text">&#xe632;</span>
-				                    <a href="">25</a>
-				                    <a href="" class="current">26</a>
-				                    <a href="">27</a>
-				                    <span class="iconfont text">&#xe632;</span>
-				                    <a href="">360</a>
-				                    <a href="" class="next"><em class="iconfont">&#xe62f;</em>下一页</a>
-				                    <span href="" class="next-disabled">尾页</span>
-				                    <span class="text">跳转到 第</span>
-				                    <span><input type="text" class="input"></span>
-				                    <span class="text">页</span>
-				                    <span><button class="button button-mini button-success">确定</button></span>
-				                </div>
+								
 							</div>
 						</td>
 					</tr>
 				</table>
 			</div>
+			<div class="panel mt20">
+				<div class="panel-header">组织成员 <a href="" class="fr mtt5 button button-success button-small">添加员工</a></div>
+				<div class="panel-body">
+					<table class="table table-bordered table-head-bordered center">
+                        <colgroup>
+                            <col style="width: 19%;">
+                            <col style="width: 19%;">
+                            <col style="width: 19%;">
+                            <col style="width: 19%;">
+                            <col>
+                        </colgroup>
+                        <thead>
+                        	<tr>
+                        		<th>员工姓名</th>
+                        		<th>所在部门</th>
+                        		<th>员工编号</th>
+                        		<th>员工职级</th>
+                        		<th>操作</th>
+                        	</tr>
+                        </thead>
+                        <tbody>
+                        	<tr>
+                        		<td>李萌萌</td>
+                        		<td>客服部</td>
+                        		<td>6001</td>
+                        		<td>客服经理<span class="highlight">负责人</span></td>
+                        		<td><span class="text-primary btnShow">修改</span><a href="">删除</a></td>
+                        	</tr>
+                        	<tr>
+                        		<td>李萌萌</td>
+                        		<td>客服部</td>
+                        		<td>6001</td>
+                        		<td>客服经理</td>
+                        		<td><a href="">修改</a><a href="">删除</a></td>
+                        	</tr>
+                        </tbody>
+					</table>
+					<table class="table table-bordered table-head-bordered mt10">
+                        <colgroup>
+                            <col style="width: 19%;">
+                            <col style="width: 19%;">
+                            <col style="width: 19%;">
+                            <col style="width: 19%;">
+                            <col>
+                        </colgroup>
+                        <thead>
+                        	<tr>
+                        		<th>员工姓名br</th>
+                        		<th>所在部门</th>
+                        		<th>员工编号</th>
+                        		<th>员工职级</th>
+                        		<th>操作</th>
+                        	</tr>
+                        </thead>
+                        <tbody>
+                        	<tr>
+                        		<td>李萌萌<br>spark269@163.com</td>
+                        		<td>客服部<br>6001</td>
+                        		<td>6001</td>
+                        		<td>客服经理<span class="highlight">负责人</span></td>
+                        		<td><span class="text-primary btnShow">修改</span><a href="">删除</a></td>
+                        	</tr>
+                        	<tr>
+                        		<td>李萌萌</td>
+                        		<td>客服部</td>
+                        		<td>6001</td>
+                        		<td>客服经理</td>
+                        		<td><span class="text-primary btnShow">修改</span><a href="">删除</a></td>
+                        	</tr>
+                        </tbody>
+					</table>
+					<div class="page-item">
+	                    <span href="" class="prev-disabled">首页</span>
+	                    <a href="" class="prev"><em class="iconfont">&#xe631;</em>上一页</a>
+	                    <a href="">1</a>
+	                    <span class="iconfont text">&#xe632;</span>
+	                    <a href="">25</a>
+	                    <a href="" class="current">26</a>
+	                    <a href="">27</a>
+	                    <span class="iconfont text">&#xe632;</span>
+	                    <a href="">360</a>
+	                    <a href="" class="next"><em class="iconfont">&#xe62f;</em>下一页</a>
+	                    <span href="" class="next-disabled">尾页</span>
+	                    <span class="text">跳转到 第</span>
+	                    <span><input type="text" class="input"></span>
+	                    <span class="text">页</span>
+	                    <span><button class="button button-mini button-success">确定</button></span>
+	                </div>
+				</div>
+			</div>
 		</div>
 	</div>
+	<div id="contentForm" class="hide">
+        <div id="form" class="form-horizontal">
+            <div class="control-group">
+                <label class="control-label">邮箱：</label>
+                <div class="controls bui-form-group-select" data-type="city">
+                  <input name="sname" type="text" class="input-large" data-rules="{required : true}">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">姓名：</label>
+                <div class="controls">
+                  <input name="sname" type="text" class="input-large" data-rules="{required : true}">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">部门：</label>
+                <div class="controls">
+                  <select class="input-small" value="山东省"><option>省份</option></select>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">职级：</label>
+                <div class="controls">
+                  <select class="input-small" value="山东省"><option>省份</option></select>
+                </div>
+            </div>
+            <div class="control-group control-btn"> 
+                <label class="control-label"></label>
+                <div class="controls">
+                    <button type="submit" class="button button-normal button-success">修改</button><button type="reset" class="button button-normal ml10">重置</button>
+                </div>
+            </div>
+        </div>
+    </div>
 	<!--该js需要修改js路径及修改seajs路径-->
-	<script src="http://g.tbcdn.cn/fi/bui/jquery-1.8.1.min.js"></script>
-	<script src="http://g.alicdn.com/bui/seajs/2.3.0/sea.js"></script>
-	<script src="http://g.alicdn.com/bui/bui/1.1.17/config.js"></script>
-	<!--ztree-->
-	<script src="../js/zTree_v3/jquery.ztree.all-3.5.min.js"></script>
-	<script type="text/javascript">
-		//竖状菜单
-	    BUI.use('bui/tree',function (Tree) {
-	        var menu = new Tree.TreeMenu({
-	        render : '.side-bar-content',
-
-	        elCls : 'bui-side-menu', 
-	        itemCls : 'bui-menu-item',
-	        expandAnimate : true,
-	        showIcons : false,
-
-	        dirTpl : '<li class="menu-leaf menu-second"><div class="bui-menu-title"><s></s><span class="bui-menu-title-text"><a href="{href}">{text}</a></span></div></li>',
-	        leafTpl : '<li class="menu-leaf"><a href="{href}">{text}</a></li>',
-
-	        nodes : [
-	            {text : '组织权限',id : '',href:"javascript:void(0)",expanded : true,children : [
-	                {text : '组织架构设置',id : '',href:"#"},
-	                {text : '基本资料设置',id : '',href:"#"},
-	                {text : '供应商和客户信息',id : '',href:"#"}
-	            ]},
-	            {text : '收件箱',id : '',href:"#",leaf : false,children: []},
-	            {text : '销售清单',id : '',href:"#",leaf : false,children: []},
-	            {text : '发票',id : '',href:"#",leaf : false,children: []},
-	            {text : '费用报销',id : '',href:"javascript:void(0)",expanded : true,children : [
-	                {text : '收件箱',id : '',href:"#"},
-	                {text : '新建报销单',id : '',href:"#"},
-	                {text : '草稿',id : '',href:"#"},
-	                {text : '待审核报销单',id : '',href:"#"},
-	                {text : '已审核报销单',id : '',href:"#"},
-	                {text : '我的历史报销单记录',id : '',href:"#"},
-	                {text : '报销费用分析',id : '',href:"#"}
-	            ]},
-	            {text : '工资社保单',id : '',href:"#",leaf : false,children: []},
-	            {text : '银行对账单',id : '',href:"#",leaf : false,children: []},
-	            {text : '网上抄税',id : '',href:"#",leaf : false,children: []},
-	            {text : '预约取发票',id : '',href:"#",leaf : false,children: []},
-	            {text : '报表分析',id : '',href:"#",leaf : false,children: []}
-	            ]
-	    	});
-	   		menu.render();
-			$.each($("li.menu-second"),function(){
-				var that = $(this);
-				if(that.next().hasClass("menu-second")){
-					that.find("s").remove();
-				}
-			})
-	        menu.on('itemclick',function(ev){
-	            $('.log').text(ev.item.text);
-	        }); 
-	    });
-		//ztree
-		var setting = {
-			view: {
-				addHoverDom: addHoverDom,
-				removeHoverDom: removeHoverDom,
-				selectedMulti: false
-			},
-			edit: {
-				enable: true,
-				editNameSelectAll: true,
-				showRemoveBtn: showRemoveBtn,
-				showRenameBtn: showRenameBtn
-			},
-			data: {
-				simpleData: {
-					enable: true
-				}
-			},
-			callback: {
-				beforeDrag: beforeDrag,
-				beforeEditName: beforeEditName,
-				beforeRemove: beforeRemove,
-				beforeRename: beforeRename,
-				onRemove: onRemove,
-				onRename: onRename
-			}
-		};
-
-		var zNodes =[
-			{ id:1, pId:0, name:"父节点 1", open:true},
-			{ id:11, pId:1, name:"叶子节点 1-1"},
-			{ id:12, pId:1, name:"叶子节点 1-2"},
-			{ id:13, pId:1, name:"叶子节点 1-3"},
-			{ id:2, pId:0, name:"父节点 2", open:true},
-			{ id:21, pId:2, name:"叶子节点 2-1"},
-			{ id:22, pId:2, name:"叶子节点 2-2"},
-			{ id:23, pId:2, name:"叶子节点 2-3"},
-			{ id:3, pId:0, name:"父节点 3", open:true},
-			{ id:31, pId:3, name:"叶子节点 3-1"},
-			{ id:32, pId:3, name:"叶子节点 3-2"},
-			{ id:33, pId:3, name:"叶子节点 3-3"}
-		];
-		var log, className = "dark";
-		function beforeDrag(treeId, treeNodes) {
-			return false;
-		}
-		function beforeEditName(treeId, treeNode) {
-			className = (className === "dark" ? "":"dark");
-			showLog("[ "+getTime()+" beforeEditName ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name);
-			var zTree = $.fn.zTree.getZTreeObj("treeDemo");
-			zTree.selectNode(treeNode);
-			return confirm("进入节点 -- " + treeNode.name + " 的编辑状态吗？");
-		}
-		function beforeRemove(treeId, treeNode) {
-			className = (className === "dark" ? "":"dark");
-			showLog("[ "+getTime()+" beforeRemove ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name);
-			var zTree = $.fn.zTree.getZTreeObj("treeDemo");
-			zTree.selectNode(treeNode);
-			return confirm("确认删除 节点 -- " + treeNode.name + " 吗？");
-		}
-		function onRemove(e, treeId, treeNode) {
-			showLog("[ "+getTime()+" onRemove ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name);
-		}
-		function beforeRename(treeId, treeNode, newName, isCancel) {
-			className = (className === "dark" ? "":"dark");
-			showLog((isCancel ? "<span style='color:red'>":"") + "[ "+getTime()+" beforeRename ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name + (isCancel ? "</span>":""));
-			if (newName.length == 0) {
-				alert("节点名称不能为空.");
-				var zTree = $.fn.zTree.getZTreeObj("treeDemo");
-				setTimeout(function(){zTree.editName(treeNode)}, 10);
-				return false;
-			}
-			return true;
-		}
-		function onRename(e, treeId, treeNode, isCancel) {
-			showLog((isCancel ? "<span style='color:red'>":"") + "[ "+getTime()+" onRename ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name + (isCancel ? "</span>":""));
-		}
-		function showRemoveBtn(treeId, treeNode) {
-			return !treeNode.isFirstNode;
-		}
-		function showRenameBtn(treeId, treeNode) {
-			return !treeNode.isLastNode;
-		}
-		function showLog(str) {
-			if (!log) log = $("#log");
-			log.append("<li class='"+className+"'>"+str+"</li>");
-			if(log.children("li").length > 8) {
-				log.get(0).removeChild(log.children("li")[0]);
-			}
-		}
-		function getTime() {
-			var now= new Date(),
-			h=now.getHours(),
-			m=now.getMinutes(),
-			s=now.getSeconds(),
-			ms=now.getMilliseconds();
-			return (h+":"+m+":"+s+ " " +ms);
-		}
-
-		var newCount = 1;
-		function addHoverDom(treeId, treeNode) {
-			var sObj = $("#" + treeNode.tId + "_span");
-			if (treeNode.editNameFlag || $("#addBtn_"+treeNode.tId).length>0) return;
-			var addStr = "<span class='button add' id='addBtn_" + treeNode.tId
-				+ "' title='add node' onfocus='this.blur();'></span>";
-			sObj.after(addStr);
-			var btn = $("#addBtn_"+treeNode.tId);
-			if (btn) btn.bind("click", function(){
-				var zTree = $.fn.zTree.getZTreeObj("treeDemo");
-				zTree.addNodes(treeNode, {id:(100 + newCount), pId:treeNode.id, name:"new node" + (newCount++)});
-				return false;
-			});
-		};
-		function removeHoverDom(treeId, treeNode) {
-			$("#addBtn_"+treeNode.tId).unbind().remove();
-		};
-		function selectAll() {
-			var zTree = $.fn.zTree.getZTreeObj("treeDemo");
-			zTree.setting.edit.editNameSelectAll =  $("#selectAll").attr("checked");
-		}
-		
-		$(document).ready(function(){
-			$.fn.zTree.init($("#treeDemo"), setting, zNodes);
-			$("#selectAll").bind("click", selectAll);
-		});
+	<script src="/js/webjs/jquery-1.8.1.min.js"></script>
+    <script src="/js/webjs/sea.js"></script>
+    <script src="/js/webjs/config.js"></script>
+    <script src="/js/webjs/menuTree.js"></script>
+    <script type="text/javascript">
+        //侧栏高度
+	    (function(){
+	        var H=$(window).height();
+	        var h1=$(".side-bar-top").height()+$(".side-bar-bottom").height();
+	        $(".side-bar-content").height(H-h1);
+	        $(window).resize(function(){
+	            H=$(window).height();
+	            $(".side-bar-content").height(H-h1);
+	        });
+	    })()
+	    //竖状菜单
+        var menu = new menuTree(
+            {"nodes" : [
+                {text : '组织权限',id : 'a',href:"#",expanded : true,children : [
+                    {text : '控件组合1',id : 'a1',href:"控件组合1.html"},
+                    {text : '控件组合',id : 'a2',href:"控件组合.html"},
+                    {text : '基本资料设置',id : 'a3',href:"#"},
+                    {text : '供应商和客户信息',id : 'a4',href:"#"}
+                ]},
+                {text : '费用报销',id : 'b',href:"#",expanded : false,children : [
+                    {text : '收件箱',id : 'b1',href:"#"},
+                    {text : '新建报销单',id : 'b2',href:"#"},
+                    {text : '草稿',id : 'b3',href:"#"},
+                    {text : '待审核报销单',id : 'b4',href:"#"},
+                    {text : '已审核报销单',id : 'b5',href:"#"},
+                    {text : '我的历史报销单记录',id : 'b6',href:"#"},
+                    {text : '报销费用分析',id : 'b7',href:"#"}
+                ]},
+                {text : '收件箱',id : 'c',href:"#",leaf : false,children: []},
+                {text : '销售清单',id : 'd',href:"#",leaf : false,children: []},
+                {text : '发票',id : 'e',href:"#",leaf : false,children: []},
+                {text : '工资社保单',id : 'f',href:"#",leaf : false,children: []},
+                {text : '银行对账单',id : 'g',href:"#",leaf : false,children: []},
+                {text : '网上抄税',id : 'h',href:"#",leaf : false,children: []},
+                {text : '预约取发票',id : 'i',href:"#",leaf : false,children: []},
+                {text : '报表分析',id : 'g',href:"#",leaf : false,children: []}
+                ]
+            },"menuTree"
+        );
+		//tree
+		BUI.use('bui/tree',function (Tree) {
+        
+	      	//树节点数据，
+	      	//text : 文本，
+	      	//id : 节点的id,
+	      	//leaf ：标示是否叶子节点，可以不提供，根据childern,是否为空判断
+	      	//expanded ： 是否默认展开
+	      	var data = [ 
+		        {text : '1',id : '1',children: [{text : '11',id : '11'}]},
+		        {text : '2',id : '2',expanded : true,children : [
+		            {text : '21',id : '21',children : [{text : '211',id : '211'},{text : '212',id : '212'}]},
+		            {text : '22',id : '22'}
+		        ]},
+		        {text : '3',id : '3'},
+		        {text : '4',id : '4'}
+	        ];
+	      	//由于这个树，不显示根节点，所以可以不指定根节点
+	      	var tree = new Tree.TreeList({
+		        render : '#treeDemo',
+		        root : {                  //由于要显示根节点，所以需要配置根节点
+		          id : '0',
+		          text : '根节点',
+		          expanded : true,
+		          children : data
+		        },
+		        showLine : true, //显示连接线
+		        showRoot : true
+		      	});
+		      	tree.render();
+		 
+		      	tree.on('itemclick',function(ev){
+		        var item = ev.item;
+		        $('.log').text(item.text);
+	      	});
+    	});
+		//弹窗
+        BUI.use('bui/overlay',function(Overlay){
+            //dialogForm
+            var dialogForm = new Overlay.Dialog({
+                title:'修改',
+                width:600,
+                //height:300,
+                contentId:'contentForm',
+                success:function () {
+	              	alert('确认');
+	              	this.close();
+	            },
+                buttons : []
+            });
+            $('.btnShow').on('click',function () {
+                dialogForm.show();
+            });
+        });
 	</script>
 </body>
 </html>

@@ -50,6 +50,15 @@
 	    	</table>
 	    	<div class="pagination"></div>
 		</div>
+		<div id="content" style="display: none;"></div>
+		<div class="imgviewwrap" style="display:none;">
+                <div id="imgviewWrap"></div>
+                <div class="controls-wrap" style="float:left;">
+                    <span class="resume"><i class="iconfont">&#xe63b;</i>原始大小</span>
+                    <span class="zoom"><i class="iconfont">&#xe63a;</i>放大</span>
+                    <span class="micrify"><i class="iconfont">&#xe639;</i>缩小</span>
+                </div>
+        </div>
 	</div>
 <!--该js需要修改js路径及修改seajs路径-->
 <script src="http://g.tbcdn.cn/fi/bui/jquery-1.8.1.min.js"></script>
@@ -62,12 +71,74 @@
 		data : {},
 		success : function(data) {
 			if(data == null) return;
+			data.sort(function(a,b){return a.date<b.date?1:-1});
 			$('#retData').empty();
 			for(var i=0; i<data.length; i++) {
-				$('#retData').append("<tr><td>"+data[i].date+"</td><td>"+data[i].company_name+"</td><td><a href='/files/company/"+data[i].file_name+"'>点击查看发票图片</a></td></tr>");
+				$('#retData').append("<tr><td>"+data[i].date+"</td><td>"+data[i].company_name+"</td><td><a href='javascript:showImg(\"/files/company/"+data[i].file_name+"\")'>点击查看发票图片</a></td></tr>");
 			}
 		}
 	});
+	
+	function showImg(src) {
+		BUI.use(['bui/imgview', 'bui/overlay'],function(ImgView, Overlay){
+			  var dialogWidth = 800;
+		      var dialogHeight = 500;
+		      var imgView = new ImgView.ViewContent({
+		        render: "#imgviewWrap",
+		        width: dialogWidth,
+		        imgSrc: src,
+		        height: dialogHeight,
+		        autoRender: false, // 是否自动渲染,默认为false
+		        drag:true
+		      });
+		      var dialog = new Overlay.Dialog({
+		          title: '发票图片浏览',
+		          width: dialogWidth,
+		          height: dialogHeight,
+		          //elCls : 'imgview-dialog',
+		          buttons:[],
+		          //配置DOM容器的编号
+		          contentId: 'imgviewWrap',
+		          success: function () {
+		            // alert('确认');
+		            this.close();
+		          }
+		      });
+		      imgView.render();
+		      $(".controls-wrap").on('click',function(e){
+	                var target = e.target;
+	                if($.contains(this,target)){
+	                	var self = jQuery(target),
+	                	cls = self.attr("class");
+	                	if (cls == "viewImg") {
+	                		var width = 400,height = 300;
+	                		$("#img-preview-wrap").width(width).height(height)
+		                	imgView.set('width', width);
+	                		imgView.set('height', height);
+	                	}else{
+	                		viewContent[cls]();
+	                	}
+	                	return false;
+	                }
+	            });
+		      dialog.show();
+		})
+		return;
+		BUI.use('bui/overlay',function(Overlay){
+			 var dialogAlert = new Overlay.Dialog({
+	            title:'当前发票图片',
+	            width:600,
+	            height:450,
+	            bodyContent:'<div style="width:600px;height:450px;"><img src="'+src+'" style="width:600px;height:auto;"></div>',
+	            success:function () {
+	              alert('确认');
+	              this.close();
+	            }
+	         });
+          	 dialogAlert.show();
+		});
+	}
+	
 	function searchData() {
 		var conditionType = $('#condition option:selected').val();
 		var conditionValue = $('#content').val();
@@ -99,52 +170,55 @@
         });
     })()
 	//竖状菜单
-    BUI.use('bui/tree',function (Tree) {
-        var menu = new Tree.TreeMenu({
-        render : '.side-bar-content',
+	       BUI.use('bui/tree',function (Tree) {
+	           var menu = new Tree.TreeMenu({
+	           render : '.side-bar-content',
 
-        elCls : 'bui-side-menu', 
-        itemCls : 'bui-menu-item',
-        expandAnimate : true,
-        showIcons : false,
+	           elCls : 'bui-side-menu', 
+	           itemCls : 'bui-menu-item',
+	           expandAnimate : true,
+	           showIcons : true,
+	           loadMask:true,
 
-        dirTpl : '<li class="menu-leaf menu-second"><div class="bui-menu-title"><s></s><span class="bui-menu-title-text"><a href="{href}">{text}</a></span></div></li>',
-        leafTpl : '<li class="menu-leaf"><a href="{href}">{text}</a></li>',
+	           dirTpl : '<li class="menu-leaf menu-second"><div class="bui-menu-title"><s></s><span class="bui-menu-title-text"><a href="{href}">{text}</a></span></div></li>',
+	           leafTpl : '<li class="menu-leaf"><a href="{href}">{text}</a></li>',
 
-        nodes : [
-  				{text : '发票',id : '',href:"#",leaf : true, children: [
-  					{text : '发票上传',id : '',href:"/views/webviews/company/expense_account_upload.html"},
-  					{text : '发票历史记录',id : '',href:"/views/webviews/company/expense_account_history.html"}                                                      
-  				]},
-  				{text : '银行对账单',id : '',href:"#",expanded : false,children: [
-  					{text : '上传对账单',id : '',href:"/views/webviews/company/bank_statement_upload.html"},
-  					{text : '对账单历史记录',id : '',href:"/views/webviews/company/bank_statement_history.html"}                                                       
-  				]},
-  	            {text : '工资社保',id : '',href:"#",expanded : false,children : [
-  					{text : '参数设置',id : '',href:"/views/webviews/company/salary_welfare_args_settings.html"},
-  					{text : '下载工资计算模板',id : '',href:"/views/webviews/company/salary_welfare_template_download.html"},
-  					{text : '上传本月工资',id : '',href:"/views/webviews/company/salary_welfare_upload.html"}
-  				]},
-  	            {text : '预约取发票',id : '',href:"#",leaf : false,children: [
-  					{text : '方式选择',id : '',href:"/views/webviews/company/take_expense_account_mode_select.html"}
-  				]},
-  	            {text : '组织架构',id : '',href:"#",expanded : false,children : [
-  	                {text : '基本信息设置',id : '',href:"/views/webviews/company/organization_information_settings.html"},
-  	                {text : '组织架构设置',id : '',href:"/views/webviews/company/organization_structure_settings.html"}
-  	            ]}
-  	            ]
-  	    	});
-   		menu.render();
-		$.each($("li.menu-second"),function(){
-			var that = $(this);
-			if(that.next().hasClass("menu-second")){
-				that.find("s").remove();
-			}
-		})
-        menu.on('itemclick',function(ev){
-            $('.log').text(ev.item.text);
-        }); 
-    });
+	           nodes : [
+						{text : '公司发票',id : '10',href:"javascript:void(0);",  expanded : true,children: [
+							{text : '发票上传',id : '11', href:"/views/webviews/company/expense_account_upload.html"},
+                            {text : '发票历史记录',id : '12', href:"/views/webviews/company/expense_account_history.html"}                                           
+                        ]},
+                        {text : '银行对账单',id : '20',href:"javascript:void(0);", expanded : false,children: [
+							{text : '上传对账单',id : '21', href:"/views/webviews/company/bank_statement_upload.html"},
+							{text : '对账单历史记录',id : '22', href:"/views/webviews/company/bank_statement_history.html"}                                           
+						]},
+						 {text : '工资社保',id : '30',href:"javascript:void(0);", expanded : false,children: [
+							{text : '参数设置',id : '31', href:"/views/webviews/company/salary_welfare_args_settings.html"},
+							{text : '下载工资计算模板',id : '32', href:"/views/webviews/company/salary_welfare_template_download.html"},                                           
+							{text : '上传本月工资',id : '33', href:"/views/webviews/company/salary_welfare_upload.html"}
+						]},
+						{text : '预约取发票',id : '40',href:"javascript:void(0);", expanded : false,children: [
+							{text : '方式选择',id : '41', href:"/views/webviews/company/take_expense_account_mode_select.html"}                                           
+						]},
+						{text : '组织架构',id : '50',href:"javascript:void(0);",  expanded : false,children: [
+							{text : '基本信息设置',id : '51', href:"/views/webviews/company/organization_information_settings.html"},
+							{text : '组织架构设置',id : '52', href:"/views/webviews/company/organization_structure_settings.html"}                                           
+						]},
+	            ]
+	       	});
+	      		menu.render();
+	           $.each($("li.menu-second"),function(){
+	               var that = $(this);
+	               if(that.next().hasClass("menu-second")){
+	                   that.find("s").remove();
+	               }
+	           })
+	           menu.on('itemclick',function(ev){
+	               $('.log').text(ev.item.text);
+	           });
+	           var firstLeaf = menu.findNode('12'); //获取第一个叶子节点
+	           menu.setSelected(firstLeaf);
+	       });
 </script>
 </body>
 </html>

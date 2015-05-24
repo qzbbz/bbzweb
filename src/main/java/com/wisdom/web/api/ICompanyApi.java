@@ -6,6 +6,8 @@ import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.wisdom.web.utils.CompanyOrgStructure;
+
 public interface ICompanyApi {
 
 	public Map<String, String> companyDetailRegister(Map<String, String> params);
@@ -25,5 +27,9 @@ public interface ICompanyApi {
 	public Map<String, String> uploadCompanyBankSta(MultipartFile file, Map<String, String> params);
 	
 	public List<Map<String, String>> getCompanyBankStaByCondition(Map<String, String> params);
+	
+	public Map<String, String> getCompanyDetailInfo(String userId);
+	
+	public List<CompanyOrgStructure> getOrgStructureData(String userId);
 		
 }

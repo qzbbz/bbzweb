@@ -1,5 +1,7 @@
 package com.wisdom.company.dao;
 
+import java.util.List;
+
 import com.wisdom.common.model.Dept;
 
 public interface IDeptDao {
@@ -11,5 +13,7 @@ public interface IDeptDao {
 	public boolean deleteDept(Dept dept);
 	
 	public boolean updateDept(Dept dept);
+	
+	public List<Dept> getDeptListByCompanyId(long companyId);
 	
 }

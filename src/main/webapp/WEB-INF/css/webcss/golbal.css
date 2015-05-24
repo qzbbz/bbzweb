@@ -639,7 +639,7 @@ hr {
 .row {
   margin-left: -10px;
   *zoom: 1;
-  margin-bottom: 10px;
+  padding: 5px 0;
 }
 .row:before,
 .row:after {
@@ -813,7 +813,7 @@ hr {
 .row-fluid {
   width: 100%;
   *zoom: 1;
-  margin-bottom: 10px;
+  padding: 5px 0;
 }
 .row-fluid:before,
 .row-fluid:after {
@@ -3814,9 +3814,10 @@ form h3 {
   border-top-right-radius: 2px;
 }
 .page-item {
-  padding: 10px 0;
+  padding: 20px 0 10px;
   font-size: 12px;
   text-align: center;
+  height: 26px;
 }
 .page-item a {
   display: inline-block;

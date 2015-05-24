@@ -1,5 +1,7 @@
 package com.wisdom.company.dao;
 
+import java.util.List;
+
 import com.wisdom.common.model.Company;
 
 public interface ICompanyDao {
@@ -13,5 +15,7 @@ public interface ICompanyDao {
 	public boolean updateCompany(Company company);
 	
 	public boolean updateCompanyName(String companyName, long companyId);
+	
+	List<Company> getSubCompanyListByCompanyId(long companyId);
 	
 }

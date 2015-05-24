@@ -1,5 +1,7 @@
 package com.wisdom.company.service;
 
+import java.util.List;
+
 import com.wisdom.common.model.Company;
 
 public interface ICompanyService {
@@ -13,5 +15,9 @@ public interface ICompanyService {
 	public String getCompanyName(long companyId);
 	
 	public boolean updateCompanyName(String companyName, long companyId);
+	
+	public String getParentCompanyNameByCompanyId(long companyId);
+	
+	public List<Company> getSubCompanyListByCompanyId(long companyId);
 	
 }

@@ -20,6 +20,7 @@ import com.wisdom.area.service.IAreaService;
 import com.wisdom.company.service.ICompanyService;
 import com.wisdom.user.service.IUserService;
 import com.wisdom.web.api.ICompanyApi;
+import com.wisdom.web.utils.CompanyOrgStructure;
 import com.wisdom.web.utils.ErrorCode;
 
 @Controller
@@ -203,5 +204,19 @@ public class CompanyController {
 		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/files/company");
 		ResponseEntity<byte[]> re = companyApi.downloadSalarySocialSecurityTemplate(userId, cityName, type, realPath);
 		return re;
+	}
+	
+	@RequestMapping("/company/getOrgStructureData")
+	@ResponseBody
+	public List<CompanyOrgStructure> getOrgStructureData(HttpServletRequest request) {
+		String userId = (String) request.getSession().getAttribute("userId");
+		return companyApi.getOrgStructureData(userId);
+	}
+	
+	@RequestMapping("/company/getCompanyDetailInfo")
+	@ResponseBody
+	public Map<String, String> getCompanyDetailInfo(HttpServletRequest request) {
+		String userId = (String) request.getSession().getAttribute("userId");
+		return companyApi.getCompanyDetailInfo(userId);
 	}
 }

@@ -167,19 +167,20 @@
 	           elCls : 'bui-side-menu', 
 	           itemCls : 'bui-menu-item',
 	           expandAnimate : true,
-	           showIcons : false,
+	           showIcons : true,
+	           loadMask:true,
 
 	           dirTpl : '<li class="menu-leaf menu-second"><div class="bui-menu-title"><s></s><span class="bui-menu-title-text"><a href="{href}">{text}</a></span></div></li>',
 	           leafTpl : '<li class="menu-leaf"><a href="{href}">{text}</a></li>',
 
 	           nodes : [
-						{text : '公司发票',id : '10',href:"#",  expanded : true,children: [
+						{text : '公司发票',id : '10',href:"javascript:void(0);",  expanded : true,children: [
 							{text : '发票上传',id : '11', href:"/views/webviews/company/expense_account_upload.html"},
                             {text : '发票历史记录',id : '12', href:"/views/webviews/company/expense_account_history.html"}                                           
                         ]},
-                        {text : '银行对账单',id : '20',href:"#", leaf:false,expanded : false,children: [
+                        {text : '银行对账单',id : '20',href:"javascript:void(0);", expanded : false,children: [
 							{text : '上传对账单',id : '21', href:"/views/webviews/company/bank_statement_upload.html"},
-							{text : '对账单历史记录',id : '22', href:"/views/webviews/companyUser/bank_statement_history.html"}                                           
+							{text : '对账单历史记录',id : '22', href:"/views/webviews/company/bank_statement_history.html"}                                           
 						]},
 						 {text : '工资社保',id : '30',href:"javascript:void(0);", expanded : false,children: [
 							{text : '参数设置',id : '31', href:"/views/webviews/company/salary_welfare_args_settings.html"},

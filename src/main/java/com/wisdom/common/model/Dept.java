@@ -19,6 +19,7 @@ public class Dept implements java.io.Serializable {
 	private Long companyId;
 	private Long parentId;
 	private Long costCenterEncode;
+	private Integer level;
 	private Timestamp createTime;
 
 	// Constructors
@@ -29,12 +30,13 @@ public class Dept implements java.io.Serializable {
 
 	/** full constructor */
 	public Dept(Long id, String name, Long costCenterEncode, Long companyId, Long parentId,
-			Timestamp createTime) {
+			Integer level, Timestamp createTime) {
 		this.id = id;
 		this.name = name;
 		this.costCenterEncode = costCenterEncode;
 		this.companyId = companyId;
 		this.parentId = parentId;
+		this.level = level;
 		this.createTime = createTime;
 	}
 
@@ -42,6 +44,14 @@ public class Dept implements java.io.Serializable {
 
 	public Long getId() {
 		return this.id;
+	}
+
+	public Integer getLevel() {
+		return level;
+	}
+
+	public void setLevel(Integer level) {
+		this.level = level;
 	}
 
 	public void setId(Long id) {

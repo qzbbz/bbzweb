@@ -51,5 +51,19 @@ public class CompanyServiceImpl implements ICompanyService {
 	public boolean updateCompanyName(String companyName, long companyId) {
 		return companyDao.updateCompanyName(companyName, companyId);
 	}
+
+	@Override
+	public String getParentCompanyNameByCompanyId(long companyId) {
+		Company company = companyDao.getCompanyByCompanyId(companyId);
+		if(company == null) return "";
+		company = companyDao.getCompanyByCompanyId(company.getParentId());
+		if(company == null) return "";
+		return company.getName() == null ? "" : company.getName();
+	}
+
+	@Override
+	public List<Company> getSubCompanyListByCompanyId(long companyId) {
+		return companyDao.getSubCompanyListByCompanyId(companyId);
+	}
 	
 }

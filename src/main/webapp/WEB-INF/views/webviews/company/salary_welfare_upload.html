@@ -66,52 +66,55 @@
             });
         })()
 		//竖状菜单
-	    BUI.use('bui/tree',function (Tree) {
-	        var menu = new Tree.TreeMenu({
-	        render : '.side-bar-content',
+	       BUI.use('bui/tree',function (Tree) {
+	           var menu = new Tree.TreeMenu({
+	           render : '.side-bar-content',
 
-	        elCls : 'bui-side-menu', 
-	        itemCls : 'bui-menu-item',
-	        expandAnimate : true,
-	        showIcons : false,
+	           elCls : 'bui-side-menu', 
+	           itemCls : 'bui-menu-item',
+	           expandAnimate : true,
+	           showIcons : true,
+	           loadMask:true,
 
-	        dirTpl : '<li class="menu-leaf menu-second"><div class="bui-menu-title"><s></s><span class="bui-menu-title-text"><a href="{href}">{text}</a></span></div></li>',
-	        leafTpl : '<li class="menu-leaf"><a href="{href}">{text}</a></li>',
+	           dirTpl : '<li class="menu-leaf menu-second"><div class="bui-menu-title"><s></s><span class="bui-menu-title-text"><a href="{href}">{text}</a></span></div></li>',
+	           leafTpl : '<li class="menu-leaf"><a href="{href}">{text}</a></li>',
 
-	        nodes : [
-	  				{text : '发票',id : '',href:"#",leaf : true, children: [
-	  					{text : '发票上传',id : '',href:"/views/webviews/company/expense_account_upload.html"},
-	  					{text : '发票历史记录',id : '',href:"/views/webviews/company/expense_account_history.html"}                                                      
-	  				]},
-	  				{text : '银行对账单',id : '',href:"#",expanded : false,children: [
-	  					{text : '上传对账单',id : '',href:"/views/webviews/company/bank_statement_upload.html"},
-	  					{text : '对账单历史记录',id : '',href:"/views/webviews/company/bank_statement_history.html"}                                                       
-	  				]},
-	  	            {text : '工资社保',id : '',href:"#",expanded : false,children : [
-	  					{text : '参数设置',id : '',href:"/views/webviews/company/salary_welfare_args_settings.html"},
-	  					{text : '下载工资计算模板',id : '',href:"/views/webviews/company/salary_welfare_template_download.html"},
-	  					{text : '上传本月工资',id : '',href:"/views/webviews/company/salary_welfare_upload.html"}
-	  				]},
-	  	            {text : '预约取发票',id : '',href:"#",leaf : false,children: [
-	  					{text : '方式选择',id : '',href:"/views/webviews/company/take_expense_account_mode_select.html"}
-	  				]},
-	  	            {text : '组织架构',id : '',href:"#",expanded : false,children : [
-	  	                {text : '基本信息设置',id : '',href:"/views/webviews/company/organization_information_settings.html"},
-	  	                {text : '组织架构设置',id : '',href:"/views/webviews/company/organization_structure_settings.html"}
-	  	            ]}
-	  	            ]
-	  	    	});
-	   		menu.render();
-			$.each($("li.menu-second"),function(){
-				var that = $(this);
-				if(that.next().hasClass("menu-second")){
-					that.find("s").remove();
-				}
-			})
-	        menu.on('itemclick',function(ev){
-	            $('.log').text(ev.item.text);
-	        }); 
-	    });
+	           nodes : [
+						{text : '公司发票',id : '10',href:"javascript:void(0);",  expanded : true,children: [
+							{text : '发票上传',id : '11', href:"/views/webviews/company/expense_account_upload.html"},
+                            {text : '发票历史记录',id : '12', href:"/views/webviews/company/expense_account_history.html"}                                           
+                        ]},
+                        {text : '银行对账单',id : '20',href:"javascript:void(0);", expanded : false,children: [
+							{text : '上传对账单',id : '21', href:"/views/webviews/company/bank_statement_upload.html"},
+							{text : '对账单历史记录',id : '22', href:"/views/webviews/company/bank_statement_history.html"}                                           
+						]},
+						 {text : '工资社保',id : '30',href:"javascript:void(0);", expanded : false,children: [
+							{text : '参数设置',id : '31', href:"/views/webviews/company/salary_welfare_args_settings.html"},
+							{text : '下载工资计算模板',id : '32', href:"/views/webviews/company/salary_welfare_template_download.html"},                                           
+							{text : '上传本月工资',id : '33', href:"/views/webviews/company/salary_welfare_upload.html"}
+						]},
+						{text : '预约取发票',id : '40',href:"javascript:void(0);", expanded : false,children: [
+							{text : '方式选择',id : '41', href:"/views/webviews/company/take_expense_account_mode_select.html"}                                           
+						]},
+						{text : '组织架构',id : '50',href:"javascript:void(0);",  expanded : false,children: [
+							{text : '基本信息设置',id : '51', href:"/views/webviews/company/organization_information_settings.html"},
+							{text : '组织架构设置',id : '52', href:"/views/webviews/company/organization_structure_settings.html"}                                           
+						]},
+	            ]
+	       	});
+	      		menu.render();
+	           $.each($("li.menu-second"),function(){
+	               var that = $(this);
+	               if(that.next().hasClass("menu-second")){
+	                   that.find("s").remove();
+	               }
+	           })
+	           menu.on('itemclick',function(ev){
+	               $('.log').text(ev.item.text);
+	           });
+	           var firstLeaf = menu.findNode('11'); //获取第一个叶子节点
+	           menu.setSelected(firstLeaf);
+	       });
         //弹层
         BUI.use(['bui/overlay','bui/form'],function(Overlay,Form){
     

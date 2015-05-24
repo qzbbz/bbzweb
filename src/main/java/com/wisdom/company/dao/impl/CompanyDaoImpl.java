@@ -4,19 +4,23 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.wisdom.common.model.Company;
+import com.wisdom.common.model.ExpenseType;
 import com.wisdom.company.dao.ICompanyDao;
 import com.wisdom.company.mapper.CompanyMapper;
+import com.wisdom.company.mapper.ExpenseTypeMapper;
 
 @Repository("companyDao")
 public class CompanyDaoImpl implements ICompanyDao {
@@ -85,6 +89,20 @@ public class CompanyDaoImpl implements ICompanyDao {
 		int affectedRows = jdbcTemplate.update(sql, companyName, companyId);
 		logger.debug("updateCompanyName result : {}", affectedRows);
 		return affectedRows != 0;
+	}
+
+	@Override
+	public List<Company> getSubCompanyListByCompanyId(long companyId) {
+		List<Company> list = null;
+		try {
+			String sql = "select * from company where parent_id=?";
+			list = jdbcTemplate.query(sql, new Object[]{companyId},
+					new RowMapperResultSetExtractor<Company>(
+							new CompanyMapper()));
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return list;
 	}
 
 }

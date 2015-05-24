@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>组织架构</title>
+	<title>上海青智财务咨询有限公司</title>
     <link rel="stylesheet" type="text/css" href="/css/webcss/bui.css">
 	<link rel="stylesheet" type="text/css" href="/css/webcss/golbal.css">
 	<link rel="stylesheet" type="text/css" href="/css/webcss/layout.css">
@@ -22,7 +22,7 @@
 			<div class="side-bar-bottom">
 				<ul>
 					<li><a href=""><i class="setting"></i>设置</a></li>
-					<li><a href=""><i class="exit"></i>安全退出</a></li>
+					<li><a href="/logout"><i class="exit"></i>安全退出</a></li>
 				</ul>
 			</div>
 		</div>
@@ -37,88 +37,134 @@
 						<td>
 							<div class="fk-tree">
 								<h2>组织架构</h2>
-								<ul id="treeDemo" class="ztree"></ul>
+								<ul id="t1" class="ztree"></ul>
 							</div>
 						</td>
 						<td>
 							<div class="fk-content">
-								<div class="fk-content-menu clearfix">
-									<div class="fl"><label for="">当前组织：</label><label id="companyName"></label></div>
-									<div class="fr"><a href="" class="button button-mini button-success">添加子公司</a></div>
-								</div>
+								<div class="menu"><a href="" class="active">当前组织架构信息</a></div>
 								<div class="fk-content-info">
 									<div class="form-horizontal onlineTools">
-                        				<div class="row detail-row">
-                        					<label>上级组织：</label><span class="detail-text" id="parentCompanyName"></span>
+                        				<div class="row-fluid show-grid">
+                        					<div class="span12">
+                        						<label>公司名称：</label><span id="company_name" class="detail-text"></span>
+                        					</div>
+                        					<div class="span12">
+                        						<label>上级组织：</label><span id="parent_company" class="detail-text"></span>
+                        					</div>
                         				</div>
-                        				<div class="row detail-row">
-                        					<label>组织名称：</label><span class="detail-text" id="orgName"></span>
+                        				<div class="row-fluid show-grid">
+                        					<div class="span12">
+                        						<label>组织名称：</label><span id="org_name" class="detail-text"></span>
+                        					</div>
+                        					<div class="span12">
+                        						<label>组织代码：</label><span id="org_code" class="detail-text"></span>
+                        					</div>
                         				</div>
-                        				<div class="row detail-row">
-                        					<label>组织代码：</label><span class="detail-text" id="orgCode"></span>
-                        				</div>
-                        				<div class="row detail-row">
-                        					<label>组织类型：</label><span class="detail-text" id="orgType"></span>
+                        				<div class="row-fluid show-grid">
+                        					<div class="span12">
+                        						<label>组织类型：</label><span id="org_type" class="detail-text"></span>
+                        					</div>
                         				</div>
                         			</div>
-                        			<div class="nav-tabs mt10">
-						                <ul>
-						                    <li class="active"><a href="">组织成员</a></li>
-						                    <li><a href="">负责人</a></li>
-						                </ul>
+                        			<div class="panel mt10">
+						                <div class="panel-header" style="color: #5da09a;font-weight: bold;font-size: 14px;">当前可以进行的操作</div>
+						                <div class="panel-body well" style="height:150px;">
+						                	<div id="currentOpeTips" class="tips tips-warning" style="display:none;">提示信息</div>
+						                	<div id="addOneLevelDeptOrSubCompany" style="display:none;">
+							                	<div>
+							                		<label for="">您可以添加一级部门：</label>
+	                        						<select class="input input-normal" style="width:160px;"></select><button class="button button-success ml10">确定添加</button>
+							                	</div>
+							                	<div>
+	                        						<p class="mt10"><label for="">您可以添加子公司：</label><input type="text" class="input input-normal" style="margin-left:15px;"><button class="button button-success ml10">确定添加</button></p>
+							                	</div>
+						                	</div>
+						                	<div id="addSubDept" style="display:none;">
+												<p>您当前选择的是：<b class="text-danger mr20" id="currentSelectDept">客服部</b><a href="">修改部门名称</a><a href="">删除该部门</a></p>
+												<p class="mt10"><label for="">您可以增加子部门：</label><input type="text" class="input input-normal"><button class="button button-success ml10">确定添加</button></p>
+						                	</div>
+						                </div>
 						            </div>
-						            <div class="mt10 clearfix">
-						            	<div class="fl">
-						            		<input type="text" class="input input-normal"><button class="button button-mini button-success ml10">搜索</button>
-						            	</div>
-						            	<div class="fr"><a href="" class="button button-mini button-success">添加员工</a></div>
-						            </div>
-						            <table class="table table-bordered table-head-bordered center mt10">
-				                        <colgroup>
-				                            <col style="width: 40px;">
-				                            <col style="width: 19%;">
-				                            <col style="width: 19%;">
-				                            <col style="width: 19%;">
-				                            <col style="width: 19%;">
-				                            <col>
-				                        </colgroup>
-				                        <thead>
-				                        	<tr>
-				                        		<th>员工电子邮件</th>
-				                        		<th>员工姓名</th>
-				                        		<th>所在部门</th>
-				                        		<th>员工编号</th>
-				                        		<th>员工职级</th>
-				                        		<th>邀请码</th>
-				                        		<th>操作</th>
-				                        	</tr>
-				                        </thead>
-				                        <tbody>
-				                        	<tr>
-				                        		<td>chaikuaizha2222222222ng@yahoo.com.cn</td>
-				                        		<td>李萌萌</td>
-				                        		<td>客服部</td>
-				                        		<td>6001</td>
-				                        		<td>客服经理</td>
-				                        		<td>12asdsadqweqwewqewqeqweqwe3456</td>
-				                        		<td><a href="">修改</a><a href="">删除</a></td>
-				                        	</tr>
-				                        	<tr>
-				                        		<td>chaikuaizhang@yahoo.com.cn</td>
-				                        		<td>李萌萌</td>
-				                        		<td>客服部</td>
-				                        		<td>6001</td>
-				                        		<td>客服经理</td>
-				                        		<td>123sdaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa456</td>
-				                        		<td><a href="">修改</a><a href="">删除</a></td>
-				                        	</tr>
-				                        </tbody>
-									</table>
 								</div>
+								
 							</div>
 						</td>
 					</tr>
 				</table>
+			</div>
+			<div class="panel mt20">
+				<div class="panel-header">组织成员 <button href="" class="fr mtt5 button button-success button-small disabled">添加员工</button></div>
+				<div class="panel-body">
+					<table class="table table-bordered table-head-bordered center">
+                        <colgroup>
+                            <col style="width: 19%;">
+                            <col style="width: 19%;">
+                            <col style="width: 19%;">
+                            <col style="width: 19%;">
+                            <col>
+                        </colgroup>
+                        <thead>
+                        	<tr>
+                        		<th>员工姓名</th>
+                        		<th>所在部门</th>
+                        		<th>员工编号</th>
+                        		<th>员工职级</th>
+                        		<th>操作</th>
+                        	</tr>
+                        </thead>
+                        <tbody>
+                        	<tr>
+                        		<td>李萌萌</td>
+                        		<td>客服部</td>
+                        		<td>6001</td>
+                        		<td>客服经理<span class="highlight">负责人</span></td>
+                        		<td><span class="text-primary btnShow">修改</span><a href="">删除</a></td>
+                        	</tr>
+                        	<tr>
+                        		<td>李萌萌</td>
+                        		<td>客服部</td>
+                        		<td>6001</td>
+                        		<td>客服经理</td>
+                        		<td><a href="">修改</a><a href="">删除</a></td>
+                        	</tr>
+                        </tbody>
+					</table>
+					<table class="table table-bordered table-head-bordered mt10">
+                        <colgroup>
+                            <col style="width: 19%;">
+                            <col style="width: 19%;">
+                            <col style="width: 19%;">
+                            <col style="width: 19%;">
+                            <col>
+                        </colgroup>
+                        <thead>
+                        	<tr>
+                        		<th>员工姓名br</th>
+                        		<th>所在部门</th>
+                        		<th>员工编号</th>
+                        		<th>员工职级</th>
+                        		<th>操作</th>
+                        	</tr>
+                        </thead>
+                        <tbody>
+                        	<tr>
+                        		<td>李萌萌<br>spark269@163.com</td>
+                        		<td>客服部<br>6001</td>
+                        		<td>6001</td>
+                        		<td>客服经理<span class="highlight">负责人</span></td>
+                        		<td><span class="text-primary btnShow">修改</span><a href="">删除</a></td>
+                        	</tr>
+                        	<tr>
+                        		<td>李萌萌</td>
+                        		<td>客服部</td>
+                        		<td>6001</td>
+                        		<td>客服经理</td>
+                        		<td><span class="text-primary btnShow">修改</span><a href="">删除</a></td>
+                        	</tr>
+                        </tbody>
+					</table>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -127,179 +173,119 @@
 	<script src="http://g.alicdn.com/bui/seajs/2.3.0/sea.js"></script>
 	<script src="http://g.alicdn.com/bui/bui/1.1.17/config.js"></script>
 	<!--ztree-->
-	<script src="/js/webjs/zTree_v3/jquery.ztree.all-3.5.min.js"></script>
+	<!-- <script src="/js/webjs/zTree_v3/jquery.ztree.all-3.5.min.js"></script> -->
 	<script type="text/javascript">
-		//竖状菜单
-	    BUI.use('bui/tree',function (Tree) {
-	        var menu = new Tree.TreeMenu({
-	        render : '.side-bar-content',
+	//竖状菜单
+    BUI.use('bui/tree',function (Tree) {
+        var menu = new Tree.TreeMenu({
+        render : '.side-bar-content',
 
-	        elCls : 'bui-side-menu', 
-	        itemCls : 'bui-menu-item',
-	        expandAnimate : true,
-	        showIcons : false,
+        elCls : 'bui-side-menu', 
+        itemCls : 'bui-menu-item',
+        expandAnimate : true,
+        showIcons : true,
+        loadMask:true,
 
-	        dirTpl : '<li class="menu-leaf menu-second"><div class="bui-menu-title"><s></s><span class="bui-menu-title-text"><a href="{href}">{text}</a></span></div></li>',
-	        leafTpl : '<li class="menu-leaf"><a href="{href}">{text}</a></li>',
-	        nodes : [
-	  				{text : '发票',id : '',href:"#",leaf : true, children: [
-	  					{text : '发票上传',id : '',href:"/views/webviews/company/expense_account_upload.html"},
-	  					{text : '发票历史记录',id : '',href:"/views/webviews/company/expense_account_history.html"}                                                      
-	  				]},
-	  				{text : '银行对账单',id : '',href:"#",expanded : false,children: [
-	  					{text : '上传对账单',id : '',href:"/views/webviews/company/bank_statement_upload.html"},
-	  					{text : '对账单历史记录',id : '',href:"/views/webviews/company/bank_statement_history.html"}                                                       
-	  				]},
-	  	            {text : '工资社保',id : '',href:"#",expanded : false,children : [
-	  					{text : '参数设置',id : '',href:"/views/webviews/company/salary_welfare_args_settings.html"},
-	  					{text : '下载工资计算模板',id : '',href:"/views/webviews/company/salary_welfare_template_download.html"},
-	  					{text : '上传本月工资',id : '',href:"/views/webviews/company/salary_welfare_upload.html"}
-	  				]},
-	  	            {text : '预约取发票',id : '',href:"#",leaf : false,children: [
-	  					{text : '方式选择',id : '',href:"/views/webviews/company/take_expense_account_mode_select.html"}
-	  				]},
-	  	            {text : '组织架构',id : '',href:"#",expanded : false,children : [
-	  	                {text : '基本信息设置',id : '',href:"/views/webviews/company/organization_information_settings.html"},
-	  	                {text : '组织架构设置',id : '',href:"/views/webviews/company/organization_structure_settings.html"}
-	  	            ]}
-	  	            ]
-	  	    	});
-	   		menu.render();
-			$.each($("li.menu-second"),function(){
-				var that = $(this);
-				if(that.next().hasClass("menu-second")){
-					that.find("s").remove();
-				}
-			})
-	        menu.on('itemclick',function(ev){
-	            $('.log').text(ev.item.text);
-	        }); 
-	    });
-		//ztree
-		var setting = {
-			view: {
-				addHoverDom: addHoverDom,
-				removeHoverDom: removeHoverDom,
-				selectedMulti: false
-			},
-			edit: {
-				enable: true,
-				editNameSelectAll: true,
-				showRemoveBtn: showRemoveBtn,
-				showRenameBtn: showRenameBtn
-			},
-			data: {
-				simpleData: {
-					enable: true
-				}
-			},
-			callback: {
-				beforeDrag: beforeDrag,
-				beforeEditName: beforeEditName,
-				beforeRemove: beforeRemove,
-				beforeRename: beforeRename,
-				onRemove: onRemove,
-				onRename: onRename
-			}
-		};
+        dirTpl : '<li class="menu-leaf menu-second"><div class="bui-menu-title"><s></s><span class="bui-menu-title-text"><a href="{href}">{text}</a></span></div></li>',
+        leafTpl : '<li class="menu-leaf"><a href="{href}">{text}</a></li>',
 
-		var zNodes =[
-			{ id:1, pId:0, name:"父节点 1", open:true},
-			{ id:11, pId:1, name:"叶子节点 1-1"},
-			{ id:12, pId:1, name:"叶子节点 1-2"},
-			{ id:13, pId:1, name:"叶子节点 1-3"},
-			{ id:2, pId:0, name:"父节点 2", open:true},
-			{ id:21, pId:2, name:"叶子节点 2-1"},
-			{ id:22, pId:2, name:"叶子节点 2-2"},
-			{ id:23, pId:2, name:"叶子节点 2-3"},
-			{ id:3, pId:0, name:"父节点 3", open:true},
-			{ id:31, pId:3, name:"叶子节点 3-1"},
-			{ id:32, pId:3, name:"叶子节点 3-2"},
-			{ id:33, pId:3, name:"叶子节点 3-3"}
-		];
-		var log, className = "dark";
-		function beforeDrag(treeId, treeNodes) {
-			return false;
-		}
-		function beforeEditName(treeId, treeNode) {
-			className = (className === "dark" ? "":"dark");
-			showLog("[ "+getTime()+" beforeEditName ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name);
-			var zTree = $.fn.zTree.getZTreeObj("treeDemo");
-			zTree.selectNode(treeNode);
-			return confirm("进入节点 -- " + treeNode.name + " 的编辑状态吗？");
-		}
-		function beforeRemove(treeId, treeNode) {
-			className = (className === "dark" ? "":"dark");
-			showLog("[ "+getTime()+" beforeRemove ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name);
-			var zTree = $.fn.zTree.getZTreeObj("treeDemo");
-			zTree.selectNode(treeNode);
-			return confirm("确认删除 节点 -- " + treeNode.name + " 吗？");
-		}
-		function onRemove(e, treeId, treeNode) {
-			showLog("[ "+getTime()+" onRemove ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name);
-		}
-		function beforeRename(treeId, treeNode, newName, isCancel) {
-			className = (className === "dark" ? "":"dark");
-			showLog((isCancel ? "<span style='color:red'>":"") + "[ "+getTime()+" beforeRename ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name + (isCancel ? "</span>":""));
-			if (newName.length == 0) {
-				alert("节点名称不能为空.");
-				var zTree = $.fn.zTree.getZTreeObj("treeDemo");
-				setTimeout(function(){zTree.editName(treeNode)}, 10);
-				return false;
-			}
-			return true;
-		}
-		function onRename(e, treeId, treeNode, isCancel) {
-			showLog((isCancel ? "<span style='color:red'>":"") + "[ "+getTime()+" onRename ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name + (isCancel ? "</span>":""));
-		}
-		function showRemoveBtn(treeId, treeNode) {
-			return !treeNode.isFirstNode;
-		}
-		function showRenameBtn(treeId, treeNode) {
-			return !treeNode.isLastNode;
-		}
-		function showLog(str) {
-			if (!log) log = $("#log");
-			log.append("<li class='"+className+"'>"+str+"</li>");
-			if(log.children("li").length > 8) {
-				log.get(0).removeChild(log.children("li")[0]);
-			}
-		}
-		function getTime() {
-			var now= new Date(),
-			h=now.getHours(),
-			m=now.getMinutes(),
-			s=now.getSeconds(),
-			ms=now.getMilliseconds();
-			return (h+":"+m+":"+s+ " " +ms);
-		}
-
-		var newCount = 1;
-		function addHoverDom(treeId, treeNode) {
-			var sObj = $("#" + treeNode.tId + "_span");
-			if (treeNode.editNameFlag || $("#addBtn_"+treeNode.tId).length>0) return;
-			var addStr = "<span class='button add' id='addBtn_" + treeNode.tId
-				+ "' title='add node' onfocus='this.blur();'></span>";
-			sObj.after(addStr);
-			var btn = $("#addBtn_"+treeNode.tId);
-			if (btn) btn.bind("click", function(){
-				var zTree = $.fn.zTree.getZTreeObj("treeDemo");
-				zTree.addNodes(treeNode, {id:(100 + newCount), pId:treeNode.id, name:"new node" + (newCount++)});
-				return false;
-			});
-		};
-		function removeHoverDom(treeId, treeNode) {
-			$("#addBtn_"+treeNode.tId).unbind().remove();
-		};
-		function selectAll() {
-			var zTree = $.fn.zTree.getZTreeObj("treeDemo");
-			zTree.setting.edit.editNameSelectAll =  $("#selectAll").attr("checked");
-		}
-		
-		$(document).ready(function(){
-			$.fn.zTree.init($("#treeDemo"), setting, zNodes);
-			$("#selectAll").bind("click", selectAll);
-		});
+        nodes : [
+					{text : '公司发票',id : '10',href:"javascript:void(0);",  expanded : true,children: [
+						{text : '发票上传',id : '11', href:"/views/webviews/company/expense_account_upload.html"},
+                     {text : '发票历史记录',id : '12', href:"/views/webviews/company/expense_account_history.html"}                                           
+                 ]},
+                 {text : '银行对账单',id : '20',href:"javascript:void(0);", expanded : false,children: [
+						{text : '上传对账单',id : '21', href:"/views/webviews/company/bank_statement_upload.html"},
+						{text : '对账单历史记录',id : '22', href:"/views/webviews/company/bank_statement_history.html"}                                           
+					]},
+					 {text : '工资社保',id : '30',href:"javascript:void(0);", expanded : false,children: [
+						{text : '参数设置',id : '31', href:"/views/webviews/company/salary_welfare_args_settings.html"},
+						{text : '下载工资计算模板',id : '32', href:"/views/webviews/company/salary_welfare_template_download.html"},                                           
+						{text : '上传本月工资',id : '33', href:"/views/webviews/company/salary_welfare_upload.html"}
+					]},
+					{text : '预约取发票',id : '40',href:"javascript:void(0);", expanded : false,children: [
+						{text : '方式选择',id : '41', href:"/views/webviews/company/take_expense_account_mode_select.html"}                                           
+					]},
+					{text : '组织架构',id : '50',href:"javascript:void(0);",  expanded : false,children: [
+						{text : '基本信息设置',id : '51', href:"/views/webviews/company/organization_information_settings.html"},
+						{text : '组织架构设置',id : '52', href:"/views/webviews/company/organization_structure_settings.html"}                                           
+					]},
+         ]
+    	});
+   		menu.render();
+        $.each($("li.menu-second"),function(){
+            var that = $(this);
+            if(that.next().hasClass("menu-second")){
+                that.find("s").remove();
+            }
+        })
+        menu.on('itemclick',function(ev){
+            $('.log').text(ev.item.text);
+        });
+        var firstLeaf = menu.findNode('11'); //获取第一个叶子节点
+        menu.setSelected(firstLeaf);
+    });
+	
+	
+	
+    BUI.use(['bui/tree','bui/data'],function (Tree,Data) {
+    	var v = false;
+    	$.ajax({
+    		url : '/company/getCompanyDetailInfo',
+    		type : "POST",
+    		data : {},
+    		success : function(data) {
+    			if(data == null || data == '') return;
+    			hasSetCompanyDetailInfo = true;
+    			$('#company_name').html(data.company_name);
+    			$('#parent_company').html(data.parent_company_name == null || data.parent_company_name == '' ? '无' : data.parent_company_name);
+    			$('#org_name').html(data.company_name);
+    			$('#org_code').html(data.org_code);
+    			$('#org_type').html('总公司');
+    			//数据缓冲类
+    	        var store = new Data.TreeStore({
+    	            root : {
+    	              id : data.company_id,
+    	              text : data.company_name
+    	            },
+    	            url : '/company/getOrgStructureData',
+    	            autoLoad : true
+    	          });
+    	          
+    	        var tree = new Tree.TreeList({
+    	          render : '#t1',
+    	          showLine : true,
+    	          height:300,
+    	          store : store,
+    	          showRoot : true
+    	        });
+    	        tree.render();
+    	        
+    	        var item = tree.getItem('0');
+    	        tree.setSelected(item);
+    	        tree.on('itemclick',function(ev){
+    	        	var node = store.findNode(ev.item.id);
+    	        	//alert(node);
+    	        	var subNode = store.add({id : '205',text: '测试部门'}, node);
+    	        	//tree.render();
+    	          var item = ev.item;
+    	          $('.log').text(item.text);
+    	        });
+    	        $('#reload').on('click',function(){
+    	          var node = tree.getSelected();
+    	          if(node){
+    	            /*tree.collapseNode(node);
+    	            node.children = [];
+    	            node.loaded = false;
+    	            
+    	           node.expanded = false;*/
+    	            store.reloadNode(node);
+    	          } 
+    	        });
+    		}
+    	});
+        
+      });
 	</script>
 </body>
 </html>
