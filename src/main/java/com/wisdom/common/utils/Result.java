@@ -39,7 +39,7 @@ public class Result {
 	}
 
 	public Map<String,Object> getResultMap(){
-		container.put("code", this.code);
+//		container.put("code", this.code);
 		return this.container;
 	}
 

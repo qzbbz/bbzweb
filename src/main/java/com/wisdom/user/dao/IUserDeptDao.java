@@ -12,4 +12,8 @@ public interface IUserDeptDao {
 	
 	public List<UserDept> getUserDeptListByStatusAndDeptId(int status, long deptId);
 	
+	public long getUserNumByDeptId(long deptId);
+	
+	public int delUserByDeptId(long deptId);
+		
 }

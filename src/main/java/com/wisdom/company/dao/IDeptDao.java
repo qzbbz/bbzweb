@@ -16,4 +16,10 @@ public interface IDeptDao {
 	
 	public List<Dept> getDeptListByCompanyId(long companyId);
 	
+	public long addDeptAndGetKey(final Dept dept);
+	
+	public boolean updateDeptInfoById(Dept dept);
+	
+	public long querySubDeptNumByIdAndCompanyId(long companyId,long id);
+	
 }

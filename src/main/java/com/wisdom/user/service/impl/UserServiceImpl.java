@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.wisdom.common.model.AmountLimit;
 import com.wisdom.common.model.User;
@@ -176,5 +177,15 @@ public class UserServiceImpl implements IUserService {
 		return userOperationDao.addUserPhone(up);
 	}
 
+	@Override
+	public boolean deleteUser(String userId) {
+		if(StringUtils.isEmpty(userId)){
+			logger.error("userId empty error!");
+			return false;
+		}
+		User user = new User();
+		user.setUserId(userId);
+		return userOperationDao.deleteUser(user);
+	}
 }
 

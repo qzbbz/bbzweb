@@ -41,4 +41,6 @@ public interface IUserService {
 	
 	public boolean ifNeedSuperApproval(String userId,String approvalId,double amount);
 	
+	public boolean deleteUser(String userId);
+	
 }

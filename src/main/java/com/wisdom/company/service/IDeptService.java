@@ -14,4 +14,12 @@ public interface IDeptService {
 	
 	public List<Dept> getDeptListByCompanyId(long companyId);
 	
+	public long addDeptAndGetKey(final Dept dept);
+	
+	public boolean updateDeptInfoById(Dept dept);
+	
+	public long querySubDeptNumByIdAndCompanyId(long companyId, long id);
+	
+	public boolean deleteDept(long deptId);
+	
 }

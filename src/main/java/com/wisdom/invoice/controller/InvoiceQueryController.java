@@ -148,7 +148,7 @@ public class InvoiceQueryController {
 				time = Timestamp.valueOf(date);
 			}
 			List<InvoiceInfo> list = userInvoiceService.getInvoiceInfoByCondition(userId, date, submitter, amount, null, page, pageSize);
-			result.addResult("invoiceList", list);
+			result.getResultMap().put("invoiceList", list);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

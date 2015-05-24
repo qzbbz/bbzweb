@@ -19,5 +19,5 @@ public interface ICompanyService {
 	public String getParentCompanyNameByCompanyId(long companyId);
 	
 	public List<Company> getSubCompanyListByCompanyId(long companyId);
-	
+	public Company getCompanyByCompanyId(Long id);
 }

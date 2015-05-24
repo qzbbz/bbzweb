@@ -66,4 +66,10 @@ public class CompanyServiceImpl implements ICompanyService {
 		return companyDao.getSubCompanyListByCompanyId(companyId);
 	}
 	
+	@Override
+	public Company getCompanyByCompanyId(Long id){
+		return companyDao.getCompanyByCompanyId(id);
+	}
+	
+	
 }

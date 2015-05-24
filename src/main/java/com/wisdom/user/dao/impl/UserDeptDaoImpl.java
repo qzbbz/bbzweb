@@ -64,4 +64,28 @@ public class UserDeptDaoImpl implements IUserDeptDao {
 		return list;
 	}
 
+	@Override
+	public long getUserNumByDeptId(long deptId) {
+		try {
+			String sql = "select count(id) from user_dept where dept_id =? ";
+			long num = jdbcTemplate.queryForLong(sql, new Object[] { deptId });
+			return num;
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return 0;
+	}
+
+	@Override
+	public int delUserByDeptId(long deptId) {
+		try{
+			String sql= "delete from user_dept where dept_id=?";
+			int num = jdbcTemplate.update(sql,new Object[]{deptId});
+			return num;
+		}catch(Exception e){
+			logger.equals(e.toString());
+		}
+		return 0;
+	}
+
 }
