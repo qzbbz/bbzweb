@@ -14,6 +14,8 @@ public interface IUserDeptDao {
 	
 	public long getUserNumByDeptId(long deptId);
 	
+	public boolean addUserDeptRecord(UserDept userDept);
+	
 	public int delUserByDeptId(long deptId);
 		
 }

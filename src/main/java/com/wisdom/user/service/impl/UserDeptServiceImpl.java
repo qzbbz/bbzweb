@@ -2,17 +2,27 @@ package com.wisdom.user.service.impl;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.wisdom.common.model.User;
 import com.wisdom.common.model.UserDept;
 import com.wisdom.company.dao.IDeptDao;
+import com.wisdom.invoice.dao.IUserInvoiceDao;
 import com.wisdom.user.dao.IUserDeptDao;
+import com.wisdom.user.dao.IUserInviteCodeDao;
 import com.wisdom.user.dao.IUserOperationDao;
 import com.wisdom.user.service.IUserDeptService;
+import com.wisdom.user.service.IUserService;
+import com.wisdom.web.api.controller.ArchSetController;
 
 @Service("userDeptService")
 public class UserDeptServiceImpl implements IUserDeptService {
+	private static final Logger logger = LoggerFactory
+			.getLogger(UserDeptServiceImpl.class); 
 
 	@Autowired
 	private IUserDeptDao userDeptDao;
@@ -20,7 +30,14 @@ public class UserDeptServiceImpl implements IUserDeptService {
 	@Autowired
 	private IUserOperationDao userOperationDao;
 	
-	@Autowired IDeptDao deptDao;
+	@Autowired 
+	private IDeptDao deptDao;
+	
+	@Autowired
+	private IUserService userService;
+	
+	@Autowired
+	private IUserInviteCodeDao userInviteCodeDao;
 	
 	@Override
 	public long getDeptIdByUserId(String userId) {
@@ -40,6 +57,49 @@ public class UserDeptServiceImpl implements IUserDeptService {
 	@Override
 	public boolean delUserByDeptId(long deptId) {
 		return userDeptDao.delUserByDeptId(deptId) > 0;
+	}
+
+	@Override
+	@Transactional
+	public boolean addDeptUser(String userId,String userName,int iCharger,
+			long iDeptId,String userCode,String userLevel,long iCompanyId,String msgEMail) {
+		
+		//先增加用户
+		User user = new User();
+		user.setUserId(userId);
+		user.setUserName(userName);
+		user.setUserLevel(userLevel);
+		user.setUserEncode(userCode);
+		user.setMsgEmail(msgEMail);
+		user.setCompanyId(iCompanyId);
+		user.setTypeId(0);//暂时为0；
+		
+		boolean blRet = userService.addUser(user);
+		if(!blRet){
+			logger.error("add user error!");
+			return false;
+		}
+		
+		//增加部门映射关系
+		UserDept userDept = new UserDept();
+		userDept.setDeptId(iDeptId);
+		userDept.setStatus(iCharger);
+		userDept.setUserId(userId);
+		
+		blRet = userDeptDao.addUserDeptRecord(userDept);
+		if(!blRet){
+			logger.error("addUserDeptRecord failed!");
+		}
+		
+		//生成邀请码
+		StringBuilder orig = new StringBuilder().append(iCompanyId).append(iDeptId).append(userId).append(userCode);
+		long inviteCode = Math.abs(orig.toString().hashCode())%1000000;
+		blRet = userInviteCodeDao.addUserInviteCode(userId, String.valueOf(inviteCode));
+		if(!blRet){
+			logger.error("addUserInviteCode error!",userId);
+			return false;
+		}
+		return true;
 	}
 	
 }

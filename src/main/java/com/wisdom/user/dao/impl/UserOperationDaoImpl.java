@@ -29,13 +29,14 @@ public class UserOperationDaoImpl implements IUserOperationDao {
 
 	@Override
 	public boolean addUser(User user) {
-		String sql = "insert into user (user_name, msg_email, user_id, type_id, company_id, user_encode, create_time)"
-				+ " values (?, ?, ?, ?, ?, ?, ?)";
+		String sql = "insert into user (user_name, msg_email, user_id, type_id, user_level, company_id, user_encode, create_time)"
+				+ " values (?, ?, ?, ?, ?, ?, ?, ?)";
 		int affectedRows = jdbcTemplate.update(sql,
 				user.getUserName() == null ? "" : user.getUserName(),
 				user.getMsgEmail() == null ? "" : user.getMsgEmail(),
 				user.getUserId() == null ? "" : user.getUserId(),
 				user.getTypeId() == null ? 0 : user.getTypeId(),
+				user.getUserLevel() == null? "":user.getUserLevel(),
 				user.getCompanyId() == null ? -1 : user.getCompanyId(),
 				user.getUserEncode() == null ? "" : user.getUserEncode(),
 				user.getCreateTime()==null ? new Timestamp(System.currentTimeMillis()) : user.getCreateTime());
@@ -54,11 +55,12 @@ public class UserOperationDaoImpl implements IUserOperationDao {
 
 	@Override
 	public boolean updateUser(User user) {
-		String sql = "update user set user_name=?, msg_email=?, type_id=?, company_id=?, user_encode=? where user_id=?";
+		String sql = "update user set user_name=?, msg_email=?, type_id=?, user_level=?, company_id=?, user_encode=? where user_id=?";
 		int affectedRows = jdbcTemplate.update(sql,
 				user.getUserName() == null ? "" : user.getUserName(),
 				user.getMsgEmail() == null ? "" : user.getMsgEmail(),
 				user.getTypeId() == null ? 0 : user.getTypeId(),
+				user.getUserLevel() == null ? "" : user.getUserLevel(),
 				user.getCompanyId() == null ? -1 : user.getCompanyId(),
 				user.getUserEncode() == null ? "" : user.getUserEncode(),
 				user.getUserId() == null ? "" : user.getUserId());
