@@ -116,5 +116,15 @@ public class CompanyOrgStructure {
 	public void setChildren(List<CompanyOrgStructure> children) {
 		this.children = children;
 	}
+
+	@Override
+	public String toString() {
+		return "CompanyOrgStructure [text=" + text + ", id=" + id
+				+ ", companyId=" + companyId + ", parentCompanyId="
+				+ parentCompanyId + ", costCenter=" + costCenter
+				+ ", expanded=" + expanded + ", typeIsDept=" + typeIsDept
+				+ ", typeIsSubCompany=" + typeIsSubCompany + ", children="
+				+ children + "]";
+	}
 	
 }

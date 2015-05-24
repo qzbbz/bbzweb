@@ -1253,7 +1253,7 @@ td.x-grid-rownumber {
   background: none no-repeat scroll 5px 5px #ffffff;
   line-height: 16px;
   padding: 5px 10px 5px 25px;
-  background-image: url("../../img/load-16-16.gif");
+  background-image: url("/img/webimg/load-16-16.gif");
 }
 /**chart**/
 .node-info-container,
@@ -1820,7 +1820,7 @@ textarea.bui-form-field-error,
 }
 .bui-tree-list .bui-tree-item-loading .x-tree-elbow-expander,
 .bui-grid .bui-grid-row-loading .x-tree-elbow-expander {
-  background: url("../../img/load-16-16.gif") no-repeat 0 0 transparent;
+  background: url("/img/webimg/load-16-16.gif") no-repeat 0 0 transparent;
 }
 .bui-tree-grid .bui-grid-table .bui-grid-cell-text {
   display: inline-block;

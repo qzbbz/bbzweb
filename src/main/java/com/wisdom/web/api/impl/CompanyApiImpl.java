@@ -4,7 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -24,12 +27,14 @@ import com.wisdom.common.model.Company;
 import com.wisdom.common.model.CompanyBankSta;
 import com.wisdom.common.model.CompanyDetail;
 import com.wisdom.common.model.CompanySalary;
+import com.wisdom.common.model.CostCenter;
 import com.wisdom.common.model.Dept;
 import com.wisdom.common.model.SalarySocialSecurity;
 import com.wisdom.company.service.ICompanyBankStaService;
 import com.wisdom.company.service.ICompanyDetailService;
 import com.wisdom.company.service.ICompanySalaryService;
 import com.wisdom.company.service.ICompanyService;
+import com.wisdom.company.service.ICostCenterService;
 import com.wisdom.company.service.IDeptService;
 import com.wisdom.company.service.ISalarySocialSecurityService;
 import com.wisdom.user.service.IUserModifyService;
@@ -49,6 +54,9 @@ public class CompanyApiImpl implements ICompanyApi {
 
 	@Autowired
 	private IDeptService deptService;
+	
+	@Autowired
+	private ICostCenterService costCenterService;
 
 	@Autowired
 	private ICompanyDetailService companyDetailService;
@@ -481,18 +489,28 @@ public class CompanyApiImpl implements ICompanyApi {
 
 	@Override
 	public List<CompanyOrgStructure> getOrgStructureData(String userId) {
-		List<CompanyOrgStructure> cos = new ArrayList<>();
 		long rootCompanyId = userService.getCompanyIdByUserId(userId);
 		
 		List<CompanyOrgStructure> cosList = new ArrayList<>();
 		
 		List<Dept> rootDeptList = deptService.getDeptListByCompanyId(rootCompanyId);
 		if(rootDeptList != null && rootDeptList.size() != 0) {
-			int index = 0;
-			while(rootDeptList.size() != 0 && index < rootDeptList.size()) {
-				if(addDeptToCos(rootDeptList.get(index).getParentId(), rootDeptList.get(index), cosList)) {
-					rootDeptList.remove(index);
-					index--;
+			Collections.sort(rootDeptList, new Comparator<Dept>() {
+	            public int compare(Dept arg0, Dept arg1) {
+	                return arg0.getLevel().compareTo(arg1.getLevel());
+	            }
+	        });
+			for(Dept dept : rootDeptList) {
+				if (dept.getLevel() == 1) {
+					CompanyOrgStructure cos = new CompanyOrgStructure();
+					cos.setCompanyId(String.valueOf(dept.getCompanyId()));
+					cos.setCostCenter(String.valueOf(dept.getCostCenterEncode()));
+					cos.setId(String.valueOf(dept.getId()));
+					cos.setText(dept.getName());
+					cos.setTypeIsDept(true);
+					cosList.add(cos);
+				} else {
+					addDeptToCos(dept, cosList);
 				}
 			}
 		}
@@ -501,18 +519,35 @@ public class CompanyApiImpl implements ICompanyApi {
 		if(subCompanyList != null && subCompanyList.size() != 0) {
 			for(Company company : subCompanyList) {
 				CompanyOrgStructure cosTemp = new CompanyOrgStructure();
-				cosTemp.setCompanyId(String.valueOf(company.getName()));
+				cosTemp.setCompanyId(String.valueOf(company.getId()));
 				cosTemp.setParentCompanyId(String.valueOf(company.getParentId()));
 				cosTemp.setText(company.getName());
 				cosTemp.setTypeIsSubCompany(true);
 				cosList.add(cosTemp);
 				List<Dept> subDeptList = deptService.getDeptListByCompanyId(company.getId());
 				if(subDeptList != null && subDeptList.size() != 0) {
-					int index = 0;
-					while(subDeptList.size() != 0 && index < subDeptList.size()) {
-						if(addDeptToCos(subDeptList.get(index).getParentId(), subDeptList.get(index), cosList)) {
-							subDeptList.remove(index);
-							index--;
+					Collections.sort(subDeptList, new Comparator<Dept>() {
+			            public int compare(Dept arg0, Dept arg1) {
+			                return arg0.getLevel().compareTo(arg1.getLevel());
+			            }
+			        });
+					for(Dept dept : subDeptList) {
+						if (dept.getLevel() == 1) {
+							for(CompanyOrgStructure temp : cosList) {
+								if(String.valueOf(dept.getCompanyId()).equals(temp.getCompanyId())) {
+									List<CompanyOrgStructure> subTemp = temp.getChildren();
+									CompanyOrgStructure cos = new CompanyOrgStructure();
+									cos.setCompanyId(String.valueOf(dept.getCompanyId()));
+									cos.setCostCenter(String.valueOf(dept.getCostCenterEncode()));
+									cos.setId(String.valueOf(dept.getId()));
+									cos.setText(dept.getName());
+									cos.setTypeIsDept(true);
+									subTemp.add(cos);
+									break;
+								}
+							}
+						} else {
+							addDeptToCos(dept, cosList);
 						}
 					}
 				}
@@ -520,22 +555,13 @@ public class CompanyApiImpl implements ICompanyApi {
 		}
 		return cosList;
 	}
-
-	private boolean addDeptToCos(long parentDeptId, Dept dept,
+	
+	private void addDeptToCos(Dept dept,
 			List<CompanyOrgStructure> cosList) {
-		boolean addSuccess = false;
-		if (parentDeptId == 0) {
-			CompanyOrgStructure cos = new CompanyOrgStructure();
-			cos.setCompanyId(String.valueOf(dept.getCompanyId()));
-			cos.setCostCenter(String.valueOf(dept.getCostCenterEncode()));
-			cos.setId(String.valueOf(dept.getId()));
-			cos.setText(dept.getName());
-			cos.setTypeIsDept(true);
-			cosList.add(cos);
-			addSuccess = true;
-		}
+		if(cosList == null || cosList.size() == 0) return;
 		for (CompanyOrgStructure cos : cosList) {
-			if (Long.valueOf(cos.getId()) == parentDeptId) {
+			logger.debug("cos:{}", cos.toString());
+			if (cos.getId() != null && Long.valueOf(cos.getId()) == dept.getParentId()) {
 				List<CompanyOrgStructure> subCosList = cos.getChildren();
 				if (subCosList == null)
 					subCosList = new ArrayList<>();
@@ -544,12 +570,27 @@ public class CompanyApiImpl implements ICompanyApi {
 				cosTemp.setCostCenter(String.valueOf(dept.getCostCenterEncode()));
 				cosTemp.setId(String.valueOf(dept.getId()));
 				cosTemp.setText(dept.getName());
-				cos.setTypeIsDept(true);
+				cosTemp.setTypeIsDept(true);
 				subCosList.add(cosTemp);
-				addSuccess = true;
 				break;
+			} else {
+				addDeptToCos(dept, cos.getChildren());
 			}
 		}
-		return addSuccess;
+	}
+
+	@Override
+	public List<Map<String, String>> getAllCostCenterCode() {
+		List<CostCenter> costCenterList = costCenterService.getAllCostCenter();
+		List<Map<String, String>> retList = new ArrayList<>();
+		for(CostCenter costCenter : costCenterList) {
+			Map<String, String> map = new HashMap<>();
+			map.put("id", String.valueOf(costCenter.getId()));
+			map.put("encode", String.valueOf(costCenter.getEncode()));
+			map.put("name", costCenter.getName());
+			map.put("alias", costCenter.getAlias());
+			retList.add(map);
+		}
+		return retList;
 	}
 }

@@ -1,5 +1,7 @@
 package com.wisdom.company.dao;
 
+import java.util.List;
+
 import com.wisdom.common.model.CostCenter;
 
 public interface ICostCenterDao {
@@ -11,5 +13,7 @@ public interface ICostCenterDao {
 	public boolean deleteCostCenterByEncode(long encode);
 	
 	public boolean updateCostCenter(CostCenter costCenter);
+	
+	public List<CostCenter> getAllCostCenter();
 	
 }

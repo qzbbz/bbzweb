@@ -84,7 +84,7 @@ public class DeptDaoImpl implements IDeptDao {
 			int id = jdbcTemplate.update(new PreparedStatementCreator() {
 				public PreparedStatement createPreparedStatement(
 						Connection connection) throws SQLException {
-					String sql = "insert into dept (name, company_id, parent_id, cost_center_encode, level=?, create_time)"
+					String sql = "insert into dept (name, company_id, parent_id, cost_center_encode, level, create_time)"
 				+ " values (?, ?, ?, ?, ?, ?)";
 					PreparedStatement ps = connection.prepareStatement(sql,
 							Statement.RETURN_GENERATED_KEYS);

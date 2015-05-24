@@ -1,16 +1,20 @@
 package com.wisdom.company.dao.impl;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.stereotype.Repository;
 
 import com.wisdom.common.model.CostCenter;
+import com.wisdom.common.model.Dept;
 import com.wisdom.company.dao.ICostCenterDao;
 import com.wisdom.company.mapper.CostCenterMapper;
+import com.wisdom.company.mapper.DeptMapper;
 
 @Repository("costCenterDao")
 public class CostCenterDaoImpl implements ICostCenterDao {
@@ -71,6 +75,20 @@ public class CostCenterDaoImpl implements ICostCenterDao {
 				costCenter.getId());
 		logger.debug("updateCostCenter result : {}", affectedRows);
 		return affectedRows != 0;
+	}
+
+	@Override
+	public List<CostCenter> getAllCostCenter() {
+		List<CostCenter> list = null;
+		try {
+			String sql = "select * from cost_center";
+			list = jdbcTemplate.query(sql, 
+					new RowMapperResultSetExtractor<CostCenter>(
+							new CostCenterMapper()));
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return list;
 	}
 
 }

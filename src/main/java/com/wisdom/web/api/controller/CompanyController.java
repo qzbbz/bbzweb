@@ -219,4 +219,10 @@ public class CompanyController {
 		String userId = (String) request.getSession().getAttribute("userId");
 		return companyApi.getCompanyDetailInfo(userId);
 	}
+	
+	@RequestMapping("/company/getAllCostCenterEncode")
+	@ResponseBody
+	public List<Map<String, String>> getAllCostCenterEncode() {
+		return companyApi.getAllCostCenterCode();
+	}
 }

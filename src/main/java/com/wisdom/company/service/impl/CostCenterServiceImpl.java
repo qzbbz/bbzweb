@@ -1,5 +1,7 @@
 package com.wisdom.company.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +33,11 @@ public class CostCenterServiceImpl implements ICostCenterService {
 	@Override
 	public boolean updateCostCenter(CostCenter costCenter) {
 		return costCenterDao.updateCostCenter(costCenter);
+	}
+
+	@Override
+	public List<CostCenter> getAllCostCenter() {
+		return costCenterDao.getAllCostCenter();
 	}
 
 }

@@ -31,5 +31,7 @@ public interface ICompanyApi {
 	public Map<String, String> getCompanyDetailInfo(String userId);
 	
 	public List<CompanyOrgStructure> getOrgStructureData(String userId);
+	
+	public List<Map<String, String>> getAllCostCenterCode();
 		
 }

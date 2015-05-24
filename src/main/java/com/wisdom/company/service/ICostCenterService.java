@@ -1,5 +1,7 @@
 package com.wisdom.company.service;
 
+import java.util.List;
+
 import com.wisdom.common.model.CostCenter;
 
 public interface ICostCenterService {
@@ -12,4 +14,5 @@ public interface ICostCenterService {
 	
 	public boolean updateCostCenter(CostCenter costCenter);
 	
+	public List<CostCenter> getAllCostCenter();
 }

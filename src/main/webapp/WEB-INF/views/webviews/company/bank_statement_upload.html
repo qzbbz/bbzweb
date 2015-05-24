@@ -32,11 +32,15 @@
 						<h2>您在这里可以上传银行对账单</h2>
 						<form id="bankUpload" action="/company/uploadBankSta" method="POST"	enctype="multipart/form-data">
 							<div id="fileInfo" style="height: 50px;" class="text-primary"></div>
-							<div class="form-horizontal control-group">
-								<label class="control-label control-label-large">选择会计期间</label>
-                            	<div class="controls"><input type="text" id="date" name="date" class="input input-large calendar"></div>
+							<div class="form-horizontal" style="margin-bottom:30px;">
+								<div class="row">
+									<label for="" class="control-label">选择会计期间：</label>
+									<div class="controls">
+	                            		<div class="controls"><input type="text" id="date" name="date" class="input input-large calendar" style="width:350px;"></div>
+	                            	</div>
+                            	</div>
                             </div>
-							<a href="javascript:;" class="file button button-success">选择对账单图片文件
+							<a href="javascript:;" class="file-green button button-success">选择对账单图片文件
 								<input type="file" id="bankFile" name="files">
 							</a> <a href="javascript:uploadBankSta();"
 								class="button button-success">上传对账单图片文件</a>

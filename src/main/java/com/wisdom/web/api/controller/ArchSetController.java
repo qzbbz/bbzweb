@@ -24,7 +24,6 @@ import com.wisdom.common.model.UserDept;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
-@RequestMapping("/company")
 public class ArchSetController {
 	private static final Logger logger = LoggerFactory
 			.getLogger(ArchSetController.class); 
@@ -41,7 +40,7 @@ public class ArchSetController {
 	private IUserDeptService userDeptService;
 	
 	@ResponseBody
-	@RequestMapping("/addDept")
+	@RequestMapping("/company/addDept")
 	public Result addDept(HttpServletRequest request){
 		Result result = new Result();
 		String deptName = request.getParameter("deptName");
@@ -61,7 +60,7 @@ public class ArchSetController {
 			return result;
 		}
 		
-		/*TODO公司是否存在*/
+		/*公司是否存在*/
 		Company company = companyService.getCompanyByCompanyId(Long.parseLong(companyId));
 		if(null == company){
 			logger.error("company not existed! {}",companyId);
@@ -72,8 +71,8 @@ public class ArchSetController {
 		Dept dept = new Dept();
 		try {
 			dept.setCompanyId(Long.parseLong(companyId));
-			dept.setCostCenterEncode(0L);//TODO 
-			dept.setLevel(Integer.parseInt(level));
+			dept.setCostCenterEncode(0L);//TODO
+			dept.setLevel(Integer.parseInt(level) + 1);
 			dept.setName(deptName);
 			dept.setParentId(Long.parseLong(parentId));
 		} catch (NumberFormatException e) {
@@ -92,7 +91,7 @@ public class ArchSetController {
 	
 	
 	@ResponseBody
-	@RequestMapping("/addSubCompany")
+	@RequestMapping("/company/addSubCompany")
 	public Result addSubCompany(HttpServletRequest request){
 		Result result = new Result();
 		String companyName = request.getParameter("companyName");
@@ -112,15 +111,15 @@ public class ArchSetController {
 			return result;
 		}
 		
-		/*TODO 父公司ID存在时，校验一下*/
+		/*父公司ID存在时，校验一下*/
 		
 		
 		Company company = new Company();
 		try{
 			company.setName(companyName);
-			company.setMonthExpense(Integer.parseInt(monthExpense));
+			company.setMonthExpense(0);
 			company.setParentId(Long.parseLong(parentId));
-			company.setPerfectMoment(perfectMoment);
+			company.setPerfectMoment("");
 		}catch(Exception e){
 			result.setResultCode(ResultCode.paramError.code);
 			return result;
@@ -133,7 +132,7 @@ public class ArchSetController {
 	}
 	
 	@ResponseBody
-	@RequestMapping("/modDeptInfo")
+	@RequestMapping("/company/modDeptInfo")
 	public Result modDeptInfo(HttpServletRequest request){
 		Result result = new Result();
 		String deptName = request.getParameter("deptName");
@@ -166,7 +165,7 @@ public class ArchSetController {
 	}
 	
 	@ResponseBody
-	@RequestMapping("/delDept")
+	@RequestMapping("/company/delDept")
 	public Result delDept(HttpServletRequest request){
 		Result result = new Result();
 		String deptName = request.getParameter("deptName");
@@ -193,7 +192,7 @@ public class ArchSetController {
 		}
 		
 		
-		/*TODO 部门下还有子部门，是否可以删除*/
+		/*部门下还有子部门，是否可以删除*/
 		long subNum = deptService.querySubDeptNumByIdAndCompanyId(iComanyId, id);
 		if(subNum>0){
 			logger.debug("has subdeptment:",subNum);
@@ -203,7 +202,7 @@ public class ArchSetController {
 		}
 		
 		
-		/*TODO 部门下还有成员，直接删除*/
+		/*部门下还有成员，直接删除*/
 /*		long userNum = userDeptService.getUserNumByDeptId(Long.parseLong(deptId));
 		if(userNum>0){
 			result.setResultCode(ResultCode.paramError.code);
