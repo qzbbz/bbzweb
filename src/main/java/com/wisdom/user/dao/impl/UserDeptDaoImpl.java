@@ -109,5 +109,23 @@ public class UserDeptDaoImpl implements IUserDeptDao {
 		
 		return false;
 	}
+	
+	@Override
+	public boolean delUserDept(String userId,long deptId){
+		if(-1 == deptId || StringUtils.isEmpty(userId)){
+			logger.error("input param error");
+			return false;
+		}
+		try{
+			String sql= "delete from user_dept where user_id =?, dept_id=?";
+			int num = jdbcTemplate.update(sql,
+					userId,
+					deptId);
+			return num > 0;
+		}catch(Exception e){
+			logger.error(e.toString());
+		}
+		return false;
+	}
 
 }

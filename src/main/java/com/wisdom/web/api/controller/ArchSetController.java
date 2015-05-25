@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -164,6 +165,7 @@ public class ArchSetController {
 		}
 	}
 	
+	@Transactional
 	@ResponseBody
 	@RequestMapping("/company/delDept")
 	public Result delDept(HttpServletRequest request){
@@ -245,6 +247,7 @@ public class ArchSetController {
 	}
 	
 	@ResponseBody
+	@Transactional
 	@RequestMapping("/addDeptUser")
 	public Result addDeptUser(HttpServletRequest request){
 		Result result = new Result();
@@ -280,12 +283,85 @@ public class ArchSetController {
 		}
 		boolean blRet = userDeptService.addDeptUser(userId,userName,iCharger,iDeptId,userCode,userLevel,iCompanyId,msgMail);
 		if(!blRet){
-			logger.error("parameter convert error!");
+			logger.error("addDeptUser error!");
 			result.setResultCode(ResultCode.systemError.code);
 			return result;
 		}
 		result.setResultCode(ResultCode.success.code);
 		return result;
 	}
+	
+	@ResponseBody
+	@RequestMapping("/modDeptUser")
+	public Result modDeptUser(HttpServletRequest request){
+		Result result = new Result();
+		String userId = request.getParameter("userId");
+		String userName = request.getParameter("userName");
+		String typeId = request.getParameter("typeId");
+		String userCode = request.getParameter("userCode");
+		String userLevel = request.getParameter("userLevel");
+		String msgMail = request.getParameter("msgMail");
+		
+		if(StringUtils.isEmpty(userId)){
+			result.setResultCode(ResultCode.paramError.code);
+			result.setMsg("用户ID不能为空!");
+			return result;	
+		}
+		 
+		int iTypeId = -1;
+		
+		try {
+			iTypeId = Integer.parseInt(typeId);
+		} catch (NumberFormatException e) {
+			logger.error("parameter convert error!");
+			result.setResultCode(ResultCode.paramError.code);
+			result.setMsg("参数类型错误!");
+			return result;
+		}
+		
+		boolean blRet = userService.updateUserInfo(userId,userName,iTypeId,userCode,userLevel,msgMail);
+		if(!blRet){
+			logger.error("addDeptUser error!");
+			result.setResultCode(ResultCode.systemError.code);
+			return result;
+		}
+		result.setResultCode(ResultCode.success.code);
+		return result;
+	}
+	
+	@ResponseBody
+	@RequestMapping("/delDeptUser")
+	public Result delDeptUser(HttpServletRequest request){
+		Result result = new Result();
+		String userId = request.getParameter("userId");
+		String deptId = request.getParameter("deptId");
+		
+		if(StringUtils.isEmpty(userId)){
+			result.setResultCode(ResultCode.paramError.code);
+			result.setMsg("用户ID不能为空!");
+			return result;	
+		}
+		 
+		long iDeptId = -1;
+		
+		try {
+			iDeptId = Integer.parseInt(deptId);
+		} catch (NumberFormatException e) {
+			logger.error("parameter convert error!");
+			result.setResultCode(ResultCode.paramError.code);
+			result.setMsg("参数类型错误!");
+			return result;
+		}
+		
+		boolean blRet = userDeptService.delDeptUser(userId,iDeptId);
+		if(!blRet){
+			logger.error("addDeptUser error!");
+			result.setResultCode(ResultCode.systemError.code);
+			return result;
+		}
+		result.setResultCode(ResultCode.success.code);
+		return result;
+	}
+	
 	
 }

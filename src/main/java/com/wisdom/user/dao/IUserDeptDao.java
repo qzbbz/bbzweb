@@ -17,5 +17,7 @@ public interface IUserDeptDao {
 	public boolean addUserDeptRecord(UserDept userDept);
 	
 	public int delUserByDeptId(long deptId);
+	
+	public boolean delUserDept(String userId,long deptId);
 		
 }

@@ -16,6 +16,7 @@ public interface IUserOperationDao {
 	public boolean deleteUser(User user);
 	
 	public boolean updateUser(User user);
+	public boolean updateUserInfo(User user);
 	
 	public boolean updateUserRegStatus(int status, String userId);
 	

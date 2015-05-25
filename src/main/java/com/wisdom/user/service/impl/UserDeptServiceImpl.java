@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import com.wisdom.common.model.User;
 import com.wisdom.common.model.UserDept;
@@ -100,6 +101,22 @@ public class UserDeptServiceImpl implements IUserDeptService {
 			return false;
 		}
 		return true;
+	}
+	
+	@Override
+	public boolean delDeptUser(String userId,long deptId){
+		if(StringUtils.isEmpty(userId) || -1 == deptId){
+			logger.error("input params error");
+			return false;
+		}
+		User user = new User();
+		user.setUserId(userId);
+		if(!userOperationDao.deleteUser(user)){
+			logger.error("delete User failed!");
+			return false;
+		}
+		
+		return userDeptDao.delUserDept(userId, deptId);
 	}
 	
 }

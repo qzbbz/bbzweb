@@ -11,6 +11,10 @@ public interface IUserDeptService {
 	public List<UserDept> getUserDeptListByDeptId(long deptId);
 	public boolean delUserByDeptId(long deptId);
 	
+	
+	
 	public boolean addDeptUser(String userId,String userName,int iCharger,long iDeptId,String userCode,
 			String userLevel,long iCompanyId,String msgMail);
+	
+	public boolean delDeptUser(String userId,long deptId);
 }

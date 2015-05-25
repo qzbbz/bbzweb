@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import com.wisdom.common.model.User;
 import com.wisdom.common.model.UserDept;
@@ -64,6 +65,62 @@ public class UserOperationDaoImpl implements IUserOperationDao {
 				user.getCompanyId() == null ? -1 : user.getCompanyId(),
 				user.getUserEncode() == null ? "" : user.getUserEncode(),
 				user.getUserId() == null ? "" : user.getUserId());
+		logger.debug("updateUser result : {}", affectedRows);
+		return affectedRows != 0;
+	}
+	
+	@Override
+	public boolean updateUserInfo(User user) {
+		StringBuilder sqlBuilder = new StringBuilder();
+		sqlBuilder.append("update user set ");
+		Object[] objs = new Object[6];
+		int index = 0;
+		
+		if(!StringUtils.isEmpty(user.getUserName())){
+			objs[index] = user.getUserName();
+			index++;
+			sqlBuilder.append(" user_name=?,");
+		}
+		
+		if(!StringUtils.isEmpty(user.getMsgEmail())){
+			objs[index] = user.getMsgEmail();
+			index++;
+			sqlBuilder.append(" msg_email=?,");
+		}
+		
+		if(-1 != user.getTypeId()){
+			objs[index] = user.getTypeId();
+			index++;
+			sqlBuilder.append(" type_id=?,");
+		}
+		
+		if(!StringUtils.isEmpty(user.getUserLevel())){
+			objs[index] = user.getUserLevel();
+			index++;
+			sqlBuilder.append(" user_level=?,");
+		}
+		
+		if(-1 !=user.getCompanyId()){
+			objs[index] = user.getUserLevel();
+			index++;
+			sqlBuilder.append(" company_id=?,");
+		}
+		
+		if(!StringUtils.isEmpty(user.getUserEncode())){
+			objs[index] = user.getUserEncode();
+			index++;
+			sqlBuilder.append(" user_encode=?,");
+		}
+		
+		sqlBuilder.deleteCharAt(sqlBuilder.length()-1);//删除末尾逗号
+		objs[index] = user.getUserEncode();
+		index++;
+		sqlBuilder.append(" where user_id=?");
+		
+		Object[] params = new Object[index];
+		System.arraycopy(objs, 0, params, 0, index);
+		
+		int affectedRows = jdbcTemplate.update(sqlBuilder.toString(),params);
 		logger.debug("updateUser result : {}", affectedRows);
 		return affectedRows != 0;
 	}

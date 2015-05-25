@@ -9,4 +9,3 @@ target/
 .project
 .classpath
 bbzweb.iml
-src/main/java/com/wisdom/web/api/controller/ArchSetController.java

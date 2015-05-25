@@ -9,6 +9,8 @@ public interface IUserService {
 	
 	public String getUserPwdByUserId(String userId);
 	
+	public boolean updateUserInfo(String userId,String userName,int typeId,String userCode,String userLevel,String msgMail);
+	
 	public String getUserMsgEmailByUserId(String userId);
 	
 	public boolean updateUserMsgEmailByUserId(String msgEamil, String userId);

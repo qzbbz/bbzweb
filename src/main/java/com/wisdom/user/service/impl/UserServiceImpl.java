@@ -187,5 +187,30 @@ public class UserServiceImpl implements IUserService {
 		user.setUserId(userId);
 		return userOperationDao.deleteUser(user);
 	}
+
+	@Override
+	public boolean updateUserInfo(String userId,String userName,int typeId,
+				String userCode,String userLevel,String msgMail) {
+		
+		if(StringUtils.isEmpty(userId)){
+			logger.error("userId empty error!");
+			return false;
+		}
+		
+		if(StringUtils.isEmpty(userName) &&  StringUtils.isEmpty(userCode)&&StringUtils.isEmpty(userLevel)
+				&& StringUtils.isEmpty(msgMail) && -1 == typeId){
+			logger.error("no need to update!");
+			return false;
+		}
+		
+		User user= new User();
+		user.setUserId(userId);
+		user.setUserName(userName);
+		user.setUserLevel(userLevel);
+		user.setMsgEmail(msgMail);
+		user.setTypeId(typeId);
+		
+		return userOperationDao.updateUserInfo(user);
+	}
 }
 
