@@ -13,6 +13,8 @@ public class CompanyOrgStructure {
 	
 	private String parentCompanyId;
 	
+	private int level;
+	
 	private String costCenter;
 	
 	private boolean expanded;
@@ -31,7 +33,7 @@ public class CompanyOrgStructure {
 	
 	public CompanyOrgStructure(String text, String id, boolean expanded,
 			String costCenter, String companyId, boolean typeIsDept,
-			boolean typeIsSubCompany,
+			boolean typeIsSubCompany, int level,
 			String parentCompanyId, List<CompanyOrgStructure> children) {
 		super();
 		this.text = text;
@@ -43,6 +45,15 @@ public class CompanyOrgStructure {
 		this.parentCompanyId = parentCompanyId;
 		this.typeIsDept = typeIsDept;
 		this.typeIsSubCompany = typeIsSubCompany;
+		this.level = level;
+	}
+
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
 	}
 
 	public boolean isTypeIsSubCompany() {

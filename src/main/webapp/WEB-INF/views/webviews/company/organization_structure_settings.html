@@ -100,14 +100,18 @@
 												</div>
 											</div>
 											<div id="addSubDept" style="display: none;">
-												<p>
-													您当前选择的是：<b class="text-danger mr20" id="currentSelectDept"></b><a
-														href="javascript:void(0);" id="modifyDeptName">修改部门名称</a><a
-														href="javascript:void(0);" id="deleteDept">删除该部门</a>
+												<p class="mt10">
+													<label for="">您当前选择的部门是：</label><input type="text" class="input input-normal" id="currentSelectDept" disabled>
+													<a href="javascript:void(0);" id="deleteDept" class="button button-danger ml10">删除部门</a>
+												</p>
+												<p class="mt10">
+													<label for="">您可以修改部门名称：</label><input id="newModifyDeptName"
+														type="text" class="input input-normal">
+													<button id="modifyDeptName" class="button button-success ml10">确定修改</button>
 												</p>
 												<p class="mt10">
 													<label for="">您可以增加子部门：</label><input id="newDeptName"
-														type="text" class="input input-normal">
+														type="text" class="input input-normal" style="margin-left:12px;">
 													<button id="addNewDept" class="button button-success ml10">确定添加</button>
 												</p>
 											</div>
@@ -320,19 +324,76 @@
         	});
     	})
     	$('#addNewDept').click(function(){
-    		alert(3);
+    		var newDeptName = $('#newDeptName').val();
+    		var item = tree.getSelected();
+    		var companyId = (item == null || item=='' ? headCompanyId : item.companyId);
+    		$.ajax({
+        		url : '/company/addDept',
+        		type : "POST",
+        		data : {deptName:newDeptName,curDeptId:item.id,level:item.level,companyId:companyId},
+        		success : function(data) {
+        			if(data == null || data == '' || data.resultCode == null || data.resultCode != '0') {
+        				alert('出错');
+        				return;
+        			} else {
+        				store.load(null);
+        			}        			
+        		}
+        	});
     	})
     	$('#modifyDeptName').click(function(){
-    		alert(4);
+    		var item = tree.getSelected();
+    		if(item.level != null && item.level == '1') {
+    			BUI.Message.Alert('一级部门名称不允许修改！','warning');
+    			return;
+    		} else if($('#newModifyDeptName').val() == null || $('#newModifyDeptName').val() == '') {
+    			BUI.Message.Alert('请输入修改后的部门名称！','warning');
+    			return;
+    		}
+    		var newDeptName = $('#newModifyDeptName').val();
+    		var item = tree.getSelected();
+    		$.ajax({
+        		url : '/company/modDeptInfo',
+        		type : "POST",
+        		data : {deptName:newDeptName,deptId:item.id},
+        		success : function(data) {
+        			if(data == null || data == '' || data.resultCode == null || data.resultCode != '0') {
+        				//alert('出错');
+        				return;
+        			} else {
+        				store.load(null);
+        			}        			
+        		}
+        	});
     	})
     	$('#deleteDept').click(function(){
-    		alert(5);
+    		var item = tree.getSelected();
+    		if(!item.leaf) {
+    			BUI.Message.Alert('当前部门具有子部门，请先删除子部门！','warning');
+    			return;
+    		}
+    		BUI.Message.Alert('您确定要删除当前部门嘛？',function() {
+    			$.ajax({
+            		url : '/company/delDept',
+            		type : "POST",
+            		data : {companyId:item.companyId,deptId:item.id},
+            		success : function(data) {
+            			if(data == null || data == '' || data.resultCode == null || data.resultCode != '0') {
+            				//alert('出错');
+            				return;
+            			} else {
+            				store.load(null);
+            			}        			
+            		}
+            	});
+    	    },'warning');
     	})
     	$('#addDeptUser').click(function(){
     		//dialogForm
             var dialogForm = new Overlay.Dialog({
                 title:'添加部门员工',
                 width:600,
+                height:400,
                 contentId:'addDeptUserForm',
                 success:function () {
 	              	alert('确认');
@@ -409,7 +470,7 @@
         		$('#addDeptUser').removeClass('disabled');
         		$('#addOneLevelDeptOrSubCompany').hide();
         		$('#addSubDept').show();
-        		$('#currentSelectDept').html(ev.item.text);
+        		$('#currentSelectDept').val(ev.item.text);
         	} else {
         		$('#addDeptUser').addClass('disabled');
         		$('#addOneLevelDeptOrSubCompany').show();

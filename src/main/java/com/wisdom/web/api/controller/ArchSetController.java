@@ -213,7 +213,7 @@ public class ArchSetController {
 		List<UserDept> userDeptList = new ArrayList<UserDept>();
 		userDeptList = userDeptService.getUserDeptListByDeptId(id);
 		List<String> userList = new ArrayList<String>();
-		if(null != userDeptList){
+		if(null != userDeptList && userDeptList.size() != 0){
 			//删除用户
 			for(UserDept o:userDeptList){
 				String userId = o.getUserId();

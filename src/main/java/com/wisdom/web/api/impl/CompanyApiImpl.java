@@ -507,6 +507,7 @@ public class CompanyApiImpl implements ICompanyApi {
 					cos.setCostCenter(String.valueOf(dept.getCostCenterEncode()));
 					cos.setId(String.valueOf(dept.getId()));
 					cos.setText(dept.getName());
+					cos.setLevel(dept.getLevel());
 					cos.setTypeIsDept(true);
 					cosList.add(cos);
 				} else {
@@ -541,6 +542,7 @@ public class CompanyApiImpl implements ICompanyApi {
 									cos.setCostCenter(String.valueOf(dept.getCostCenterEncode()));
 									cos.setId(String.valueOf(dept.getId()));
 									cos.setText(dept.getName());
+									cos.setLevel(dept.getLevel());
 									cos.setTypeIsDept(true);
 									subTemp.add(cos);
 									break;
@@ -570,6 +572,7 @@ public class CompanyApiImpl implements ICompanyApi {
 				cosTemp.setCostCenter(String.valueOf(dept.getCostCenterEncode()));
 				cosTemp.setId(String.valueOf(dept.getId()));
 				cosTemp.setText(dept.getName());
+				cosTemp.setLevel(dept.getLevel());
 				cosTemp.setTypeIsDept(true);
 				subCosList.add(cosTemp);
 				break;
