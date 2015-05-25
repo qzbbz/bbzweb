@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import com.wisdom.common.model.UserDept;
 import com.wisdom.user.dao.IUserDeptDao;
@@ -83,9 +84,30 @@ public class UserDeptDaoImpl implements IUserDeptDao {
 			int num = jdbcTemplate.update(sql,new Object[]{deptId});
 			return num;
 		}catch(Exception e){
-			logger.equals(e.toString());
+			logger.error(e.toString());
 		}
 		return 0;
+	}
+
+	@Override
+	public boolean addUserDeptRecord(UserDept userDept) {
+		if(null == userDept || null == userDept.getDeptId() || StringUtils.isEmpty(userDept.getUserId())){
+			logger.error("input param error");
+			return false;
+		}
+		
+		try{
+			String sql= "insert into user_dept(user_id,dept_id,status) values (?,?,?)";
+			int num = jdbcTemplate.update(sql,
+					userDept.getUserId(),
+					userDept.getDeptId(),
+					userDept.getStatus());
+			return num > 0;
+		}catch(Exception e){
+			logger.error(e.toString());
+		}
+		
+		return false;
 	}
 
 }

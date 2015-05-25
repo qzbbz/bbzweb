@@ -71,8 +71,9 @@ public class ArchSetController {
 		Dept dept = new Dept();
 		try {
 			dept.setCompanyId(Long.parseLong(companyId));
-			dept.setCostCenterEncode(0L);//TODO
-			dept.setLevel(Integer.parseInt(level) + 1);
+
+			dept.setCostCenterEncode(0L);//TODO 
+			dept.setLevel(Integer.parseInt(level) + 1); //添加子部门时，level + 1
 			dept.setName(deptName);
 			dept.setParentId(Long.parseLong(parentId));
 		} catch (NumberFormatException e) {
@@ -111,9 +112,8 @@ public class ArchSetController {
 			return result;
 		}
 		
-		/*父公司ID存在时，校验一下*/
-		
-		
+		/*TODO 父公司ID存在时，校验一下*/
+
 		Company company = new Company();
 		try{
 			company.setName(companyName);
@@ -241,6 +241,50 @@ public class ArchSetController {
 		}else{
 			result.setResultCode(ResultCode.success.code);
 		}
+		return result;
+	}
+	
+	@ResponseBody
+	@RequestMapping("/addDeptUser")
+	public Result addDeptUser(HttpServletRequest request){
+		Result result = new Result();
+		String userId = request.getParameter("userId");
+		String userName = request.getParameter("userName");
+		String charger = request.getParameter("charger");
+		String deptId = request.getParameter("deptId");
+		String userCode = request.getParameter("userCode");
+		String userLevel = request.getParameter("userLevel");
+		String companyId = request.getParameter("companyId");
+		String msgMail = request.getParameter("msgMail");
+		
+		if(StringUtils.isEmpty(userId) || StringUtils.isEmpty(userName) || StringUtils.isEmpty(charger) || StringUtils.isEmpty(deptId) ||
+			StringUtils.isEmpty(userCode) || StringUtils.isEmpty(userLevel) ||StringUtils.isEmpty(companyId)){
+			result.setResultCode(ResultCode.paramError.code);
+			result.setMsg("参数错误!");
+			return result;	
+		}
+		 
+		int iCharger = -1;
+		long iDeptId = -1;
+		long iCompanyId = -1;
+		
+		try {
+			iCharger = Integer.parseInt(charger);
+			iDeptId = Long.parseLong(deptId);
+			iCompanyId = Long.parseLong(companyId);
+		} catch (NumberFormatException e) {
+			logger.error("parameter convert error!");
+			result.setResultCode(ResultCode.paramError.code);
+			result.setMsg("参数类型错误!");
+			return result;
+		}
+		boolean blRet = userDeptService.addDeptUser(userId,userName,iCharger,iDeptId,userCode,userLevel,iCompanyId,msgMail);
+		if(!blRet){
+			logger.error("parameter convert error!");
+			result.setResultCode(ResultCode.systemError.code);
+			return result;
+		}
+		result.setResultCode(ResultCode.success.code);
 		return result;
 	}
 	

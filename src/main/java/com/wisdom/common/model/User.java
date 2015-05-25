@@ -19,6 +19,7 @@ public class User implements java.io.Serializable {
 	private String userName;
 	private String msgEmail;
 	private Integer typeId;
+	private String userLevel;
 	private Long companyId;
 	private String userEncode;
 	private Timestamp createTime;
@@ -30,11 +31,12 @@ public class User implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public User(Long id, String userName, String msgEmail, String userEncode, String userId, Integer typeId, Long companyId,
+	public User(Long id, String userName, String msgEmail, String userEncode, String userId, Integer typeId, String userLevel,Long companyId,
 			Timestamp createTime) {
 		this.id = id;
 		this.userId = userId;
 		this.typeId = typeId;
+		this.userLevel = userLevel;
 		this.msgEmail = msgEmail;
 		this.userName = userName;
 		this.companyId = companyId;
@@ -106,6 +108,14 @@ public class User implements java.io.Serializable {
 
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
+	}
+
+	public String getUserLevel() {
+		return userLevel;
+	}
+
+	public void setUserLevel(String userLevel) {
+		this.userLevel = userLevel;
 	}
 
 }
