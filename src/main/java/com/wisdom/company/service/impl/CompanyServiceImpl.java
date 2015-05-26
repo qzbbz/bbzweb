@@ -7,8 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.wisdom.common.model.Company;
+import com.wisdom.common.model.Dept;
 import com.wisdom.common.model.Employment;
+import com.wisdom.common.utils.Result;
+import com.wisdom.common.utils.ResultCode;
 import com.wisdom.company.dao.ICompanyDao;
+import com.wisdom.company.dao.IDeptDao;
 import com.wisdom.company.dao.IEmploymentDao;
 import com.wisdom.company.service.ICompanyService;
 
@@ -20,6 +24,9 @@ public class CompanyServiceImpl implements ICompanyService {
 	
 	@Autowired
 	private IEmploymentDao employmentDao;
+	
+	@Autowired
+	private IDeptDao deptDao;
 	
 	@Override
 	public long addCompany(Company company) {
@@ -69,6 +76,42 @@ public class CompanyServiceImpl implements ICompanyService {
 	@Override
 	public Company getCompanyByCompanyId(Long id){
 		return companyDao.getCompanyByCompanyId(id);
+	}
+
+	@Override
+	public Result delCompany(long companyId) {
+		Result result = new Result();
+		if(-1 == companyId){
+			result.setMsg("参数错误！");
+			result.setResultCode(ResultCode.paramError.code);
+			return result;
+		}
+		/*先检查是否还有子公司存在*/
+		List<Company> list = getSubCompanyListByCompanyId(companyId);
+		if(null != list && list.size() > 0){
+			result.setMsg("请先删除子公司!");
+			result.setResultCode(ResultCode.serviceError.code);
+			return result;
+		}
+		/*检查是否还有部门存在*/
+		List<Dept> deptList = deptDao.getDeptListByCompanyId(companyId);
+		if(null != deptList && deptList.size() > 0){
+			result.setMsg("请先删除公司下部门!");
+			result.setResultCode(ResultCode.serviceError.code);
+			return result;
+		}
+		
+		Company company = new Company();
+		company.setId(companyId);
+		boolean blRet = companyDao.deleteCompany(company);
+		if(!blRet){
+			result.setMsg("删除公司操作失败!");
+			result.setResultCode(ResultCode.systemError.code);
+			return result;
+		}
+		
+		result.setResultCode(ResultCode.success.code);
+		return result;
 	}
 	
 	

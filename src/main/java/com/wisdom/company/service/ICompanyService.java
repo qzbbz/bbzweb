@@ -3,6 +3,7 @@ package com.wisdom.company.service;
 import java.util.List;
 
 import com.wisdom.common.model.Company;
+import com.wisdom.common.utils.Result;
 
 public interface ICompanyService {
 	
@@ -20,4 +21,6 @@ public interface ICompanyService {
 	
 	public List<Company> getSubCompanyListByCompanyId(long companyId);
 	public Company getCompanyByCompanyId(Long id);
+	
+	public Result delCompany(long companyId);
 }

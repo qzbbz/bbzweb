@@ -1,10 +1,12 @@
 package com.wisdom.user.dao.impl;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
@@ -18,6 +20,7 @@ import com.wisdom.common.model.UserPhoneType;
 import com.wisdom.common.model.UserPwd;
 import com.wisdom.common.model.UserRole;
 import com.wisdom.user.dao.IUserOperationDao;
+import com.wisdom.user.mapper.UserMapper;
 
 @Repository("userOperationDao")
 public class UserOperationDaoImpl implements IUserOperationDao {
@@ -309,6 +312,60 @@ public class UserOperationDaoImpl implements IUserOperationDao {
 		int affectedRows = jdbcTemplate.update(sql, userPwd);
 		logger.debug("updateUserPwd result : {}", affectedRows);
 		return affectedRows != 0;
+	}
+
+	@Override
+	public List<User> queryUser(User user,Integer begin ,Integer end) {
+		if(null == user){
+			logger.error("null pointor error");
+			return null;
+		}
+		
+		if(StringUtils.isEmpty(user.getUserId()) && StringUtils.isEmpty(user.getUserName()) && 
+				StringUtils.isEmpty(user.getUserEncode()) && StringUtils.isEmpty(user.getMsgEmail())){
+			logger.error("no query condition!");
+			return null;
+		}
+		
+		StringBuilder sqlBuilder = new StringBuilder();
+		sqlBuilder.append("select user_id,user_name,user_level,msg_email,company_id,user_encode from user where 1=1 ");
+		Object[] objs = new Object[10];
+		int index = 0;
+		if(!StringUtils.isEmpty(user.getUserId())){
+			objs[index] = user.getUserId();
+			index++;
+			sqlBuilder.append(" and user_id=? ");
+		}
+		
+		if(!StringUtils.isEmpty(user.getUserName())){
+			objs[index] = user.getUserName();
+			index++;
+			sqlBuilder.append(" and user_name=? ");
+		}
+		
+		if(!StringUtils.isEmpty(user.getUserEncode())){
+			objs[index] = user.getUserEncode();
+			index++;
+			sqlBuilder.append(" and user_encode=? ");
+		}
+		
+		if(!StringUtils.isEmpty(user.getMsgEmail())){
+			objs[index] = user.getMsgEmail();
+			index++;
+			sqlBuilder.append(" and msg_email=? ");
+		}
+		
+		Object[] params = new Object[index];
+		System.arraycopy(objs, 0, params, 0, index);
+		List<User> list = null;
+		try {
+			list = jdbcTemplate.query(sqlBuilder.toString(),params,new UserMapper());
+			return list;
+		} catch (DataAccessException e) {
+			logger.error("query user error!");
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }

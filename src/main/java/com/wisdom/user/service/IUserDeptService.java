@@ -3,6 +3,7 @@ package com.wisdom.user.service;
 import java.util.List;
 
 import com.wisdom.common.model.UserDept;
+import com.wisdom.user.domain.UserInfo;
 
 public interface IUserDeptService {
 
@@ -17,4 +18,7 @@ public interface IUserDeptService {
 			String userLevel,long iCompanyId,String msgMail);
 	
 	public boolean delDeptUser(String userId,long deptId);
+	
+	/*根据条件查询用户：deptId暂时没用到*/
+	public List<UserInfo> queryUser(String userId,long iDeptId,String userName,String userCode);
 }

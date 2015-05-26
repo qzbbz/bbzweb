@@ -1,5 +1,7 @@
 package com.wisdom.user.dao;
 
+import java.util.List;
+
 import com.wisdom.common.model.User;
 import com.wisdom.common.model.UserDept;
 import com.wisdom.common.model.UserInviteCode;
@@ -65,5 +67,7 @@ public interface IUserOperationDao {
 	public boolean deleteUserRole(UserRole userRole);
 	
 	public boolean updateUserRole(UserRole userRole);
+	
+	public List<User> queryUser(User user,Integer begin ,Integer end);
 	
 }

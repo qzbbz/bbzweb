@@ -1,5 +1,6 @@
 package com.wisdom.user.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import com.wisdom.invoice.dao.IUserInvoiceDao;
 import com.wisdom.user.dao.IUserDeptDao;
 import com.wisdom.user.dao.IUserInviteCodeDao;
 import com.wisdom.user.dao.IUserOperationDao;
+import com.wisdom.user.domain.UserInfo;
 import com.wisdom.user.service.IUserDeptService;
 import com.wisdom.user.service.IUserService;
 import com.wisdom.web.api.controller.ArchSetController;
@@ -117,6 +119,33 @@ public class UserDeptServiceImpl implements IUserDeptService {
 		}
 		
 		return userDeptDao.delUserDept(userId, deptId);
+	}
+
+	@Override
+	public List<UserInfo> queryUser(String userId, long iDeptId,
+			String userName, String userCode) {
+		List<User> list= new ArrayList<User>();
+		
+		User user = new User();
+		user.setUserId(userId);
+		user.setUserName(userName);
+		user.setUserEncode(userCode);
+		
+		list = userOperationDao.queryUser(user, null, null);
+		if(null == list || !(list.size()>0)){
+			return null;
+		}
+		List<UserInfo> userInfoList = new ArrayList<UserInfo>();
+		for(User u : list){
+			UserInfo userInfo = new UserInfo();
+			userInfo.setUserId(user.getUserId());
+			userInfo.setUserName(user.getUserName());
+			userInfo.setUserCode(user.getUserEncode());
+			userInfo.setUserLevel(user.getUserLevel());
+			userInfo.setCompanyId(String.valueOf(user.getCompanyId()));
+			userInfoList.add(userInfo);
+		}
+		return userInfoList;
 	}
 	
 }

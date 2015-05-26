@@ -18,6 +18,7 @@ import com.wisdom.common.utils.Result;
 import com.wisdom.common.utils.ResultCode;
 import com.wisdom.company.service.ICompanyService;
 import com.wisdom.company.service.IDeptService;
+import com.wisdom.user.domain.UserInfo;
 import com.wisdom.user.service.IUserDeptService;
 import com.wisdom.user.service.IUserService;
 import com.wisdom.common.model.UserDept;
@@ -131,6 +132,23 @@ public class ArchSetController {
 		result.getResultMap().put("companyId", ret);
 		return result;
 	}
+	
+	@ResponseBody
+	@RequestMapping("/company/delSubCompany")
+	public Result delSubCompany(HttpServletRequest request){
+		Result result = new Result();
+		String companyName = request.getParameter("companyName");
+		String companyId = request.getParameter("curCompanyId");
+		
+		if(StringUtils.isEmpty(companyId)){
+			result.setResultCode(ResultCode.paramError.code);
+			result.setMsg("公司编号不能为空!");
+			return result;
+		}
+		result = companyService.delCompany(Long.valueOf(companyId));
+		return result;
+	}
+	
 	
 	@ResponseBody
 	@RequestMapping("/company/modDeptInfo")
@@ -359,6 +377,48 @@ public class ArchSetController {
 			result.setResultCode(ResultCode.systemError.code);
 			return result;
 		}
+		result.setResultCode(ResultCode.success.code);
+		return result;
+	}
+	
+	@ResponseBody
+	@RequestMapping("/queryUser")
+	public Result queryDeptUser(HttpServletRequest request){
+		Result result = new Result();
+		String userId = request.getParameter("userId");
+		String deptId = request.getParameter("deptId");
+		String userName = request.getParameter("userName");
+		String userCode = request.getParameter("userCode");
+		String page = request.getParameter("page");
+		String pageSize = request.getParameter("pageSize");
+		
+		
+		if(StringUtils.isEmpty(userId)){
+			result.setResultCode(ResultCode.paramError.code);
+			result.setMsg("用户ID不能为空!");
+			return result;	
+		}
+		 
+		long iDeptId = -1;
+		
+		try {
+			iDeptId = Integer.parseInt(deptId);
+		} catch (NumberFormatException e) {
+			logger.error("parameter convert error!");
+			result.setResultCode(ResultCode.paramError.code);
+			result.setMsg("参数类型错误!");
+			return result;
+		}
+		
+		List<UserInfo> list= userDeptService.queryUser(userId,iDeptId,userName,userCode);
+		if(null == list || !(list.size() > 0)){
+			logger.error("query user error!");
+			result.setResultCode(ResultCode.success.code);
+			result.setMsg("没有查到相关的用户信息！");
+			return result;
+		}
+		
+		result.addResult("userList", list);
 		result.setResultCode(ResultCode.success.code);
 		return result;
 	}

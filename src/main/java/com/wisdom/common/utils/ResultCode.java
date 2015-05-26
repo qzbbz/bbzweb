@@ -14,6 +14,10 @@ public enum ResultCode {
 	 */
 	paramError("1"),
 	/**
+	 * 业务校验错误
+	 */
+	serviceError("1"),
+	/**
 	 * not login
 	 */
 	notLogin("2");
