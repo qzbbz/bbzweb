@@ -520,6 +520,21 @@
                         <td><a href="javascript:void(0)" id="btnShow6">继续弹出message</a></td>
                         <td></td>
                     </tr>
+                    <tr>
+                        <td><a href="javascript:void(0)" id="btnShow7">带图片</a></td>
+                        <td>
+                            <div id="contentImg" class="hide">
+                                <div class="imgviewwrap">
+                                    <div id="imgviewWrap"></div>
+                                    <div class="controls-wrap">
+                                        <!-- <span class="resume"><i class="iconfont" title="原图">&#xe63b;</i>原图</span> -->
+                                        <span class="zoom"><i class="iconfont" title="放大">&#xe63a;</i>放大</span>
+                                        <span class="micrify"><i class="iconfont" title="缩小">&#xe639;</i>缩小</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
             <!--仿表格-->
@@ -577,20 +592,30 @@
                         <a href="" class="button button-success">按钮测试</a>
                     </div>
                 </div>
-                <div class="form-window">
+            </div>
+            <!--多图上传-->
+            <h2>多图上传</h2>
+            <div class="zero-state">
+                <div class="form-window form-uploader">
                     <div class="hd"><i class="iconfont">&#xe637;</i></div>
                     <div class="bd">
                         <h2>标题测试测试测试</h2>
-                        <p>内容测试测试测试测试测试测试测试测试内容测试测试测试测试测试测试测试测试,内容测试测试测试测试测试测试测试测试,内容测试测试测试测试测试测试测试测试,</p>
+                        <p>内容测试测试测试测试测</p>
                         <div class="form-horizontal">
                             <div class="row">
-                                <label for="" class="control-label">选择时间；</label>
+                                <label for="" class="control-label">选择时间：</label>
                                 <div class="controls">
-                                  <input name="sname" type="text" class="input input-large" data-rules="{required : true}">
+                                  <input name="sname" type="text" class="input input-normal" data-rules="{required : true}">
                                 </div>
                             </div>
                         </div>
-                        <p><a href="" class="button button-success">按钮测试</a><a href="" class="button button-success">按钮测试</a></p>
+                    </div>
+                    <div class="uploader-wrap">
+                        <div class="uploader-label">文件列表：</div>
+                        <div id="J_Uploader">
+                            <div class="uploader-text">选择发票图片文件</div>
+                        </div>
+                        <a class="button button-success ml10" href="">测试按钮</a>
                     </div>
                 </div>
             </div>
@@ -910,16 +935,6 @@
               <button id="unmask" class="button">取消屏蔽</button>
               <button id="maskFull" class="button">屏蔽整个窗口</button>
             </p>
-            <!--图片浏览-->
-            <h2>图片浏览</h2>
-            <div class="imgviewwrap">
-                <div id="imgviewWrap"></div>
-                <div class="controls-wrap" style="float:left;">
-                    <span class="resume"><i class="iconfont">&#xe63b;</i>原始大小</span>
-                    <span class="zoom"><i class="iconfont">&#xe63a;</i>放大</span>
-                    <span class="micrify"><i class="iconfont">&#xe639;</i>缩小</span>
-                </div>
-            </div>
         </div>
 	</div>
     <script src="/js/webjs/jquery-1.8.1.min.js"></script>
@@ -1009,6 +1024,11 @@
                     alert("删除成功")
                 }
             })
+            // 默认ID选中
+            defaultSelect("a1");
+            function defaultSelect(id){ 
+                $("#"+id).parent().addClass("bui-menu-item-selected")
+            }
         })()
         function txtTemplate(d,txt){
             return txt ? $('<div class="span1"><p class="text-hide data-checkbox"><input type="checkbox"></p></div>'+
@@ -1085,7 +1105,21 @@
             $('#btnShow').on('click',function () {
                 dialogForm.show();
             });
-
+            //dialogForm
+            var dialogForm = new Overlay.Dialog({
+                title:'查看图片',
+                width:880,
+                height:550,
+                contentId:'contentImg',
+                success:function () {
+                    alert('确认');
+                    this.close();
+                },
+                buttons : []
+            });
+            $('#btnShow7').on('click',function () {
+                dialogForm.show();
+            });
 
             //dialogText 非模态窗口
             var dialogText = new Overlay.Dialog({
@@ -1286,9 +1320,9 @@
                 render: "#imgviewWrap",
                 autoRender: false, // 设置为true就自动渲染，默认为false！
                 // 以下属性全部可以set来修改。
-                width: 800,
-                height: 500,
-                imgSrc: "http://pic3.bbzhi.com/youxibizhi/youxizhandouhuamianbizhi/game_gamewall_235201_15.jpg",
+                width: 760,
+                height: 480,
+                imgSrc: "http://www.37bjw.com/d/file/yangsheng/news/201504/0df29ef260c5caf78f51a4db3639fdea.jpg",
                 //rotateTime: 300, // 旋转时间,默认300
                 //scaleTime: 300, // 缩放时间,默认300
                 overflowSize: 100, // 边界回弹像素,默认100,实际上是取Math.min(overflowSize,imgNowWidth,imgNowHeight)
@@ -1300,19 +1334,63 @@
             $(".controls-wrap").on('click',function(e){
                 var target = e.target;
                 if($.contains(this,target)){
-                	var self = jQuery(target),
-                	cls = self.attr("class");
-                	if (cls == "viewImg") {
-                		var width = 400,height = 300;
-                		$("#img-preview-wrap").width(width).height(height)
-	                	viewContent.set('width', width);
-	                	viewContent.set('height', height);
-                	}else{
-                		viewContent[cls]();
-                	}
-                	return false;
+                var self = jQuery(target),
+                cls = self.attr("class");
+                if (cls == "viewImg") {
+                    viewImg就是新窗口打开imgSrc
+                    self.attr({"href" : viewContent.get('imgSrc'),"target" : "_blank"});
+                    return true;
+                    } else if (cls == "drag1") {
+                    换src
+                    viewContent.set("drag", false);
+                    } else if (cls == "drag2") {
+                    换src
+                    viewContent.set("drag", true);
+                    } else if (cls == "chgImg1") {
+                    换src
+                    viewContent.set("imgSrc", "http://pic.sc.chinaz.com/files/pic/pic9/201505/apic11703.jpg");
+                    } else if (cls == "chgImg2") {
+                    换src
+                    viewContent.set("imgSrc", "http://b.hiphotos.baidu.com/image/pic/item/adaf2edda3cc7cd9840d6c923a01213fb80e915c.jpg");
+                    } else if (cls == "resize1") {
+                测试resize
+                var width = 800,height = 600;
+                $("#img-preview-wrap").width(width).height(height)
+                viewContent.resize({width : width,height : height});
+                viewContent.set('width', width);
+                viewContent.set('height', height);
+                } else if (cls == "resize2") {
+                // 测试resize
+                var width = 400,height = 300;
+                $("#img-preview-wrap").width(width).height(height)
+                // viewContent.resize({width : width,height : height});
+                viewContent.set('width', width);
+                viewContent.set('height', height);
+                }else{
+                // 为了方便,直接根据className调用
+                viewContent[cls]();
+                }
+                return false;
                 }
             });
+        });
+        //多图上传
+        BUI.use('bui/uploader',function (Uploader) {
+            /**
+            * 返回数据的格式
+            *
+            *  默认是 {url : 'url'},否则认为上传失败
+            *  可以通过isSuccess 更改判定成功失败的结构
+            */
+            var uploader = new Uploader.Uploader({
+            render: '#J_Uploader',
+            url: 'upload.php'
+            }).render();
+
+            var uploader = new Uploader.Uploader({
+            render: '#Q_Uploader',
+            url: 'upload.php'
+            }).render();
         });
 	</script>
 

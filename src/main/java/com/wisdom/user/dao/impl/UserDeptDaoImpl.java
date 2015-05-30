@@ -117,7 +117,7 @@ public class UserDeptDaoImpl implements IUserDeptDao {
 			return false;
 		}
 		try{
-			String sql= "delete from user_dept where user_id =?, dept_id=?";
+			String sql= "delete from user_dept where user_id =? and dept_id=?";
 			int num = jdbcTemplate.update(sql,
 					userId,
 					deptId);
@@ -126,6 +126,29 @@ public class UserDeptDaoImpl implements IUserDeptDao {
 			logger.error(e.toString());
 		}
 		return false;
+	}
+
+	@Override
+	public List<UserDept> getUserDeptListByDeptIdAndUserId(long deptId,
+			String userId) {
+		List<UserDept> list = null;
+		try {
+			String sql = "select * from user_dept where dept_id =? and user_id=?";
+			list = jdbcTemplate.query(sql, new Object[] { deptId, userId },
+					new RowMapperResultSetExtractor<UserDept>(
+							new UserDeptMapper()));
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return list;
+	}
+
+	@Override
+	public boolean updateUserDeptStatus(String userId, int status) {
+		String sql = "update user_dept set status=? where user_id=?";
+		int affectedRows = jdbcTemplate.update(sql, status, userId);
+		logger.debug("updateUserDeptStatus result : {}", affectedRows);
+		return affectedRows != 0;
 	}
 
 }

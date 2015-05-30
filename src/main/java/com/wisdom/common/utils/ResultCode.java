@@ -20,7 +20,11 @@ public enum ResultCode {
 	/**
 	 * not login
 	 */
-	notLogin("2");
+	notLogin("2"),
+	/**
+	 * 参数错误
+	 */
+	userEmailExist("10");
 
 	public String code;
 	public String message; //错误描述

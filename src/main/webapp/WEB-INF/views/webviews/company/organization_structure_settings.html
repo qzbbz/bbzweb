@@ -24,7 +24,7 @@
 				<img src="/img/webimg/bss-logo.png">
 				<h1>上海青智财务咨询有限公司</h1>
 			</div>
-			<div class="side-bar-content"></div>
+			<div class="side-bar-content"  id="menuTree"></div>
 			<div class="side-bar-bottom">
 				<ul>
 					<li><a href=""><i class="setting"></i>设置</a></li>
@@ -82,12 +82,18 @@
 											style="color: #5da09a; font-weight: bold; font-size: 14px;">当前可以进行的操作</div>
 										<div class="panel-body well" style="height: 150px;">
 											<div id="addOneLevelDeptOrSubCompany" style="display: none;">
+												<div style="margin-bottom:10px;">
+													<p class="mt10">
+														<label for="">您当前选择的是：</label><input style="margin-left:25px;" type="text" class="input input-normal" id="currentSelectSubComapny" disabled>
+														<button id="deleteSubCompany" class="button button-danger ml10" style="width:110px;">删除子公司</button>
+													</p>
+												</div>
 												<div>
 													<label for="">您可以添加一级部门：</label> <select
 														class="input input-normal" id="oneLevelDeptSelect"
 														style="width: 160px;"></select>
 													<button id="addNewOneLevelDept"
-														class="button button-success ml10">确定添加</button>
+														class="button button-success ml10" style="width:110px;">确定添加</button>
 												</div>
 												<div>
 													<p class="mt10">
@@ -95,7 +101,7 @@
 															id="newSubCompanyName" class="input input-normal"
 															style="margin-left: 15px;">
 														<button id="addNewSubComapny"
-															class="button button-success ml10">确定添加</button>
+															class="button button-success ml10" style="width:110px;">确定添加</button>
 													</p>
 												</div>
 											</div>
@@ -151,24 +157,11 @@
 								<th>所在部门</th>
 								<th>员工编号</th>
 								<th>员工职级</th>
+								<th>微信邀请码</th>
 								<th>操作</th>
 							</tr>
 						</thead>
-						<tbody>
-							<tr>
-								<td>李萌萌</td>
-								<td>客服部</td>
-								<td>6001</td>
-								<td>客服经理<span class="highlight">负责人</span></td>
-								<td><span class="text-primary btnShow">修改</span><a href="">删除</a></td>
-							</tr>
-							<tr>
-								<td>李萌萌</td>
-								<td>客服部</td>
-								<td>6001</td>
-								<td>客服经理</td>
-								<td><a href="">修改</a><a href="">删除</a></td>
-							</tr>
+						<tbody id="deptUserList">
 						</tbody>
 					</table>
 				</div>
@@ -176,14 +169,14 @@
 		</div>
 	</div>
 
-	<div id="addDeptUserForm" class="hide">
+	<div id="addDeptUserForm" style="display:none;">
 		<div id="form" class="form-horizontal">
 			<div class="control-group">
 				<label class="control-label"><s>*</s>电子邮件地址：</label>
 				<div class="controls">
 					<input id="dept_user_email" type="text" class="input-large"
 						data-rules="{required : true}" style="width:250px;">
-					<span class="ml10 text-danger">已被使用，请检查！</span>
+					<!-- <span class="ml10 text-danger">已被使用，请检查！</span> -->
 				</div>
 			</div>
 			<div class="control-group">
@@ -207,6 +200,8 @@
 				<div class="controls">
 					<input type="text" class="input-large" id="dept_user_dept_name"
 						data-rules="{required : true}" disabled style="width:250px;">
+					<input type="hidden" class="input-large" id="dept_user_dept_id"
+						data-rules="{required : true}" disabled style="width:250px;">
 				</div>
 			</div>
 			<div class="control-group">
@@ -227,37 +222,79 @@
 		</div>
 	</div>
 
+	<div id="modifyDeptUserForm" style="display:none;">
+		<div id="form" class="form-horizontal">
+			<div class="control-group">
+				<label class="control-label"><s>*</s>电子邮件地址：</label>
+				<div class="controls">
+					<input id="modify_dept_user_email" type="text" class="input-large"
+						data-rules="{required : true}" style="width:250px;" disabled>
+					<!-- <span class="ml10 text-danger">已被使用，请检查！</span> -->
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label"><s>*</s>员工姓名：</label>
+				<div class="controls">
+					<input type="text" class="input-large" id="modify_dept_user_name"
+						data-rules="{required : true}" style="width:250px;">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label"><s>*</s>负责人标示：</label>
+				<div class="controls control-row-auto">
+					<select class="input input-normal" id="modify_dept_user_is_admin" style="width: 260px;">
+						<option value='0'>非部门负责人</option>
+						<option value='1'>部门负责人</option>
+					</select>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">所在部门：</label>
+				<div class="controls">
+					<input type="text" class="input-large" id="modify_dept_user_dept_name"
+						data-rules="{required : true}" disabled style="width:250px;">
+					<input type="hidden" class="input-large" id="modify_dept_user_dept_id"
+						data-rules="{required : true}" disabled style="width:250px;">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label"><s>*</s>员工编号：</label>
+				<div class="controls control-row-auto">
+					<input type="text" id="modify_dept_user_code" class="input-large" style="width:250px;"></input>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label"><s>*</s>员工职级：</label>
+				<div class="controls control-row-auto">
+					<input type="text" id="modify_dept_user_level" class="input-large" style="width:250px;"></input>
+				</div>
+			</div>
+			<div class="control-group control-btn">
+				<div class="layer-wrap-footer"><a href="javascript:void(0);" id="dept_user_modify" class="button button-success">确定修改</a></div>
+			</div>
+		</div>
+	</div>
+
 	<!--该js需要修改js路径及修改seajs路径-->
 	<script src="http://g.tbcdn.cn/fi/bui/jquery-1.8.1.min.js"></script>
 	<script src="http://g.alicdn.com/bui/seajs/2.3.0/sea.js"></script>
 	<script src="http://g.alicdn.com/bui/bui/1.1.17/config.js"></script>
+	<script src="/js/webjs/menuTree.js"></script>
 	<!--ztree-->
 	<!-- <script src="/js/webjs/zTree_v3/jquery.ztree.all-3.5.min.js"></script> -->
 	<script type="text/javascript">
 	//竖状菜单
-    BUI.use('bui/tree',function (Tree) {
-        var menu = new Tree.TreeMenu({
-        render : '.side-bar-content',
-
-        elCls : 'bui-side-menu', 
-        itemCls : 'bui-menu-item',
-        expandAnimate : true,
-        showIcons : true,
-        loadMask:true,
-
-        dirTpl : '<li class="menu-leaf menu-second"><div class="bui-menu-title"><s></s><span class="bui-menu-title-text"><a href="{href}">{text}</a></span></div></li>',
-        leafTpl : '<li class="menu-leaf"><a href="{href}">{text}</a></li>',
-
-        nodes : [
-					{text : '公司发票',id : '10',href:"javascript:void(0);",  expanded : true,children: [
+    var menu = new menuTree(
+            {"nodes" : [
+					{text : '公司发票',id : '10',href:"javascript:void(0);",  expanded : false,children: [
 						{text : '发票上传',id : '11', href:"/views/webviews/company/expense_account_upload.html"},
-                     {text : '发票历史记录',id : '12', href:"/views/webviews/company/expense_account_history.html"}                                           
-                 ]},
-                 {text : '银行对账单',id : '20',href:"javascript:void(0);", expanded : false,children: [
+						{text : '发票历史记录',id : '12', href:"/views/webviews/company/expense_account_history.html"}                                           
+					]},
+					{text : '银行对账单',id : '20',href:"javascript:void(0);", expanded : false,children: [
 						{text : '上传对账单',id : '21', href:"/views/webviews/company/bank_statement_upload.html"},
 						{text : '对账单历史记录',id : '22', href:"/views/webviews/company/bank_statement_history.html"}                                           
 					]},
-					 {text : '工资社保',id : '30',href:"javascript:void(0);", expanded : false,children: [
+					{text : '工资社保',id : '30',href:"javascript:void(0);", expanded : false,children: [
 						{text : '参数设置',id : '31', href:"/views/webviews/company/salary_welfare_args_settings.html"},
 						{text : '下载工资计算模板',id : '32', href:"/views/webviews/company/salary_welfare_template_download.html"},                                           
 						{text : '上传本月工资',id : '33', href:"/views/webviews/company/salary_welfare_upload.html"}
@@ -265,29 +302,21 @@
 					{text : '预约取发票',id : '40',href:"javascript:void(0);", expanded : false,children: [
 						{text : '方式选择',id : '41', href:"/views/webviews/company/take_expense_account_mode_select.html"}                                           
 					]},
-					{text : '组织架构',id : '50',href:"javascript:void(0);",  expanded : false,children: [
+					{text : '组织架构',id : '50',href:"javascript:void(0);",  expanded : true,children: [
 						{text : '基本信息设置',id : '51', href:"/views/webviews/company/organization_information_settings.html"},
 						{text : '组织架构设置',id : '52', href:"/views/webviews/company/organization_structure_settings.html"}                                           
 					]},
-         ]
-    	});
-   		menu.render();
-        $.each($("li.menu-second"),function(){
-            var that = $(this);
-            if(that.next().hasClass("menu-second")){
-                that.find("s").remove();
-            }
-        })
-        menu.on('itemclick',function(ev){
-            $('.log').text(ev.item.text);
-        });
-        var firstLeaf = menu.findNode('11'); //获取第一个叶子节点
-        menu.setSelected(firstLeaf);
-    });
+					]
+            },"menuTree"
+        );
+    defaultSelect("52");
+    function defaultSelect(id){ 
+        $("#"+id).parent().addClass("bui-menu-item-selected")
+    }
 	
 	
 	
-    BUI.use(['bui/tree','bui/data','bui/overlay'],function (Tree,Data,Overlay) {
+    BUI.use(['bui/tree','bui/data','bui/overlay','bui/mask'],function (Tree,Data,Overlay,Mask) {
     	$('#addNewOneLevelDept').click(function(){
     		var oneLevelDeptSelectCostCenterEncode = $('#oneLevelDeptSelect option:selected').val();
     		var oneLevelDeptSelectName = $('#oneLevelDeptSelect option:selected').text();
@@ -309,6 +338,10 @@
     	})
     	$('#addNewSubComapny').click(function(){
     		var newSubCompanyName = $('#newSubCompanyName').val();
+    		if(newSubCompanyName == null || newSubCompanyName =='') {
+    			BUI.Message.Alert('子公司名称不能为空！','warning');
+    			return;
+    		}
     		$.ajax({
         		url : '/company/addSubCompany',
         		type : "POST",
@@ -323,8 +356,32 @@
         		}
         	});
     	})
+    	$('#deleteSubCompany').click(function(){
+    		var item = tree.getSelected();
+    		if(!item.leaf) {
+    			BUI.Message.Alert('当前子公司具有子部门，请先删除子部门！','warning');
+    			return;
+    		}
+    		$.ajax({
+        		url : '/company/delSubCompany',
+        		type : "POST",
+        		data : {curCompanyId:item.companyId},
+        		success : function(data) {
+        			if(data == null || data == '' || data.resultCode == null || data.resultCode != '0') {
+        				//alert('出错');
+        				return;
+        			} else {
+        				store.load(null);
+        			}        			
+        		}
+        	});
+    	})
     	$('#addNewDept').click(function(){
     		var newDeptName = $('#newDeptName').val();
+    		if(newDeptName == null || newDeptName =='') {
+    			BUI.Message.Alert('部门名称不能为空！','warning');
+    			return;
+    		}
     		var item = tree.getSelected();
     		var companyId = (item == null || item=='' ? headCompanyId : item.companyId);
     		$.ajax({
@@ -333,7 +390,7 @@
         		data : {deptName:newDeptName,curDeptId:item.id,level:item.level,companyId:companyId},
         		success : function(data) {
         			if(data == null || data == '' || data.resultCode == null || data.resultCode != '0') {
-        				alert('出错');
+        				//alert('出错');
         				return;
         			} else {
         				store.load(null);
@@ -347,7 +404,7 @@
     			BUI.Message.Alert('一级部门名称不允许修改！','warning');
     			return;
     		} else if($('#newModifyDeptName').val() == null || $('#newModifyDeptName').val() == '') {
-    			BUI.Message.Alert('请输入修改后的部门名称！','warning');
+    			BUI.Message.Alert('部门名称不能为空！','warning');
     			return;
     		}
     		var newDeptName = $('#newModifyDeptName').val();
@@ -388,20 +445,159 @@
             	});
     	    },'warning');
     	})
-    	$('#addDeptUser').click(function(){
-    		//dialogForm
-            var dialogForm = new Overlay.Dialog({
+    	var addUserDialogForm = new Overlay.Dialog({
                 title:'添加部门员工',
                 width:600,
                 height:400,
                 contentId:'addDeptUserForm',
                 success:function () {
-	              	alert('确认');
+	              	//alert('确认');
 	              	this.close();
 	            },
                 buttons : []
             });
-            dialogForm.show();
+    	var modifyUserDialogForm = new Overlay.Dialog({
+            title:'修改部门员工',
+            width:600,
+            height:400,
+            contentId:'modifyDeptUserForm',
+            success:function () {
+              	//alert('确认');
+              	this.close();
+            },
+            buttons : []
+        });
+    	var deptUser = new Array();
+    	
+    	$('#dept_user_modify').click(function(){
+    		var dept_user_email = $('#modify_dept_user_email') == null ? "" : $('#modify_dept_user_email').val();
+    		var pattern =   /^([\.a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/;
+    		if (!pattern.test(dept_user_email)) {
+    			BUI.Message.Alert('电子邮件地址为空或格式不合法，请检查！','warning');
+    	        return;  
+    	    }
+    		if($('#modify_dept_user_name').val() == '' || $('#modify_dept_user_is_admin').val() == '' || 
+    				$('#modify_dept_user_dept_id').val() == '' || $('#modify_dept_user_code').val() == '' || 
+    				$('#modify_dept_user_level').val() == '') {
+    			BUI.Message.Alert('您没有填写所有信息，请检查！','warning');
+    			return;
+    		}
+    		var userDataDetail = {
+    				userId:$('#modify_dept_user_email').val(),
+    				userName:$('#modify_dept_user_name').val(),
+    				charger:$('#modify_dept_user_is_admin option:selected').val(),
+    				deptId:$('#modify_dept_user_dept_id').val(),
+    				deptName:$('#modify_dept_user_dept_name').val(),
+    				userCode:$('#modify_dept_user_code').val(),
+    				userLevel:$('#modify_dept_user_level').val(),
+    				companyId:tree.getSelected().companyId,
+    				msgMail:""
+    				}
+    		var fullMask = new Mask.LoadMask({
+                el : 'body',
+                msg : '正在提交数据。。。'
+            });
+    		modifyUserDialogForm.close();
+    		fullMask.show();
+    		$.ajax({
+        		url : '/company/modDeptUser',
+        		type : "POST",
+        		async: false,
+        		data : userDataDetail,
+        		success : function(data) {
+        			if(data == null || data == '' || data.resultCode == null || data.resultCode != '0') {
+        				fullMask.hide();
+        				BUI.Message.Alert('修改部门员工失败，请稍后重试！','warning');
+        				return;
+        			}
+        			$.ajax({
+	            		url : '/company/queryUserByDeptId',
+	            		type : "POST",
+	            		async: false,
+	            		data : {deptId:userDataDetail.deptId, deptName:userDataDetail.deptName},
+	            		success : function(data) {
+	            			if(data == null || data == '') return;
+	            			createDataList(data);
+	            		}
+            		});
+        			fullMask.hide();
+        		},
+        		error : function() {
+        			fullMask.hide();
+        			BUI.Message.Alert('修改部门员工失败，请稍后重试！','warning');
+        		}
+        	});
+    	})
+    	
+    	$('#dept_user_submit').click(function(){
+    		var dept_user_email = $('#dept_user_email') == null ? "" : $('#dept_user_email').val();
+    		var pattern =   /^([\.a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/;
+    		if (!pattern.test(dept_user_email)) {
+    			BUI.Message.Alert('电子邮件地址为空或格式不合法，请检查！','warning');
+    	        return;  
+    	    }
+    		if($('#dept_user_name').val() == '' || $('#dept_user_is_admin').val() == '' || 
+    				$('#dept_user_dept_id').val() == '' || $('#dept_user_code').val() == '' || 
+    				$('#dept_user_level').val() == '') {
+    			BUI.Message.Alert('您没有填写所有信息，请检查！','warning');
+    			return;
+    		}
+    		var userDataDetail = {
+    				userId:$('#dept_user_email').val(),
+    				userName:$('#dept_user_name').val(),
+    				charger:$('#dept_user_is_admin option:selected').val(),
+    				deptId:$('#dept_user_dept_id').val(),
+    				deptName:$('#dept_user_dept_name').val(),
+    				userCode:$('#dept_user_code').val(),
+    				userLevel:$('#dept_user_level').val(),
+    				companyId:tree.getSelected().companyId,
+    				msgMail:""
+    				}
+    		var fullMask = new Mask.LoadMask({
+                el : 'body',
+                msg : '正在提交数据。。。'
+            });
+    		addUserDialogForm.close();
+    		fullMask.show();
+    		$.ajax({
+        		url : '/company/addDeptUser',
+        		type : "POST",
+        		async: false,
+        		data : userDataDetail,
+        		success : function(data) {
+        			if(data.resultCode == '10') {
+        				fullMask.hide();
+        				BUI.Message.Alert('当前添加员工的电子邮件地址已经被使用，请更换重试！','warning');
+        				//addUserDialogForm.show();
+        				return;
+        			}
+        			if(data == null || data == '' || data.resultCode == null || data.resultCode != '0') {
+        				fullMask.hide();
+        				BUI.Message.Alert('添加部门员工失败，请稍后重试！','warning');
+        				return;
+        			}
+        			//deptUser.push(userDataDetail);
+        			//$('#deptUserList').append("<tr><td>"+userDataDetail.userName+"</td><td>"+userDataDetail.deptName+"</td><td>"+userDataDetail.userCode+"</td><td>"+userDataDetail.userLevel+ (userDataDetail.charger == 1 ? "<span class='highlight'>负责人</span>" : "") +"</td><td>"+data.inviteCode+"</td><td><a href=''>修改</a><a href=''>删除</a></td></tr>");
+        			$.ajax({
+	            		url : '/company/queryUserByDeptId',
+	            		type : "POST",
+	            		async: false,
+	            		data : {deptId:userDataDetail.deptId, deptName:userDataDetail.deptName},
+	            		success : function(data) {
+	            			if(data == null || data == '') return;
+	            			createDataList(data);
+	            		}
+            		});
+        			fullMask.hide();
+        		},
+        		error : function() {
+        			fullMask.hide();
+        			BUI.Message.Alert('添加部门员工失败，请稍后重试！','warning');
+        		}
+        	});
+    	})
+    	$('#addDeptUser').click(function(){
+    		addUserDialogForm.show();
     	})
     	var hasSetCompanyDetailInfo = false;
     	var headCompanyName = '';
@@ -441,9 +637,68 @@
     			$('#org_name').html(data.company_name);
     			$('#org_code').html(data.org_code);
     			$('#org_type').html('总公司');
-    			$('#addOneLevelDeptOrSubCompany').show();	
+    			$('#addOneLevelDeptOrSubCompany').show();
+    			$('#deleteSubCompany').addClass("disabled");
+    			$('#currentSelectSubComapny').val(headCompanyName);
     		}
     	});
+    	
+    	function createDataList(data) {
+    		$('#deptUserList').html("");
+    		data.sort(function(a,b){return a.createDate<b.createDate?1:-1});
+    		deptUser = data;
+    		for(var i=0; i<deptUser.length; i++) {
+    			var container = $('#deptUserList');
+    			var tr = $("<tr></tr>");
+    			var td1 = $("<td>"+deptUser[i].userName+"</td><td>"+deptUser[i].deptName+"</td><td>"+deptUser[i].userCode+"</td><td>"+deptUser[i].userLevel+ (deptUser[i].charger == 1 ? "<span class='highlight'>负责人</span>" : "") +"</td><td>"+deptUser[i].inviteCode+"</td>");
+    			var td2 = $("<td></td>");
+    			var a1 = $("<a href='javascript:void(0)'>修改</a>");
+    			var a2 = $("<a href='javascript:void(0)'>删除</a>");
+				a1.attr("user_id", deptUser[i].userId);
+			    a1.click(function(event) {
+			    	for(var i=0; i<deptUser.length; i++) {
+			    		if(deptUser[i].userId === $(this).attr("user_id")) {
+			    			$('#modify_dept_user_email').val(deptUser[i].userId);
+		    				$('#modify_dept_user_name').val(deptUser[i].userName);
+		    				$('#modify_dept_user_is_admin option[value="'+deptUser[i].charger+'"]').attr("selected", true);  
+		    				$('#modify_dept_user_dept_id').val(deptUser[i].deptId);
+		    				$('#modify_dept_user_dept_name').val(deptUser[i].deptName);
+		    				$('#modify_dept_user_code').val(deptUser[i].inviteCode);
+		    				$('#modify_dept_user_level').val(deptUser[i].userLevel);
+		    				modifyUserDialogForm.show();		
+			    		}
+			    	}
+			    });
+			    a2.attr("user_id", deptUser[i].userId);
+			    a2.click(function(event) {
+			    	var userId = $(this).attr("user_id");
+		    		BUI.Message.Alert('您确定要删除当前员工吗？',function() {
+		    			$.ajax({
+		            		url : '/company/delDeptUser',
+		            		type : "POST",
+		            		data : {userId:userId,deptId:tree.getSelected().id},
+		            		success : function(data) {
+		            			$.ajax({
+		                    		url : '/company/queryUserByDeptId',
+		                    		type : "POST",
+		                    		async: false,
+		                    		data : {deptId:tree.getSelected().id, deptName:tree.getSelected().text},
+		                    		success : function(data) {
+		                    			if(data == null || data == '') return;
+		                    			createDataList(data);
+		                    		}
+		                    	});   			
+		            		}
+		            	});
+		    	    },'warning');
+			    });
+			    td2.append(a1);
+    			td2.append(a2);
+			    tr.append(td1);
+			    tr.append(td2);
+			    tr.appendTo(container);
+    		}
+    	}
     	//数据缓冲类
         var store = new Data.TreeStore({
             root : {
@@ -471,6 +726,19 @@
         		$('#addOneLevelDeptOrSubCompany').hide();
         		$('#addSubDept').show();
         		$('#currentSelectDept').val(ev.item.text);
+        		$('#dept_user_dept_name').val(ev.item.text);
+        		$('#dept_user_dept_id').val(ev.item.id);
+        		$('#deptUserList').html("");
+        		$.ajax({
+            		url : '/company/queryUserByDeptId',
+            		type : "POST",
+            		async: false,
+            		data : {deptId:ev.item.id, deptName:ev.item.text},
+            		success : function(data) {
+            			if(data == null || data == '') return;
+            			createDataList(data);
+            		}
+            	});
         	} else {
         		$('#addDeptUser').addClass('disabled');
         		$('#addOneLevelDeptOrSubCompany').show();
@@ -481,11 +749,19 @@
         		$('#parent_company').html(headCompanyName);
         		$('#org_type').html('分公司');
         		$('#org_name').html(ev.item.text);
+        		$('#deleteSubCompany').removeClass("disabled");
+        		$('#addNewSubComapny').addClass("disabled");
+        		$('#currentSelectSubComapny').val(ev.item.text);
         	} else {
         		$('#company_name').html(headCompanyName);
         		$('#org_name').html(ev.item.text);
         		$('#parent_company').html('无');
         		$('#org_type').html('总公司');
+        	}
+        	if(currentSelectOrg == headCompanyId) {
+        		$('#deleteSubCompany').addClass("disabled");
+        		$('#addNewSubComapny').removeClass("disabled");
+        		$('#currentSelectSubComapny').val(ev.item.text);
         	}
         	//alert(node);
         	//var subNode = store.add({id : '205',text: '测试部门'}, node);

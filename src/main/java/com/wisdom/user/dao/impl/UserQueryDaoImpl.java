@@ -1,9 +1,12 @@
 package com.wisdom.user.dao.impl;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.stereotype.Repository;
 
 import com.wisdom.common.model.User;
@@ -43,7 +46,7 @@ public class UserQueryDaoImpl implements IUserQueryDao {
 			user = jdbcTemplate.queryForObject(sql, new Object[] { userId },
 					new UserMapper());
 		} catch (Exception e) {
-			logger.info("resuly is 0.");
+			logger.error("resuly is 0, exception : " + e.toString());
 		}
 		return user;
 	}
@@ -177,6 +180,33 @@ public class UserQueryDaoImpl implements IUserQueryDao {
 			logger.info("resuly is 0.");
 		}
 		return userOpenid;
+	}
+
+	@Override
+	public List<User> getUserListByCompanyId(long companyId) {
+		List<User> list = null;
+		try {
+			String sql = "select * from user where company_id =?";
+			list = jdbcTemplate.query(sql, new Object[] { companyId },
+					new RowMapperResultSetExtractor<User>(
+							new UserMapper()));
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return list;
+	}
+
+	@Override
+	public UserInviteCode getUserInvitecodeByUserId(String userId) {
+		String sql = "select * from user_invitecode where user_id = ?";
+		UserInviteCode userInvitecode = null;
+		try {
+			userInvitecode = jdbcTemplate.queryForObject(sql,
+					new Object[] { userId }, new UserInviteCodeMapper());
+		} catch (Exception e) {
+			logger.info("resuly is 0.");
+		}
+		return userInvitecode;
 	}
 
 }

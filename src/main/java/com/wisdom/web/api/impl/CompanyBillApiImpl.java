@@ -40,7 +40,7 @@ public class CompanyBillApiImpl implements ICompanyBillApi {
 	private ICompanyBillService companyBillService;
 	
 	@Override
-	public Map<String, String> uploadCompanySalary(Map<String, String> params, MultipartFile file) {
+	public Map<String, String> uploadCompanyBill(Map<String, String> params, MultipartFile file) {
 		Map<String, String> retMap = new HashMap<>();
 		try {
 			String userId = params.get("userId");
@@ -55,7 +55,7 @@ public class CompanyBillApiImpl implements ICompanyBillApi {
 			companyBillService.addCompanyBill(cb);
 			retMap.put("error_code", "0");
 		} catch (IOException e) {
-			logger.debug("uploadCompanyBankSta exception : {}", e.toString());
+			logger.debug("uploadCompanyBill exception : {}", e.toString());
 			retMap.put("error_code", "1");
 			retMap.put("error_message", "上传发票失败，请稍后重试！");
 		}

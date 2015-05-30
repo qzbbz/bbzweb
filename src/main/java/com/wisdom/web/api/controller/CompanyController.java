@@ -1,10 +1,12 @@
 package com.wisdom.web.api.controller;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
 import com.wisdom.area.service.IAreaService;
 import com.wisdom.company.service.ICompanyService;
@@ -98,17 +101,12 @@ public class CompanyController {
 		params.put("area", areaService.getAreaNameByAreaId(request.getParameter("area")));
 		params.put("addExtra", request.getParameter("addExtra"));
 		params.put("bankName", request.getParameter("bankName"));
-		Map<String, String> retMap = companyApi.companyInfoSettings(files, params);
-		if(("0").equals(retMap.get("error_code"))) {
-			return "redirect:/views/webviews/company/organization_structure_settings.html";
-		} else {
-			return "redirect:/views/webviews/accounter/company_error.html";
-		}
+		companyApi.companyInfoSettings(files, params);
+		return "redirect:/views/webviews/company/organization_structure_settings.html";
 	}
 	
 	@RequestMapping("/company/setSalarySocialSecurityInfo")
-	@ResponseBody
-	public Map<String, String> setSalarySocialSecurityInfo(HttpServletRequest request) {
+	public String setSalarySocialSecurityInfo(HttpServletRequest request) {
 		Map<String, String> retMap = new HashMap<>();
 		String userId = (String) request.getSession().getAttribute("userId");
 		retMap.put("userId", userId);
@@ -140,7 +138,7 @@ public class CompanyController {
 		retMap.put("bigmedicalBase", request.getParameter("bigmedicalBase"));
 		retMap = companyApi.updateSSSInfo(retMap);
 		logger.debug("finish setSalarySocialSecurityInfo, retMap : {}", retMap);
-		return retMap;
+		return "redirect:/views/webviews/company/salary_welfare_args_settings.html";
 	}
 	
 	@RequestMapping("/company/getSalarySocialSecurityInfo")
@@ -165,14 +163,14 @@ public class CompanyController {
 	}
 	
 	@RequestMapping("/company/uploadSalary")
-	@ResponseBody
-	public Map<String, String> uploadSalary(@RequestParam("files") MultipartFile file, HttpServletRequest request) {
+	public String uploadSalary(@RequestParam("files") MultipartFile file, HttpServletRequest request) {
 		String userId = (String) request.getSession().getAttribute("userId");
 		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/files/company");
-		return companyApi.uploadCompanySalary(userId, realPath, file);
+		companyApi.uploadCompanySalary(userId, realPath, file);
+		return "redirect:/views/webviews/company/salary_welfare_upload.html";
 	}
 	
-	@RequestMapping("/company/uploadBankSta")
+	/*@RequestMapping("/company/uploadBankSta")
 	@ResponseBody
 	public Map<String, String> uploadBankSta(@RequestParam("files") MultipartFile file, HttpServletRequest request) {
 		String userId = (String) request.getSession().getAttribute("userId");
@@ -183,6 +181,29 @@ public class CompanyController {
 		params.put("realPath", realPath);
 		params.put("date", date);
 		return companyApi.uploadCompanyBankSta(file, params);
+	}*/
+	
+	@RequestMapping("/company/uploadBankSta")
+	@ResponseBody
+	public String uploadBankSta(DefaultMultipartHttpServletRequest multipartRequest,
+			HttpServletRequest request) {
+		logger.debug("===>uploadBankSta");
+		String userId = (String) request.getSession().getAttribute("userId");
+		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/files/company");
+		String date = request.getParameter("date");
+		Map<String, String> params = new HashMap<>();
+		params.put("userId", userId);
+		params.put("realPath", realPath);
+		params.put("date", date);
+		if (multipartRequest != null) {
+			Iterator<String> iterator = multipartRequest.getFileNames();
+			while (iterator.hasNext()) {
+				MultipartFile multifile = multipartRequest
+						.getFile((String) iterator.next());
+				companyApi.uploadCompanyBankSta(multifile, params);
+			}
+		}
+		return new HashMap<String, String>().put("url", "");
 	}
 	
 	@RequestMapping("/company/getAllCompanyBankSta")

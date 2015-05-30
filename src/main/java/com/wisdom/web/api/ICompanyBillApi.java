@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface ICompanyBillApi {
 
-	public Map<String, String> uploadCompanySalary(Map<String, String> params, MultipartFile file);
+	public Map<String, String> uploadCompanyBill(Map<String, String> params, MultipartFile file);
 	
 	public List<Map<String, String>> getCompanyBillByCondition(Map<String, String> params);
 	

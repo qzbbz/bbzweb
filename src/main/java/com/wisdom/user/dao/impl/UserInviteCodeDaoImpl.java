@@ -40,7 +40,7 @@ public class UserInviteCodeDaoImpl implements IUserInviteCodeDao {
 	@Override
 	public boolean addUserInviteCode(String userId, String inviteCode) {
 		String sql = "insert into user_invitecode (user_id, invite_code, create_time)"
-				+ " values (?, ?)";
+				+ " values (?, ?, ?)";
 		int affectedRows = jdbcTemplate.update(sql, userId, inviteCode,
 				new Timestamp(System.currentTimeMillis()));
 		logger.debug("addUserInviteCode result : {}", affectedRows);

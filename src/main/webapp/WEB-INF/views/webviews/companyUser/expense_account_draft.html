@@ -69,7 +69,7 @@
 		data : {status:1, page:page, pageSize:pageSize},
 		success : function(data) {
 			if(data == null || data == '') return;
-			$('#retData').empty();
+			$('#retData').html("");
 			data.sort(function(a,b){return a.create_time<b.create_time?1:-1});
 			for(var i=0; i<data.length; i++) {
 				$('#retData').append("<tr><td>"+data[i].invoice_id+"</td><td>"+data[i].create_time+"</td><td>"+data[i].cost_center+"</td><td>"+data[i].identify_status+"</td><td><a href='"+data[i].file_name+"'>点击预览发票</a></td></tr>");

@@ -3,13 +3,18 @@ package com.wisdom.user.service;
 import java.util.List;
 
 import com.wisdom.common.model.User;
+import com.wisdom.common.model.UserInviteCode;
 import com.wisdom.common.model.UserPhone;
 
 public interface IUserService {
 	
 	public String getUserPwdByUserId(String userId);
 	
-	public boolean updateUserInfo(String userId,String userName,int typeId,String userCode,String userLevel,String msgMail);
+	public User getUserByUserId(String userId);
+	
+	public List<User> getUserListByCompanyId(long companyId);
+	
+	public boolean updateUserInfo(String userId,String userName,int status, int typeId,String userCode,String userLevel,String msgMail);
 	
 	public String getUserMsgEmailByUserId(String userId);
 	
@@ -44,5 +49,7 @@ public interface IUserService {
 	public boolean ifNeedSuperApproval(String userId,String approvalId,double amount);
 	
 	public boolean deleteUser(String userId);
+	
+	public UserInviteCode getUserInvitecodeByUserId(String userId);
 	
 }

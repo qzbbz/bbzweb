@@ -74,7 +74,7 @@
 		data : {},
 		success : function(data) {
 			if(data == null || data == '') return;
-			$('#retData').empty();
+			$('#retData').html("");
 			data.sort(function(a,b){return a.submit_time<b.submit_time?1:-1});
 			for(var i=0; i<data.length; i++) {
 				$('#retData').append("<tr><td>"+data[i].invoice_id+"</td><td>"+data[i].submit_time.substr(0, 10)+"</td><td>"+data[i].user_name+"</td><td>"+data[i].bill_expenseTypeName+"</td><td>"+data[i].bill_amount+"</td><td><p title='"+data[i].desc+"'>"+(data[i].desc.length>8?data[i].desc.substr(0,8)+"...":data[i].desc)+"</p></td><td><p title='"+data[i].reasons+"'>"+(data[i].reasons.length>8?data[i].reasons.substr(0,8)+"...":data[i].reasons)+"</p></td><td><a href='"+data[i].bill_img+"'>点击预览发票</a></td></tr>");

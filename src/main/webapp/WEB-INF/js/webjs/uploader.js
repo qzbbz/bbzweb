@@ -311,7 +311,7 @@ define('bui/uploader/button/base', ['bui/common', './filter'], function(require)
        */
       text: {
         view: true,
-        value: '上传文件'
+        value: '上传'
       },
       /**
        * 上传时，提交文件的name值

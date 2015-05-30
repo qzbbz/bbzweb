@@ -63,7 +63,6 @@
       	$("#"+Cookie.get("menuId")).parent().addClass("bui-menu-item-selected")
       } 
     })
-
 	function isExpanded(exp){
 		return exp ? 'bui-menu-item-expanded':' ';
 	}

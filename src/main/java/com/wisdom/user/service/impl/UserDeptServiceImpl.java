@@ -75,7 +75,7 @@ public class UserDeptServiceImpl implements IUserDeptService {
 		user.setUserEncode(userCode);
 		user.setMsgEmail(msgEMail);
 		user.setCompanyId(iCompanyId);
-		user.setTypeId(0);//暂时为0；
+		user.setTypeId(5);//暂时为0；
 		
 		boolean blRet = userService.addUser(user);
 		if(!blRet){
@@ -146,6 +146,17 @@ public class UserDeptServiceImpl implements IUserDeptService {
 			userInfoList.add(userInfo);
 		}
 		return userInfoList;
+	}
+
+	@Override
+	public List<UserDept> getUserDeptListByDeptIdAndUserId(long deptId,
+			String userId) {
+		return userDeptDao.getUserDeptListByDeptIdAndUserId(deptId, userId);
+	}
+
+	@Override
+	public boolean updateUserDeptStatus(String userId, int status) {
+		return userDeptDao.updateUserDeptStatus(userId, status);
 	}
 	
 }

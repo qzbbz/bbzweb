@@ -156,11 +156,11 @@ transform: translate3d(0, 0, 0);
 /**/
 @font-face {
   font-family: "iconfont";
-  src: url('../../font/webfont/iconfont.eot'); /* IE9*/
-  src: url('../../font/webfont/iconfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-  url('../../font/webfont/iconfont.woff') format('woff'), /* chrome、firefox */
-  url('../../font/webfont/iconfont.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
-  url('../../font/webfont/iconfont.svg#iconfont') format('svg'); /* iOS 4.1- */
+  src: url('../../fonts/webfonts/iconfont.eot'); /* IE9*/
+  src: url('../../fonts/webfonts/iconfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('../../fonts/webfonts/iconfont.woff') format('woff'), /* chrome、firefox */
+  url('../../fonts/webfonts/iconfont.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+  url('../../fonts/webfonts/iconfont.svg#iconfont') format('svg'); /* iOS 4.1- */
 }
 .iconfont {
   font-family:"iconfont" !important;
@@ -217,11 +217,35 @@ transform: translate3d(0, 0, 0);
 .file { position: relative; display: inline-block; background: #e5e5e5; border: 1px solid #ccc; border-radius: 3px; padding: 4px 12px; overflow: hidden; color: #4d4d4d; text-decoration: none; text-indent: 0; line-height: 20px; cursor: pointer;}
 .file input { position: absolute; font-size: 100px; right: 0; top: 0; opacity: 0; cursor: pointer;}
 .file:hover { background: #fff; border-color: #ccc; color: #4d4d4d; text-decoration: none; cursor: pointer;}
-.file-green { position: relative; display: inline-block; background: #7db3ae; border: 1px solid #6daaa4; border-radius: 3px; padding: 4px 12px; overflow: hidden; color: #fff; text-decoration: none; text-indent: 0; line-height: 20px; cursor: pointer;}
+.file-green/*,.bui-uploader-button-text*/ { position: relative; display: inline-block; background: #7db3ae; border: 1px solid #6daaa4; border-radius: 3px; padding: 4px 12px; overflow: hidden; color: #fff; text-decoration: none; text-indent: 0; line-height: 20px; cursor: pointer;}
 .file-green input { position: absolute; font-size: 100px; right: 0; top: 0; opacity: 0; cursor: pointer;}
-.file-green:hover { background: #5da09a; border-color: #508984; color: #fff; text-decoration: none; cursor: pointer;}
+.file-green:hover/*,.bui-uploader-button-text:hover*/ { background: #5da09a; border-color: #508984; color: #fff; text-decoration: none; cursor: pointer;}
+
+.form-uploader{ padding: 10px 20px; height: 400px;}
+.form-uploader .hd{ padding: 30px 0 0;}
+.form-uploader .bd{ padding: 0 0 20px;}
+.form-uploader .bd h2{ padding: 10px 0 0;}
+.form-uploader .bd p{ padding: 5px 0;}
+.form-uploader .input-normal{ width: 280px;}
+.form-uploader .row{ padding-left: 30px;}
+
+.uploader-wrap{ position: relative; margin-left: 70px; margin-top: 90px; text-align: left;}
+.uploader-text{ position: absolute; width: 202px; height: 40px; line-height: 40px; text-align: center; z-index: 99; border: 1px solid #6daaa4; background: #7db3ae; font-size: 14px; color: #fff; border-radius: 3px;}
+.defaultTheme{ position: absolute; left: 0; top: 0; width: 204px;}
+.bui-uploader-button-wrap{ position: absolute; border-radius: 3px; z-index: 888;}
+.bui-uploader-button-text{ display: none;}
+.file-input-wrapper{ width: 204px; height: 42px; position: absolute; background: rgba(0,0,0,0.0001); z-index: 999; left: 0; top: 0; cursor: pointer;}
+.file-input-wrapper:hover{ background: rgba(0,0,0,0.1);}
+.uploader-wrap .button{ width: 204px; height: 40px; line-height: 42px; text-align: center; font-size: 14px; color: #fff; padding: 0; margin: 0 0 0 226px;}
+
+.bui-queue{ position: absolute; left: 100px; top: -100px; height: 70px; overflow: auto; overflow-x: hidden; width: 280px; border: 1px solid #ccc;  border-radius: 3px; padding: 0 0 0 10px;}
+.uploader-label{ position: absolute; top: -100px; left: 30px;}
+.bui-queue .error{ width: 200px; height: 20px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+/*.bui-queue li{ border-left: 1px solid #e6e6e6; width: 432px;}
+.bui-queue li:first-child{ border-top: 1px solid #e6e6e6;}
+.bui-queue li:last-child{ border-bottom: 1px solid #e6e6e6;}*/
 /*图片浏览*/
 .imgviewwrap{ position: relative;}
-.controls-wrap{ position: absolute; left: 810px; top: 14px;}
-.resume,.zoom,.micrify{ position: relative; line-height: 40px; height: 40px; position: relative; cursor: pointer; border: 1px solid #ddd; background: #fafafa; padding: 0 10px 0 40px; display: block; margin-top: 10px;}
-.resume i,.zoom i,.micrify i{ font-size: 24px; top: 0; position: absolute; left: 10px;}
+.controls-wrap{ position: absolute; left: 770px; top: 15px;}
+.resume,.zoom,.micrify{ position: relative; line-height: 40px; height: 40px; cursor: pointer; border: 1px solid #ddd; background: #fafafa; display: block; margin-top: 10px; padding: 0 10px;}
+.resume i,.zoom i,.micrify i{ font-size: 24px; top: 0; position: relative; left: 0; margin-right: 10px;}

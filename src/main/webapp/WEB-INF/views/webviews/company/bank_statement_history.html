@@ -14,7 +14,7 @@
 				<img src="/img/webimg/bss-logo.png" >
 				<h1>上海元升财务咨询有限公司</h1>
 			</div>
-            <div class="side-bar-content"></div>
+            <div class="side-bar-content" id="menuTree"></div>
 			<div class="side-bar-bottom">
 				<ul>
 					<li><a href=""><i class="setting"></i>设置</a></li>
@@ -23,12 +23,12 @@
 			</div>
 		</div>
 		<div class="main">
-			<div class="menu"><h2>对账单记录</h2></div>
+			<div class="menu"><a href="#" class="active">对账单历史记录</a></div>
 			<div class="well mt20">
 				<div class="form-horizontal onlineTools">
 					<div class="row show-grid">
 						<label class="control-label control-label-small"></label>
-                        <div class="controls"><select name="condition" id="condition" class="input input-normal"><option value='0'>所有</option><option value='1'>按日期检索</option><option value='2'>按识别状态检索</option></select><input type="text" id="content" class="input input-normal ml10"><button onclick="searchData();" class="button button-success ml10">搜索</button></div>
+                        <div class="controls"><select name="condition" id="condition" class="input input-normal"><option value='0'>所有</option><option value='1'>按日期检索</option><option value='2'>按识别状态检索</option></select><input type="text" id="content" class="input input-normal ml10"><button id="searchData" class="button button-success ml10">搜索</button></div>
 					</div>
 				</div>
 			</div>
@@ -57,60 +57,139 @@
 	    	<div class="pagination"></div>
 		</div>
 	</div>
+	<div id="contentImg" class="hide">
+		<div class="imgviewwrap">
+			<div id="imgviewWrap"></div>
+			<div class="controls-wrap">
+				<!-- <span class="resume"><i class="iconfont" title="原图">&#xe63b;</i>原图</span> -->
+				<span class="zoom"><i class="iconfont" title="放大">&#xe618;</i>放大</span>
+				<span class="micrify"><i class="iconfont" title="缩小">&#xe62c;</i>缩小</span>
+			</div>
+		</div>
+	</div>
 <!--该js需要修改js路径及修改seajs路径-->
 <script src="http://g.tbcdn.cn/fi/bui/jquery-1.8.1.min.js"></script>
 <script src="http://g.alicdn.com/bui/seajs/2.3.0/sea.js"></script>
 <script src="http://g.alicdn.com/bui/bui/1.1.17/config.js"></script>
+<script src="/js/webjs/menuTree.js"></script>
 <script type="text/javascript">
-	$.ajax({
-		url : '/company/getAllCompanyBankSta',
-		type : "POST",
-		data : {},
-		success : function(data) {
-			if(data == null) return;
-			$('#retData').empty();
+	BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
+		var viewContent = new Imgview.ViewContent({
+            render: "#imgviewWrap",
+            autoRender: false, // 设置为true就自动渲染，默认为false！
+            // 以下属性全部可以set来修改。
+            width: 760,
+            height: 480,
+            imgSrc: "",
+            //rotateTime: 300, // 旋转时间,默认300
+            //scaleTime: 300, // 缩放时间,默认300
+            overflowSize: 100, // 边界回弹像素,默认100,实际上是取Math.min(overflowSize,imgNowWidth,imgNowHeight)
+            drag: true //是否可以拖动，默认为true
+        });
+		viewContent.render();
+		$(".controls-wrap").on('click',function(e){
+            var target = e.target;
+            if($.contains(this,target)){
+            var self = jQuery(target),
+            cls = self.attr("class");
+            if (cls == "viewImg") {
+                self.attr({"href" : viewContent.get('imgSrc'),"target" : "_blank"});
+                return true;
+                } else if (cls == "drag1") {
+                viewContent.set("drag", false);
+                } else if (cls == "drag2") {
+                viewContent.set("drag", true);
+                } else if (cls == "chgImg1") {
+                viewContent.set("imgSrc", "http://pic.sc.chinaz.com/files/pic/pic9/201505/apic11703.jpg");
+                } else if (cls == "chgImg2") {
+                viewContent.set("imgSrc", "http://b.hiphotos.baidu.com/image/pic/item/adaf2edda3cc7cd9840d6c923a01213fb80e915c.jpg");
+                } else if (cls == "resize1") {
+            var width = 800,height = 600;
+            $("#img-preview-wrap").width(width).height(height);
+            viewContent.resize({width : width,height : height});
+            viewContent.set('width', width);
+            viewContent.set('height', height);
+            } else if (cls == "resize2") {
+            // 测试resize
+            var width = 400,height = 300;
+            $("#img-preview-wrap").width(width).height(height);
+            // viewContent.resize({width : width,height : height});
+            viewContent.set('width', width);
+            viewContent.set('height', height);
+            }else{
+            // 为了方便,直接根据className调用
+            viewContent[cls]();
+            }
+            return false;
+            }
+        });
+		var dialogForm = new Overlay.Dialog({
+		    title:'对账单图片',
+		    width:880,
+		    height:550,
+		    contentId:'contentImg',
+		    success:function () {
+		        this.close();
+		    },
+		    buttons : []
+		});
+		function createDataList(data) {
+			$('#retData').html("");
+			if(data == null || data == '') return;
+			data.sort(function(a,b){return a.date<b.date?1:-1});
 			for(var i=0; i<data.length; i++) {
-				if(data[i].status == '0') {
-					$('#retData').append("<tr><td>"+data[i].date+"</td><td>"+data[i].ide_name+"</td><td>"+data[i].ide_account+"</td><td>"+data[i].ide_bank_name+"</td><td><span class='text-info'>待识别</span></td><td><a href='/files/company/"+data[i].file_name+"'>点击查看对账单图片</a></td></tr>");
+				var container = $('#retData');
+			    var a = $("<tr><td>"+data[i].date+"</td><td>"+data[i].ide_name+"</td><td>"+data[i].ide_account+"</td><td>"+data[i].ide_bank_name+"</td><td><span class='text-info'>待识别</span></td><td><a href='javascript:void(0);'>点击查看对账单图片</a></td></tr>");
+			    var imgsrc = '/files/company/' + data[i].file_name;
+			    
+			    a.attr("img-src", imgsrc);
+			    
+			    a.click(function(event) {
+			    	viewContent.set('imgSrc', $(this).attr("img-src"));
+				    dialogForm.show();
+			    });
+			    a.appendTo(container);
+				/* if(data[i].status == '0') {
+					$('#retData').append("<tr><td>"+data[i].date+"</td><td>"+data[i].ide_name+"</td><td>"+data[i].ide_account+"</td><td>"+data[i].ide_bank_name+"</td><td><span class='text-info'>待识别</span></td><td><a href='javascript:void(0);'>点击查看对账单图片</a></td></tr>");
+					a.click(function(event) {clickImageView(img);
+
 				} else if(data[i].status == '1') {
-					$('#retData').append("<tr><td>"+data[i].date+"</td><td>"+data[i].ide_name+"</td><td>"+data[i].ide_account+"</td><td>"+data[i].ide_bank_name+"</td><td><span class='text-success'>识别成功</span></td><td><a href='/files/company/"+data[i].file_name+"'>点击查看对账单图片</a></td></tr>");
+					$('#retData').append("<tr><td>"+data[i].date+"</td><td>"+data[i].ide_name+"</td><td>"+data[i].ide_account+"</td><td>"+data[i].ide_bank_name+"</td><td><span class='text-success'>识别成功</span></td><td><a href='javascript:clickImageView(\'"+data[i].file_name+"\')'>点击查看对账单图片</a></td></tr>");
 				} else {
-					$('#retData').append("<tr><td>"+data[i].date+"</td><td>"+data[i].ide_name+"</td><td>"+data[i].ide_account+"</td><td>"+data[i].ide_bank_name+"</td><td><span class='text-danger'>识别失败</span></td><td><a href='/files/company/"+data[i].file_name+"'>点击查看对账单图片</a></td></tr>");
-				}
+					$('#retData').append("<tr><td>"+data[i].date+"</td><td>"+data[i].ide_name+"</td><td>"+data[i].ide_account+"</td><td>"+data[i].ide_bank_name+"</td><td><span class='text-danger'>识别失败</span></td><td><a href='javascript:clickImageView(\'"+data[i].file_name+"\')'>点击查看对账单图片</a></td></tr>");
+				} */
 			}
-		}
-	});
-	function searchData() {
-		var conditionType = $('#condition option:selected').val();
-		var conditionValue = $('#content').val();
-		if(conditionType != '0' && (conditionValue == null || conditionValue == '')) {
-			alert('请输入检索内容！');
-			return;
-		}
-		if(conditionType == '2') {
-			if(conditionValue == '待识别') conditionValue = '0';
-			if(conditionValue == '识别成功') conditionValue = '1';
-			if(conditionValue == '识别失败') conditionValue = '2';
-		}
+		};
 		$.ajax({
 			url : '/company/getAllCompanyBankSta',
 			type : "POST",
-			data : {conditionType : conditionType, conditionValue : conditionValue},
+			data : {},
 			success : function(data) {
-				if(data == null) return;
-				$('#retData').empty();
-				for(var i=0; i<data.length; i++) {
-					if(data[i].status == '0') {
-						$('#retData').append("<tr><td>"+data[i].date+"</td><td>"+data[i].ide_name+"</td><td>"+data[i].ide_account+"</td><td>"+data[i].ide_bank_name+"</td><td><span class='text-info'>待识别</span></td><td><a href='/files/company/"+data[i].file_name+"'>点击查看对账单图片</a></td></tr>");
-					} else if(data[i].status == '1') {
-						$('#retData').append("<tr><td>"+data[i].date+"</td><td>"+data[i].ide_name+"</td><td>"+data[i].ide_account+"</td><td>"+data[i].ide_bank_name+"</td><td><span class='text-success'>识别成功</span></td><td><a href='/files/company/"+data[i].file_name+"'>点击查看对账单图片</a></td></tr>");
-					} else {
-						$('#retData').append("<tr><td>"+data[i].date+"</td><td>"+data[i].ide_name+"</td><td>"+data[i].ide_account+"</td><td>"+data[i].ide_bank_name+"</td><td><span class='text-danger'>识别失败</span></td><td><a href='/files/company/"+data[i].file_name+"'>点击查看对账单图片</a></td></tr>");
-					}
-				}
+				createDataList(data);
 			}
 		});
-	}
+		$('#searchData').click(function(){
+			var conditionType = $('#condition option:selected').val();
+			var conditionValue = $('#content').val();
+			if(conditionType != '0' && (conditionValue == null || conditionValue == '')) {
+				BUI.Message.Alert('请输入需要检索内容的内容！','warning');
+				return;
+			}
+			if(conditionType == '2') {
+				if(conditionValue == '待识别') conditionValue = '0';
+				if(conditionValue == '识别成功') conditionValue = '1';
+				if(conditionValue == '识别失败') conditionValue = '2';
+			}
+			$.ajax({
+				url : '/company/getAllCompanyBankSta',
+				type : "POST",
+				data : {conditionType : conditionType, conditionValue : conditionValue},
+				success : function(data) {
+					createDataList(data);
+				}
+			});
+		})
+	});
 	//侧栏高度
     (function(){
         var H=$(window).height();
@@ -122,55 +201,36 @@
         });
     })()
 	//竖状菜单
-	       BUI.use('bui/tree',function (Tree) {
-	           var menu = new Tree.TreeMenu({
-	           render : '.side-bar-content',
-
-	           elCls : 'bui-side-menu', 
-	           itemCls : 'bui-menu-item',
-	           expandAnimate : true,
-	           showIcons : true,
-	           loadMask:true,
-
-	           dirTpl : '<li class="menu-leaf menu-second"><div class="bui-menu-title"><s></s><span class="bui-menu-title-text"><a href="{href}">{text}</a></span></div></li>',
-	           leafTpl : '<li class="menu-leaf"><a href="{href}">{text}</a></li>',
-
-	           nodes : [
-						{text : '公司发票',id : '10',href:"javascript:void(0);",  expanded : false,children: [
-							{text : '发票上传',id : '11', href:"/views/webviews/company/expense_account_upload.html"},
-                            {text : '发票历史记录',id : '12', href:"/views/webviews/company/expense_account_history.html"}                                           
-                        ]},
-                        {text : '银行对账单',id : '20',href:"javascript:void(0);", expanded : true,children: [
-							{text : '上传对账单',id : '21', href:"/views/webviews/company/bank_statement_upload.html"},
-							{text : '对账单历史记录',id : '22', href:"/views/webviews/company/bank_statement_history.html"}                                           
-						]},
-						 {text : '工资社保',id : '30',href:"javascript:void(0);", expanded : false,children: [
-							{text : '参数设置',id : '31', href:"/views/webviews/company/salary_welfare_args_settings.html"},
-							{text : '下载工资计算模板',id : '32', href:"/views/webviews/company/salary_welfare_template_download.html"},                                           
-							{text : '上传本月工资',id : '33', href:"/views/webviews/company/salary_welfare_upload.html"}
-						]},
-						{text : '预约取发票',id : '40',href:"javascript:void(0);", expanded : false,children: [
-							{text : '方式选择',id : '41', href:"/views/webviews/company/take_expense_account_mode_select.html"}                                           
-						]},
-						{text : '组织架构',id : '50',href:"javascript:void(0);",  expanded : false,children: [
-							{text : '基本信息设置',id : '51', href:"/views/webviews/company/organization_information_settings.html"},
-							{text : '组织架构设置',id : '52', href:"/views/webviews/company/organization_structure_settings.html"}                                           
-						]},
-	            ]
-	       	});
-	      		menu.render();
-	           $.each($("li.menu-second"),function(){
-	               var that = $(this);
-	               if(that.next().hasClass("menu-second")){
-	                   that.find("s").remove();
-	               }
-	           })
-	           menu.on('itemclick',function(ev){
-	               $('.log').text(ev.item.text);
-	           });
-	           var firstLeaf = menu.findNode('22'); //获取第一个叶子节点
-	           menu.setSelected(firstLeaf);
-    });
+	//竖状菜单
+        var menu = new menuTree(
+            {"nodes" : [
+					{text : '公司发票',id : '10',href:"javascript:void(0);",  expanded : false,children: [
+						{text : '发票上传',id : '11', href:"/views/webviews/company/expense_account_upload.html"},
+						{text : '发票历史记录',id : '12', href:"/views/webviews/company/expense_account_history.html"}                                           
+					]},
+					{text : '银行对账单',id : '20',href:"javascript:void(0);", expanded : true,children: [
+						{text : '上传对账单',id : '21', href:"/views/webviews/company/bank_statement_upload.html"},
+						{text : '对账单历史记录',id : '22', href:"/views/webviews/company/bank_statement_history.html"}                                           
+					]},
+					{text : '工资社保',id : '30',href:"javascript:void(0);", expanded : false,children: [
+						{text : '参数设置',id : '31', href:"/views/webviews/company/salary_welfare_args_settings.html"},
+						{text : '下载工资计算模板',id : '32', href:"/views/webviews/company/salary_welfare_template_download.html"},                                           
+						{text : '上传本月工资',id : '33', href:"/views/webviews/company/salary_welfare_upload.html"}
+					]},
+					{text : '预约取发票',id : '40',href:"javascript:void(0);", expanded : false,children: [
+						{text : '方式选择',id : '41', href:"/views/webviews/company/take_expense_account_mode_select.html"}                                           
+					]},
+					{text : '组织架构',id : '50',href:"javascript:void(0);",  expanded : false,children: [
+						{text : '基本信息设置',id : '51', href:"/views/webviews/company/organization_information_settings.html"},
+						{text : '组织架构设置',id : '52', href:"/views/webviews/company/organization_structure_settings.html"}                                           
+					]},
+					]
+            },"menuTree"
+        );
+    defaultSelect("11");
+    function defaultSelect(id){ 
+        $("#"+id).parent().addClass("bui-menu-item-selected")
+    }
 </script>
 </body>
 </html>

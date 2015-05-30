@@ -14,7 +14,7 @@
 				<img src="/img/webimg/bss-logo.png" >
 				<h1>上海元升财务咨询有限公司</h1>
 			</div>
-            <div class="side-bar-content"></div>
+            <div class="side-bar-content" id="menuTree"></div>
 			<div class="side-bar-bottom">
 				<ul>
 					<li><a href=""><i class="setting"></i>设置</a></li>
@@ -24,29 +24,27 @@
 		</div>
 		<div class="main">
 			<div class="zero-state">
-				<div class="form-window">
-					<div class="hd">
-						<i class="iconfont">&#xe627;</i>
-					</div>
-					<div class="bd">
-						<h2>您在这里可以上传银行对账单</h2>
-						<form id="bankUpload" action="/company/uploadBankSta" method="POST"	enctype="multipart/form-data">
-							<div id="fileInfo" style="height: 50px;" class="text-primary"></div>
-							<div class="form-horizontal" style="margin-bottom:30px;">
-								<div class="row">
-									<label for="" class="control-label">选择会计期间：</label>
-									<div class="controls">
-	                            		<div class="controls"><input type="text" id="date" name="date" class="input input-large calendar" style="width:350px;"></div>
-	                            	</div>
-                            	</div>
+				<div class="form-window form-uploader">
+                    <div class="hd"><i class="iconfont"></i></div>
+                    <div class="bd">
+                        <h2>您在这里可以上传银行对账单</h2>
+                        <div class="form-horizontal" style="margin-top:20px;">
+                            <div class="row">
+                                <label for="" class="control-label">会计期间：</label>
+                                <div class="controls">
+                                  <input name="sname" id="date" name="date" type="text" class="input input-normal calendar" data-rules="{required : true}">
+                                </div>
                             </div>
-							<a href="javascript:;" class="file-green button button-success">选择对账单图片文件
-								<input type="file" id="bankFile" name="files">
-							</a> <a href="javascript:uploadBankSta();"
-								class="button button-success">上传对账单图片文件</a>
-						</form>
-					</div>
-				</div>
+                        </div>
+                    </div>
+                    <div class="uploader-wrap">
+                        <div class="uploader-label">文件列表：</div>
+                        <div id="J_Uploader">
+                            <div class="uploader-text">选择对账单图片文件</div>
+                        <div class="bui-uploader defaultTheme" aria-disabled="false"><div class="bui-uploader-htmlButton bui-uploader-button" aria-disabled="false"><a href="javascript:void(0);" class="bui-uploader-button-wrap"><span class="bui-uploader-button-text">上传文件</span><div class="file-input-wrapper"><input type="file" name="fileData" hidefocus="true" class="file-input" multiple="multiple"></div></a></div><div class="bui-queue bui-simple-list" aria-disabled="false"><ul></ul></div></div></div>
+                        <a class="button button-success ml10" id="uplaodFiles" href="#">上传对账单图片文件</a>
+                    </div>
+                </div>
 			</div>
 		</div>
 	</div>
@@ -54,29 +52,9 @@
 	<script src="http://g.tbcdn.cn/fi/bui/jquery-1.8.1.min.js"></script>
 	<script src="http://g.alicdn.com/bui/seajs/2.3.0/sea.js"></script>
 	<script src="http://g.alicdn.com/bui/bui/1.1.17/config.js"></script>
+	<script src="/js/webjs/menuTree.js"></script>
 	<script src="/js/webjs/layout.js"></script>
 	<script type="text/javascript">
-		function uploadBankSta() {
-			if($('#bankFile').val() == null || $('#bankFile').val() == '') {
-				BUI.use('bui/overlay',function(overlay){
-					  function show () {
-					    BUI.Message.Alert('请先选择需要上传的图片文件。',function(){
-					    },'warning');
-					  }
-					  show();
-					      
-					});
-				return;
-			}
-			if($('#date').val() == null || $('#date').val() == '') {
-				alert("您还没有选择会计期间！");
-				return;
-			}
-			$('#bankUpload').submit();			
-		}
-		$("#bankFile").attr('onChange', $.browser.msie ? "$(this).data('onChange').apply(this)" : "")
-		.change( function(){if(!$.browser.msie)$(this).data('onChange').apply(this)} )
-		.data('onChange',function(){$("#fileInfo").html($("#bankFile").val());});
 		//侧栏高度
         (function(){
             var H=$(window).height();
@@ -88,55 +66,35 @@
             });
         })()
 		//竖状菜单
-	       BUI.use('bui/tree',function (Tree) {
-	           var menu = new Tree.TreeMenu({
-	           render : '.side-bar-content',
-
-	           elCls : 'bui-side-menu', 
-	           itemCls : 'bui-menu-item',
-	           expandAnimate : true,
-	           showIcons : true,
-	           loadMask:true,
-
-	           dirTpl : '<li class="menu-leaf menu-second"><div class="bui-menu-title"><s></s><span class="bui-menu-title-text"><a href="{href}">{text}</a></span></div></li>',
-	           leafTpl : '<li class="menu-leaf"><a href="{href}">{text}</a></li>',
-
-	           nodes : [
-						{text : '公司发票',id : '10',href:"javascript:void(0);",  expanded : false,children: [
-							{text : '发票上传',id : '11', href:"/views/webviews/company/expense_account_upload.html"},
-                            {text : '发票历史记录',id : '12', href:"/views/webviews/company/expense_account_history.html"}                                           
-                        ]},
-                        {text : '银行对账单',id : '20',href:"javascript:void(0);", expanded : true,children: [
-							{text : '上传对账单',id : '21', href:"/views/webviews/company/bank_statement_upload.html"},
-							{text : '对账单历史记录',id : '22', href:"/views/webviews/company/bank_statement_history.html"}                                           
-						]},
-						 {text : '工资社保',id : '30',href:"javascript:void(0);", expanded : false,children: [
-							{text : '参数设置',id : '31', href:"/views/webviews/company/salary_welfare_args_settings.html"},
-							{text : '下载工资计算模板',id : '32', href:"/views/webviews/company/salary_welfare_template_download.html"},                                           
-							{text : '上传本月工资',id : '33', href:"/views/webviews/company/salary_welfare_upload.html"}
-						]},
-						{text : '预约取发票',id : '40',href:"javascript:void(0);", expanded : false,children: [
-							{text : '方式选择',id : '41', href:"/views/webviews/company/take_expense_account_mode_select.html"}                                           
-						]},
-						{text : '组织架构',id : '50',href:"javascript:void(0);",  expanded : false,children: [
-							{text : '基本信息设置',id : '51', href:"/views/webviews/company/organization_information_settings.html"},
-							{text : '组织架构设置',id : '52', href:"/views/webviews/company/organization_structure_settings.html"}                                           
-						]},
-	            ]
-	       	});
-	      		menu.render();
-	           $.each($("li.menu-second"),function(){
-	               var that = $(this);
-	               if(that.next().hasClass("menu-second")){
-	                   that.find("s").remove();
-	               }
-	           })
-	           menu.on('itemclick',function(ev){
-	               $('.log').text(ev.item.text);
-	           });
-	           var firstLeaf = menu.findNode('21'); //获取第一个叶子节点
-	           menu.setSelected(firstLeaf);
-	       });
+	     var menu = new menuTree(
+            {"nodes" : [
+					{text : '公司发票',id : '10',href:"javascript:void(0);",  expanded : false,children: [
+						{text : '发票上传',id : '11', href:"/views/webviews/company/expense_account_upload.html"},
+						{text : '发票历史记录',id : '12', href:"/views/webviews/company/expense_account_history.html"}                                           
+					]},
+					{text : '银行对账单',id : '20',href:"javascript:void(0);", expanded : true,children: [
+						{text : '上传对账单',id : '21', href:"/views/webviews/company/bank_statement_upload.html"},
+						{text : '对账单历史记录',id : '22', href:"/views/webviews/company/bank_statement_history.html"}                                           
+					]},
+					{text : '工资社保',id : '30',href:"javascript:void(0);", expanded : false,children: [
+						{text : '参数设置',id : '31', href:"/views/webviews/company/salary_welfare_args_settings.html"},
+						{text : '下载工资计算模板',id : '32', href:"/views/webviews/company/salary_welfare_template_download.html"},                                           
+						{text : '上传本月工资',id : '33', href:"/views/webviews/company/salary_welfare_upload.html"}
+					]},
+					{text : '预约取发票',id : '40',href:"javascript:void(0);", expanded : false,children: [
+						{text : '方式选择',id : '41', href:"/views/webviews/company/take_expense_account_mode_select.html"}                                           
+					]},
+					{text : '组织架构',id : '50',href:"javascript:void(0);",  expanded : false,children: [
+						{text : '基本信息设置',id : '51', href:"/views/webviews/company/organization_information_settings.html"},
+						{text : '组织架构设置',id : '52', href:"/views/webviews/company/organization_structure_settings.html"}                                           
+					]},
+					]
+            },"menuTree"
+        );
+    defaultSelect("21");
+    function defaultSelect(id){ 
+        $("#"+id).parent().addClass("bui-menu-item-selected")
+    }
         //弹层
         BUI.use(['bui/overlay','bui/form'],function(Overlay,Form){
     
@@ -177,6 +135,27 @@
               autoRender : true
             });
           });
+        BUI.use('bui/uploader', function (Uploader) {
+            /**
+            * 返回数据的格式
+            *
+            *  默认是 {url : 'url'},否则认为上传失败
+            *  可以通过isSuccess 更改判定成功失败的结构
+            */
+            var uploader = new Uploader.Uploader({
+            render: '#J_Uploader',
+            url: '/company/uploadBankSta',
+            autoUpload:false
+            }).render();
+            $('#uplaodFiles').click(function(){
+            	if($('#date').val() == null || $('#date').val() == '') {
+            		BUI.Message.Alert('会计期间不能为空，请检查！','warning');
+            	} else {
+            		uploader.set('data', {date:$('#date').val()});
+            		uploader.upload();
+            	}
+            })
+        });
 	</script>
 </body>
 </html>

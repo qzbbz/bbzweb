@@ -79,7 +79,7 @@
 			data : {status:1, page:page, pageSize:pageSize},
 			success : function(data) {
 				if(data == null || data == '') return;
-				$('#retData').empty();
+				$('#retData').html("");
 				//alert(JSON.stringify(data));
 				data.sort(function(a,b){return a.submit_time<b.submit_time?1:-1});
 				for(var i=0; i<data.length; i++) {

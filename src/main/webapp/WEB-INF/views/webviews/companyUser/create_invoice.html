@@ -132,7 +132,7 @@
 			data : {status:1, page:page, pageSize:pageSize},
 			success : function(data) {
 				if(data == null || data == '') return;
-				$('#retData').empty();
+				$('#retData').html("");
 				data.sort(function(a,b){return a.create_time<b.create_time?1:-1});
 				for(var i=0; i<data.length; i++) {
 					$('#retData').append("<div class='row-fluid show-grid td'><div class='span1'><p class='text-hide data-checkbox'><input type='checkbox' value='"+data[i].invoice_id+"' class='data-check-invoice-id'></p></div><div class='span3'><p class='text-hide data-invoice-id'>"+data[i].invoice_id+"</p></div><div class='span3'><p class='text-hide data-create-time'>"+data[i].create_time+"</p></div><div class='span3'><p class='text-hide data-invoice-code'>"+(data[i].invoice_code == null || data[i].invoice_code == '' ? "无" : data[i].invoice_code)+"</p></div><div class='span3'><p class='text-hide data-type-name'>"+data[i].expense_type_name+"</p></div><div class='span3'><p class='text-hide data-amount'>"+data[i].amount+"</p></div><div class='span4'><p class='text-hide data-desc' title='"+(data[i].desc == null || data[i].desc == '' ? "无" : data[i].desc)+"'>"+(data[i].desc == null || data[i].desc == '' ? "无" : (data[i].desc.length>8?data[i].desc.substr(0,8)+"...":data[i].desc))+"</p></div><div class='span3'><a href='javascript:void(0)' class='dataEdit'>修改</a><a href='javascript:void(0)' class='dataDel'>删除</a></div></div>");

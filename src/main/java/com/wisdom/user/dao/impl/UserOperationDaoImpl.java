@@ -103,8 +103,8 @@ public class UserOperationDaoImpl implements IUserOperationDao {
 			sqlBuilder.append(" user_level=?,");
 		}
 		
-		if(-1 !=user.getCompanyId()){
-			objs[index] = user.getUserLevel();
+		if(user.getCompanyId() != null && -1 != user.getCompanyId()){
+			objs[index] = user.getCompanyId();
 			index++;
 			sqlBuilder.append(" company_id=?,");
 		}
@@ -116,7 +116,7 @@ public class UserOperationDaoImpl implements IUserOperationDao {
 		}
 		
 		sqlBuilder.deleteCharAt(sqlBuilder.length()-1);//删除末尾逗号
-		objs[index] = user.getUserEncode();
+		objs[index] = user.getUserId();
 		index++;
 		sqlBuilder.append(" where user_id=?");
 		

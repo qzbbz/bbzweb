@@ -8,11 +8,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import com.wisdom.common.model.AmountLimit;
 import com.wisdom.common.model.User;
 import com.wisdom.common.model.UserDept;
+import com.wisdom.common.model.UserInviteCode;
 import com.wisdom.common.model.UserOpenid;
 import com.wisdom.common.model.UserPhone;
 import com.wisdom.common.model.UserPwd;
@@ -189,7 +191,8 @@ public class UserServiceImpl implements IUserService {
 	}
 
 	@Override
-	public boolean updateUserInfo(String userId,String userName,int typeId,
+	@Transactional
+	public boolean updateUserInfo(String userId,String userName,int status, int typeId,
 				String userCode,String userLevel,String msgMail) {
 		
 		if(StringUtils.isEmpty(userId)){
@@ -208,9 +211,29 @@ public class UserServiceImpl implements IUserService {
 		user.setUserName(userName);
 		user.setUserLevel(userLevel);
 		user.setMsgEmail(msgMail);
+		user.setUserEncode(userCode);
 		user.setTypeId(typeId);
 		
+		if(!userDeptDao.updateUserDeptStatus(userId, status)) {
+			return false;
+		}
+		
 		return userOperationDao.updateUserInfo(user);
+	}
+
+	@Override
+	public List<User> getUserListByCompanyId(long companyId) {
+		return userQueryDao.getUserListByCompanyId(companyId);
+	}
+
+	@Override
+	public User getUserByUserId(String userId) {
+		return userQueryDao.getUserByUserId(userId);
+	}
+
+	@Override
+	public UserInviteCode getUserInvitecodeByUserId(String userId) {
+		return userQueryDao.getUserInvitecodeByUserId(userId);
 	}
 }
 

@@ -71,7 +71,7 @@
 		success : function(data) {
 			//alert(JSON.stringify(data));
 			if(data == null || data == '') return;
-			$('#retData').empty();
+			$('#retData').html("");
 			data.sort(function(a,b){return a.create_time<b.create_time?1:-1});
 			for(var i=0; i<data.length; i++) {
 				$('#retData').append("<tr><td>"+data[i].invoice_id+"</td><td>"+data[i].bill_expenseTypeName+"</td><td>"+data[i].bill_amount+"</td><td class='"+(data[i].bill_commit_status == 0 ? "text-warning" : "text-info")+"'>"+(data[i].bill_commit_status == 0? "已提交发票" : "草稿发票")+"</td><td class='"+(data[i].bill_commit_status == 1? "" : (data[i].processStatus == 0 ? "text-info" : (data[i].approval_status == true ? "text-success" : "text-danger")))+"'>"+(data[i].bill_commit_status == 1 ? "无" : (data[i].processStatus == 0? "审核中" : (data[i].approval_status == true ? "审核通过" : "审核拒绝")))+"</td><td><a href='"+data[i].file_name+"'>点击预览发票</a></td></tr>");

@@ -10,7 +10,9 @@ public interface IUserDeptService {
 	public long getDeptIdByUserId(String userId);
 	public long getUserNumByDeptId(long deptId);
 	public List<UserDept> getUserDeptListByDeptId(long deptId);
+	public List<UserDept> getUserDeptListByDeptIdAndUserId(long deptId, String userId);
 	public boolean delUserByDeptId(long deptId);
+	public boolean updateUserDeptStatus(String userId,int status);
 	
 	
 	

@@ -10,6 +10,8 @@ public interface IUserDeptDao {
 	
 	public List<UserDept> getUserDeptListByDeptId(long deptId);
 	
+	public List<UserDept> getUserDeptListByDeptIdAndUserId(long deptId, String userId);
+	
 	public List<UserDept> getUserDeptListByStatusAndDeptId(int status, long deptId);
 	
 	public long getUserNumByDeptId(long deptId);
@@ -19,5 +21,7 @@ public interface IUserDeptDao {
 	public int delUserByDeptId(long deptId);
 	
 	public boolean delUserDept(String userId,long deptId);
+	
+	public boolean updateUserDeptStatus(String userId,int status);
 		
 }

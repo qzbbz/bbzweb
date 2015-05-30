@@ -1253,7 +1253,7 @@ td.x-grid-rownumber {
   background: none no-repeat scroll 5px 5px #ffffff;
   line-height: 16px;
   padding: 5px 10px 5px 25px;
-  background-image: url("/img/webimg/load-16-16.gif");
+  background-image: url("../../img/webimg/load-16-16.gif");
 }
 /**chart**/
 .node-info-container,
@@ -1406,7 +1406,7 @@ textarea.bui-form-field-error,
 .bui-calendar .bui-calendar-header .x-datepicker-prev .icon,
 .bui-calendar .bui-calendar-header .x-datepicker-next .icon {
   vertical-align: text-bottom;
-  background-image: url('../../img/sprite-469-300.png');
+  background-image: url('../../img/webimg/sprite-469-300.png');
 }
 .bui-calendar .bui-calendar-header .x-datepicker-prev {
   left: 4px;
@@ -1820,7 +1820,7 @@ textarea.bui-form-field-error,
 }
 .bui-tree-list .bui-tree-item-loading .x-tree-elbow-expander,
 .bui-grid .bui-grid-row-loading .x-tree-elbow-expander {
-  background: url("/img/webimg/load-16-16.gif") no-repeat 0 0 transparent;
+  background: url("../../img/webimg/load-16-16.gif") no-repeat 0 0 transparent;
 }
 .bui-tree-grid .bui-grid-table .bui-grid-cell-text {
   display: inline-block;
@@ -2036,22 +2036,21 @@ textarea.bui-form-field-error,
 /** 公共的一些定义 **/
 .bui-uploader .bui-uploader-button-wrap {
   display: inline-block;
-  padding: 0 5px;
-  height: 24px;
+  height: 42px;
+  width: 204px;
   overflow: hidden;
-  line-height: 24px;
   position: relative;
   z-index: 500;
   margin-right: 10px;
   text-decoration: none;
-  font-size: 12px;
+  font-size: 14x;
   text-align: center;
   cursor: pointer;
 }
 .bui-uploader .bui-uploader-button-wrap .file-input-wrapper {
   display: block;
-  width: 200px;
-  height: 26px;
+  width: 300px;
+  height: 40px;
   position: absolute;
   left: 0;
   top: 0;
@@ -2073,8 +2072,8 @@ textarea.bui-form-field-error,
 }
 .bui-uploader .bui-uploader-button-wrap .uploader-button-swf {
   display: block;
-  width: 200px;
-  height: 26px;
+  width: 300px;
+  height: 40px;
   position: absolute;
   left: 0;
   top: 0;
@@ -2097,36 +2096,33 @@ textarea.bui-form-field-error,
 /**默认定义的样式**/
 .defaultTheme .bui-uploader-button-wrap {
   display: inline-block;
-  padding: 0 5px;
-  height: 24px;
+  height: 42px;
+  width: 204px;
   overflow: hidden;
-  line-height: 24px;
+  line-height: 42px;
   position: relative;
   z-index: 500;
   margin-right: 10px;
   text-decoration: none;
-  font-size: 12px;
+  font-size: 14px;
   text-align: center;
-  border: 1px solid #C4DAED;
   /** 渐变 **/
-  background: -webkit-gradient(linear, left top, left bottom, from(#fdfefe), to(#dfe7ef));
-  background: -moz-linear-gradient(top, #fdfefe, #dfe7ef);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FDFEFE', endColorstr='#DFE7EF');
-}
-.defaultTheme .bui-uploader-button-wrap:link,
-.defaultTheme .bui-uploader-button-wrap:visited {
-  color: #404040;
-}
-.defaultTheme .bui-uploader-button-wrap:hover {
-  text-decoration: none;
-  color: black;
-  background: -webkit-gradient(linear, left top, left bottom, from(#dfe7ef), to(#fdfefe));
-  background: -moz-linear-gradient(top, #dfe7ef, #fdfefe);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#DFE7EF', endColorstr='#FDFEFE');
-}
-.defaultTheme .bui-uploader-button-wrap:active {
-  background: #DFE7EF;
-  filter: none;
+  /*&:link, &:visited{
+      color:#404040;
+    }*/
+  /*&:hover{
+      text-decoration: none;
+      color: black;
+      background-color: #5da09a;
+      // #gradient > .horizontal(#DFE7EF, #FDFEFE);
+      //background: -webkit-gradient(linear, left top, left bottom, from(#DFE7EF), to(#FDFEFE));
+      //background: -moz-linear-gradient(top, #DFE7EF, #FDFEFE);
+      //filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = '#DFE7EF', endColorstr = '#FDFEFE');
+    }*/
+  /*&:active{
+      background: #DFE7EF;
+      filter: none;
+    }*/
 }
 .defaultTheme .bui-uploader-htmlButton-disabled .bui-uploader-button-wrap {
   border: 1px solid #bfbfbf;
