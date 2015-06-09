@@ -1,14 +1,17 @@
 package com.wisdom.web.api.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,21 +95,42 @@ public class AccounterController {
 		logger.debug("finish getAllAccounter");
 		return retMap;
 	}
-
-	@RequestMapping("/updateAccounterInfo")
+	
+	@RequestMapping("/getAllAccounterByCondition")
 	@ResponseBody
-	public Map<Integer, String> updateAccounterInfo(
-			@RequestParam("file") MultipartFile file, HttpServletRequest request) {
-		logger.debug("enter getAccounterInfo");
+	public List<Map<String, String>> getAllAccounterByCondition(HttpServletRequest request) {
+		logger.debug("enter getAllAccounterByCondition");
 		String userId = (String) request.getSession().getAttribute(
 				SessionConstant.SESSION_USER_ID);
-		String name = request.getParameter("name");
 		String province = request.getParameter("province");
 		String city = request.getParameter("city");
 		String area = request.getParameter("area");
-		String certificate = request.getParameter("certificate");
 		String industry = request.getParameter("industry");
 		String career = request.getParameter("career");
+		List<Map<String, String>> retMap = new ArrayList<>();
+		if (userId != null && !userId.isEmpty()) {
+			retMap = accounterService.getAllAccounterByCondition(province, city, area, industry, career);
+		}
+		logger.debug("finish getAllAccounterByCondition");
+		return retMap;
+	}
+
+	@RequestMapping("/accounter/updateAccounterInfo")
+	public String updateAccounterInfo(
+			@RequestParam("files") MultipartFile file, HttpServletRequest request) {
+		logger.debug("enter getAccounterInfo");
+		String userId = (String) request.getSession().getAttribute(
+				SessionConstant.SESSION_USER_ID);
+		String name = request.getParameter("userName");
+		String phone = request.getParameter("userPhone");
+		String province = request.getParameter("provinceName");
+		String city = request.getParameter("cityName");
+		String area = request.getParameter("areaName");
+		String certificate = request.getParameter("certificateName");
+		String industry = request.getParameter("industryName");
+		String career = request.getParameter("careerName");
+		String realPath = request.getSession().getServletContext()
+				.getRealPath("/WEB-INF/img/webimg");
 		Map<Integer, String> retMap = new HashMap<>();
 		boolean updateSuccess = false;
 		if (userId != null && !userId.isEmpty()) {
@@ -119,14 +143,13 @@ public class AccounterController {
 			accounter.setCareer(career);
 			accounter.setIndustry(industry);
 			if (!file.isEmpty()) {
-				InputStream is = null;
+				String fileName = getGernarateFileName(file, userId);
 				try {
-					is = file.getInputStream();
-					String imageStr = Base64Converter.imageToBase64(is);
-					if (imageStr != null && !imageStr.isEmpty())
-						accounter.setImage(imageStr);
-				} catch (IOException e) {
-					logger.debug(e.toString());
+					FileUtils.copyInputStreamToFile(file.getInputStream(),
+							new File(realPath, fileName));
+					accounter.setImage("/img/webimg/" + fileName);
+				} catch (IOException e1) {
+					e1.printStackTrace();
 				}
 			}
 			updateSuccess = accounterService.updateAccounter(accounter);
@@ -139,7 +162,19 @@ public class AccounterController {
 					ErrorCode.ACCOUNTER_UPDATE_INFO_ERROR_MESSAGE);
 		}
 		logger.debug("finish getAccounterInfo");
-		return retMap;
+		return "redirect:/views/webviews/accounter/finish_reg_info.html";
 	}
 
+	@RequestMapping("/accounter/finishDeatilRegInfo")
+	public String finishDeatilRegInfo(HttpServletRequest request) {
+		return "redirect:/views/webviews/accounter/finish_reg_info.html";
+	}
+	
+	private String getGernarateFileName(MultipartFile file, String userId) {
+		Random rdm = new Random(System.currentTimeMillis());
+		String extendName = file.getOriginalFilename().substring(
+				file.getOriginalFilename().indexOf(".") + 1);
+		return userId + System.currentTimeMillis() + Math.abs(rdm.nextInt())
+				% 1000 + (extendName == null ? ".unknown" : "." + extendName);
+	}
 }

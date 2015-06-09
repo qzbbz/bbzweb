@@ -27,15 +27,15 @@ public class CompanyUserController {
 	private ICompanyUserApi companyUserService;
 	
 	@RequestMapping("/companyUser/uploadCompanyUserBill")
-	@ResponseBody
-	public Map<String, String> uploadSalary(@RequestParam("files") MultipartFile file, HttpServletRequest request) {
+	public String uploadSalary(@RequestParam("files") MultipartFile file, HttpServletRequest request) {
 		String userId = (String) request.getSession().getAttribute("userId");
 		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/img/billImg");
 		Map<String, String> params = new HashMap<>();
 		params.put("userId", userId);
 		params.put("realPath", realPath);
 		logger.debug(params.toString());
-		return companyUserService.uploadCompanyUserBill(params, file);
+		companyUserService.uploadCompanyUserBill(params, file);
+		return "redirect:/views/webviews/companyUser/expense_account_upload.html";
 	}
 	
 	@RequestMapping("/companyUser/getAllCompanyUserDraftBill")

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>上海元升财务咨询有限公司</title>
+    <link rel="stylesheet" type="text/css" href="/css/webcss/bui.css">
+	<link rel="stylesheet" type="text/css" href="/css/webcss/golbal.css">
+	<link rel="stylesheet" type="text/css" href="/css/webcss/layout.css">
+</head>
+<body>
+	<div class="wrap">
+		<div class="side-bar">
+			<div class="side-bar-top">
+				<img src="/img/webimg/bss-logo.png" >
+				<h1>上海元升财务咨询有限公司</h1>
+			</div>
+            <div class="side-bar-content"  id="menuTree"></div>
+			<div class="side-bar-bottom">
+				<ul>
+					<li><a href="javascript:void(0)"><i class="setting"></i>设置</a></li>
+					<li><a href="/logout"><i class="exit"></i>安全退出</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="main">
+			<div class="zero-state">
+				<div class="form-window">
+					<form name="accounterRegForm" id="accounterRegForm" action="/accounter/updateAccounterInfo" method="POST"	enctype="multipart/form-data">
+					<div class="form-horizontal onlineTools" style="margin-top:-40px;with:400px;">
+						<div class="row-fluid show-grid mt10">
+							<label class="control-label control-label-small">您的姓名</label>
+                            <div class="controls"><input type="text" id="userName" name="userName" class="input input-small"><a href="javascript:;" class="file button button-success" style="margin-left:10px;">选择头像文件<input type="file" id="userFile" name="files" class="ml10"></a><label id="userFileInfo" style="margin-left:10px;"></label></div>
+						</div>
+						<div class="row-fluid show-grid mt10">
+							<label class="control-label control-label-small">您的联系电话</label>
+                            <div class="controls"><input type="text" id="userPhone" name="userPhone" class="input input-small" style="width:240px;"></div>
+						</div>
+						<div class="row-fluid show-grid mt10">
+							<label class="control-label control-label-small">选择您的职业</label>
+                            <div class="controls"><select id="career" class="input input-normal" style="width:250px;"></select></div>
+						</div>
+						<div class="row-fluid show-grid mt10">
+							<label class="control-label control-label-small">选择您的行业</label>
+                            <div class="controls"><select id="industry" class="input input-normal" style="width:250px;"></select></div>
+						</div>
+						<div class="row-fluid show-grid mt10">
+							<label class="control-label control-label-small">选择您的证书</label>
+                            <div class="controls"><select id="certificate" class="input input-normal" style="width:250px;"></select></div>
+						</div>
+						<div class="row-fluid show-grid mt10">
+							<label class="control-label control-label-small">选择地区</label>
+                            <div class="controls"><select class="input input-mini" id="province" name="province" style="width:120px;"></select><select class="input input-mini ml10" id="city" name="city" style="width:120px;"></select><select class="input input-mini ml10" id="area" name="area" style="width:140px;"></select></div>
+						</div>
+						<div style="margin:20px;padding:0; width:500px;height:2px;background-color:#bbe9c7;overflow:hidden;"></div>  
+						<div class="row-fluid show-grid mt10" style="margin-left:260px;margin-top:-10px;">
+							<label class="control-label control-label-small">&nbsp;</label>
+                            <div class="controls"><a class="button button-success" onclick="checkInput();">提交详细注册信息</a></div>
+						</div>
+					</div>
+					<input id="provinceName" name ="provinceName" type="hidden">
+					<input id="cityName" name ="cityName" type="hidden">
+					<input id="areaName" name ="areaName" type="hidden">
+					<input id="industryName" name ="industryName" type="hidden">
+					<input id="careerName" name ="careerName" type="hidden">
+					<input id="certificateName" name ="certificateName" type="hidden">
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--该js需要修改js路径及修改seajs路径-->
+	<script src="http://g.tbcdn.cn/fi/bui/jquery-1.8.1.min.js"></script>
+	<script src="http://g.alicdn.com/bui/seajs/2.3.0/sea.js"></script>
+	<script src="http://g.alicdn.com/bui/bui/1.1.17/config.js"></script>
+	<script src="/js/webjs/menuTree.js"></script>
+	<script type="text/javascript">
+		//侧栏高度
+        (function(){
+            var H=$(window).height();
+            var h1=$(".side-bar-top").height()+$(".side-bar-bottom").height();
+            $(".side-bar-content").height(H-h1);
+            $(window).resize(function(){
+                H=$(window).height();
+                $(".side-bar-content").height(H-h1);
+            });
+        })()
+        
+        addProvince($('#province'), $('#city'));
+		$("#province").change(function(){
+			$("#city").empty();
+			addCity($('#city'), $('#province option:selected').val());
+		});
+		$("#city").change(function(){
+			$("#area").empty();
+			addArea($('#area'), $('#city option:selected').val());
+		});
+		
+		$("#userFile").attr('onChange', $.browser.msie ? "$(this).data('onChange').apply(this)" : "")
+		.change( function(){if(!$.browser.msie)$(this).data('onChange').apply(this)} )
+		.data('onChange',function(){$("#userFileInfo").html($("#userFile").val() != null ? ($("#userFile").val().length>20 ? ($("#userFile").val().substr(0, 20) + "...") : $("#userFile").val()) : (""));});
+		
+		addIndustry();
+		addCareer();
+		addCertificate();
+        
+		function addIndustry() {
+			$.ajax({
+				url : '/getAllAccounterIndustry',
+				type : "POST",
+				data : {},
+				success : function(data) {
+					$.each(data,function(name,value) {
+						$('#industry').append("<option value='"+name+"'>"+value+"</option>");
+					});
+				}
+			});
+		}
+        
+		function addCareer() {
+			$.ajax({
+				url : '/getAllAccounterCareer',
+				type : "POST",
+				data : {},
+				success : function(data) {
+					$.each(data,function(name,value) {
+						$('#career').append("<option value='"+name+"'>"+value+"</option>");
+					});
+				}
+			});
+		}
+		
+		function addCertificate() {
+			$.ajax({
+				url : '/getAllAccounterCertificate',
+				type : "POST",
+				data : {},
+				success : function(data) {
+					$.each(data,function(name,value) {
+						$('#certificate').append("<option value='"+name+"'>"+value+"</option>");
+					});
+				}
+			});
+		}
+		
+        function addProvince(obj) {
+			$.ajax({
+				url : '/getAllProvinces',
+				type : "POST",
+				data : {},
+				success : function(data) {
+					$.each(data,function(name,value) {
+						obj.append("<option value='"+name+"'>"+value+"</option>");
+					});
+					addCity($('#city'), $('#province option:selected').val());
+				}
+			});
+		}
+
+		function addCity(obj, provinceId) {
+			obj.empty();
+			$.ajax({
+				url : '/getCities',
+				type : "POST",
+				data : {provinceId:provinceId},
+				success : function(data) {
+					$.each(data,function(name,value) {
+						obj.append("<option value='"+name+"'>"+value+"</option>");
+					});
+					addArea($('#area'), $('#city option:selected').val());
+				}
+			});
+		}
+
+		function addArea(obj, cityId) {
+			obj.empty();
+			$.ajax({
+				url : '/getAreas',
+				type : "POST",
+				data : {cityId:cityId},
+				success : function(data) {
+					$.each(data,function(name,value) {
+						obj.append("<option value='"+name+"'>"+value+"</option>");
+					});
+				}
+			});
+		}
+		
+        function checkInput() {
+        	var province = $('#province option:selected').text();
+    		var city = $('#city option:selected').text();
+    		var area = $('#area option:selected').text();
+    		var industry = $('#industry option:selected').text();
+    		var career = $('#career option:selected').text();
+    		var certificate = $('#certificate option:selected').text();
+    		var userName = $('#userName').val();
+    		var userPhone = $('#userPhone').val();
+    		var userFile = $("#userFile").val();
+    		$('#provinceName').val(province);
+    		$('#cityName').val(city);
+    		$('#areaName').val(area);
+    		$('#industryName').val(industry);
+    		$('#careerName').val(career);
+    		$('#certificateName').val(certificate);
+    		if(userName == null || userName == '') {
+    			BUI.use('bui/overlay',function(overlay){
+					function show () {
+						BUI.Message.Alert('用户姓名不能为空，请检查！',function(){
+						},'warning');
+					}
+					show();	      
+				});
+    			return;
+    		}
+    		if(userFile == null || userFile == '') {
+    			BUI.use('bui/overlay',function(overlay){
+					function show () {
+						BUI.Message.Alert('头像文件没有选择，请检查！',function(){
+						},'warning');
+					}
+					show();	      
+				});
+    			return;
+    		}
+    		if(userPhone == null || userPhone == '' || !isTelephone(userPhone)) {
+    			BUI.use('bui/overlay',function(overlay){
+					function show () {
+						BUI.Message.Alert('联系电话为空或不正确，请检查！',function(){
+						},'warning');
+					}
+					show();	      
+				});
+    			return;
+    		}
+    		if(industry == null || industry == '') {
+    			BUI.use('bui/overlay',function(overlay){
+					function show () {
+						BUI.Message.Alert('行业选择不能为空，请检查！',function(){
+						},'warning');
+					}
+					show();	      
+				});
+    			return;
+    		}
+    		if(career == null || career == '') {
+    			BUI.use('bui/overlay',function(overlay){
+					function show () {
+						BUI.Message.Alert('职业选择不能为空，请检查！',function(){
+						},'warning');
+					}
+					show();	      
+				});
+    			return;
+    		}
+    		if(certificate == null || certificate == '') {
+    			BUI.use('bui/overlay',function(overlay){
+					function show () {
+						BUI.Message.Alert('证书选择不能为空，请检查！',function(){
+						},'warning');
+					}
+					show();	      
+				});
+    			return;
+    		}
+    		if(province == null || province == '' ||
+    				city == null || city == '' ||
+    				area == null || area == '') {
+    			BUI.use('bui/overlay',function(overlay){
+					function show () {
+						BUI.Message.Alert('地区选择不正确，请检查！',function(){
+						},'warning');
+					}
+					show();	      
+				});
+    			return;
+    		}
+    		$('#accounterRegForm').submit();
+		}
+        
+		//竖状菜单
+	    var menu = new menuTree(
+            {"nodes" : [
+					{text : '完善注册信息',id : '10',href:"/views/webviews/accounter/finish_reg_info.html",  leaf:false,expanded : false,children: []}
+					]
+            },"menuTree"
+        );
+	    defaultSelect("10");
+	    function defaultSelect(id){ 
+	        $("#"+id).parent().addClass("bui-menu-item-selected")
+	    }
+	    
+	    function isTelephone(phoneNumber) {
+	    	var isPhone = /^([0-9]{3,4}-)?[0-9]{7,8}$/;
+	    	var isMob = /^((\+?86)|(\(\+86\)))?(13[012356789][0-9]{8}|15[012356789][0-9]{8}|18[02356789][0-9]{8}|147[0-9]{8}|1349[0-9]{7})$/;
+	    	/* if(isMob.test(phoneNumber)||isPhone.test(phoneNumber)){ */
+	    	if (isMob.test(phoneNumber)) {
+	    		return true;
+	    	} else {
+	    		return false;
+	    	}
+	    }
+	</script>
+</body>
+</html>

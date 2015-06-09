@@ -1440,6 +1440,29 @@ button.down,
   color: #EF6D44;
 }
 
+.play-btn {
+  border-radius: 100%;
+  background-color: rgba(255,255,255,.8);
+  width: 100px;
+  height: 100px;
+  margin: 3em auto;
+  box-shadow: 0 1px 3px rgba(0,0,0,.05);
+  cursor: pointer;
+  transition: .3s background-color ease;
+}
+
+.play-btn .play-btn-arrow {
+  position: relative;
+  top: 25%;
+  left: 35%;
+  width: 0;
+  height: 0;
+  border-top: 25px solid transparent;
+  border-bottom: 25px solid transparent;
+  border-left: 40px solid #EF6D44;
+  -moz-transform: scale(.9999);
+}
+
 * {
   font-family: Microsoft YaHei, '宋体', Tahoma, Helvetica, Arial, "\5b8b\4f53", sans-serif;
 }

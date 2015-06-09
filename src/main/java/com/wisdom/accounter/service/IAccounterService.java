@@ -17,6 +17,11 @@ public interface IAccounterService {
 	
 	public List<Map<String, String>> getAllAccounter();
 	
+	public List<Map<String, String>> getAllAccounterByCondition(String province, String city, String area,
+			String industry, String career);
+	
 	public boolean updateAccounter(Accounter accounter);
+	
+	public boolean addAccounter(Accounter accounter);
 	
 }

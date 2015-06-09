@@ -306,6 +306,7 @@
 						{text : '基本信息设置',id : '51', href:"/views/webviews/company/organization_information_settings.html"},
 						{text : '组织架构设置',id : '52', href:"/views/webviews/company/organization_structure_settings.html"}                                           
 					]},
+					{text : '会计点将',id : '60',href:"/views/webviews/company/select_accounter.html",  leaf:false,expanded : false,children: []},
 					]
             },"menuTree"
         );
@@ -328,7 +329,7 @@
         		data : {deptName:oneLevelDeptSelectName,curDeptId:0,level:0,companyId:companyId},
         		success : function(data) {
         			if(data == null || data == '' || data.resultCode == null || data.resultCode != '0') {
-        				alert('出错');
+        				//alert('出错');
         				return;
         			} else {
         				store.load(null);

@@ -40,9 +40,9 @@
 										type="text" id="content" class="input input-normal ml10">
 									<button onclick="searchData();"
 										class="button button-success ml10">搜索</button>
-									<button onclick="onePressAudit(1);"
+									<button id="onePressAuditReject"
 										class="button button-danger ml10">一键审核拒绝</button>
-									<button onclick="onePressAudit(0);"
+									<button id="onePressAuditPass"
 										class="button button-success ml10">一键审核通过</button>
 								</div>
 							</div>
@@ -62,119 +62,285 @@
 						</div>
 						<div id="retData"></div>
 					</div>
+					<input type="hidden" id="img_src_temp">
 				</div>
 			</div>
 		</div>
 	</div>
+	
+	<div id="contentImg" class="hide">
+		<div class="imgviewwrap">
+			<div id="imgviewWrap"></div>
+			<div class="controls-wrap">
+				<!-- <span class="resume"><i class="iconfont" title="原图">&#xe63b;</i>原图</span> -->
+				<span class="zoom"><i class="iconfont" title="放大">&#xe618;</i>放大</span>
+				<span class="micrify"><i class="iconfont" title="缩小">&#xe62c;</i>缩小</span>
+			</div>
+		</div>
+	</div>
+	
 	<script src="http://g.alicdn.com/bui/jquery-1.8.1.min.js"></script>
 	<script src="http://g.alicdn.com/bui/seajs/2.3.0/sea.js"></script>
 	<script src="http://g.alicdn.com/bui/bui/1.1.17/config.js"></script>
+	<script src="/js/webjs/menuTree.js"></script>
 	<script type="text/javascript">
-		var page = 1;
-		var pageSize = 1000;
-		var invoiceList = new Array();
-		$.ajax({
-			url : '/companyUser/getNeedAuditInvoiceList',
-			type : "POST",
-			data : {status:1, page:page, pageSize:pageSize},
-			success : function(data) {
-				if(data == null || data == '') return;
-				$('#retData').html("");
-				//alert(JSON.stringify(data));
-				data.sort(function(a,b){return a.submit_time<b.submit_time?1:-1});
-				for(var i=0; i<data.length; i++) {
-					$('#retData').append("<div class='row-fluid show-grid td'><div class='span1'><input type='checkbox' value='"+ data[i].invoice_id + "&" + data[i].user_id + "' class='data-check-invoice-id'></div><div class='span3'><p class='text-hide data-submit-time'>"+data[i].submit_time.substr(0, 10)+"</p></div><div class='span3'><p class='text-hide data-user-name'>"+data[i].user_name+"</p></div><div class='span3'><p class='text-hide data-type-name'>"+(data[i].bill_expenseTypeName == null || data[i].bill_expenseTypeName == '' ? "无" : data[i].bill_expenseTypeName)+"</p></div><div class='span3'><p class='text-hide data-amount'>"+data[i].bill_amount+"</p></div><div class='span3'><p class='text-hide data-desc' title='"+(data[i].desc == null || data[i].desc == '' ? "无" : data[i].desc)+"'>"+(data[i].desc == null || data[i].desc == '' ? "无" : (data[i].desc.length > 8 ? data[i].desc.substr(0, 8) + "...":data[i].desc))+"</p></div><div class='span3'><p class='text-hide data-reasons' title='"+data[i].reasons+"'>"+(data[i].reasons.length > 8 ? data[i].reasons.substr(0,8)+"...":data[i].reasons)+"</p></div><div class='span2'><a class='data-img' href='"+data[i].bill_img+"'>点击查看</a></div><div class='span2'><a class='text-hide data-add-reasons' href='javascript:void(0)'>添加审核理由</a></div></div>");
-				}
-				bindOperation();
-				bindCheck();
-			}
-		});
-		
-		function bindCheck() {
-			$(".data-check-invoice-id").die().live("click",function(){
-				var invoiceId = $(this).val();
-				if ($(this).is(':checked')) {
-					invoiceList.push($(this).parent().parent());
-				} else {
-					for(var i=0; i<invoiceList.length; i++) {
-						if($(invoiceList[i]).find(".data-check-invoice-id").val() === invoiceId) {
-							invoiceList.splice(i, 1);
-							break;
-						}
-					}
-				}
-			})
-		}
-		
-		function onePressAudit(status) {
-			if(invoiceList.length == 0) {
-				BUI.use('bui/overlay',function(overlay){
-				  function show () {
-				    BUI.Message.Alert('您还没有勾选审核的发票',function(){
-				    },'warning');
-				  }
-				  show();
-				      
-				});
-				return;
-			}
-			var temp = new Array();
-			for(var i=0; i<invoiceList.length; i++) {
-				var reasons = $(invoiceList[i]).find(".data-reasons").attr('title');
-				temp.push($(invoiceList[i]).find(".data-check-invoice-id").val() + "&" + reasons);
-				$(invoiceList[i]).remove();
-			}
+	
+		BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
+			var viewContent = new Imgview.ViewContent({
+		        render: "#imgviewWrap",
+		        autoRender: false, // 设置为true就自动渲染，默认为false！
+		        // 以下属性全部可以set来修改。
+		        width: 760,
+		        height: 480,
+		        imgSrc: "",
+		        //rotateTime: 300, // 旋转时间,默认300
+		        //scaleTime: 300, // 缩放时间,默认300
+		        overflowSize: 100, // 边界回弹像素,默认100,实际上是取Math.min(overflowSize,imgNowWidth,imgNowHeight)
+		        drag: true //是否可以拖动，默认为true
+		    });
+			viewContent.render();
+			$(".controls-wrap").on('click',function(e){
+		        var target = e.target;
+		        if($.contains(this,target)){
+		        var self = jQuery(target),
+		        cls = self.attr("class");
+		        if (cls == "viewImg") {
+		            self.attr({"href" : viewContent.get('imgSrc'),"target" : "_blank"});
+		            return true;
+		            } else if (cls == "drag1") {
+		            viewContent.set("drag", false);
+		            } else if (cls == "drag2") {
+		            viewContent.set("drag", true);
+		            } else if (cls == "chgImg1") {
+		            viewContent.set("imgSrc", "http://pic.sc.chinaz.com/files/pic/pic9/201505/apic11703.jpg");
+		            } else if (cls == "chgImg2") {
+		            viewContent.set("imgSrc", "http://b.hiphotos.baidu.com/image/pic/item/adaf2edda3cc7cd9840d6c923a01213fb80e915c.jpg");
+		            } else if (cls == "resize1") {
+		        var width = 800,height = 600;
+		        $("#img-preview-wrap").width(width).height(height);
+		        viewContent.resize({width : width,height : height});
+		        viewContent.set('width', width);
+		        viewContent.set('height', height);
+		        } else if (cls == "resize2") {
+		        // 测试resize
+		        var width = 400,height = 300;
+		        $("#img-preview-wrap").width(width).height(height);
+		        // viewContent.resize({width : width,height : height});
+		        viewContent.set('width', width);
+		        viewContent.set('height', height);
+		        }else{
+		        // 为了方便,直接根据className调用
+		        viewContent[cls]();
+		        }
+		        return false;
+		        }
+		    });
+			var dialogForm = new Overlay.Dialog({
+			    title:'发票图片',
+			    width:880,
+			    height:550,
+			    contentId:'contentImg',
+			    success:function () {
+			        this.close();
+			    },
+			    buttons : []
+			});
+			var page = 1;
+			var pageSize = 1000;
+			var invoiceList = new Array();
 			$.ajax({
-				url : '/companyUser/submitAuditResult',
+				url : '/companyUser/getNeedAuditInvoiceList',
 				type : "POST",
-				data : {invoiceIdList:temp.join(","), status:status},
+				data : {status:1, page:page, pageSize:pageSize},
 				success : function(data) {
+					if(data == null || data == '') return;
+					$('#retData').html("");
+					data.sort(function(a,b){return a.submit_time<b.submit_time?1:-1});
+					for(var i=0; i<data.length; i++) {
+						var container = $('#retData');
+					    var rootDiv = $("<div class='row-fluid show-grid td'></div>");
+					    var div1 = $("<div class='span1'><input type='checkbox' value='"+ data[i].invoice_id + "&" + data[i].user_id + "' class='data-check-invoice-id'></div><div class='span3'><p class='text-hide data-submit-time'>"+data[i].submit_time.substr(0, 10)+"</p></div><div class='span3'><p class='text-hide data-user-name'>"+data[i].user_name+"</p></div><div class='span3'><p class='text-hide data-type-name'>"+(data[i].bill_expenseTypeName == null || data[i].bill_expenseTypeName == '' ? "无" : data[i].bill_expenseTypeName)+"</p></div><div class='span3'><p class='text-hide data-amount'>"+data[i].bill_amount+"</p></div><div class='span3'><p class='text-hide data-desc' title='"+(data[i].desc == null || data[i].desc == '' ? "无" : data[i].desc)+"'>"+(data[i].desc == null || data[i].desc == '' ? "无" : (data[i].desc.length > 8 ? data[i].desc.substr(0, 8) + "...":data[i].desc))+"</p></div><div class='span3'><p class='text-hide data-reasons' title='"+data[i].reasons+"'>"+(data[i].reasons.length > 8 ? data[i].reasons.substr(0,8)+"...":data[i].reasons)+"</p></div>");
+					    var div2 = $("<div class='span2'></div>");
+					    var a = $("<a class='data-img' href='javascript:void(0);'>点击查看</a>");
+					    var div3 = $("<div class='span2'><a class='text-hide data-add-reasons' href='javascript:void(0)'>添加审核理由</a></div>");
+					    a.attr("img-src", data[i].bill_img);
+					    a.click(function(event) {
+					    	viewContent.set('imgSrc', ($(this).attr("img-src") == null  ?"":$(this).attr("img-src")));
+						    dialogForm.show();
+					    });
+					    div2.append(a);
+					    rootDiv.append(div1);
+					    rootDiv.append(div2);
+					    rootDiv.append(div3);
+					    rootDiv.appendTo(container);
+					}
+					bindOperation();
+					bindCheck();
 				}
 			});
-		}
-		var checkInfo = '';
-		function bindOperation() {
-			// 编辑
-            $(".data-add-reasons").die().live("click",function(){
-                var par=$(this).parent().parent(),d={};
+			function searchData() {
+				var conditionType = $('#condition option:selected').val();
+				var conditionValue = $('#content').val();
+				if(conditionType != '0' && (conditionValue == null || conditionValue == '')) {
+					//alert('请输入检索内容！');
+					return;
+				}
+			}
+			function bindCheck() {
+				$(".data-check-invoice-id").die().live("click",function(){
+					var invoiceId = $(this).val();
+					if ($(this).is(':checked')) {
+						invoiceList.push($(this).parent().parent());
+					} else {
+						for(var i=0; i<invoiceList.length; i++) {
+							if($(invoiceList[i]).find(".data-check-invoice-id").val() === invoiceId) {
+								invoiceList.splice(i, 1);
+								break;
+							}
+						}
+					}
+				})
+			}
+			
+			$('#onePressAuditReject').click(function(){
+				onePressAudit(1);
+			});
+			
+			$('#onePressAuditPass').click(function(){
+				onePressAudit(0);
+			})
+			
+			function onePressAudit(status) {
+				if(invoiceList.length == 0) {
+					BUI.use('bui/overlay',function(overlay){
+					  function show () {
+					    BUI.Message.Alert('您还没有勾选审核的发票',function(){
+					    },'warning');
+					  }
+					  show();
+					      
+					});
+					return;
+				}
+				var temp = new Array();
+				for(var i=0; i<invoiceList.length; i++) {
+					var reasons = $(invoiceList[i]).find(".data-reasons").attr('title');
+					temp.push($(invoiceList[i]).find(".data-check-invoice-id").val() + "&" + reasons);
+					$(invoiceList[i]).remove();
+				}
+				$.ajax({
+					url : '/companyUser/submitAuditResult',
+					type : "POST",
+					data : {invoiceIdList:temp.join(","), status:status},
+					success : function(data) {
+					}
+				});
+			}
+			var checkInfo = '';
+			function bindOperation() {
+				// 编辑
+	            $(".data-add-reasons").die().live("click",function(){
+	                var par=$(this).parent().parent(),d={};
 
-                d={
-                    'user_name' : par.find(".data-user-name").text(),
-                    'invoice_check__id' : par.find(".data-check-invoice-id").val(),
-                    "submit_time" : par.find(".data-submit-time").text(),
-                    "invoice_img" : par.find(".data-img").text(),
-                    "amount" : par.find(".data-amount").text(),
-                    "expense_type_name" : par.find(".data-type-name").text(),
-                    "desc_snap" : par.find(".data-desc").text(),
-                    "desc" : par.find(".data-desc").attr('title'),
-                    "reasons_snap" : par.find(".data-reasons").text(),
-                    "reasons" : par.find(".data-reasons").attr('title'),
-                }
-                checkInfo = d.invoice_check__id;
-                var tempHtml = par.html();
-                par.empty().append(txtTemplate(d,false));
-                $("#cancelEdit").on("click",function(){
-                    par.empty().append(tempHtml);
-                })
-            })
-            // 保存
-            $(".dataSave").die().live("click",function(){
-                var par=$(this).parent().parent(),d={};
-                d={
-                    'user_name' : par.find("input[name='user-name']").val(),
-                    "submit_time" : par.find("input[name='submit-time']").val(),
-                    "invoice_img" : par.find("input[name='invoice-code']").val(),
-                    "amount" : par.find("input[name='amount']").val(),
-                    "expense_type_name" : par.find("input[name='type-name']").val(),
-                    "desc" : par.find("input[name='desc']").val(),
-                    "reasons" : par.find("input[name='reasons']").val(),
-                    "desc_snap" : par.find("input[name='desc']").val().length > 8 ? par.find("input[name='desc']").val().substr(0,8)+"..." : par.find("input[name='desc']").val(),
-                    "reasons_snap" : par.find("input[name='reasons']").val().length > 8 ? par.find("input[name='reasons']").val().substr(0,8)+"...":par.find("input[name='reasons']").val()
-                }
-                var tempHtml = par.html();
-                par.empty().append(txtTemplate(d,true));
-            });
-		}
+	                d={
+	                    'user_name' : par.find(".data-user-name").text(),
+	                    'invoice_check__id' : par.find(".data-check-invoice-id").val(),
+	                    "submit_time" : par.find(".data-submit-time").text(),
+	                    "invoice_img" : par.find(".data-img").attr("img-src"),
+	                    "amount" : par.find(".data-amount").text(),
+	                    "expense_type_name" : par.find(".data-type-name").text(),
+	                    "desc_snap" : par.find(".data-desc").text(),
+	                    "desc" : par.find(".data-desc").attr('title'),
+	                    "reasons_snap" : par.find(".data-reasons").text(),
+	                    "reasons" : par.find(".data-reasons").attr('title'),
+	                }
+	               
+	                $('#img_src_temp').val(d.invoice_img);
+	                
+	                checkInfo = d.invoice_check__id;
+	                var tempHtml = par.html();
+	                par.empty().append(txtTemplate(d,false));
+	                $("#cancelEdit").on("click",function(){
+	                    par.empty().append(tempHtml);
+	                    par.find('a[img-src]').click(function() {
+					    	viewContent.set('imgSrc', $('#img_src_temp').val());
+						    dialogForm.show();
+					    });
+	                })
+	            })
+	            // 保存
+	            $(".dataSave").die().live("click",function(){
+	                var par=$(this).parent().parent(),d={};
+	                d={
+	                    'user_name' : par.find("input[name='user-name']").val(),
+	                    "submit_time" : par.find("input[name='submit-time']").val(),
+	                    "invoice_img" : par.find("input[name='invoice-code']").val(),
+	                    "amount" : par.find("input[name='amount']").val(),
+	                    "expense_type_name" : par.find("input[name='type-name']").val(),
+	                    "desc" : par.find("input[name='desc']").val(),
+	                    "reasons" : par.find("input[name='reasons']").val(),
+	                    "desc_snap" : par.find("input[name='desc']").val().length > 8 ? par.find("input[name='desc']").val().substr(0,8)+"..." : par.find("input[name='desc']").val(),
+	                    "reasons_snap" : par.find("input[name='reasons']").val().length > 8 ? par.find("input[name='reasons']").val().substr(0,8)+"...":par.find("input[name='reasons']").val()
+	                }
+	                var tempHtml = par.html();
+	                par.empty().append(txtTemplate(d,true));
+	                par.find('a[img-src]').click(function() {
+				    	viewContent.set('imgSrc', $('#img_src_temp').val());
+					    dialogForm.show();
+				    });
+	            });
+			}
+			
+			function txtTemplate(d,txt){
+	            return txt ? $('<div class="span1"><input type="checkbox" value="'+ checkInfo +'" class="data-check-invoice-id"></div>' +
+	            '<div class="span3">'+
+	            '<p class="text-hide data-submit-time">'+d.submit_time+'</p>'+
+	            '</div>'+
+	            '<div class="span3">'+
+	            '<p class="text-hide data-user-name">'+d.user_name+'</p>'+
+	            '</div>'+
+	            '<div class="span3">'+
+	            '<p class="text-hide data-type-name">'+d.expense_type_name+'</p>'+
+	            '</div>'+
+	            '<div class="span3">'+
+	            '<p class="text-hide data-amount">'+d.amount+'</p>'+
+	            '</div>'+
+	            '<div class="span3">'+
+	            '<p class="text-hide data-desc" title="'+ d.desc +'">'+d.desc_snap+'</p>'+
+	            '</div>'+
+	            '<div class="span3">'+
+	            '<p class="text-hide data-reasons" title="'+ d.reasons +'">'+(d.reasons == "" ? "无" : d.reasons)+'</p>'+
+	            '</div>'+
+	            '<div class="span2">'+
+	            '<a class="data-img" img-src="'+$('#img_src_temp').val()+'" href="javascript:void(0);">点击查看</a>'+
+	            '</div>' + 
+	            '<div class="span2">'+
+	            '<a class="text-hide data-add-reasons" href="javascript:void(0)">添加审核理由</a>'+
+	            '</div>') : $('<div class="span1"><p class="text-hide data-checkbox"><input type="checkbox"></p></div>' +
+	            '<div class="span3">'+
+	            '<input type="text" name="submit-time" class="input input-small calendar" value="'+d.submit_time+'" disabled>'+
+	            '</div>'+
+	            '<div class="span3">'+
+	            '<input type="text" name="user-name" class="input input-small" value="'+d.user_name+'" disabled>'+
+	            '</div>'+
+	            '<div class="span3">'+
+	            '<input type="text" name="type-name" class="input input-small" value="'+d.expense_type_name+'" disabled>'+
+	            '</div>'+
+	            '<div class="span3">'+
+	            '<input type="text" name="amount" class="input input-small" value="'+d.amount+'" disabled>'+
+	            '</div>'+
+	            '<div class="span4">'+
+	            '<input name="desc" class="input input-small" disabled value="'+d.desc+'">'+
+	            '</div>'+
+	            '<div class="span4">'+
+	            '<input name="reasons" class="input input-small" value="'+d.reasons+'">'+
+	            '</div>'+
+	            '<div class="span2">'+
+	            '<a href="javascript:void(0)" class="button button-success button-mini dataSave">保存</a>'+
+	            '<a href="javascript:void(0)" id="cancelEdit">取消</a>'+
+	            '</div>');
+	        }
+		});		
 		
         //侧栏高度
         (function(){
@@ -186,110 +352,27 @@
                 $(".side-bar-content").height(H-h1);
             });
         })()
-        function txtTemplate(d,txt){
-            return txt ? $('<div class="span1"><input type="checkbox" value="'+ checkInfo +'" class="data-check-invoice-id"></div>' +
-            '<div class="span3">'+
-            '<p class="text-hide data-submit-time">'+d.submit_time+'</p>'+
-            '</div>'+
-            '<div class="span3">'+
-            '<p class="text-hide data-user-name">'+d.user_name+'</p>'+
-            '</div>'+
-            '<div class="span3">'+
-            '<p class="text-hide data-type-name">'+d.expense_type_name+'</p>'+
-            '</div>'+
-            '<div class="span3">'+
-            '<p class="text-hide data-amount">'+d.amount+'</p>'+
-            '</div>'+
-            '<div class="span3">'+
-            '<p class="text-hide data-desc" title="'+ d.desc +'">'+d.desc_snap+'</p>'+
-            '</div>'+
-            '<div class="span3">'+
-            '<p class="text-hide data-reasons" title="'+ d.reasons +'">'+(d.reasons == "" ? "无" : d.reasons)+'</p>'+
-            '</div>'+
-            '<div class="span2">'+
-            '<a class="data-img" href="' +d.bill_img+ '">点击查看</a>'+
-            '</div>' + 
-            '<div class="span2">'+
-            '<a class="text-hide data-add-reasons" href="javascript:void(0)">添加审核理由</a>'+
-            '</div>') : $('<div class="span1"><p class="text-hide data-checkbox"><input type="checkbox"></p></div>' +
-            '<div class="span3">'+
-            '<input type="text" name="submit-time" class="input input-small calendar" value="'+d.submit_time+'" disabled>'+
-            '</div>'+
-            '<div class="span3">'+
-            '<input type="text" name="user-name" class="input input-small" value="'+d.user_name+'" disabled>'+
-            '</div>'+
-            '<div class="span3">'+
-            '<input type="text" name="type-name" class="input input-small" value="'+d.expense_type_name+'" disabled>'+
-            '</div>'+
-            '<div class="span3">'+
-            '<input type="text" name="amount" class="input input-small" value="'+d.amount+'" disabled>'+
-            '</div>'+
-            '<div class="span4">'+
-            '<input name="desc" class="input input-small" disabled value="'+d.desc+'">'+
-            '</div>'+
-            '<div class="span4">'+
-            '<input name="reasons" class="input input-small" value="'+d.reasons+'">'+
-            '</div>'+
-            '<div class="span2">'+
-            '<a href="javascript:void(0)" class="button button-success button-mini dataSave">保存</a>'+
-            '<a href="javascript:void(0)" id="cancelEdit">取消</a>'+
-            '</div>');
-        }
-       /*  //竖状菜单
-       var menu = new menuTree(
-            {"nodes" : [
-					{text : '发票上传',id : '',href:"/views/webviews/companyUser/expense_account_upload.html", leaf:true, children: []},
-					{text : '发票草稿箱',id : '',href:"/views/webviews/companyUser/expense_account_draft.html", leaf:true, children: []},
-					{text : '新建报销单',id : '',href:"/views/webviews/companyUser/create_invoice.html", leaf:true, children: []},
-					{text : '待审核报销单',id : '',href:"/views/webviews/companyUser/user_wait_audit_invoice.html", leaf:true, children: []},
-					{text : '已审核报销单',id : '',href:"/views/webviews/companyUser/user_finish_audit_invoice.html", leaf:true, children: []},
-					{text : '报销单历史',id : '',href:"/views/webviews/companyUser/expense_account_history.html", leaf:true, children: []},
-					{text : '审核发票',id : '',href:"javascript:void(0);",  leaf:false, expanded : true,children: [
-						{text : '待审核发票',id : '', href:"/views/webviews/companyUser/"},
-						{text : '已审核发票',id : '', href:"/views/webviews/companyUser/"}                                                   
-					]}
-                ]
-            },"menuTree"
-        ); */
+        
       //竖状菜单
-        BUI.use('bui/tree',function (Tree) {
-            var menu = new Tree.TreeMenu({
-            render : '.side-bar-content',
-
-            elCls : 'bui-side-menu', 
-            itemCls : 'bui-menu-item',
-            expandAnimate : true,
-            showIcons : false,
-
-            dirTpl : '<li class="menu-leaf menu-second"><div class="bui-menu-title"><s></s><span class="bui-menu-title-text"><a href="{href}">{text}</a></span></div></li>',
-            leafTpl : '<li class="menu-leaf"><a href="{href}">{text}</a></li>',
-
-            nodes : [
-   					{text : '发票上传',id : '10',href:"/views/webviews/companyUser/expense_account_upload.html"},
-   					{text : '发票草稿箱',id : '20',href:"/views/webviews/companyUser/expense_account_draft.html"},
-   					{text : '新建报销单',id : '30',href:"/views/webviews/companyUser/create_invoice.html"},
-   					{text : '待审核报销单',id : '40',href:"/views/webviews/companyUser/user_wait_audit_invoice.html"},
-   					{text : '已审核报销单',id : '50',href:"/views/webviews/companyUser/user_finish_audit_invoice.html"},
-   					{text : '报销单历史',id : '60',href:"/views/webviews/companyUser/expense_account_history.html"},
-   					{text : '审核发票',id : '70',href:"javascript:void(0);",  leaf:false, expanded : true,children: [
-   						{text : '待审核发票',id : '71', href:"/views/webviews/companyUser/audit_invoice_need_process.html"},
-   						{text : '已审核发票',id : '72', href:"/views/webviews/companyUser/audit_invoice_finished.html"}                                                 
-   					]}
-             ]
-        	});
-       		menu.render();
-            $.each($("li.menu-second"),function(){
-                var that = $(this);
-                if(that.next().hasClass("menu-second")){
-                    that.find("s").remove();
-                }
-            })
-            menu.on('itemclick',function(ev){
-                $('.log').text(ev.item.text);
-            });
-            var firstLeaf = menu.findNode('71'); //获取第一个叶子节点
-            menu.setSelected(firstLeaf);
-        });
+        var menu = new menuTree(
+            {"nodes" : [
+       					{text : '发票上传',id : '10',href:"/views/webviews/companyUser/expense_account_upload.html", leaf : false,children: []},
+       					{text : '发票草稿箱',id : '20',href:"/views/webviews/companyUser/expense_account_draft.html", leaf : false,children: []},
+       					{text : '新建报销单',id : '30',href:"/views/webviews/companyUser/create_invoice.html", leaf : false,children: []},
+       					{text : '待审核报销单',id : '40',href:"/views/webviews/companyUser/user_wait_audit_invoice.html", leaf : false,children: []},
+       					{text : '已审核报销单',id : '50',href:"/views/webviews/companyUser/user_finish_audit_invoice.html", leaf : false,children: []},
+       					{text : '报销单历史',id : '60',href:"/views/webviews/companyUser/expense_account_history.html", leaf : false,children: []},
+       					{text : '审核发票',id : '70',href:"javascript:void(0);",  leaf:false, expanded : true,children: [
+       						{text : '待审核发票',id : '71', href:"/views/webviews/companyUser/audit_invoice_need_process.html"},
+       						{text : '已审核发票',id : '72', href:"/views/webviews/companyUser/audit_invoice_finished.html"}                                                   
+       					]}
+                 ]
+            },"menuTree"
+        );
+	    defaultSelect("71");
+	    function defaultSelect(id){ 
+	        $("#"+id).parent().addClass("bui-menu-item-selected")
+	    }
 	</script>
 </body>
 </html>

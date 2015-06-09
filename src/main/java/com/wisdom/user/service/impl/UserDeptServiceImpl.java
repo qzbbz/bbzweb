@@ -21,6 +21,7 @@ import com.wisdom.user.domain.UserInfo;
 import com.wisdom.user.service.IUserDeptService;
 import com.wisdom.user.service.IUserService;
 import com.wisdom.web.api.controller.ArchSetController;
+import com.wisdom.web.utils.UserPwdMD5Encrypt;
 
 @Service("userDeptService")
 public class UserDeptServiceImpl implements IUserDeptService {
@@ -82,6 +83,7 @@ public class UserDeptServiceImpl implements IUserDeptService {
 			logger.error("add user error!");
 			return false;
 		}
+		userService.setUserPwdByUserId(UserPwdMD5Encrypt.getPasswordByMD5Encrypt("111111"), userId);
 		
 		//增加部门映射关系
 		UserDept userDept = new UserDept();

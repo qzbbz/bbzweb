@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.wisdom.accounter.service.IAccounterService;
+import com.wisdom.common.model.Accounter;
 import com.wisdom.common.model.User;
 import com.wisdom.user.service.IUserService;
 import com.wisdom.web.api.IUserValidateApi;
@@ -22,6 +24,9 @@ public class UserValidateApiImpl implements IUserValidateApi {
 
 	@Autowired
 	private IUserService userService;
+	
+	@Autowired
+	private IAccounterService accounterService;
 
 	@Override
 	public Map<String, String> UserLoginValidate(String userId, String userPwd) {
@@ -56,6 +61,10 @@ public class UserValidateApiImpl implements IUserValidateApi {
 					&& userService.setUserPwdByUserId(
 							UserPwdMD5Encrypt.getPasswordByMD5Encrypt(userPwd),
 							userId)) {
+				if(userTypeId == 1) {
+					Accounter accounter = new Accounter(0L, userId, "", "", "", "", "", "", "", new Timestamp(System.currentTimeMillis()));
+					accounterService.addAccounter(accounter);
+				}
 				retMap.put("error_code", "0");
 			} else {
 				retMap.put("error_code", "100");

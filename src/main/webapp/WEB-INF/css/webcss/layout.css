@@ -4,7 +4,7 @@ a:hover{ text-decoration: none;}
 .wrap{ min-width: 1020px; padding-left: 220px; height: 100%;}
 /*侧栏*/
 .side-bar{ background: #35383b; width: 220px; height: 100%; position: fixed; top: 0; left: 0; z-index: 9;}
-.side-bar-top{ position: absolute; width: 220px; height: 120px; background: #2e3236; border-bottom: 1px solid #363b40; top: 0; left: 0; text-align: center;}
+.side-bar-top{ position: absolute; width: 220px; height: 130px; background: #2e3236; border-bottom: 1px solid #363b40; top: 0; left: 0; text-align: center;}
 .side-bar-top img{ margin-top: 20px;}
 .side-bar-top h1{ font-size: 15px; color: #fff; padding: 5px 0 20px;}
 .side-bar-bottom{ position: absolute; width: 220px; height: 100px; background: #303438; bottom: 0; left: 0; border-top: 1px solid #363b40;}

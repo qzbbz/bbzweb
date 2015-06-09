@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>上海元升财务咨询有限公司</title>
+	<!--基础-->
+    <link rel="stylesheet" type="text/css" href="/css/webcss/bui.css">
+	<link rel="stylesheet" type="text/css" href="/css/webcss/golbal.css">
+	<link rel="stylesheet" type="text/css" href="/css/webcss/layout.css">
+</head>
+<body>
+	<div class="wrap">
+		<div class="side-bar">
+			<div class="side-bar-top">
+				<img src="/img/webimg/bss-logo.png" >
+				<h1>上海元升财务咨询有限公司</h1>
+			</div>
+            <div class="side-bar-content" id="menuTree"></div>
+			<div class="side-bar-bottom">
+				<ul>
+					<li><a href="javascript:void(0);"><i class="setting"></i>设置</a></li>
+					<li><a href="/logout"><i class="exit"></i>安全退出</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="main">
+            <div class="menu"><a href="" class="active">点将财会</a></div>
+			<div class="well mt20">
+				<div class="form-horizontal onlineTools">
+                    <div class="row-fluid show-grid">
+                        <div >
+                            <label class="control-label control-label-small" style="margin-left:-40px;">选择地区</label>
+                            <select class="input input-mini" id="province" name="province" style="width:140px;margin-left:10px;"></select><select class="input input-mini ml10" id="city" name="city" style="width:140px;"></select><select class="input input-mini ml10" id="area" name="area" style="width:140px;"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-horizontal onlineTools">
+                    <div class="row-fluid show-grid">
+                        <div >
+                            <label class="control-label control-label-small" style="margin-left:-40px;">选择行业</label>
+                            <div class="controls"><select id="accounter_industry" class="input input-normal"></select></div>
+                        </div>
+                        <div style="margin-left:260px;">
+                            <label class="control-label control-label-small">选择职业</label>
+                            <div class="controls"><select id="accounter_career" class="input input-normal"></select></div>
+                        </div>
+                        <a href="javascript:void(0)" id="searchAccounter" class="button button-success" style="margin-left:20px;">查询会计师</a>
+                    </div>
+                </div>
+			</div>
+			
+			<div class="tips tips-warning mt20" id="tipInfo" style="display:none;"></div>
+			
+			<div class="tips tips-success mt20" id="tipInfoSearch">请选择条件，然后点击查询会计师！</div>
+			
+			<div class="member-wrap">
+				<ul id="retData">
+				</ul>
+			</div>
+        </div>
+	</div>
+    <script src="/js/webjs/jquery-1.8.1.min.js"></script>
+    <script src="/js/webjs/sea.js"></script>
+    <script src="/js/webjs/config.js"></script>
+    <script src="/js/webjs/menuTree.js"></script>
+	<script src="/js/webjs/layout.js"></script>
+    <script type="text/javascript">
+        //侧栏高度
+        (function(){
+            var H=$(window).height();
+            var h1=$(".side-bar-top").height()+$(".side-bar-bottom").height();
+            $(".side-bar-content").height(H-h1);
+            $(window).resize(function(){
+                H=$(window).height();
+                $(".side-bar-content").height(H-h1);
+            });
+        })()
+        
+        addProvince($('#province'), $('#city'));
+		$("#province").change(function(){
+			$("#city").empty();
+			addCity($('#city'), $('#province option:selected').val());
+		});
+		$("#city").change(function(){
+			$("#area").empty();
+			addArea($('#area'), $('#city option:selected').val());
+		});
+		
+		addIndustry();
+		addCareer();
+		
+		function addIndustry() {
+			$.ajax({
+				url : '/getAllAccounterIndustry',
+				type : "POST",
+				data : {},
+				success : function(data) {
+					$.each(data,function(name,value) {
+						$('#accounter_industry').append("<option value='"+name+"'>"+value+"</option>");
+					});
+				}
+			});
+		}
+        
+		function addCareer() {
+			$.ajax({
+				url : '/getAllAccounterCareer',
+				type : "POST",
+				data : {},
+				success : function(data) {
+					$.each(data,function(name,value) {
+						$('#accounter_career').append("<option value='"+name+"'>"+value+"</option>");
+					});
+				}
+			});
+		}
+		
+        function addProvince(obj) {
+			$.ajax({
+				url : '/getAllProvinces',
+				type : "POST",
+				data : {},
+				success : function(data) {
+					$.each(data,function(name,value) {
+						obj.append("<option value='"+name+"'>"+value+"</option>");
+					});
+					addCity($('#city'), $('#province option:selected').val());
+				}
+			});
+		}
+
+		function addCity(obj, provinceId) {
+			obj.empty();
+			$.ajax({
+				url : '/getCities',
+				type : "POST",
+				data : {provinceId:provinceId},
+				success : function(data) {
+					$.each(data,function(name,value) {
+						obj.append("<option value='"+name+"'>"+value+"</option>");
+					});
+					addArea($('#area'), $('#city option:selected').val());
+				}
+			});
+		}
+		
+		$('#tipInfoSearch').show();
+		
+		function addArea(obj, cityId) {
+			obj.empty();
+			$.ajax({
+				url : '/getAreas',
+				type : "POST",
+				data : {cityId:cityId},
+				success : function(data) {
+					$.each(data,function(name,value) {
+						obj.append("<option value='"+name+"'>"+value+"</option>");
+					});
+				}
+			});
+		}
+		
+		$('#searchAccounter').click(function(){
+			$('#tipInfo').hide();
+			$('#tipInfoSearch').hide();
+			var province = $('#province option:selected').text();
+			var city = $('#city option:selected').text();
+			var area = $('#area option:selected').text();
+			var accounter_industry = $('#accounter_industry option:selected').text();
+			var accounter_career = $('#accounter_career option:selected').text();
+			if(province == null || province =='' ||
+					city == null || city == '' ||
+					area == null || area == '' ||
+					accounter_industry == null || accounter_industry == '' ||
+					accounter_career == null || accounter_career == '') {
+				BUI.use('bui/overlay',function(overlay){
+					function show () {
+						BUI.Message.Alert('查询条件不能为空，请检查！',function(){
+						},'warning');
+					}
+					show();	      
+				});
+				return;
+			}
+			$.ajax({
+				url : '/getAllAccounterByCondition',
+				type : "POST",
+				data : {province:province, city:city, area:area, industry:accounter_industry,career:accounter_career},
+				success : function(data) {
+					if(data==null || data=='') {
+						$('#retData').html('');
+						$('#tipInfo').html('没有查询到符合条件的会计师，请更换查询条件或稍后重试！');
+						$('#tipInfo').show();
+						return;
+					}
+					$('#tipInfo').hide();
+					$('#retData').html('');
+					$.each(data,function(name,data) {
+						var li = $('<li style="padding 0 10px;"></li>');
+						var img = $('<div class="member-photo"><img src="'+data.image+'" width="200px" height="200px">');
+						var detail = $('<div class="member-text"><p><label for="">姓名：</label>'+data.userName+'</p><p><label for="">职业经历：</label>'+data.career+'</p><p><label for="">职业证书：</label>'+data.certificate+'</p><p><label for="">行业：</label>'+data.industry+'</p><p><label for="">地区：</label>'+data.province+data.city+data.area+'</p></div>');
+						var a = $('<a href="javascript:void(0)" class="button button-success" style="width:180px;">点选当前会计</a>');
+						li.append(img);
+						li.append(detail);
+						a.attr("accounter_user_id", data.user_id);
+					    a.click(function(event) {
+					    	BUI.use('bui/overlay',function(overlay){
+								function show () {
+									BUI.Message.Alert('您已成功选择会计师！',function(){
+									},'warning');
+								}
+								show();	      
+							});			    	
+					    });
+						li.append(a);
+						$('#retData').append(li);
+					});
+				},
+				error : function() {
+					$('#retData').html('');
+					$('#tipInfo').html('没有查询到符合条件的会计师，请更换查询条件或稍后重试！');
+					$('#tipInfo').show();
+				}
+			});
+		})
+		
+        var menu = new menuTree(
+            {"nodes" : [
+					{text : '公司发票',id : '10',href:"javascript:void(0);",  expanded : false,children: [
+						{text : '发票上传',id : '11', href:"/views/webviews/company/expense_account_upload.html"},
+						{text : '发票历史记录',id : '12', href:"/views/webviews/company/expense_account_history.html"}                                           
+					]},
+					{text : '银行对账单',id : '20',href:"javascript:void(0);", expanded : false,children: [
+						{text : '上传对账单',id : '21', href:"/views/webviews/company/bank_statement_upload.html"},
+						{text : '对账单历史记录',id : '22', href:"/views/webviews/company/bank_statement_history.html"}                                           
+					]},
+					{text : '工资社保',id : '30',href:"javascript:void(0);", expanded : false,children: [
+						{text : '参数设置',id : '31', href:"/views/webviews/company/salary_welfare_args_settings.html"},
+						{text : '下载工资计算模板',id : '32', href:"/views/webviews/company/salary_welfare_template_download.html"},                                           
+						{text : '上传本月工资',id : '33', href:"/views/webviews/company/salary_welfare_upload.html"}
+					]},
+					{text : '预约取发票',id : '40',href:"javascript:void(0);", expanded : false,children: [
+						{text : '方式选择',id : '41', href:"/views/webviews/company/take_expense_account_mode_select.html"}                                           
+					]},
+					{text : '组织架构',id : '50',href:"javascript:void(0);",  expanded : false,children: [
+						{text : '基本信息设置',id : '51', href:"/views/webviews/company/organization_information_settings.html"},
+						{text : '组织架构设置',id : '52', href:"/views/webviews/company/organization_structure_settings.html"}                                           
+					]},
+					{text : '会计点将',id : '60',href:"/views/webviews/company/select_accounter.html",  leaf:false,expanded : false,children: []},
+					]
+            },"menuTree"
+        );
+        defaultSelect("60");
+        function defaultSelect(id){ 
+            $("#"+id).parent().addClass("bui-menu-item-selected")
+        }
+	</script>
+</body>
+</html>

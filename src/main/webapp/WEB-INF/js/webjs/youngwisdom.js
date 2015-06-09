@@ -89,7 +89,7 @@ angular.module('ywLanding')
 					var path = '';
 					switch(userType) {
 					case 1:
-						path = "../../accounter/admin";
+						path = "/accounter/finishDeatilRegInfo";
 						break;
 					case 2:
 						path = "../../company/expenseAccountUpload";

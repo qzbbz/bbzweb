@@ -18,6 +18,7 @@ import com.wisdom.common.model.Accounter;
 import com.wisdom.common.model.AccounterCareer;
 import com.wisdom.common.model.AccounterCertificate;
 import com.wisdom.common.model.AccounterIndustry;
+import com.wisdom.user.service.IUserService;
 
 @Service("accounterService")
 public class AccounterServiceImpl implements IAccounterService {
@@ -33,6 +34,9 @@ public class AccounterServiceImpl implements IAccounterService {
 
 	@Autowired
 	private IAccounterDao accounterDao;
+	
+	@Autowired
+	private IUserService userService;
 
 	@Override
 	public Map<Long, String> getAllAccounterCareer() {
@@ -113,10 +117,31 @@ public class AccounterServiceImpl implements IAccounterService {
 		map.put("city", accounter.getCity());
 		map.put("province", accounter.getProvince());
 		map.put("image", accounter.getImage());
-		map.put("certificate_id", accounter.getCertificate());
-		map.put("industry_id", accounter.getIndustry());
-		map.put("career_id", accounter.getCareer());
+		map.put("certificate", accounter.getCertificate());
+		map.put("industry", accounter.getIndustry());
+		map.put("career", accounter.getCareer());
+		String userName = userService.getUserNameByUserId(accounter.getUserId());
+		if(userName != null) {
+			map.put("userName", userName);
+		}
 		return map;
+	}
+
+	@Override
+	public List<Map<String, String>> getAllAccounterByCondition(String province,
+			String city, String area, String industry, String career) {
+		List<Map<String, String>> retList = new ArrayList<>();
+		List<Accounter> list = accounterDao.getAllAccounterByCondition(province, city, area, industry, career);
+		if(list != null && list.size() > 0) {
+			for(Accounter accounter : list)
+				retList.add(accounterConvertToMap(accounter));
+		}
+		return retList;
+	}
+
+	@Override
+	public boolean addAccounter(Accounter accounter) {
+		return accounterDao.addAccounter(accounter);
 	}
 
 }

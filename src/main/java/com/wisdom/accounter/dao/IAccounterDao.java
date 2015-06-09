@@ -12,6 +12,9 @@ public interface IAccounterDao {
 	
 	public List<Accounter> getAllAccounter();
 	
+	public List<Accounter> getAllAccounterByCondition(String province, String city, String area,
+			String industry, String career);
+	
 	public boolean addAccounter(Accounter accounter);
 	
 	public boolean deleteAccounter(Accounter accounter);

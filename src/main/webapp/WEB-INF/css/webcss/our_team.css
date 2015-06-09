@@ -9,34 +9,34 @@
 	font-weight: 600;
 	margin-top: 2em
 }
-@media (min-width: 1220px) {
+@media (min-width: 1400px) {
 	.about-page .section-heading {
 		font-size: 25px
 	}
 }
-@media (min-width: 1550px) {
+/* @media (min-width: 1550px) {
 	.about-page .section-heading {
 		font-size: 28px
 	}
-}
+} */
 .about-page .section-subheading {
 	font-size: 18px
 }
-@media (min-width: 1550px) {
+/* @media (min-width: 1550px) {
 	.about-page .section-subheading {
 		font-size: 20px
 	}
-}
+} */
 .about-page .about__intro__content {
 	margin: 2em auto;
 	max-width: 28em;
 	font-size: 19px
 }
-@media (max-width: 640px) {
+/* @media (max-width: 640px) {
 	.about-page .about__intro__content {
 		max-width: 20em
 	}
-}
+} */
 .about-page .about__team {
 	padding-top: 0
 }
@@ -54,7 +54,8 @@
 	overflow: hidden;
 	margin-left: auto;
 	margin-right: auto;
-	max-width: 1000px
+	max-width: 1000px;
+	padding-left: 0;
 }
 .about-page .events__super-block {
 	display: block;
@@ -154,7 +155,7 @@
 .about-page .events__sub-block.pull-right {
 	float: right
 }
-@media (max-width: 1020px) {
+/* @media (max-width: 1020px) {
 	.about-page .events {
 		font-size: 20px;
 		max-width: 100%;
@@ -163,27 +164,28 @@
 		display: flex;
 		-webkit-flex-direction: column;
 		-ms-flex-direction: column;
-		flex-direction: column
+		flex-direction: column;
+		padding-left: 0;
 	}
 	.about-page .events__super-block {
 		width: 100%
 	}
-	.about-page .events__super-block.o1 {
+	.about-page .events__super-block .o1 {
 		-webkit-order: 1;
 		-ms-flex-order: 1;
 		order: 1
 	}
-	.about-page .events__super-block.o2 {
+	.about-page .events__super-block .o2 {
 		-webkit-order: 2;
 		-ms-flex-order: 2;
 		order: 2
 	}
-	.about-page .events__super-block.o3 {
+	.about-page .events__super-block .o3 {
 		-webkit-order: 3;
 		-ms-flex-order: 3;
 		order: 3
 	}
-	.about-page .events__super-block.o4 {
+	.about-page .events__super-block .o4 {
 		-webkit-order: 4;
 		-ms-flex-order: 4;
 		order: 4
@@ -191,20 +193,23 @@
 	.about-page .events .hide-for-2-col {
 		display: none
 	}
-}
-@media (max-width: 600px) {
+} */
+/* @media (max-width: 600px) {
 	.about-page .events {
-		font-size: 18px
+		font-size: 18px;
+		padding-left: 0;
 	}
 }
 @media (max-width: 420px) {
 	.about-page .events {
-		font-size: 14px
+		font-size: 14px;
+		padding-left: 0;
 	}
 }
 @media (min-width: 1220px) {
 	.about-page .events {
-		max-width: 1200px
+		max-width: 1200px;
+		padding-left: 0;
 	}
 	.about-page .events__super-block {
 		width: 600px
@@ -213,12 +218,13 @@
 @media (min-width: 1550px) {
 	.about-page .events {
 		max-width: 1400px;
-		font-size: 20px
+		font-size: 20px;
+		padding-left: 0;
 	}
 	.about-page .events__super-block {
 		width: 700px
 	}
-}
+} */
 .about-page .department-list {
 	text-align: center;
 	margin-bottom: 2em;
@@ -241,7 +247,7 @@
 .about-page .department-list li+li {
 	margin-left: 1.4em
 }
-@media (max-width: 640px) {
+/* @media (max-width: 640px) {
 	.about-page .department-list {
 		margin-left: auto;
 		margin-right: auto;
@@ -268,7 +274,7 @@
 	.about-page .department-list li+li {
 		margin-left: 0
 	}
-}
+} */
 .about-page .team {
 	overflow: hidden;
 	max-width: 1200px;
@@ -298,7 +304,8 @@
 	top: 0;
 	left: 0;
 	width: 100%;
-	height: 100%
+	height: 100%;
+	overflow: hidden;
 }
 .about-page .team__member__info {
 	background-color: rgba(65, 144, 136, .7);
@@ -332,7 +339,7 @@
 	width: 28px;
 	height: 28px
 }
-@media (max-width: 640px) {
+/* @media (max-width: 640px) {
 	.about-page .team__member__info .info-container {
 		margin: 5px
 	}
@@ -340,7 +347,7 @@
 		width: 22px;
 		height: 22px
 	}
-}
+} */
 .about-page .team__member__info .social-link img {
 	margin-left: -3px
 }
@@ -355,20 +362,20 @@
 	font-size: 18px;
 	font-weight: 700
 }
-@media (max-width: 640px) {
+/* @media (max-width: 640px) {
 	.about-page .team__member__info h3 {
 		font-size: 14px
 	}
-}
+} */
 .about-page .team__member__info h4 {
 	font-size: 15px
 }
-@media (min-width: 1550px) {
+/* @media (min-width: 1550px) {
 	.about-page .team {
 		max-width: 1400px
 	}
-}
-@media (max-width: 1220px) {
+} */
+/* @media (max-width: 1220px) {
 	.about-page .team {
 		max-width: 1000px
 	}
@@ -380,8 +387,8 @@
 	.about-page .team__member {
 		width: 20%
 	}
-}
-@media (max-width: 800px) {
+} */
+/* @media (max-width: 800px) {
 	.about-page .team__member {
 		width: 25%
 	}
@@ -393,7 +400,7 @@
 	.about-page .team__member {
 		width: calc(100% / 3)
 	}
-}
+} */
 .about-page .advisors {
 	font-size: 16px
 }
@@ -439,7 +446,7 @@
 .about-page .about__related .related-block.press:hover {
 	background-color: rgba(239, 109, 68, .8)
 }
-@media (max-width: 940px) {
+/* @media (max-width: 940px) {
 	.about-page .about__related {
 		padding: 0
 	}
@@ -455,7 +462,7 @@
 		font-size: 14px;
 		margin-left: 0
 	}
-}
+} */
 .about-page .about__related h2,
 .about-page .about__related p {
 	color: #fff
@@ -481,7 +488,7 @@
 	top: 50%;
 	margin-top: -16px
 }
-@media (min-width: 1550px) {
+/* @media (min-width: 1550px) {
 	.about-page .about__related {
 		max-width: 1400px
 	}
@@ -508,7 +515,7 @@
 	.tweak-relo-text {
 		max-width: 14em!important
 	}
-}
+} */
 
 .new-home__section {
 	background-color: #F6F6F6;
@@ -543,23 +550,23 @@
 .new-home__section .padding-start {
 	padding-right: 4em
 }
-@media (max-width: 48.125em) {
+/* @media (max-width: 48.125em) {
 	.new-home__section .padding-start {
 		padding: 0 3em 0 4em
 	}
-}
+} */
 .new-home__section .padding-middle {
 	padding: 0 2em
 }
-@media (max-width: 48.125em) {
+/* @media (max-width: 48.125em) {
 	.new-home__section .padding-middle {
 		padding: 0 3em 0 4em
 	}
-}
+} */
 .new-home__section .padding-end {
 	padding-left: 4em
 }
-@media (max-width: 48.125em) {
+/* @media (max-width: 48.125em) {
 	.new-home__section .padding-end {
 		padding: 0 3em 0 4em
 	}
@@ -568,7 +575,7 @@
 	.new-home__section--no-top-padding {
 		padding-top: 0
 	}
-}
+} */
 
 .large-2 {
   width: 16.66667%;
@@ -599,10 +606,10 @@
 }
 
 media="screen, projection"
-@media (min-width: 48.125em)
+/* @media (min-width: 48.125em)
 .large-2 {
   width: 16.66667%;
-}
+} */
 
 .flexbox .tax-accountants .testimonial__text:before {
 	position: absolute;

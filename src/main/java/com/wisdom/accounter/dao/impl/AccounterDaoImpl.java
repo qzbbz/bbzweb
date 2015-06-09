@@ -79,9 +79,14 @@ public class AccounterDaoImpl implements IAccounterDao {
 
 	@Override
 	public boolean isAccounterExistByUserId(String userId) {
-		String sql = "select id from accounter where user_id = ?";
-		Accounter user = jdbcTemplate.queryForObject(sql,
-				new Object[] { userId }, new AccounterMapper());
+		String sql = "select * from accounter where user_id = ?";
+		Accounter user = null;
+		try {
+			user = jdbcTemplate.queryForObject(sql,
+					new Object[] { userId }, new AccounterMapper());
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
 		return user != null ? true : false;
 	}
 
@@ -91,6 +96,21 @@ public class AccounterDaoImpl implements IAccounterDao {
 		try {
 			String sql = "select * from accounter";
 			list = jdbcTemplate.query(sql,
+					new RowMapperResultSetExtractor<Accounter>(
+							new AccounterMapper()));
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return list;
+	}
+
+	@Override
+	public List<Accounter> getAllAccounterByCondition(String province,
+			String city, String area, String industry, String career) {
+		List<Accounter> list = null;
+		try {
+			String sql = "select * from accounter where province=? and city=? and area=? and industry=? and career=?";
+			list = jdbcTemplate.query(sql, new Object[] { province, city, area, industry, career },
 					new RowMapperResultSetExtractor<Accounter>(
 							new AccounterMapper()));
 		} catch (Exception e) {
