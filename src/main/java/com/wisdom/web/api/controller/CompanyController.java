@@ -21,6 +21,7 @@ import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequ
 
 import com.wisdom.area.service.IAreaService;
 import com.wisdom.company.service.ICompanyService;
+import com.wisdom.user.service.IUserModifyService;
 import com.wisdom.user.service.IUserService;
 import com.wisdom.web.api.ICompanyApi;
 import com.wisdom.web.utils.CompanyOrgStructure;
@@ -44,13 +45,16 @@ public class CompanyController {
 	@Autowired
 	private ICompanyApi companyApi;
 	
+	@Autowired
+	private IUserModifyService userModifyService;
+	
 	@RequestMapping("/company/selectAccounter")
 	@ResponseBody
 	public Map<Integer, String> selectAccounter(HttpServletRequest request) {
 		logger.info("enter selectAccounter");
 		boolean selectSuccess = false;
 		Map<Integer, String> retMap = new HashMap<>();
-		String accounterUserId = request.getParameter("userId");
+		String accounterUserId = request.getParameter("accounterId");
 		String userId = (String) request.getSession().getAttribute("userId");
 		long companyId = userService.getCompanyIdByUserId(userId);
 		int accounterAmount = companyService
@@ -66,6 +70,19 @@ public class CompanyController {
 					ErrorCode.COMPANY_SELECT_ACCOUNTER_ERROR_MESSAGE);
 		}
 		logger.info("leave selectAccounter");
+		return retMap;
+	}
+	
+	@RequestMapping("/company/selectOneAccounter")
+	@ResponseBody
+	public Map<Integer, String> selectOneAccounter(HttpServletRequest request) {
+		logger.info("enter selectOneAccounter");
+		Map<Integer, String> retMap = new HashMap<>();
+		String accounterUserId = request.getParameter("accounterId");
+		String userId = (String) request.getSession().getAttribute("userId");
+		long companyId = userService.getCompanyIdByUserId(userId);
+		userModifyService.modifyUserCompanyIdByUserId(accounterUserId, companyId);
+		logger.info("leave selectOneAccounter");
 		return retMap;
 	}
 	
@@ -245,5 +262,21 @@ public class CompanyController {
 	@ResponseBody
 	public List<Map<String, String>> getAllCostCenterEncode() {
 		return companyApi.getAllCostCenterCode();
+	}
+	
+	@RequestMapping("/company/getSalaryTemplateHistory")
+	@ResponseBody
+	public List<Map<String, String>> getSalaryTemplateHistory(HttpServletRequest request) {
+		String userId = (String) request.getSession().getAttribute("userId");
+		long companyId = userService.getCompanyIdByUserId(userId);
+		return companyApi.getSalaryTemplateHistory(companyId);
+	}
+	
+	@RequestMapping("/company/getSalaryHistory")
+	@ResponseBody
+	public List<Map<String, String>> getSalaryHistory(HttpServletRequest request) {
+		String userId = (String) request.getSession().getAttribute("userId");
+		long companyId = userService.getCompanyIdByUserId(userId);
+		return companyApi.getSalaryHistory(companyId);
 	}
 }

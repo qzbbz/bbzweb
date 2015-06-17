@@ -25,8 +25,13 @@ public class AccounterDaoImpl implements IAccounterDao {
 	@Override
 	public Accounter getAccounterByUserId(String userId) {
 		String sql = "select * from accounter where user_id = ?";
-		Accounter user = jdbcTemplate.queryForObject(sql,
-				new Object[] { userId }, new AccounterMapper());
+		Accounter user = null;
+		try {
+			user = jdbcTemplate.queryForObject(sql,
+					new Object[] { userId }, new AccounterMapper());
+		} catch(Exception e) {
+			logger.error(e.toString());
+		}
 		return user;
 	}
 
@@ -48,12 +53,16 @@ public class AccounterDaoImpl implements IAccounterDao {
 	public boolean addAccounter(Accounter accounter) {
 		String sql = "insert into accounter (user_id, area, city, province, image, certificate, industry, career, create_time)"
 				+ " values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-		int affectedRows = jdbcTemplate.update(sql, accounter.getUserId(),
+		int affectedRows = 0;
+		try {
+			affectedRows = jdbcTemplate.update(sql, accounter.getUserId(),
 				accounter.getArea(), accounter.getCity(),
 				accounter.getProvince(), accounter.getImage(),
 				accounter.getCertificate(), accounter.getIndustry(),
 				accounter.getCareer(), accounter.getCreateTime());
-		logger.debug("addAccounter result : {}", affectedRows);
+		} catch(Exception e) {
+			logger.error(e.toString());
+		}
 		return affectedRows != 0;
 	}
 

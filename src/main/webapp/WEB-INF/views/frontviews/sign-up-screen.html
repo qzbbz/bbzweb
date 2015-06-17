@@ -1,18 +1,24 @@
 
 <div class="content">
-	<h1>{{t.serviceSlogon}}</h1>
-	
+	<!-- <h1>{{t.serviceSlogon}}</h1> -->
+	<h1>元升专业服务</h1>
 	<p>
-	<div ng-repeat="line in t.serviceBrief" class="desc">
-		{{line}}
+	<!-- <div ng-repeat="line in t.serviceBrief" class="desc"> -->
+	<div class="desc">
+		<!-- {{line}} -->
+		元升是一家在线财务咨询公司<br/>
+		旗下的帮帮账产品为您提供线上专业会计记账和报税服务<br/>
+		现在注册即可免费试用一个月
 	</div>
 	</p>
 	<div id="signup-error-msg"></div>
 </div>
 
+<a id="open_video" href="/views/frontviews/video.html">
 <div class="play-btn hide-for-small js-module-video-play">
-	<div class="play-btn-arrow" id="play-btn-arrow"></div>
+	<div class="play-btn-arrow"></div>
 </div>
+</a>
 
 <form class="signup-form" name="signupForm">
 	<div class="field">
@@ -48,37 +54,12 @@
 </div>
 <div class="background"></div>
 
-<div id="contentVideo" style="display:none;">
-<div class="embed-responsive embed-responsive-16by9">
-	<object id="ckplayer_a1" name="ckplayer_a1" menu="false" width="512" height="288" type="application/x-shockwave-flash" data="http://www.adbug.cn/public/themes/adbug/js/ckplayer.swf"><param name="bgcolor" value="#FFF"><param name="wmode" value="opaque"><param name="allowFullScreen" value="true"><param name="allowScriptAccess" value="always"><param name="flashvars" value="f=http://file.adbug.cn/datasync/tudou/HG_2015_06_09_19_54_06.flv?=1&amp;c=0"></object>
-</div>
-</div>
-
-<script src="/js/webjs/sea.js"></script>
-<script src="/js/webjs/config.js"></script>
-<script src="/js/webjs/overlay-min.js"></script>
-<script src="/js/webjs/common.js"></script>
 <script type="text/javascript">
-	/* BUI.use('bui/overlay',function(Overlay){
-	    var dialog = new Overlay.Dialog({
-	        width:960,
-	        height:540,
-	        elCls : 'custom-dialog',
-	        contentId:'contentVideo',
-	        buttons : [],
-	        success:function () {
-                this.close();
-            }
-	    });
-	    $('#play-btn-arrow').on('click',function () {
-	        dialog.show();
-	    });
-	}); */
-	
-	$('#play-btn-arrow').on('click',function () {
-		alert("");
-        $('#contentVideo').show();
-    });
+	$("#open_video").fancybox({
+		'type'				: 'iframe',
+		'width'				: '75%',
+		'height'			: '75%'
+	});
 
 	function checkInput() {
 		$("#sign-up-screen-email").on('input',function(e){
@@ -89,7 +70,7 @@
 			} else {
 				$("#sign-up-screen-email-error").hide();
 			}
-		}); 
+		});
 		$("#sign-up-screen-pwd").on('input',function(e){
 			$("#signup-error-msg").hide();
 			var pwd = $("#sign-up-screen-pwd").val();

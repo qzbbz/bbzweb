@@ -24,4 +24,12 @@ public interface IAccounterService {
 	
 	public boolean addAccounter(Accounter accounter);
 	
+	public Map<String, List<Map<String, String>>> getAllCompanyExpense(String userId);
+	
+	public Map<String, List<Map<String, String>>> getCompanyExpenseByCompanyName(String userId, String companyName);
+	
+	public Map<String, String> accounterBelongToCompany(String userId);
+	
+	public Map<String, String> accounterHasFinishRegister(String userId);
+	
 }

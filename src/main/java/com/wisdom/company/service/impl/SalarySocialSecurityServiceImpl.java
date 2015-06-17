@@ -1,5 +1,7 @@
 package com.wisdom.company.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +40,11 @@ public class SalarySocialSecurityServiceImpl implements ISalarySocialSecuritySer
 	public boolean setTemplate(long companyId, String cityName, int type,
 			String templatePath) {
 		return salarySocialSecurityDao.setTemplate(companyId, cityName, type, templatePath);
+	}
+
+	@Override
+	public List<SalarySocialSecurity> getSSSByCompanyId(long companyId) {
+		return salarySocialSecurityDao.getSSSByCompanyId(companyId);
 	}
 
 }

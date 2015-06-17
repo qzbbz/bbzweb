@@ -60,11 +60,7 @@ public class UserValidateApiImpl implements IUserValidateApi {
 			if (userService.addUser(user)
 					&& userService.setUserPwdByUserId(
 							UserPwdMD5Encrypt.getPasswordByMD5Encrypt(userPwd),
-							userId)) {
-				if(userTypeId == 1) {
-					Accounter accounter = new Accounter(0L, userId, "", "", "", "", "", "", "", new Timestamp(System.currentTimeMillis()));
-					accounterService.addAccounter(accounter);
-				}
+							userId)) {				
 				retMap.put("error_code", "0");
 			} else {
 				retMap.put("error_code", "100");

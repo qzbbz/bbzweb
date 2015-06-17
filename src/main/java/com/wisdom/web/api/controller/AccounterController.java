@@ -3,6 +3,7 @@ package com.wisdom.web.api.controller;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,10 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.wisdom.accounter.service.IAccounterService;
 import com.wisdom.common.model.Accounter;
+import com.wisdom.common.model.SalarySocialSecurity;
 import com.wisdom.user.service.IUserService;
 import com.wisdom.web.utils.Base64Converter;
 import com.wisdom.web.utils.ErrorCode;
@@ -167,7 +173,60 @@ public class AccounterController {
 
 	@RequestMapping("/accounter/finishDeatilRegInfo")
 	public String finishDeatilRegInfo(HttpServletRequest request) {
-		return "redirect:/views/webviews/accounter/finish_reg_info.html";
+		return "redirect:/views/webviews/accounter/company_expense_records.html";
+	}
+	
+	@RequestMapping("/accounter/getAllCompanyExpense")
+	@ResponseBody
+	public Map<String, List<Map<String, String>>> getAllCompanyExpense(HttpServletRequest request) {
+		String userId = (String) request.getSession().getAttribute(
+				SessionConstant.SESSION_USER_ID);
+		return accounterService.getAllCompanyExpense(userId);
+	}
+	
+	@RequestMapping("/accounter/getCompanyExpenseByCompanyName")
+	@ResponseBody
+	public Map<String, List<Map<String, String>>> getCompanyExpenseByCompanyName(HttpServletRequest request) {
+		String userId = (String) request.getSession().getAttribute(
+				SessionConstant.SESSION_USER_ID);
+		String companyName = request.getParameter("companyName");
+		if(companyName == null || companyName.isEmpty()) return null;
+		return accounterService.getCompanyExpenseByCompanyName(userId, companyName);
+	}
+	
+	@RequestMapping("/accounter/accounterHasBelongToCompany")
+	@ResponseBody
+	public Map<String, String> accounterHasBelongToCompany(HttpServletRequest request) {
+		String userId = (String) request.getSession().getAttribute(
+				SessionConstant.SESSION_USER_ID);
+		return accounterService.accounterBelongToCompany(userId);
+	}
+	
+	@RequestMapping("/accounter/accounterHasFinishRegister")
+	@ResponseBody
+	public Map<String, String> accounterHasFinishRegister(HttpServletRequest request) {
+		String userId = (String) request.getSession().getAttribute(
+				SessionConstant.SESSION_USER_ID);
+		return accounterService.accounterHasFinishRegister(userId);
+	}
+	
+	@RequestMapping("/accounter/downloadCompanyExpense")
+	public ResponseEntity<byte[]> downloadCompanyExpense(HttpServletRequest request) {
+		String fileName = request.getParameter("fileName");
+		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/files/company");		
+		ResponseEntity<byte[]> re = null;
+		File file = new File(realPath + "/" + fileName);
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentDispositionFormData("attachment", new String(fileName.getBytes("UTF-8"), "iso-8859-1"));
+			headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+			re = new ResponseEntity<byte[]>(
+					FileUtils.readFileToByteArray(file), headers,
+					HttpStatus.CREATED);
+		} catch (IOException e) {
+			logger.debug("download exception : {}", e.toString());
+		}
+		return re;
 	}
 	
 	private String getGernarateFileName(MultipartFile file, String userId) {

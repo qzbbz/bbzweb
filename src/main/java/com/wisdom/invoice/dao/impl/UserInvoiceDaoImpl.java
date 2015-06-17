@@ -202,4 +202,19 @@ public class UserInvoiceDaoImpl implements IUserInvoiceDao {
 		return list;
 	}
 
+	@Override
+	public List<UserInvoice> getUserInvoiceByUserIdAndStatusAndApprovalStatus(
+			String userId, int status, int approvalStatus) {
+		List<UserInvoice> list = null;
+		try {
+			String sql = "select * from user_invoice where user_id = ? and status = ? and approval_status=?";
+			list = jdbcTemplate.query(sql, new Object[] { userId, status, approvalStatus },
+					new RowMapperResultSetExtractor<UserInvoice>(
+							new UserInvoiceMapper()));
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return list;
+	}
+
 }

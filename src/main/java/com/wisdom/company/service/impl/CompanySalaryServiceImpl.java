@@ -1,5 +1,7 @@
 package com.wisdom.company.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +28,11 @@ public class CompanySalaryServiceImpl implements ICompanySalaryService {
 	@Override
 	public boolean deleteCompanySalaryByCompanyId(long companyId) {
 		return companySalaryDao.deleteCompanySalaryByCompanyId(companyId);
+	}
+
+	@Override
+	public List<CompanySalary> getAllCompanySalary(long companyId) {
+		return companySalaryDao.getAllCompanySalary(companyId);
 	}
 
 }

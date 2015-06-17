@@ -1,5 +1,7 @@
 package com.wisdom.company.dao;
 
+import java.util.List;
+
 import com.wisdom.common.model.CompanySalary;
 
 public interface ICompanySalaryDao {
@@ -9,5 +11,7 @@ public interface ICompanySalaryDao {
 	public long addCompanySalary(CompanySalary companySalary);
 	
 	public boolean deleteCompanySalaryByCompanyId(long companyId);
+	
+	public List<CompanySalary> getAllCompanySalary(long companyId);
 	
 }

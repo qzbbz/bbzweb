@@ -590,4 +590,9 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		return invoiceDao.deleteInvoiceByInvoiceId(invoiceId);
 	}
 
+	@Override
+	public Invoice getInvoiceById(long id) {
+		return invoiceDao.getInvoiceById(id);
+	}
+
 }

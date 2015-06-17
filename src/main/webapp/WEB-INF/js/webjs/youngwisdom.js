@@ -200,10 +200,10 @@ angular.module('ywLanding')
 }])
 .controller('ywComments', ['$scope','t', function($scope, msg){
 	$scope.comments = [
-		{text: '没有青智唯嘉的帮助，不像在运营我自己的公司。'},
-		{text: '我从来没有遇到一个团队对记账服务如此热情，青智唯嘉轻松为我们解决了大问题。'},
-		{text: 'KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK。'},
-		{text: 'MMMMMMMMMMMMMMMMMMMMMMMMMM。'}
+		{text: '没有帮帮账的帮助，不像在运营我自己的公司。'},
+		{text: '我从来没有遇到一个团队对记账报税服务如此热情，帮帮账轻松为我们解决了大问题。'},
+		{text: '作为公司的创业者，我业务十分繁忙，帮帮账在财税方面提供给了我十分到位的帮助和支持。'},
+		{text: '我爱上了帮帮账，也推荐给了我身边创业的朋友。 我感到我的账本交给帮帮账十分放心。'}
 	];
 }])
 .controller('homeController', ['$scope','t', '$location', '$q', '$http', function($scope, msg, $location, $q, $http){

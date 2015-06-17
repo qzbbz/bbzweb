@@ -74,4 +74,10 @@ public class UserInvoiceServiceImpl implements IUserInvoiceService {
 		return userInvoiceDao.getInvoiceInfoByCondition(userId, date, submitter, amount, 
 				expenseType, page, pageSize);
 	}
+
+	@Override
+	public List<UserInvoice> getUserInvoiceByUserIdAndStatusAndApprovalStatus(
+			String userId, int status, int approvalStatus) {
+		return userInvoiceDao.getUserInvoiceByUserIdAndStatusAndApprovalStatus(userId, status, approvalStatus);
+	}
 }

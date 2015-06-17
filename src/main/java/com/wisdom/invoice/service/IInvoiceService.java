@@ -53,4 +53,6 @@ public interface IInvoiceService {
 	public Map submitUserInvoice(String userId,long invoiceId, Map<String, String> params);
 	
 	public boolean deleteInvoiceByInvoiceId(long invoiceId);
+	
+	public Invoice getInvoiceById(long id);
 }

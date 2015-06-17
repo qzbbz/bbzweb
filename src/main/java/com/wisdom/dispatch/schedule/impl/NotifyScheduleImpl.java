@@ -35,7 +35,7 @@ public class NotifyScheduleImpl implements NotifySchedule {
 	private final String subject = "您有一个新的要审批的报销单据!";
 	
 	//@Scheduled(cron="0/30 * * * * ?") //每30秒
-	@Scheduled(fixedDelay=30000) //每30秒
+	//@Scheduled(fixedDelay=30000) //每30秒
 	@Override
 	public void invoiceApprovalNotify() {
 		//查询一批记录

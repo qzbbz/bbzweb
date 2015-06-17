@@ -33,5 +33,9 @@ public interface ICompanyApi {
 	public List<CompanyOrgStructure> getOrgStructureData(String userId);
 	
 	public List<Map<String, String>> getAllCostCenterCode();
+	
+	public List<Map<String, String>> getSalaryTemplateHistory(long companyId);
+	
+	public List<Map<String, String>> getSalaryHistory(long companyId);
 		
 }

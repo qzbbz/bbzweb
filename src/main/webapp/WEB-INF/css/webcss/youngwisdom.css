@@ -483,14 +483,14 @@ p {
 .signin-page {
   boxing-sizing: border-box;
   color: white;
-  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%), url('../../img/webimg/brick.jpg');
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%), url('../../img/webimg/emily.png');
   background-color: #634F40;
   background-size: cover, cover;
   min-height: 100%;
 }
 .signin-page .background-people {
   min-height: 700px;
-  background-image: url('../../img/webimg/emily.png');
+  /* background-image: url('../../img/webimg/emily.png'); */
   background-size: 1176px 562px;
   background-position: bottom center;
   background-repeat: no-repeat;
@@ -603,14 +603,14 @@ p {
 .signup-page {
   boxing-sizing: border-box;
   color: white;
-  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%), url('../../img/webimg/wood.jpg');
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%), url('../../img/webimg/emily.png');
   background-color: #634F40;
   background-size: cover, cover;
   min-height: 100%;
 }
 .signup-page .background-people {
   min-height: 700px;
-  background-image: url('../../img/webimg/emily.png');
+  /* background-image: url('../../img/webimg/emily.png'); */
   background-size: 1176px 562px;
   background-position: bottom center;
   background-repeat: no-repeat;
@@ -1461,6 +1461,31 @@ button.down,
   border-bottom: 25px solid transparent;
   border-left: 40px solid #EF6D44;
   -moz-transform: scale(.9999);
+}
+
+.new-home__logos {
+  max-width: 68em;
+  padding: 1.5em 0;
+  margin: auto;
+}
+
+.new-home {
+  background-color: #FFF;
+  font-size: 15px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.new-home__logos__container {
+  display: block;
+  text-align: center;
+  padding-bottom: .8em;
+}
+
+.new-home__logos__logo {
+  vertical-align: middle;
+  height: 20px;
+  padding: 0 2.15em;
+  margin-bottom: 1em;
 }
 
 * {

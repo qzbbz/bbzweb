@@ -1,15 +1,19 @@
 package com.wisdom.company.dao.impl;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.stereotype.Repository;
 
+import com.wisdom.common.model.CostCenter;
 import com.wisdom.common.model.SalarySocialSecurity;
 import com.wisdom.company.dao.ISalarySocialSecurityDao;
+import com.wisdom.company.mapper.CostCenterMapper;
 import com.wisdom.company.mapper.SalarySocialSecurityMapper;
 
 @Repository("salarySocialSecurityDao")
@@ -128,6 +132,20 @@ public class SalarySocialSecurityDaoImpl implements ISalarySocialSecurityDao {
 		int affectedRows = jdbcTemplate.update(sql, templatePath, companyId, cityName, type);
 		logger.debug("updateDept result : {}", affectedRows);
 		return affectedRows != 0;
+	}
+
+	@Override
+	public List<SalarySocialSecurity> getSSSByCompanyId(long companyId) {
+		List<SalarySocialSecurity> list = null;
+		try {
+			String sql = "select * from sss where company_id=?";
+			list = jdbcTemplate.query(sql, new Object[]{companyId},
+					new RowMapperResultSetExtractor<SalarySocialSecurity>(
+							new SalarySocialSecurityMapper()));
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return list;
 	}
 
 }

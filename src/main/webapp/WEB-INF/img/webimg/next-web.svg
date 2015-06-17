@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 18.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 66.6 600 266.9" enable-background="new 0 66.6 600 266.9" xml:space="preserve">
+<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="346.4326" y1="235.1084" x2="380.6616" y2="254.8714" gradientTransform="matrix(1.3339 0 0 1.3339 0 -197.51)">
+	<stop  offset="0" style="stop-color:#B3B3B3"/>
+	<stop  offset="0.75" style="stop-color:#CCCCCC"/>
+</linearGradient>
+<path fill="url(#SVGID_1_)" d="M536,66.6l-29.3,86.6l-18-70.6c-4.1-16-9.3-16-12.4-16c0,0-6.5,0-13.2,1.9l-14.1,62.8l27.3,122.1
+	h54.7L600,66.6H536z"/>
+<linearGradient id="SVGID_2_" gradientUnits="userSpaceOnUse" x1="255.0401" y1="255.9376" x2="300.9901" y2="282.4666" gradientTransform="matrix(1.3339 0 0 1.3339 0 -197.51)">
+	<stop  offset="0" style="stop-color:#B3B3B3"/>
+	<stop  offset="0.75" style="stop-color:#CCCCCC"/>
+</linearGradient>
+<path fill="url(#SVGID_2_)" d="M397.9,153.4l-22.4-70.7c-4.8-15.1-11.7-16.1-15.9-16.1c0,0-7.9,0-16.1,1.9v109.8l29.3,75.1h8.5
+	l28.7-1.9L397.9,153.4L397.9,153.4z"/>
+<linearGradient id="SVGID_3_" gradientUnits="userSpaceOnUse" x1="321.45" y1="338" x2="321.45" y2="198" gradientTransform="matrix(1.3339 0 0 1.3339 0 -197.51)">
+	<stop  offset="0" style="stop-color:#CCCCCC"/>
+	<stop  offset="0.85" style="stop-color:#CCCCCC"/>
+	<stop  offset="0.95" style="stop-color:#E6E6E6"/>
+</linearGradient>
+<path fill="url(#SVGID_3_)" d="M476.2,66.6h-49.6c-3.7,0-13.5,0-16.3,16l-28.9,170.7h45.2l37.2-170.7
+	C467.4,66.6,475,66.6,476.2,66.6L476.2,66.6z"/>
+<linearGradient id="SVGID_4_" gradientUnits="userSpaceOnUse" x1="13.3504" y1="273.713" x2="140.6457" y2="251.2671" gradientTransform="matrix(1.3339 0 0 1.3339 0 -197.51)">
+	<stop  offset="0" style="stop-color:#CCCCCC"/>
+	<stop  offset="0.7" style="stop-color:#CCCCCC"/>
+	<stop  offset="1" style="stop-color:#B3B3B3"/>
+</linearGradient>
+<path fill="url(#SVGID_4_)" d="M175.4,68.5c0,0-8-1.9-16-1.9H0L19.7,120h49v133.4h53.4V120h53.4C175.4,120,175.4,68.5,175.4,68.5z"
+	/>
+<linearGradient id="SVGID_5_" gradientUnits="userSpaceOnUse" x1="194.55" y1="338" x2="194.55" y2="198" gradientTransform="matrix(1.3339 0 0 1.3339 0 -197.51)">
+	<stop  offset="0" style="stop-color:#CCCCCC"/>
+	<stop  offset="0.85" style="stop-color:#CCCCCC"/>
+	<stop  offset="0.95" style="stop-color:#E6E6E6"/>
+</linearGradient>
+<path fill="url(#SVGID_5_)" d="M308.8,66.6c-8.8,0-16,7.2-16,16V150l-57.6-72.8c-5.2-6.9-13.6-10.5-21.2-10.5h-54.6
+	c0,0,13.3,0,13.3,16v170.7h53.4V151.6l72.6,91.8c5.3,6.5,13.1,10,20.9,9.9h26.5V82.6c0-9.5,6-16,13.5-16L308.8,66.6L308.8,66.6z"/>
+<g>
+	<path fill="#B3B3B3" d="M32.4,333.4v-33.9H20v-7.6h33.9v7.6H41.5v33.9H32.4z M71.6,333.4v-41.5h9.1V308H97v-16.1h9.1v41.5H97v-17.7
+		H80.7v17.7C80.7,333.4,71.6,333.4,71.6,333.4z M126.9,333.4v-41.5h28.3v7.6h-19.1v8.9h13.9v7.2h-13.9v10.3h20.1v7.3L126.9,333.4
+		L126.9,333.4z M201.8,333.4v-41.5h9.1l17.3,26.4h0.1v-26.4h8.4v41.5h-8.4l-18.1-26.7h-0.1v26.7H201.8z M257.6,333.4v-41.5h28.3v7.6
+		h-19.1v8.9h13.9v7.2h-13.9v10.3h20v7.3L257.6,333.4L257.6,333.4z M302.8,333.4l13.3-21.9L304,291.9h10.4l7.3,12.4l6.9-12.4h9.5
+		l-11.9,19.6l13.5,21.9h-10.1l-8.8-14.5l-8.5,14.5H302.8z M367.4,333.4v-33.9h-12.3v-7.6H389v7.6h-12.4v33.9H367.4z M441.9,333.4
+		l-11.1-41.5h9.2l4.4,18.9c1.1,3.9,1.7,6.8,2,9.1h0.1c0.3-2.1,0.9-5.1,1.9-9.1l4.1-18.9h8.4l4.5,19.1c1.1,4.8,1.7,7.7,2,8.9h0.1
+		c0.3-1.6,0.8-4.5,1.9-8.8l4.1-19.2h8.4l-10.8,41.5h-7.7l-6.5-28.8h-0.1l-6.9,28.8H441.9L441.9,333.4z M499.7,333.4v-41.5H528v7.6
+		h-19.1v8.9h13.9v7.2h-13.9v10.3H529v7.3L499.7,333.4L499.7,333.4z M547.3,333.4v-41.5h16.5c9.9,0,14.8,3.5,14.8,10.3
+		c0,2.8-0.8,4.9-2.3,6.5c-1.5,1.6-3.3,2.5-5.7,3.1v0.1c6,1.1,9.1,4.4,9.1,10.1c0,3.9-1.5,6.8-4.3,8.7c-2.9,1.9-6.4,2.8-10.8,2.8
+		L547.3,333.4L547.3,333.4z M556.4,309h6.7c4.7,0,6.9-1.6,6.9-4.9c0-3.3-2.3-5.1-6.8-5.1h-6.8V309z M556.4,326.5h7.3
+		c4.8,0,7.3-1.9,7.3-5.6c0-3.6-2.5-5.5-7.7-5.5h-6.9V326.5z"/>
+</g>
+</svg>

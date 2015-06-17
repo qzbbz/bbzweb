@@ -16,8 +16,8 @@ angular.module('ywLanding')
 }])
 .controller('ywComments', ['$scope','t', function($scope, msg){
 	$scope.comments = [
-		{text: '没有青智唯嘉的帮助，不像在运营我自己的公司。'},
-		{text: '我从来没有遇到一个团队对记账服务如此热情，青智唯嘉轻松为我们解决了大问题。'}
+		{text: '没有帮帮账的帮助，不像在运营我自己的公司。'},
+		{text: '我从来没有遇到一个团队对记账报税服务如此热情，帮帮账轻松为我们解决了大问题。'}
 	];
 }])
 .controller('homeController', ['$scope','t', '$location', '$q', function($scope, msg, $location, $q){

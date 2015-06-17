@@ -596,4 +596,36 @@ public class CompanyApiImpl implements ICompanyApi {
 		}
 		return retList;
 	}
+
+	@Override
+	public List<Map<String, String>> getSalaryTemplateHistory(long companyId) {
+		List<SalarySocialSecurity> sssList = salarySocialSecurityService.getSSSByCompanyId(companyId);
+		List<Map<String, String>> retList = new ArrayList<>();
+		String companyName = companyService.getCompanyName(companyId);
+		for(SalarySocialSecurity salarySocialSecurity : sssList) {
+			Map<String, String> map = new HashMap<>();
+			map.put("date", salarySocialSecurity.getCreateTime().toString().substring(0, 10));
+			map.put("companyName", companyName);
+			map.put("cityName", salarySocialSecurity.getCityName());
+			map.put("type", salarySocialSecurity.getRegistryType() == 0?"城镇户籍" : "农村户籍");
+			retList.add(map);
+		}
+		return retList;
+	}
+
+	@Override
+	public List<Map<String, String>> getSalaryHistory(long companyId) {
+		List<CompanySalary> salaryList = companySalaryService.getAllCompanySalary(companyId);
+		List<Map<String, String>> retList = new ArrayList<>();
+		String companyName = companyService.getCompanyName(companyId);
+		for(CompanySalary companySalary : salaryList) {
+			Map<String, String> map = new HashMap<>();
+			map.put("id", String.valueOf(companySalary.getId()));
+			map.put("date", companySalary.getCreateTime().toString().substring(0, 10));
+			map.put("companyName", companyName);
+			map.put("fileName", companySalary.getSalaryFile());
+			retList.add(map);
+		}
+		return retList;
+	}
 }

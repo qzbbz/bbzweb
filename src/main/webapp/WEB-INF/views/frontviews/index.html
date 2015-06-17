@@ -7,8 +7,10 @@
 		<link rel="stylesheet" type="text/css" href="../../css/webcss/normalize.css">
 		<link rel="stylesheet" type="text/css" href="../../css/webcss/bootstrap.css">
 		<link rel="stylesheet" type="text/css" href="../../css/webcss/youngwisdom.css">
+		<link rel="stylesheet" type="text/css" href="../../css/webcss/jquery.fancybox-1.3.4.css">
 		<script type="text/javascript" src="../../js/webjs/main.page.utils.js"></script>
-		<script type="text/javascript" src="../../js/webjs/jquery-1.11.1.js"></script>
+		<!-- <script type="text/javascript" src="../../js/webjs/jquery-1.11.1.js"></script> -->
+		<script type="text/javascript" src="../../js/webjs/jquery-1.8.1.min.js"></script>
 		<script type="text/javascript" src="../../js/webjs/modernizr.custom.87166.js"></script>
 		<script type="text/javascript" src="../../js/webjs/angularjs/angular.min.js"></script>
 		<script type="text/javascript" src="../../js/webjs/angularjs/angular-route.min.js"></script>
@@ -18,6 +20,10 @@
 		<script type="text/javascript" src="../../js/webjs/TweenMax.min.js"></script>
 		<script type="text/javascript" src="../../js/webjs/greensock/ScrollToPlugin.min.js"></script>
 		<script type="text/javascript" src="../../js/webjs/youngwisdom.js"></script>
+		<script src="/js/webjs/jquery.easing-1.3.pack.js"></script>
+		<script src="/js/webjs/jquery.fancybox-1.3.4.js"></script>
+		<script src="/js/webjs/jquery.fancybox-1.3.4.pack.js"></script>
+		<script src="/js/webjs/jquery.mousewheel-3.0.4.pack.js"></script>
 	</head>
 	<body ng-controller="main" yw-main >
 		<div class="header" ng-hide="hideHeader">
@@ -25,10 +31,10 @@
 			<div class="nav">
 				<a class="yw-link" href="/#/">{{t.home_page}}</a>
 				<a class="yw-link" href="/#/feature" >{{t.feature}}</a>
-				<a yw-button href="/#/signup" >{{t.signup}}</a>
 				<!-- <a class="yw-link" href="/#/community" >{{t.community}}</a> -->
 				<a class="yw-link" href="/#/signin" >{{t.signin}}</a>
 				<a class="yw-link" href="/#/team" >{{t.team}}</a>
+				<a yw-button href="/#/signup" >{{t.signup}}</a>
 			</div>
 		</div>
 		<div ng-view class="lj-view yw-animation"></div>
@@ -39,7 +45,7 @@
 			</span><span class="right">
 				<span class="col"><i class="glyphicon glyphicon-home"></i>
 					<div class="feature-info">
-							中国上海市徐汇区
+							中国上海市杨浦区
 					</div>
 				</span><span class="col"><i
 					class="glyphicon glyphicon-phone"></i>
@@ -49,7 +55,7 @@
 				</span><span class="col"><i
 					class="glyphicon glyphicon-envelope"></i>
 					<div class="feature-info">
-							info@youngwisdom.com.cn
+							info@bangbangzhang.com
 					</div>
 				</span>
 			</span>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>上海元升财务咨询有限公司</title>
+    <link rel="stylesheet" type="text/css" href="/css/webcss/bui.css">
+	<link rel="stylesheet" type="text/css" href="/css/webcss/golbal.css">
+	<link rel="stylesheet" type="text/css" href="/css/webcss/layout.css">
+</head>
+<body>
+	<div class="wrap">
+		<div class="side-bar">
+			<div class="side-bar-top">
+				<img src="/img/webimg/bss-logo.png" >
+				<h1>上海元升财务咨询有限公司</h1>
+			</div>
+            <div class="side-bar-content" id="menuTree"></div>
+			<div class="side-bar-bottom">
+				<ul>
+					<li><a href=""><i class="setting"></i>设置</a></li>
+					<li><a href="/logout"><i class="exit"></i>安全退出</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="main">
+			<div class="menu"><a href="#" class="active">公司资产负债表</a></div>
+			<div id="canvas"></div>
+		</div>
+	</div>
+	<div id="register_chat" class="zopim" __jx__id="___$_22 ___$_22" style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px; padding: 0px; border: 0px; overflow: hidden; position: fixed; z-index: 16000002; width: 180px; height: 30px; right: 10px; bottom: 0px; background: transparent;"><iframe id="frameChat" frameborder="0" src="/other/chat.html" style="vertical-align: text-bottom; position: relative; width: 100%; height: 100%; margin: 0px; overflow: hidden; background-color: transparent;"></iframe></div>
+<!--该js需要修改js路径及修改seajs路径-->
+<script src="http://g.tbcdn.cn/fi/bui/jquery-1.8.1.min.js"></script>
+<script src="http://g.alicdn.com/bui/seajs/2.3.0/sea.js"></script>
+<script src="http://g.alicdn.com/bui/bui/1.1.17/config.js"></script>
+<script src="/js/webjs/menuTree.js"></script>
+<script src="http://g.tbcdn.cn/bui/acharts/1.0.25/acharts-min.js"></script>
+<script type="text/javascript">
+function changeHeight(width, height){
+	$('#register_chat').height(height);$('#register_chat').width(width) 
+}
+function showChatDlg() {
+	var topWin = window.top.document.getElementById("frameChat").contentWindow;
+	topWin.document.getElementById("chat_small").click();
+}
+var chart = new AChart({
+    theme : AChart.Theme.Smooth4,
+    id : 'canvas',
+    width : 950,
+    height : 500,
+    plotCfg : {
+      margin : [50,50,80] //画板的边距
+    },
+    xAxis : {
+      categories : ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月']
+    },
+    seriesOptions : { //设置多个序列共同的属性
+      lineCfg : { //不同类型的图对应不同的共用属性，lineCfg,areaCfg,columnCfg等，type + Cfg 标示
+        smooth : true
+      }
+    },
+    tooltip : {
+      valueSuffix : '°C'/*,
+      shared : true, //是否多个数据序列共同显示信息
+      crosshairs : true //是否出现基准线
+      */
+    },
+    series : [{
+        name: 'Tokyo',
+        data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
+    }, {
+        name: 'London',
+        data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
+    }, {
+        name: 'Sahnghai',
+        data: [17.0, 16.9, 19.5, 24.5, 28.2, 31.5, 35.2, 36.5, 33.3, 28.3, 23.9, 19.6]
+    }]
+  });
+
+  chart.render();
+	//侧栏高度
+    (function(){
+        var H=$(window).height();
+        var h1=$(".side-bar-top").height()+$(".side-bar-bottom").height();
+        $(".side-bar-content").height(H-h1);
+        $(window).resize(function(){
+            H=$(window).height();
+            $(".side-bar-content").height(H-h1);
+        });
+    })()
+	//竖状菜单
+	//竖状菜单
+        var menu = new menuTree(
+            {"nodes" : [
+					{text : '公司发票',id : '10',href:"javascript:void(0);",  expanded : false,children: [
+						{text : '发票上传',id : '11', href:"/views/webviews/company/expense_account_upload.html"},
+						{text : '发票历史记录',id : '12', href:"/views/webviews/company/expense_account_history.html"}                                           
+					]},
+					{text : '银行对账单',id : '20',href:"javascript:void(0);", expanded : false,children: [
+						{text : '上传对账单',id : '21', href:"/views/webviews/company/bank_statement_upload.html"},
+						{text : '对账单历史记录',id : '22', href:"/views/webviews/company/bank_statement_history.html"}                                           
+					]},
+					{text : '工资社保',id : '30',href:"javascript:void(0);", expanded : false,children: [
+						{text : '参数设置',id : '31', href:"/views/webviews/company/salary_welfare_args_settings.html"},
+						{text : '下载工资计算模板',id : '32', href:"/views/webviews/company/salary_welfare_template_download.html"},                                           
+						{text : '上传本月工资',id : '33', href:"/views/webviews/company/salary_welfare_upload.html"},
+						{text : '工资历史记录',id : '34', href:"/views/webviews/company/salary_history.html"},
+						{text : '工资计算模板历史记录',id : '35', href:"/views/webviews/company/salary_template_history.html"}
+					]},
+					{text : '预约取发票',id : '40',href:"javascript:void(0);", expanded : false,children: [
+						{text : '方式选择',id : '41', href:"/views/webviews/company/take_expense_account_mode_select.html"}                                           
+					]},
+					{text : '组织架构',id : '50',href:"javascript:void(0);",  expanded : false,children: [
+						{text : '基本信息设置',id : '51', href:"/views/webviews/company/organization_information_settings.html"},
+						{text : '组织架构设置',id : '52', href:"/views/webviews/company/organization_structure_settings.html"}                                           
+					]},
+					{text : '基本报表',id : '70',href:"javascript:void(0);",  expanded : true,children: [
+					                                                          						{text : '资产负债表',id : '71', href:"/views/webviews/company/sheet_balance.html"},
+					                                                          						{text : '利润表',id : '72', href:"/views/webviews/company/sheet_income.html"},
+					                                                          						{text : '现金流量表',id : '73', href:"/views/webviews/company/sheet_cash.html"}
+					                                                          					]},
+					{text : '会计点将',id : '60',href:"/views/webviews/company/select_accounter.html",  leaf:false,expanded : false,children: []},
+					]
+            },"menuTree"
+        );
+    defaultSelect("71");
+    function defaultSelect(id){ 
+        $("#"+id).parent().addClass("bui-menu-item-selected")
+    }
+</script>
+</body>
+</html>

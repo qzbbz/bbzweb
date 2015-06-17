@@ -18,6 +18,18 @@ import com.wisdom.common.model.Accounter;
 import com.wisdom.common.model.AccounterCareer;
 import com.wisdom.common.model.AccounterCertificate;
 import com.wisdom.common.model.AccounterIndustry;
+import com.wisdom.common.model.CompanyBankSta;
+import com.wisdom.common.model.CompanyBill;
+import com.wisdom.common.model.CompanySalary;
+import com.wisdom.common.model.Invoice;
+import com.wisdom.common.model.User;
+import com.wisdom.common.model.UserInvoice;
+import com.wisdom.company.dao.ICompanyBankStaDao;
+import com.wisdom.company.dao.ICompanyBillDao;
+import com.wisdom.company.service.ICompanySalaryService;
+import com.wisdom.company.service.ICompanyService;
+import com.wisdom.invoice.service.IInvoiceService;
+import com.wisdom.invoice.service.IUserInvoiceService;
 import com.wisdom.user.service.IUserService;
 
 @Service("accounterService")
@@ -37,6 +49,24 @@ public class AccounterServiceImpl implements IAccounterService {
 	
 	@Autowired
 	private IUserService userService;
+	
+	@Autowired
+	private ICompanyBankStaDao companyBankStaDao;
+	
+	@Autowired
+	private ICompanyBillDao companyBillDao;
+	
+	@Autowired
+	private ICompanySalaryService companySalaryService;
+	
+	@Autowired
+	private IUserInvoiceService userInvoiceService;
+	
+	@Autowired
+	private IInvoiceService invoiceService;
+	
+	@Autowired
+	private ICompanyService companyService;
 
 	@Override
 	public Map<Long, String> getAllAccounterCareer() {
@@ -142,6 +172,96 @@ public class AccounterServiceImpl implements IAccounterService {
 	@Override
 	public boolean addAccounter(Accounter accounter) {
 		return accounterDao.addAccounter(accounter);
+	}
+
+	@Override
+	public Map<String, List<Map<String, String>>> getAllCompanyExpense(String userId) {
+		Map<String, List<Map<String, String>>> retMap = new HashMap<>();
+		retMap.put("companyExpense", new ArrayList<>());
+		retMap.put("companyInvoice", new ArrayList<>());
+		User user = userService.getUserByUserId(userId);
+		if(user != null && user.getCompanyId() != -1) {
+			long companyId = user.getCompanyId();
+			String companyName = companyService.getCompanyName(companyId);
+			List<CompanyBill> companyBillList = companyBillDao.getAllCompanyBill(companyId);
+			if(companyBillList != null) {
+				for(CompanyBill bill : companyBillList) {
+					Map<String, String> map = new HashMap<>();
+					map.put("date", bill.getCreateTime().toString().substring(0, 10));
+					map.put("file", bill.getFileName());
+					map.put("companyName", companyName);
+					retMap.get("companyExpense").add(map);
+				}
+			}
+			List<CompanyBankSta> companyBankStaList = companyBankStaDao.getAllCompanyBankSta(companyId);
+			if(companyBankStaList != null ) {
+				for(CompanyBankSta bankSta : companyBankStaList) {
+					Map<String, String> map = new HashMap<>();
+					map.put("date", bankSta.getCreateTime().toString().substring(0, 10));
+					map.put("file", bankSta.getFileName());
+					map.put("companyName", companyName);
+					retMap.get("companyExpense").add(map);
+				}
+			}
+			List<CompanySalary> companySalaryList = companySalaryService.getAllCompanySalary(companyId);
+			if(companySalaryList != null) {
+				for(CompanySalary companySalary : companySalaryList) {
+					Map<String, String> map = new HashMap<>();
+					map.put("date", companySalary.getCreateTime().toString().substring(0, 10));
+					map.put("file", companySalary.getSalaryFile());
+					map.put("companyName", companyName);
+					retMap.get("companyExpense").add(map);
+				}
+			}
+			List<User> userList = userService.getUserListByCompanyId(companyId);
+			if(userList != null) {
+				for(User companyUser : userList) {
+					List<UserInvoice> userInvoiceList = userInvoiceService.getUserInvoiceByUserIdAndStatusAndApprovalStatus(companyUser.getUserId(), 1, 0);
+					if(userInvoiceList != null) {
+						for(UserInvoice userInvoice : userInvoiceList) {
+							Map<String, String> map = new HashMap<>();
+							map.put("date", userInvoice.getUpdateTime().toString().substring(0, 10));
+							Invoice invoice = invoiceService.getInvoiceById(userInvoice.getInvoiceId());
+							map.put("amount", String.valueOf(invoice.getAmount()));
+							map.put("companyName", companyName);
+							retMap.get("companyInvoice").add(map);
+						}
+					}
+				}
+			}
+		}
+		return retMap;
+	}
+
+	@Override
+	public Map<String, List<Map<String, String>>> getCompanyExpenseByCompanyName(String userId,
+			String companyName) {
+		
+		return null;
+	}
+
+	@Override
+	public Map<String, String> accounterBelongToCompany(String userId) {
+		Map<String, String> retMap = new HashMap<>();
+		User user = userService.getUserByUserId(userId);
+		if(user == null || user.getTypeId() != 1 || user.getCompanyId() == -1) {
+			retMap.put("hasBind", "false");
+		} else {
+			retMap.put("hasBind", "true");
+		}
+		return retMap;
+	}
+
+	@Override
+	public Map<String, String> accounterHasFinishRegister(String userId) {
+		Map<String, String> retMap = new HashMap<>();
+		Accounter accounter = accounterDao.getAccounterByUserId(userId);
+		if(accounter == null) {
+			retMap.put("hasFinishRegister", "false");
+		} else {
+			retMap.put("hasFinishRegister", "true");
+		}
+		return retMap;
 	}
 
 }

@@ -45,6 +45,7 @@
 			</div>
 		</div>
 	</div>
+	<div id="register_chat" class="zopim" __jx__id="___$_22 ___$_22" style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px; padding: 0px; border: 0px; overflow: hidden; position: fixed; z-index: 16000002; width: 180px; height: 30px; right: 10px; bottom: 0px; background: transparent;"><iframe id="frameChat" frameborder="0" src="/other/chat.html" style="vertical-align: text-bottom; position: relative; width: 100%; height: 100%; margin: 0px; overflow: hidden; background-color: transparent;"></iframe></div>
 	<!--该js需要修改js路径及修改seajs路径-->
 	<script src="http://g.tbcdn.cn/fi/bui/jquery-1.8.1.min.js"></script>
 	<script src="http://g.alicdn.com/bui/seajs/2.3.0/sea.js"></script>
@@ -52,6 +53,13 @@
 	<script src="/js/webjs/menuTree.js"></script>
 	<script src="/js/webjs/layout.js"></script>
 	<script type="text/javascript">
+	function changeHeight(width, height){
+		$('#register_chat').height(height);$('#register_chat').width(width) 
+	}
+	function showChatDlg() {
+		var topWin = window.top.document.getElementById("frameChat").contentWindow;
+		topWin.document.getElementById("chat_small").click();
+	}
 		function submitUpload() {
 			if($('#salaryFile').val() == null || $('#salaryFile').val() == '') {
 				BUI.use(['bui/overlay'], function(Overlay){
@@ -88,7 +96,9 @@
 					{text : '工资社保',id : '30',href:"javascript:void(0);", expanded : true,children: [
 						{text : '参数设置',id : '31', href:"/views/webviews/company/salary_welfare_args_settings.html"},
 						{text : '下载工资计算模板',id : '32', href:"/views/webviews/company/salary_welfare_template_download.html"},                                           
-						{text : '上传本月工资',id : '33', href:"/views/webviews/company/salary_welfare_upload.html"}
+						{text : '上传本月工资',id : '33', href:"/views/webviews/company/salary_welfare_upload.html"},
+						{text : '工资历史记录',id : '34', href:"/views/webviews/company/salary_history.html"},
+						{text : '工资计算模板历史记录',id : '35', href:"/views/webviews/company/salary_template_history.html"}
 					]},
 					{text : '预约取发票',id : '40',href:"javascript:void(0);", expanded : false,children: [
 						{text : '方式选择',id : '41', href:"/views/webviews/company/take_expense_account_mode_select.html"}                                           
@@ -97,6 +107,11 @@
 						{text : '基本信息设置',id : '51', href:"/views/webviews/company/organization_information_settings.html"},
 						{text : '组织架构设置',id : '52', href:"/views/webviews/company/organization_structure_settings.html"}                                           
 					]},
+					{text : '基本报表',id : '70',href:"javascript:void(0);",  expanded : false,children: [
+					                                                          						{text : '资产负债表',id : '71', href:"/views/webviews/company/sheet_balance.html"},
+					                                                          						{text : '利润表',id : '72', href:"/views/webviews/company/sheet_income.html"},
+					                                                          						{text : '现金流量表',id : '73', href:"/views/webviews/company/sheet_cash.html"}
+					                                                          					]},
 					{text : '会计点将',id : '60',href:"/views/webviews/company/select_accounter.html",  leaf:false,expanded : false,children: []},
 					]
             },"menuTree"

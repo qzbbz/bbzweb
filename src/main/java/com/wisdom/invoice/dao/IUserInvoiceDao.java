@@ -9,6 +9,8 @@ public interface IUserInvoiceDao {
 
 	public List<UserInvoice> getUserInvoiceByUserId(String userId);
 	
+	public List<UserInvoice> getUserInvoiceByUserIdAndStatusAndApprovalStatus(String userId, int status, int approvalStatus);
+	
 	public UserInvoice getUserInvoiceByInvoiceId(long invoiceId);
 	public UserInvoice getUserInvoiceByUserIdAndInvoiceId(String userId,long invoiceId);
 	
