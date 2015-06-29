@@ -105,4 +105,18 @@ public class CompanyDaoImpl implements ICompanyDao {
 		return list;
 	}
 
+	@Override
+	public List<Company> getAllCompany() {
+		List<Company> list = null;
+		try {
+			String sql = "select * from company";
+			list = jdbcTemplate.query(sql,
+					new RowMapperResultSetExtractor<Company>(
+							new CompanyMapper()));
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return list;
+	}
+
 }

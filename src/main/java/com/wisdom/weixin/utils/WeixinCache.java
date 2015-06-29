@@ -35,7 +35,7 @@ public class WeixinCache {
 	}
 
 	private static void getJsTicketFromWeixinServer() {
-		String url = WeixinConstEnum.TEST_JS_TICKET_URL.toString();
+		String url = WeixinConstEnum.COMPANY_JS_TICKE_TURL.toString();
 		url = url.replace("ACCESSTOKEN", getAccessToken());
 		Map<Object, Object> map = WeixinTools.httpGet(url);
 		if (map != null && map.containsKey("ticket")
@@ -50,10 +50,10 @@ public class WeixinCache {
 	}
 
 	private static void getAccessTokenFromWeixinServer() {
-		String url = WeixinConstEnum.TEST_ACCESS_TOKEN_URL.toString();
-		url = url.replace("APPID", WeixinConstEnum.TEST_APP_ID.toString())
+		String url = WeixinConstEnum.COMPANY_ACCESS_TOKEN_URL.toString();
+		url = url.replace("APPID", WeixinConstEnum.COMPANY_APP_ID.toString())
 				.replace("APPSECRET",
-						WeixinConstEnum.TEST_APP_SECRET.toString());
+						WeixinConstEnum.COMPANY_APP_SECRET.toString());
 		Map<Object, Object> map = WeixinTools.httpGet(url);
 		if (map != null && map.containsKey("access_token")
 				&& map.containsKey("expires_in")) {

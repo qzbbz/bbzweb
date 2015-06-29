@@ -49,14 +49,17 @@ public class CompanyBankStaDaoImpl implements ICompanyBankStaDao {
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {  
 	        public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {  
-	        	String sql = "insert into company_bank_sta (company_id, date, file_name, identify_status, create_time)"
-	    				+ " values (?, ?, ?, ?, ?)";
+	        	String sql = "insert into company_bank_sta (company_id, date, ide_name, ide_bank_name, ide_account, file_name, identify_status, create_time)"
+	    				+ " values (?, ?, ?, ?, ?,?,?,?)";
 	               PreparedStatement ps = connection.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);  
 	               ps.setLong(1, companyBankSta.getCompanyId() == null ? 0 : companyBankSta.getCompanyId());  
-	               ps.setString(2, companyBankSta.getDate() == null ? "" : companyBankSta.getDate());  
-	               ps.setString(3, companyBankSta.getFileName() == null ? "" : companyBankSta.getFileName());
-	               ps.setInt(4, companyBankSta.getIdentifyStatus() == null ? 0: companyBankSta.getIdentifyStatus());
-	               ps.setTimestamp(5, companyBankSta.getCreateTime() == null ? new Timestamp(System.currentTimeMillis()) : companyBankSta.getCreateTime());
+	               ps.setString(2, companyBankSta.getDate() == null ? "" : companyBankSta.getDate());
+	               ps.setString(3, companyBankSta.getIdeName() == null ? "" : companyBankSta.getIdeName());
+	               ps.setString(4, companyBankSta.getIdeBankName() == null ? "" : companyBankSta.getIdeBankName());
+	               ps.setString(5, companyBankSta.getIdeAccount() == null ? "" : companyBankSta.getIdeAccount());
+	               ps.setString(6, companyBankSta.getFileName() == null ? "" : companyBankSta.getFileName());
+	               ps.setInt(7, companyBankSta.getIdentifyStatus() == null ? 0: companyBankSta.getIdentifyStatus());
+	               ps.setTimestamp(8, companyBankSta.getCreateTime() == null ? new Timestamp(System.currentTimeMillis()) : companyBankSta.getCreateTime());
 	               return ps;  
 	        }  
 	    }, keyHolder);

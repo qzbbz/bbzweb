@@ -25,6 +25,7 @@ import com.wisdom.company.service.IDeptService;
 import com.wisdom.user.domain.UserInfo;
 import com.wisdom.user.service.IUserDeptService;
 import com.wisdom.user.service.IUserService;
+import com.wisdom.web.api.IGenerateCostCenterEncodeApi;
 import com.wisdom.common.model.UserDept;
 
 import javax.servlet.http.HttpServletRequest;
@@ -44,6 +45,9 @@ public class ArchSetController {
 
 	@Autowired
 	private IUserDeptService userDeptService;
+	
+	@Autowired
+	private IGenerateCostCenterEncodeApi generateCostCenterEncodeApi;
 
 	@ResponseBody
 	@RequestMapping("/company/addDept")
@@ -53,6 +57,8 @@ public class ArchSetController {
 		String companyId = request.getParameter("companyId");
 		String parentId = request.getParameter("curDeptId");
 		String level = request.getParameter("level");
+		String deptCostEncode = request.getParameter("deptCostEncode");
+		String parentCostCenterEncode = request.getParameter("parentCostCenterEncode");
 
 		if (StringUtils.isEmpty(deptName)) {
 			result.setResultCode(ResultCode.paramError.code);
@@ -78,11 +84,15 @@ public class ArchSetController {
 		Dept dept = new Dept();
 		try {
 			dept.setCompanyId(Long.parseLong(companyId));
-
-			dept.setCostCenterEncode(0L);// TODO
 			dept.setLevel(Integer.parseInt(level) + 1); // 添加子部门时，level + 1
 			dept.setName(deptName);
 			dept.setParentId(Long.parseLong(parentId));
+			if(deptCostEncode == null || deptCostEncode.isEmpty()) {
+				String encode = generateCostCenterEncodeApi.generateCostCenterEncode(parentCostCenterEncode);
+				dept.setCostCenterEncode(Long.valueOf(0L));//TODO
+			} else {
+				dept.setCostCenterEncode(Long.valueOf(deptCostEncode));
+			}
 		} catch (NumberFormatException e) {
 			logger.error("convert parameter error");
 			e.printStackTrace();

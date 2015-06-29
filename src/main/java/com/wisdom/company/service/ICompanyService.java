@@ -23,4 +23,6 @@ public interface ICompanyService {
 	public Company getCompanyByCompanyId(Long id);
 	
 	public Result delCompany(long companyId);
+	
+	List<Company> getAllCompany();
 }

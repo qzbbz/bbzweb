@@ -113,6 +113,11 @@ public class CompanyServiceImpl implements ICompanyService {
 		result.setResultCode(ResultCode.success.code);
 		return result;
 	}
+
+	@Override
+	public List<Company> getAllCompany() {
+		return companyDao.getAllCompany();
+	}
 	
 	
 }

@@ -17,5 +17,7 @@ public interface ICompanyDao {
 	public boolean updateCompanyName(String companyName, long companyId);
 	
 	List<Company> getSubCompanyListByCompanyId(long companyId);
+	
+	List<Company> getAllCompany();
 		
 }

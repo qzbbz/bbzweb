@@ -290,6 +290,10 @@
 		var topWin = window.top.document.getElementById("frameChat").contentWindow;
 		topWin.document.getElementById("chat_small").click();
 	}
+	
+	var store = null;
+	var tree = null;
+	
 	//竖状菜单
     var menu = new menuTree(
             {"nodes" : [
@@ -340,7 +344,7 @@
     		$.ajax({
         		url : '/company/addDept',
         		type : "POST",
-        		data : {deptName:oneLevelDeptSelectName,curDeptId:0,level:0,companyId:companyId},
+        		data : {deptName:oneLevelDeptSelectName,deptCostEncode:oneLevelDeptSelectCostCenterEncode, curDeptId:0,level:0,companyId:companyId},
         		success : function(data) {
         			if(data == null || data == '' || data.resultCode == null || data.resultCode != '0') {
         				//alert('出错');
@@ -402,7 +406,7 @@
     		$.ajax({
         		url : '/company/addDept',
         		type : "POST",
-        		data : {deptName:newDeptName,curDeptId:item.id,level:item.level,companyId:companyId},
+        		data : {deptName:newDeptName,parentCostCenterEncode:item.costCenter,curDeptId:item.id,level:item.level,companyId:companyId},
         		success : function(data) {
         			if(data == null || data == '' || data.resultCode == null || data.resultCode != '0') {
         				//alert('出错');
@@ -415,7 +419,7 @@
     	})
     	$('#modifyDeptName').click(function(){
     		var item = tree.getSelected();
-    		if(item.level != null && item.level == '1') {
+    		if((item.level != null && item.level == '1') || (item.level != null && item.level == '2' && item.parent.typeIsSubCompany)) {
     			BUI.Message.Alert('一级部门名称不允许修改！','warning');
     			return;
     		} else if($('#newModifyDeptName').val() == null || $('#newModifyDeptName').val() == '') {
@@ -655,6 +659,76 @@
     			$('#addOneLevelDeptOrSubCompany').show();
     			$('#deleteSubCompany').addClass("disabled");
     			$('#currentSelectSubComapny').val(headCompanyName);
+    			//数据缓冲类
+    	        store = new Data.TreeStore({
+    	            root : {
+    	              id : headCompanyId,
+    	              text : headCompanyName
+    	            },
+    	            url : '/company/getOrgStructureData',
+    	            autoLoad : true
+    	          });
+    	          
+    	        tree = new Tree.TreeList({
+    	          render : '#t1',
+    	          showLine : true,
+    	          height:300,
+    	          store : store,
+    	          showRoot : true
+    	        });
+    	        tree.render();
+    	        var item = tree.getItem(headCompanyId);
+    	        tree.setSelected(item);
+    	        tree.on('itemclick',function(ev){
+    	        	currentSelectOrg = ev.item.id;
+    	        	if(ev.item.typeIsDept) {
+    	        		$('#addDeptUser').removeClass('disabled');
+    	        		$('#addOneLevelDeptOrSubCompany').hide();
+    	        		$('#addSubDept').show();
+    	        		$('#currentSelectDept').val(ev.item.text);
+    	        		$('#dept_user_dept_name').val(ev.item.text);
+    	        		$('#dept_user_dept_id').val(ev.item.id);
+    	        		$('#deptUserList').html("");
+    	        		$.ajax({
+    	            		url : '/company/queryUserByDeptId',
+    	            		type : "POST",
+    	            		async: false,
+    	            		data : {deptId:ev.item.id, deptName:ev.item.text},
+    	            		success : function(data) {
+    	            			if(data == null || data == '') return;
+    	            			createDataList(data);
+    	            		}
+    	            	});
+    	        	} else {
+    	        		$('#addDeptUser').addClass('disabled');
+    	        		$('#addOneLevelDeptOrSubCompany').show();
+    	        		$('#addSubDept').hide();
+    	        	}
+    	        	if(ev.item.typeIsSubCompany) {
+    	        		$('#company_name').html(ev.item.text);
+    	        		$('#parent_company').html(headCompanyName);
+    	        		$('#org_type').html('分公司');
+    	        		$('#org_name').html(ev.item.text);
+    	        		$('#deleteSubCompany').removeClass("disabled");
+    	        		$('#addNewSubComapny').addClass("disabled");
+    	        		$('#currentSelectSubComapny').val(ev.item.text);
+    	        	} else {
+    	        		$('#company_name').html(headCompanyName);
+    	        		$('#org_name').html(ev.item.text);
+    	        		$('#parent_company').html('无');
+    	        		$('#org_type').html('总公司');
+    	        	}
+    	        	if(currentSelectOrg == headCompanyId) {
+    	        		$('#deleteSubCompany').addClass("disabled");
+    	        		$('#addNewSubComapny').removeClass("disabled");
+    	        		$('#currentSelectSubComapny').val(ev.item.text);
+    	        	}
+    	        	//alert(node);
+    	        	//var subNode = store.add({id : '205',text: '测试部门'}, node);
+    	        	//tree.render();
+    	          	//var item = ev.item;
+    	          	//$('.log').text(item.text);
+    	        });
     		}
     	});
     	
@@ -714,76 +788,7 @@
 			    tr.appendTo(container);
     		}
     	}
-    	//数据缓冲类
-        var store = new Data.TreeStore({
-            root : {
-              id : headCompanyId,
-              text : headCompanyName
-            },
-            url : '/company/getOrgStructureData',
-            autoLoad : true
-          });
-          
-        var tree = new Tree.TreeList({
-          render : '#t1',
-          showLine : true,
-          height:300,
-          store : store,
-          showRoot : true
-        });
-        tree.render();
-        var item = tree.getItem(headCompanyId);
-        tree.setSelected(item);
-        tree.on('itemclick',function(ev){
-        	currentSelectOrg = ev.item.id;
-        	if(ev.item.typeIsDept) {
-        		$('#addDeptUser').removeClass('disabled');
-        		$('#addOneLevelDeptOrSubCompany').hide();
-        		$('#addSubDept').show();
-        		$('#currentSelectDept').val(ev.item.text);
-        		$('#dept_user_dept_name').val(ev.item.text);
-        		$('#dept_user_dept_id').val(ev.item.id);
-        		$('#deptUserList').html("");
-        		$.ajax({
-            		url : '/company/queryUserByDeptId',
-            		type : "POST",
-            		async: false,
-            		data : {deptId:ev.item.id, deptName:ev.item.text},
-            		success : function(data) {
-            			if(data == null || data == '') return;
-            			createDataList(data);
-            		}
-            	});
-        	} else {
-        		$('#addDeptUser').addClass('disabled');
-        		$('#addOneLevelDeptOrSubCompany').show();
-        		$('#addSubDept').hide();
-        	}
-        	if(ev.item.typeIsSubCompany) {
-        		$('#company_name').html(ev.item.text);
-        		$('#parent_company').html(headCompanyName);
-        		$('#org_type').html('分公司');
-        		$('#org_name').html(ev.item.text);
-        		$('#deleteSubCompany').removeClass("disabled");
-        		$('#addNewSubComapny').addClass("disabled");
-        		$('#currentSelectSubComapny').val(ev.item.text);
-        	} else {
-        		$('#company_name').html(headCompanyName);
-        		$('#org_name').html(ev.item.text);
-        		$('#parent_company').html('无');
-        		$('#org_type').html('总公司');
-        	}
-        	if(currentSelectOrg == headCompanyId) {
-        		$('#deleteSubCompany').addClass("disabled");
-        		$('#addNewSubComapny').removeClass("disabled");
-        		$('#currentSelectSubComapny').val(ev.item.text);
-        	}
-        	//alert(node);
-        	//var subNode = store.add({id : '205',text: '测试部门'}, node);
-        	//tree.render();
-          	//var item = ev.item;
-          	//$('.log').text(item.text);
-        });
+    	
       });
 	</script>
 </body>

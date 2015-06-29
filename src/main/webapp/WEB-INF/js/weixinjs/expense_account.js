@@ -922,7 +922,7 @@ $(function(){
 	
 	function getJsConfigInfoSuccess(data,status) {
 		wx.config({
-			appId: 'wx309df15b6ddc5371',
+			appId: 'wx333ea15ba860f932',
 			timestamp: data.timestamp,
 			nonceStr: data.nonceStr,
 			signature: data.signature,
@@ -1065,8 +1065,10 @@ $(function(){
 		box.wrap.addClass("box-wrap-gif");
 		box.content.addClass("box-content-gif");
 		box.loading('<html><body><img src="../../img/weixinimg/loading1.gif"></body></html>');
+		
 		wx.chooseImage({
 			success: function (res) {
+				
 				for(var i=0; i<res.localIds.length; i++) {
 					if(!billListHasComtain(res.localIds[i])) {
 						var date = new Date();
@@ -1086,6 +1088,7 @@ $(function(){
 				setMenu('发票上传');				
 		    },
 		    fail : function(res) {
+		    	
 		    	if(res.errMsg === "system:function not exist") {
 		    		alert('微信版本过低，请升级！');
 		    	} else {

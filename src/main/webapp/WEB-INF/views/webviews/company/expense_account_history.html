@@ -28,20 +28,26 @@
 				<div class="form-horizontal onlineTools">
 					<div class="row show-grid">
 						<label class="control-label control-label-small"></label>
-                        <div class="controls"><select name="condition" id="condition" class="input input-normal"><option value='0'>所有</option><option value='1'>按日期检索</option></select><input type="text" id="content" class="input input-normal ml10"><button id="searchData" class="button button-success ml10">搜索</button></div>
+                        <div class="controls"><select name="condition" id="condition" class="input input-normal"><option value='0'>所有</option><option value='1'>按日期检索</option></select><input type="text" id="content" class="input input-normal ml10"><button id="searchData" class="button button-success ml10">搜索</button><button id="deleteData" class="button button-danger ml10">一键删除</button></div>
 					</div>
 				</div>
 			</div>
 			<table class="table center">
 	    		<colgroup>
-	    			<col style="width:16%;">
-	    			<col style="width:16%;">
-	    			<col style="width:16%;">
+	    			<col style="width:5%;">
+	    			<col style="width:19%;">
+	    			<col style="width:19%;">
+	    			<col style="width:19%;">
+	    			<col style="width:19%;">
+	    			<col style="width:19%;">
 	    		</colgroup>
 	    		<thead>
 	    			<tr>
+	    				<th>&nbsp;</th>
 	    				<th>发票上传日期</th>
 	    				<th>公司名称</th>
+	    				<th>发票金额</th>
+	    				<th>费用类型</th>
 	    				<th>发票预览</th>
 	    			</tr>
 	    		</thead>
@@ -141,14 +147,22 @@ function showChatDlg() {
 			$('#retData').html("");
 			for(var i=0; i<data.length; i++) {
 				var container = $('#retData');
-			    var a = $("<tr><td>"+data[i].date+"</td><td>"+data[i].company_name+"</td><td><a href='javascript:void(0)'>点击查看发票图片</a></td></tr>");
+				var trNode = $("<tr></tr>");
+				var checkNode = $("<td><input type='checkbox' value='' style='margin-top:0px;'></td>");
+			    var tdNode1 = $("<td>"+data[i].date+"</td><td>"+data[i].company_name+"</td><td>0.0</td><td>餐饮费</td>");
+			    var tdNode2 = $("<td></td>");
+			    var aNode = $("<a href='javascript:void(0)'>点击查看发票图片</a>");
 			    var imgsrc = '/files/company/' + data[i].file_name;
-				a.attr("img-src", imgsrc);
-			    a.click(function(event) {
+			    aNode.attr("img-src", imgsrc);
+			    aNode.click(function(event) {
 			    	viewContent.set('imgSrc', $(this).attr("img-src"));
 				    dialogForm.show();
 			    });
-			    a.appendTo(container);
+			    aNode.appendTo(tdNode2);
+			    checkNode.appendTo(trNode);
+			    tdNode1.appendTo(trNode);
+			    tdNode2.appendTo(trNode);
+			    trNode.appendTo(container);
 			}
 		};
 		$.ajax({

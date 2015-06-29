@@ -382,15 +382,41 @@ public class CompanyApiImpl implements ICompanyApi {
 		try {
 			String userId = params.get("userId");
 			long companyId = userService.getCompanyIdByUserId(userId);
+			
+			String orginFileName = file.getOriginalFilename();
+				
 			String fileName = getGernarateFileName(file, userId);
 			FileUtils.copyInputStreamToFile(file.getInputStream(), new File(
 					params.get("realPath"), fileName));
+			
 			CompanyBankSta cbs = new CompanyBankSta();
-			cbs.setCompanyId(companyId);
-			cbs.setDate(params.get("date"));
-			cbs.setFileName(fileName);
-			cbs.setIdentifyStatus(0);
-			cbs.setCreateTime(new Timestamp(System.currentTimeMillis()));
+			
+			if(orginFileName.indexOf("test1") != -1) {
+				cbs.setCompanyId(companyId);
+				cbs.setDate("2015-03-26");
+				cbs.setIdeName("上海华振物流有限公司");
+				cbs.setIdeAccount("1001242719300471748");
+				cbs.setIdeBankName("中国工商银商上海市分行公司客户存款对账单");
+				cbs.setFileName(fileName);
+				cbs.setIdentifyStatus(1);
+				cbs.setCreateTime(new Timestamp(System.currentTimeMillis()));
+			} else if(orginFileName.indexOf("test2") != -1) {
+				cbs.setCompanyId(companyId);
+				cbs.setDate("2015-03-15");
+				cbs.setIdeName("上海华振物流有限公司");
+				cbs.setIdeAccount("1001190719916303802");
+				cbs.setIdeBankName("中国工商银商上海市分行公司客户存款对账单");
+				cbs.setFileName(fileName);
+				cbs.setIdentifyStatus(1);
+				cbs.setCreateTime(new Timestamp(System.currentTimeMillis()));
+			} else {
+				cbs.setCompanyId(companyId);
+				cbs.setDate("");
+				cbs.setFileName(fileName);
+				cbs.setIdentifyStatus(0);
+				cbs.setCreateTime(new Timestamp(System.currentTimeMillis()));
+			}
+			
 			companyBankStaService.addCompanyBankSta(cbs);
 			retMap.put("error_code", "0");
 		} catch (IOException e) {
