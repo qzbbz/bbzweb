@@ -85,4 +85,20 @@ public class CompanyBillController {
 		logger.debug("params : {}", params.toString());
 		return companyBillApi.getCompanyBillByCondition(params);
 	}
+	
+	@RequestMapping("/company/deleteCompanyBill")
+	@ResponseBody
+	public Map<String, String> deleteCompanyBill(
+			HttpServletRequest request) {
+		Map<String, String> retMap = new HashMap<>();
+		String idList = (String)request.getParameter("deleteIdList");
+		String realPath = request.getSession().getServletContext()
+				.getRealPath("/WEB-INF/files/company");
+		if(companyBillApi.deleteCompanyBill(idList, realPath)) {
+			retMap.put("error_code", "0");
+		} else {
+			retMap.put("error_code", "1");
+		}
+		return retMap;
+	}
 }

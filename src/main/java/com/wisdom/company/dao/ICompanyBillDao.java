@@ -16,6 +16,6 @@ public interface ICompanyBillDao {
 	
 	public boolean deleteCompanyBillById(long id);
 	
-	public boolean updateCompanyBill(CompanyBill companyBill);
+	public boolean updateCompanyBill(double amount, String type, long id);
 	
 }

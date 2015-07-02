@@ -229,7 +229,7 @@ transform: translate3d(0, 0, 0);
 .form-uploader .input-normal{ width: 280px;}
 .form-uploader .row{ padding-left: 30px;}
 
-.uploader-wrap{ position: relative; margin-left: 70px; margin-top: 90px; text-align: left;}
+/*.uploader-wrap{ position: relative; margin-left: 70px; margin-top: 90px; text-align: left;}
 .uploader-text{ position: absolute; width: 202px; height: 40px; line-height: 40px; text-align: center; z-index: 99; border: 1px solid #6daaa4; background: #7db3ae; font-size: 14px; color: #fff; border-radius: 3px;}
 .defaultTheme{ position: absolute; left: 0; top: 0; width: 204px;}
 .bui-uploader-button-wrap{ position: absolute; border-radius: 3px; z-index: 888;}
@@ -240,7 +240,24 @@ transform: translate3d(0, 0, 0);
 
 .bui-queue{ position: absolute; left: 100px; top: -100px; height: 70px; overflow: auto; overflow-x: hidden; width: 280px; border: 1px solid #ccc;  border-radius: 3px; padding: 0 0 0 10px;}
 .uploader-label{ position: absolute; top: -100px; left: 30px;}
-.bui-queue .error{ width: 200px; height: 20px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.bui-queue .error{ width: 200px; height: 20px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}*/
+
+/*上传15-06-09*/
+.uploader-wrap{ position: relative; margin-left: 70px; margin-top: 90px; text-align: left;}
+.uploader-text{ position: absolute; width: 202px; height: 40px; line-height: 40px; text-align: center; z-index: 99; border: 1px solid #6daaa4; background: #7db3ae; font-size: 14px; color: #fff; border-radius: 3px;}
+.defaultTheme{ position: absolute; left: 0; top: 0; width: 204px;}
+.bui-uploader-button-wrap{ position: absolute; border-radius: 3px; z-index: 888;}
+.bui-uploader-button-text{ display: none;}
+.file-input-wrapper{ width: 204px; height: 42px; position: absolute; background: rgba(0,0,0,0.0001); z-index: 999; left: 0; top: 0; cursor: pointer;}
+.file-input-wrapper:hover{ background: rgba(0,0,0,0.1);}
+.uploader-wrap .button{ width: 204px; height: 40px; line-height: 42px; text-align: center; font-size: 14px; color: #fff; padding: 0; margin: 0 0 0 226px;}
+
+.bui-queue{ position: absolute; left: 100px; top: -100px; height: 70px; overflow: auto; overflow-x: hidden; width: 350px; border: 1px solid #ccc;  border-radius: 3px; padding: 0 0 0 10px;}
+.bui-queue .bui-queue-item{ height: 24px; line-height: 24px; clear: both;}
+.bui-queue .bui-queue-item input,.bui-queue .bui-queue-item select{ height: 22px; line-height: 22px; padding: 0;}
+.uploader-label{ position: absolute; top: -100px; left: 30px;}
+.bui-queue .uploader-name{ width: 150px; height: 20px; margin-right: 10px; display: inline-block; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.bui-queue .error{}
 /*.bui-queue li{ border-left: 1px solid #e6e6e6; width: 432px;}
 .bui-queue li:first-child{ border-top: 1px solid #e6e6e6;}
 .bui-queue li:last-child{ border-bottom: 1px solid #e6e6e6;}*/

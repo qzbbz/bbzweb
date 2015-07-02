@@ -92,6 +92,7 @@ public class CompanyBillApiImpl implements ICompanyBillApi {
 		for(CompanyBill cb : list) {
 			Map<String, String> map = new HashMap<>();
 			Timestamp stamp = cb.getCreateTime();
+			map.put("id", String.valueOf(cb.getId()));
 			map.put("date", sdf.format(stamp));
 			map.put("file_name", cb.getFileName() == null ? "" : cb.getFileName());
 			map.putAll(extraParams);
@@ -106,6 +107,25 @@ public class CompanyBillApiImpl implements ICompanyBillApi {
 				file.getOriginalFilename().indexOf(".") + 1);
 		return userId + System.currentTimeMillis() + Math.abs(rdm.nextInt())
 				% 1000 + (extendName == null ? ".unknown" : "." + extendName);
+	}
+
+	@Override
+	public boolean deleteCompanyBill(String idList, String realPath) {
+		String[] ids = idList.split(",");
+		for (String id : ids) {
+			CompanyBill cb = companyBillService.getCompanyBillById(Long.valueOf(id));
+			if(cb == null) continue;
+			File file = new File(realPath + "/" + cb.getFileName());
+			FileUtils.deleteQuietly(file);
+			companyBillService.deleteCompanyBillById(Long.valueOf(id));
+		}
+		return true;
+	}
+
+	@Override
+	public boolean modifyCompanyBill(String id, String amount, String type) {
+		
+		return false;
 	}
 	
 }

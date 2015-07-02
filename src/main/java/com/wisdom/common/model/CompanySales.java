@@ -6,7 +6,7 @@ import java.sql.Timestamp;
  * Accounter entity. @author MyEclipse Persistence Tools
  */
 
-public class CompanyBill implements java.io.Serializable {
+public class CompanySales implements java.io.Serializable {
 
 	// Fields
 
@@ -21,15 +21,15 @@ public class CompanyBill implements java.io.Serializable {
 	// Constructors
 
 	/** default constructor */
-	public CompanyBill() {
+	public CompanySales() {
 	}
 
 	/** minimal constructor */
-	public CompanyBill(Long id) {
+	public CompanySales(Long id) {
 		this.id = id;
 	}
 
-	public CompanyBill(Long id, Long companyId, Double amount, String type,
+	public CompanySales(Long id, Long companyId, Double amount, String type,
 			String fileName, Timestamp createTime) {
 		super();
 		this.id = id;
@@ -90,7 +90,7 @@ public class CompanyBill implements java.io.Serializable {
 
 	@Override
 	public String toString() {
-		return "CompanyBill [id=" + id + ", companyId=" + companyId
+		return "CompanySalse [id=" + id + ", companyId=" + companyId
 				+ ", amount=" + amount + ", type=" + type + ", fileName="
 				+ fileName + ", createTime=" + createTime + "]";
 	}

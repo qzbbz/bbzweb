@@ -18,6 +18,8 @@ public class CompanyBankSta implements java.io.Serializable {
 	private String ideBankName;
 	private String ideAccount;
 	private String ideDate;
+	private Double ideAmount;
+	private String ideType;
 	private String fileName;
 	private Integer identifyStatus;
 	private Timestamp createTime;
@@ -33,11 +35,10 @@ public class CompanyBankSta implements java.io.Serializable {
 		this.id = id;
 	}
 
-	
-
 	public CompanyBankSta(Long id, Long companyId, String date, String ideName,
 			String ideBankName, String ideAccount, String ideDate,
-			String fileName, Integer identifyStatus, Timestamp createTime) {
+			Double ideAmount, String ideType, String fileName,
+			Integer identifyStatus, Timestamp createTime) {
 		super();
 		this.id = id;
 		this.companyId = companyId;
@@ -46,6 +47,8 @@ public class CompanyBankSta implements java.io.Serializable {
 		this.ideBankName = ideBankName;
 		this.ideAccount = ideAccount;
 		this.ideDate = ideDate;
+		this.ideAmount = ideAmount;
+		this.ideType = ideType;
 		this.fileName = fileName;
 		this.identifyStatus = identifyStatus;
 		this.createTime = createTime;
@@ -56,7 +59,8 @@ public class CompanyBankSta implements java.io.Serializable {
 		return "CompanyBankSta [id=" + id + ", companyId=" + companyId
 				+ ", date=" + date + ", ideName=" + ideName + ", ideBankName="
 				+ ideBankName + ", ideAccount=" + ideAccount + ", ideDate="
-				+ ideDate + ", fileName=" + fileName + ", identifyStatus="
+				+ ideDate + ", ideAmount=" + ideAmount + ", ideType=" + ideType
+				+ ", fileName=" + fileName + ", identifyStatus="
 				+ identifyStatus + ", createTime=" + createTime + "]";
 	}
 
@@ -138,6 +142,22 @@ public class CompanyBankSta implements java.io.Serializable {
 
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
+	}
+
+	public Double getIdeAmount() {
+		return ideAmount;
+	}
+
+	public void setIdeAmount(Double ideAmount) {
+		this.ideAmount = ideAmount;
+	}
+
+	public String getIdeType() {
+		return ideType;
+	}
+
+	public void setIdeType(String ideType) {
+		this.ideType = ideType;
 	}
 
 }

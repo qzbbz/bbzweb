@@ -28,19 +28,21 @@
 				<div class="form-horizontal onlineTools">
 					<div class="row show-grid">
 						<label class="control-label control-label-small"></label>
-                        <div class="controls"><select name="condition" id="condition" class="input input-normal"><option value='0'>所有</option></select><input type="text" id="content" class="input input-normal ml10"><button id="searchData" class="button button-success ml10">搜索</button></div>
+                        <div class="controls"><select name="condition" id="condition" class="input input-normal"><option value='0'>所有</option></select><input type="text" id="content" class="input input-normal ml10"><button id="searchData" class="button button-success ml10">搜索</button><button id="deleteData" class="button button-danger ml10">一键删除</button></div>
 					</div>
 				</div>
 			</div>
 			<table class="table center">
 	    		<colgroup>
-	    			<col style="width:25%;">
+	    			<col style="width:5%;">
+	    			<col style="width:20%;">
 	    			<col style="width:25%;">
 	    			<col style="width:25%;">
 	    			<col style="width:25%;">
 	    		</colgroup>
 	    		<thead>
 	    			<tr>
+	    				<th>&nbsp;</th>
 	    				<th>创建日期</th>
 	    				<th>公司名称</th>
 	    				<th>城市名称</th>
@@ -84,7 +86,7 @@ function showChatDlg() {
 			data.sort(function(a,b){return a.date<b.date?1:-1});
 			for(var i=0; i<data.length; i++) {
 				var container = $('#retData');
-			    var a = $("<tr><td>"+data[i].date+"</td><td>"+data[i].companyName+"</td><td>"+data[i].cityName+"</td><td>"+data[i].type+"</td></tr>");
+			    var a = $("<tr><td><input type='checkbox' value='' style='margin-top:0px;'></td><td>"+data[i].date+"</td><td>"+data[i].companyName+"</td><td>"+data[i].cityName+"</td><td>"+data[i].type+"</td></tr>");
 			    a.appendTo(container);
 			}
 		};
@@ -122,6 +124,10 @@ function showChatDlg() {
 						{text : '上传对账单',id : '21', href:"/views/webviews/company/bank_statement_upload.html"},
 						{text : '对账单历史记录',id : '22', href:"/views/webviews/company/bank_statement_history.html"}                                           
 					]},
+					{text : '销售清单',id : '80',href:"javascript:void(0);", expanded : false,children: [
+					                                                         						{text : '上传销售清单',id : '81', href:"/views/webviews/company/sales_upload.html"},
+					                                                         						{text : '销售清单历史记录',id : '82', href:"/views/webviews/company/sales_history.html"}                                           
+					                                                         					]},
 					{text : '工资社保',id : '30',href:"javascript:void(0);", expanded : true,children: [
 						{text : '参数设置',id : '31', href:"/views/webviews/company/salary_welfare_args_settings.html"},
 						{text : '下载工资计算模板',id : '32', href:"/views/webviews/company/salary_welfare_template_download.html"},                                           
@@ -139,7 +145,8 @@ function showChatDlg() {
 					{text : '基本报表',id : '70',href:"javascript:void(0);",  expanded : false,children: [
 						{text : '资产负债表',id : '71', href:"/views/webviews/company/sheet_balance.html"},
 						{text : '利润表',id : '72', href:"/views/webviews/company/sheet_income.html"},
-						{text : '现金流量表',id : '73', href:"/views/webviews/company/sheet_cash.html"}
+						{text : '现金流量表',id : '73', href:"/views/webviews/company/sheet_cash.html"},
+						{text : '薪酬及税费表',id : '74', href:"/views/webviews/company/sheet_salary.html"}
 					]},
 					{text : '会计点将',id : '60',href:"/views/webviews/company/select_accounter.html",  leaf:false,expanded : false,children: []},
 					]

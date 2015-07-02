@@ -100,12 +100,9 @@ public class CompanyBillDaoImpl implements ICompanyBillDao {
 	}
 
 	@Override
-	public boolean updateCompanyBill(CompanyBill companyBill) {
-		String sql = "update company_bill set file_name=? where id=?";
-		logger.debug("updateCompanyBill : {}", companyBill.toString());
-		int affectedRows = jdbcTemplate.update(sql,
-				companyBill.getFileName() == null ? "" : companyBill.getFileName(),
-				companyBill.getId());
+	public boolean updateCompanyBill(double amount, String type, long id) {
+		String sql = "update company_bill set amount=? and type=? where id=?";
+		int affectedRows = jdbcTemplate.update(sql, amount, type, id);
 		logger.debug("updateCompanyBill result : {}", affectedRows);
 		return affectedRows != 0;
 	}

@@ -41,8 +41,8 @@ public class CompanyBillServiceImpl implements ICompanyBillService {
 	}
 
 	@Override
-	public boolean updateCompanyBill(CompanyBill companyBill) {
-		return companyBillDao.updateCompanyBill(companyBill);
+	public boolean updateCompanyBill(double amount, String type, long id) {
+		return companyBillDao.updateCompanyBill(amount, type, id);
 	}
 
 }
