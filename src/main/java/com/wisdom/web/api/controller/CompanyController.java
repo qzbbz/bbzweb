@@ -81,7 +81,7 @@ public class CompanyController {
 		String accounterUserId = request.getParameter("accounterId");
 		String userId = (String) request.getSession().getAttribute("userId");
 		long companyId = userService.getCompanyIdByUserId(userId);
-		userModifyService.modifyUserCompanyIdByUserId(accounterUserId, companyId);
+		companyService.updateCompanyAccounter(companyId, accounterUserId);
 		logger.info("leave selectOneAccounter");
 		return retMap;
 	}
@@ -223,6 +223,42 @@ public class CompanyController {
 		return new HashMap<String, String>().put("url", "");
 	}
 	
+	@RequestMapping("/company/uploadCompanySales")
+	@ResponseBody
+	public String uploadCompanySales(DefaultMultipartHttpServletRequest multipartRequest,
+			HttpServletRequest request) {
+		logger.debug("===>uploadBankSta");
+		String userId = (String) request.getSession().getAttribute("userId");
+		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/files/company");
+		Map<String, String> params = new HashMap<>();
+		params.put("userId", userId);
+		params.put("realPath", realPath);
+		if (multipartRequest != null) {
+			Iterator<String> iterator = multipartRequest.getFileNames();
+			while (iterator.hasNext()) {
+				MultipartFile multifile = multipartRequest
+						.getFile((String) iterator.next());
+				companyApi.uploadCompanySales(multifile, params);
+			}
+		}
+		return new HashMap<String, String>().put("url", "");
+	}
+	
+	@RequestMapping("/company/deleteCompanyBankSta")
+	@ResponseBody
+	public Map<String, String> deleteCompanyBankSta(HttpServletRequest request) {
+		Map<String, String> retMap = new HashMap<>();
+		String idList = (String)request.getParameter("deleteIdList");
+		String realPath = request.getSession().getServletContext()
+				.getRealPath("/WEB-INF/files/company");
+		if(companyApi.deleteCompanyBill(idList, realPath)) {
+			retMap.put("error_code", "0");
+		} else {
+			retMap.put("error_code", "1");
+		}
+		return retMap;
+	}
+	
 	@RequestMapping("/company/getAllCompanyBankSta")
 	@ResponseBody
 	public List<Map<String, String>> getAllCompanyBankSta(HttpServletRequest request) {
@@ -232,6 +268,17 @@ public class CompanyController {
 		params.put("conditionType", request.getParameter("conditionType"));
 		params.put("userId", userId);
 		return companyApi.getCompanyBankStaByCondition(params);
+	}
+	
+	@RequestMapping("/company/getAllCompanySales")
+	@ResponseBody
+	public List<Map<String, String>> getAllCompanySales(HttpServletRequest request) {
+		String userId = (String) request.getSession().getAttribute("userId");
+		Map<String, String> params = new HashMap<>();
+		params.put("conditionValue", request.getParameter("conditionValue"));
+		params.put("conditionType", request.getParameter("conditionType"));
+		params.put("userId", userId);
+		return companyApi.getCompanySalesByCondition(params);
 	}
 	
 	@RequestMapping("/company/downloadSalarySocialSecurityTemplate")
@@ -278,5 +325,53 @@ public class CompanyController {
 		String userId = (String) request.getSession().getAttribute("userId");
 		long companyId = userService.getCompanyIdByUserId(userId);
 		return companyApi.getSalaryHistory(companyId);
+	}
+	
+	@RequestMapping("/company/deleteCompanySales")
+	@ResponseBody
+	public Map<String, String> deleteCompanySales(
+			HttpServletRequest request) {
+		Map<String, String> retMap = new HashMap<>();
+		String idList = (String)request.getParameter("deleteIdList");
+		String realPath = request.getSession().getServletContext()
+				.getRealPath("/WEB-INF/files/company");
+		if(companyApi.deleteCompanySales(idList, realPath)) {
+			retMap.put("error_code", "0");
+		} else {
+			retMap.put("error_code", "1");
+		}
+		return retMap;
+	}
+	
+	@RequestMapping("/company/deleteCompanySalary")
+	@ResponseBody
+	public Map<String, String> deleteCompanySalary(
+			HttpServletRequest request) {
+		Map<String, String> retMap = new HashMap<>();
+		String idList = (String)request.getParameter("deleteIdList");
+		String realPath = request.getSession().getServletContext()
+				.getRealPath("/WEB-INF/files/company");
+		if(companyApi.deleteCompanySalary(idList, realPath)) {
+			retMap.put("error_code", "0");
+		} else {
+			retMap.put("error_code", "1");
+		}
+		return retMap;
+	}
+	
+	@RequestMapping("/company/setTakeType")
+	@ResponseBody
+	public Map<String, String> setTakeType(
+			HttpServletRequest request) {
+		Map<String, String> retMap = new HashMap<>();
+		String userId = (String) request.getSession().getAttribute("userId");
+		long companyId = userService.getCompanyIdByUserId(userId);
+		String takeType = (String)request.getParameter("type");
+		if(companyApi.setTakeType(companyId, takeType)) {
+			retMap.put("error_code", "0");
+		} else {
+			retMap.put("error_code", "1");
+		}
+		return retMap;
 	}
 }

@@ -252,7 +252,7 @@ transform: translate3d(0, 0, 0);
 .file-input-wrapper:hover{ background: rgba(0,0,0,0.1);}
 .uploader-wrap .button{ width: 204px; height: 40px; line-height: 42px; text-align: center; font-size: 14px; color: #fff; padding: 0; margin: 0 0 0 226px;}
 
-.bui-queue{ position: absolute; left: 100px; top: -100px; height: 70px; overflow: auto; overflow-x: hidden; width: 350px; border: 1px solid #ccc;  border-radius: 3px; padding: 0 0 0 10px;}
+.bui-queue{ position: absolute; left: 100px; top: -100px; height: 70px; overflow: auto; overflow-x: hidden; width: 300px; border: 1px solid #ccc;  border-radius: 3px; padding: 0 0 0 10px;}
 .bui-queue .bui-queue-item{ height: 24px; line-height: 24px; clear: both;}
 .bui-queue .bui-queue-item input,.bui-queue .bui-queue-item select{ height: 22px; line-height: 22px; padding: 0;}
 .uploader-label{ position: absolute; top: -100px; left: 30px;}

@@ -368,4 +368,12 @@ public class UserOperationDaoImpl implements IUserOperationDao {
 		return null;
 	}
 
+	@Override
+	public boolean updateUserPwd(String userId, String userPwd) {
+		String sql = "update user_pwd set pwd=? where user_id=?";
+		int affectedRows = jdbcTemplate.update(sql, userPwd, userId);
+		logger.debug("updateUserPwd result : {}", affectedRows);
+		return affectedRows != 0;
+	}
+
 }

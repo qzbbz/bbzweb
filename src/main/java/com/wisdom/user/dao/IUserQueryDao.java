@@ -16,6 +16,8 @@ public interface IUserQueryDao {
 	
 	public User getUserByUserId(String userId);
 	
+	public List<User> getAccounterUserList();
+	
 	public List<User> getUserListByCompanyId(long companyId);
 	
 	public UserPwd getUserPwdByUserId(String userId);

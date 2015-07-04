@@ -1,16 +1,20 @@
 package com.wisdom.company.dao.impl;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.stereotype.Repository;
 
+import com.wisdom.common.model.Company;
 import com.wisdom.common.model.CompanyDetail;
 import com.wisdom.company.dao.ICompanyDetailDao;
 import com.wisdom.company.mapper.CompanyDetailMapper;
+import com.wisdom.company.mapper.CompanyMapper;
 
 @Repository("companyDetailDao")
 public class CompanyDetailDaoImpl implements ICompanyDetailDao {
@@ -78,6 +82,20 @@ public class CompanyDetailDaoImpl implements ICompanyDetailDao {
 				companyDetail.getCompanyId());
 		logger.debug("updateCompanyDetail result : {}", affectedRows);
 		return affectedRows != 0;
+	}
+
+	@Override
+	public List<CompanyDetail> getAllCompanyDetail() {
+		List<CompanyDetail> list = null;
+		try {
+			String sql = "select * from company_detail";
+			list = jdbcTemplate.query(sql,
+					new RowMapperResultSetExtractor<CompanyDetail>(
+							new CompanyDetailMapper()));
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return list;
 	}
 
 }

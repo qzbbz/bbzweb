@@ -26,20 +26,18 @@
 			<div class="zero-state">
 				<div class="form-window">
 					<div class="hd">
-						<i class="iconfont">&#xe60b;</i>
+						<i class="iconfont">&#xe610;</i>
 					</div>
 					<div class="bd">
-						<h2>本月工资单上传</h2>
+						<h2>预约取发票方式查询</h2>
 						<p>
-							请在这里上传公司本月的工资单
+							您在这里可以查询公司设定的预约取发票的方式
 						</p>
-						<form id="salaryUpload" action="/company/uploadSalary" method="POST"	enctype="multipart/form-data">
-							<div id="fileInfo" style="height: 50px;" class="text-primary"></div>
-							<a href="javascript:;" class="file button button-success file-green">选择工资单文件
-								<input type="file" id="salaryFile" name="files">
-							</a> 
-							<a href="javascript:submitUpload();" class="button button-success">上传工资单文件</a>
-						</form>
+                        <label for="" class="control-label">公司名称：</label>
+                        <select name="companyName" id="companyName" class="input input-normal" style="width:300px;"></select>
+                        <div style="text-align:left;margin-left:52px;margin-bottom:10px;margin-top:30px;">
+                        	<label for="" class="control-label">预约取发票的方式：</label><span id="takeWay" style="height: 50px;" class="text-primary"></span>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -133,14 +131,68 @@
 				}
 			});
 		})
+	})
+	$.ajax({
+		url : '/accounter/getAllAccounterCompanyWithoutCondition',
+		type : "POST",
+		data : {},
+		success : function(data) {
+			if(data == null || data == '') {
+				$('#takeWay').html('当前您还没有被任何公司选择，因此无法获取到相关公司信息！');
+				return;
+			}
+			var options = '';
+			for(var i=0; i<data.length; i++) {
+				options += "<option value='"+data[i].companyId+"'>"+data[i].companyName+"</option>";
+			}
+			$('#companyName').html(options);
+			$.ajax({
+				url : '/accounter/getTakeBillWay',
+				type : "POST",
+				data : {companyId:$("#companyName option:selected").val()},
+				success : function(data) {
+					if(data.way == null || data.way == '') {
+						$('#takeWay').html('当前公司尚未设定预约方式，请稍后重新尝试查询！');
+					} else {
+						$('#takeWay').html('当前公司预约取发票的方式为，' + data.way);
+					}				
+				}
+			});
+		}
 	});
+	
+	$("#companyName").attr('onChange', $.browser.msie ? "$(this).data('onChange').apply(this)" : "")
+	.change( function(){if(!$.browser.msie)$(this).data('onChange').apply(this)} )
+	.data('onChange',function(){
+		$.ajax({
+			url : '/accounter/getTakeBillWay',
+			type : "POST",
+			data : {companyId:$("#companyName option:selected").val()},
+			success : function(data) {
+				if(data.way == null || data.way == '') {
+					$('#takeWay').html('当前公司尚未设定预约方式，请稍后重新尝试查询！');
+				} else {
+					$('#takeWay').html('当前公司预约取发票的方式为，' + data.way);
+				}				
+			}
+		});
+	});
+	
 		function submitUpload() {
+			var companyId = $('#companyName option:selected').val();
+			if(companyId == null || companyId == "") {
+				BUI.use(['bui/overlay'], function(Overlay){
+					BUI.Message.Alert('请先选择公司名称，如果没有任何公司可选，说明当前您还没有被任何一家公司选为会计或您负责的公司尚没有设置工资相关参数！','warning');
+				});
+				return;
+			}
+			$('#companyId').val(companyId);
 			if($('#salaryFile').val() == null || $('#salaryFile').val() == '') {
 				BUI.use(['bui/overlay'], function(Overlay){
 					BUI.Message.Alert('请先选择文件，再上传！','warning');
 				});
 			} else {
-				$('#salaryUpload').submit();
+				$('#templateUpload').submit();
 			}
 		}
 		$("#salaryFile").attr('onChange', $.browser.msie ? "$(this).data('onChange').apply(this)" : "")
@@ -157,45 +209,16 @@
             });
         })()
 		//竖状菜单
-	    var menu = new menuTree(
+	   var menu = new menuTree(
             {"nodes" : [
-					{text : '公司发票',id : '10',href:"javascript:void(0);",  expanded : false,children: [
-						{text : '发票上传',id : '11', href:"/views/webviews/company/expense_account_upload.html"},
-						{text : '发票历史记录',id : '12', href:"/views/webviews/company/expense_account_history.html"}                                           
-					]},
-					{text : '银行对账单',id : '20',href:"javascript:void(0);", expanded : false,children: [
-						{text : '上传对账单',id : '21', href:"/views/webviews/company/bank_statement_upload.html"},
-						{text : '对账单历史记录',id : '22', href:"/views/webviews/company/bank_statement_history.html"}                                           
-					]},
-					{text : '销售清单',id : '80',href:"javascript:void(0);", expanded : false,children: [
-					                                                         						{text : '上传销售清单',id : '81', href:"/views/webviews/company/sales_upload.html"},
-					                                                         						{text : '销售清单历史记录',id : '82', href:"/views/webviews/company/sales_history.html"}                                           
-					                                                         					]},
-					{text : '工资社保',id : '30',href:"javascript:void(0);", expanded : true,children: [
-						{text : '参数设置',id : '31', href:"/views/webviews/company/salary_welfare_args_settings.html"},
-						{text : '下载工资计算模板',id : '32', href:"/views/webviews/company/salary_welfare_template_download.html"},                                           
-						{text : '上传本月工资',id : '33', href:"/views/webviews/company/salary_welfare_upload.html"},
-						{text : '工资历史记录',id : '34', href:"/views/webviews/company/salary_history.html"},
-						{text : '工资计算模板历史记录',id : '35', href:"/views/webviews/company/salary_template_history.html"}
-					]},
-					{text : '预约取发票',id : '40',href:"javascript:void(0);", expanded : false,children: [
-						{text : '方式选择',id : '41', href:"/views/webviews/company/take_expense_account_mode_select.html"}                                           
-					]},
-					{text : '组织架构',id : '50',href:"javascript:void(0);",  expanded : false,children: [
-						{text : '基本信息设置',id : '51', href:"/views/webviews/company/organization_information_settings.html"},
-						{text : '组织架构设置',id : '52', href:"/views/webviews/company/organization_structure_settings.html"}                                           
-					]},
-					{text : '基本报表',id : '70',href:"javascript:void(0);",  expanded : false,children: [
-					                                                          						{text : '资产负债表',id : '71', href:"/views/webviews/company/sheet_balance.html"},
-					                                                          						{text : '利润表',id : '72', href:"/views/webviews/company/sheet_income.html"},
-					                                                          						{text : '现金流量表',id : '73', href:"/views/webviews/company/sheet_cash.html"},
-					                                                          						{text : '薪酬及税费表',id : '74', href:"/views/webviews/company/sheet_salary.html"}
-					                                                          					]},
-					{text : '会计点将',id : '60',href:"/views/webviews/company/select_accounter.html",  leaf:false,expanded : false,children: []},
+					{text : '公司费用信息',id : '10',href:"/views/webviews/accounter/company_expense_records.html", leaf:false, expanded : false,children: []},
+					{text : '公司工资模板上传',id : '30',href:"/views/webviews/accounter/company_salary_template_upload.html", leaf:false, expanded : false,children: []},
+					{text : '预约取发票方式查询',id : '40',href:"/views/webviews/accounter/take_bill_way.html", leaf:false, expanded : false,children: []},					
+					{text : '完善注册信息',id : '20',href:"/views/webviews/accounter/finish_reg_info.html",  leaf:false, expanded : false,children: []}
 					]
             },"menuTree"
         );
-	    defaultSelect("33");
+	    defaultSelect("40");
 	    function defaultSelect(id){ 
 	        $("#"+id).parent().addClass("bui-menu-item-selected")
 	    }

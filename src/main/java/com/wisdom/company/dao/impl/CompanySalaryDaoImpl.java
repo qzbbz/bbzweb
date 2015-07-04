@@ -12,9 +12,11 @@ import org.springframework.stereotype.Repository;
 
 import com.wisdom.common.model.CompanyBill;
 import com.wisdom.common.model.CompanySalary;
+import com.wisdom.common.model.SalarySocialSecurity;
 import com.wisdom.company.dao.ICompanySalaryDao;
 import com.wisdom.company.mapper.CompanyBillMapper;
 import com.wisdom.company.mapper.CompanySalaryMapper;
+import com.wisdom.company.mapper.SalarySocialSecurityMapper;
 
 @Repository("companySalaryDao")
 public class CompanySalaryDaoImpl implements ICompanySalaryDao {
@@ -71,6 +73,27 @@ public class CompanySalaryDaoImpl implements ICompanySalaryDao {
 			logger.error(e.toString());
 		}
 		return list;
+	}
+
+	@Override
+	public boolean deleteCompanySalaryById(long id) {
+		String sql = "delete from company_salary where id = ?";
+		int affectedRows = jdbcTemplate.update(sql, id);
+		logger.debug("deleteCompanySalaryById result : {}", affectedRows);
+		return affectedRows != 0;
+	}
+
+	@Override
+	public CompanySalary getCompanySalaryById(long id) {
+		String sql = "select * from company_salary where id = ?";
+		CompanySalary sss = null;
+		try {
+			sss = jdbcTemplate.queryForObject(sql, new Object[] { id },
+					new CompanySalaryMapper());
+		} catch (Exception e) {
+			logger.debug("result is 0. exception : {}" + e.toString());
+		}
+		return sss;
 	}
 
 }

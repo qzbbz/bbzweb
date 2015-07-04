@@ -13,8 +13,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.wisdom.user.service.IUserService;
 import com.wisdom.web.api.IUserValidateApi;
 import com.wisdom.web.utils.SessionConstant;
+import com.wisdom.web.utils.UserPwdMD5Encrypt;
 
 @Controller
 public class UserValidateController {
@@ -24,6 +26,9 @@ public class UserValidateController {
 
 	@Autowired
 	private IUserValidateApi userValidateApi;
+	
+	@Autowired
+	private IUserService userService;
 
 	@RequestMapping("/checkUserLogin")
 	@ResponseBody
@@ -79,6 +84,47 @@ public class UserValidateController {
 		}
 		logger.debug("finish checkUserRegister");
 		return retMap;
+	}
+	
+	@RequestMapping("/modifyPassword")
+	@ResponseBody
+	public Map<String, String> modifyPassword(HttpServletRequest request) {
+		Map<String,String> retMap = new HashMap<>();
+		String userId = (String) request.getSession().getAttribute("userId");
+		if(userId == null || userId.isEmpty()) {
+			retMap.put("error_code", "1");
+			retMap.put("error_msg", "会话已过期。请退出系统，重新登陆后再次尝试!");
+			return retMap;
+		}
+		String oldPwd = request.getParameter("oldPwd");
+		String newPwd = request.getParameter("newPwd");
+		if(oldPwd == null || oldPwd.isEmpty()) {
+			retMap.put("error_code", "2");
+			retMap.put("error_msg", "服务器无法获取您输入的旧密码或旧密码输入为空!");
+			return retMap;
+		}
+		if(newPwd == null || newPwd.isEmpty()) {
+			retMap.put("error_code", "3");
+			retMap.put("error_msg", "服务器无法获取您输入的新密码或新密码输入为空!");
+			return retMap;
+		}
+		if (userService.userIdExist(userId)) {
+			String enPwd = userService.getUserPwdByUserId(userId);
+			if (enPwd.equals(UserPwdMD5Encrypt.getPasswordByMD5Encrypt(oldPwd))) {
+				userService.modifyUserPwdByUserId(
+						UserPwdMD5Encrypt.getPasswordByMD5Encrypt(newPwd),
+						userId);
+				retMap.put("error_code", "0");
+			} else {
+				retMap.put("error_code", "5");
+				retMap.put("error_msg", "您输入的旧密码不正确，请检查！");
+			}
+			return retMap;
+		} else {
+			retMap.put("error_code", "4");
+			retMap.put("error_msg", "服务器无法查询到您的电子邮件ID，因此无法修改密码，请联系系统管理员!");
+			return retMap;
+		}
 	}
 	
 	@RequestMapping("/accounter/admin")

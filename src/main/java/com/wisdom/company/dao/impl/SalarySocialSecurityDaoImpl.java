@@ -148,4 +148,25 @@ public class SalarySocialSecurityDaoImpl implements ISalarySocialSecurityDao {
 		return list;
 	}
 
+	@Override
+	public SalarySocialSecurity getSSSById(long id) {
+		String sql = "select * from sss where id = ?";
+		SalarySocialSecurity sss = null;
+		try {
+			sss = jdbcTemplate.queryForObject(sql, new Object[] { id },
+					new SalarySocialSecurityMapper());
+		} catch (Exception e) {
+			logger.debug("result is 0. exception : {}" + e.toString());
+		}
+		return sss;
+	}
+
+	@Override
+	public boolean setTemplate(long companyId, String fileName) {
+		String sql = "update sss set template=? where company_id = ?";
+		int affectedRows = jdbcTemplate.update(sql, fileName, companyId);
+		logger.debug("updateDept result : {}", affectedRows);
+		return affectedRows != 0;
+	}
+
 }

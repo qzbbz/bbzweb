@@ -18,7 +18,7 @@
             <div class="side-bar-content" id="menuTree"></div>
 			<div class="side-bar-bottom">
 				<ul>
-					<li><a href=""><i class="setting"></i>设置</a></li>
+					<li><a href="javascript:void(0);" id="setPwd"><i class="setting"></i>设置</a></li>
 					<li><a href="/logout"><i class="exit"></i>安全退出</a></li>
 				</ul>
 			</div>
@@ -282,7 +282,37 @@ class=shape><font class="font11">1．本表反映小企业一定会计期间内�
 		</div>
 	</div>
 	
-	<div id="register_chat" class="zopim" __jx__id="___$_22 ___$_22" style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px; padding: 0px; border: 0px; overflow: hidden; position: fixed; z-index: 16000002; width: 180px; height: 30px; right: 10px; bottom: 0px; background: transparent;"><iframe id="frameChat" frameborder="0" src="/other/chat.html" style="vertical-align: text-bottom; position: relative; width: 100%; height: 100%; margin: 0px; overflow: hidden; background-color: transparent;"></iframe></div>
+	<div id="modifyPwd" style="display:none;">
+		<div id="form" class="form-horizontal">
+			<div class="control-group">
+				<label class="control-label">输入旧密码：</label>
+				<div class="controls">
+					<input id="old_pwd" type="password" class="input-large"
+						data-rules="{required : true}" style="width:250px;">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">输入新密码：</label>
+				<div class="controls control-row-auto">
+					<input id="new_pwd" type="password" class="input-large"
+						data-rules="{required : true}" style="width:250px;">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">再次输入新密码：</label>
+				<div class="controls control-row-auto">
+					<input id="confirm_new_pwd" type="password" class="input-large"
+						data-rules="{required : true}" style="width:250px;">
+				</div>
+			</div>
+			<div class="control-group">
+				<label id="modify_pwd_tips"></label>
+			</div>
+			<div class="control-group control-btn">
+				<div class="layer-wrap-footer"><a href="javascript:void(0);" id="modify_pwd_button" class="button button-success">确定修改</a></div>
+			</div>
+		</div>
+	</div>
 <!--该js需要修改js路径及修改seajs路径-->
 <script src="http://g.tbcdn.cn/fi/bui/jquery-1.8.1.min.js"></script>
 <script src="http://g.alicdn.com/bui/seajs/2.3.0/sea.js"></script>
@@ -290,7 +320,57 @@ class=shape><font class="font11">1．本表反映小企业一定会计期间内�
 <script src="http://g.tbcdn.cn/bui/acharts/1.0.25/acharts-min.js"></script>
 <script src="/js/webjs/menuTree.js"></script>
 <script type="text/javascript">
-
+BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
+	var modifyPwdForm = new Overlay.Dialog({
+        title:'密码修改',
+        width:600,
+        height:280,
+        contentId:'modifyPwd',
+        success:function () {
+          	this.close();
+        },
+        buttons : []
+    });
+	$('#setPwd').click(function(){
+		modifyPwdForm.show();
+	})
+	$('#modify_pwd_button').click(function(){
+		var oldPwd = $('#old_pwd').val();
+		var newPwd = $('#new_pwd').val();
+		var confirmNewPwd = $('#confirm_new_pwd').val();
+		if(oldPwd == null || oldPwd == "") {
+			BUI.Message.Alert('请输入旧密码！','warning');
+			return;
+		}
+		if(newPwd == null || newPwd == "") {
+			BUI.Message.Alert('请输新密码！','warning');
+			return;
+		}
+		if(confirmNewPwd == null || confirmNewPwd == "") {
+			BUI.Message.Alert('请输入新密码！','warning');
+			return;
+		}
+		if(newPwd != confirmNewPwd) {
+			BUI.Message.Alert('两次输入的新密码不一致，请检查！','warning');
+			return;
+		}
+		$.ajax({
+			url : '/modifyPassword',
+			type : "POST",
+			data : {oldPwd:oldPwd, newPwd:newPwd},
+			success : function(data) {
+				if(data.error_code == "0") {
+					BUI.Message.Alert('修改密码成功！','success');
+				} else {
+					BUI.Message.Alert('修改密码失败！错误信息：' + data.error_msg,'warning');
+				}
+			},
+			error : function(data) {
+				BUI.Message.Alert('修改密码失败！错误信息：' + data.error_msg,'warning');
+			}
+		});
+	})
+});
 	//侧栏高度
     (function(){
         var H=$(window).height();

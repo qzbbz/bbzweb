@@ -1,5 +1,7 @@
 package com.wisdom.company.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +33,11 @@ public class CompanyDetailServiceImpl implements ICompanyDetailService {
 	@Override
 	public boolean updateCompanyDetail(CompanyDetail companyDetail) {
 		return companyDetailDao.updateCompanyDetail(companyDetail);
+	}
+
+	@Override
+	public List<CompanyDetail> getAllCompanyDetail() {
+		return companyDetailDao.getAllCompanyDetail();
 	}
 
 }

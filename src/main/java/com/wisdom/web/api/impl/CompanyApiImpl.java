@@ -3,6 +3,7 @@ package com.wisdom.web.api.impl;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -25,14 +26,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.wisdom.common.model.Company;
 import com.wisdom.common.model.CompanyBankSta;
+import com.wisdom.common.model.CompanyBill;
 import com.wisdom.common.model.CompanyDetail;
 import com.wisdom.common.model.CompanySalary;
+import com.wisdom.common.model.CompanySales;
 import com.wisdom.common.model.CostCenter;
 import com.wisdom.common.model.Dept;
 import com.wisdom.common.model.SalarySocialSecurity;
 import com.wisdom.company.service.ICompanyBankStaService;
 import com.wisdom.company.service.ICompanyDetailService;
 import com.wisdom.company.service.ICompanySalaryService;
+import com.wisdom.company.service.ICompanySalesService;
 import com.wisdom.company.service.ICompanyService;
 import com.wisdom.company.service.ICostCenterService;
 import com.wisdom.company.service.IDeptService;
@@ -75,6 +79,9 @@ public class CompanyApiImpl implements ICompanyApi {
 
 	@Autowired
 	private ICompanyBankStaService companyBankStaService;
+	
+	@Autowired
+	private ICompanySalesService companySalesService;
 
 	@Override
 	public Map<String, String> companyDetailRegister(Map<String, String> params) {
@@ -390,22 +397,22 @@ public class CompanyApiImpl implements ICompanyApi {
 					params.get("realPath"), fileName));
 			
 			CompanyBankSta cbs = new CompanyBankSta();
-			
+			cbs.setDate(params.get("date"));
 			if(orginFileName.indexOf("test1") != -1) {
 				cbs.setCompanyId(companyId);
-				cbs.setDate("2015-03-26");
+				cbs.setIdeDate("2015-03-26");
 				cbs.setIdeName("上海华振物流有限公司");
 				cbs.setIdeAccount("1001242719300471748");
-				cbs.setIdeBankName("中国工商银商上海市分行公司客户存款对账单");
+				cbs.setIdeBankName("中国工商银行");
 				cbs.setFileName(fileName);
 				cbs.setIdentifyStatus(1);
 				cbs.setCreateTime(new Timestamp(System.currentTimeMillis()));
 			} else if(orginFileName.indexOf("test2") != -1) {
 				cbs.setCompanyId(companyId);
-				cbs.setDate("2015-03-15");
+				cbs.setIdeDate("2015-03-15");
 				cbs.setIdeName("上海华振物流有限公司");
 				cbs.setIdeAccount("1001190719916303802");
-				cbs.setIdeBankName("中国工商银商上海市分行公司客户存款对账单");
+				cbs.setIdeBankName("中国工商银行");
 				cbs.setFileName(fileName);
 				cbs.setIdentifyStatus(1);
 				cbs.setCreateTime(new Timestamp(System.currentTimeMillis()));
@@ -470,6 +477,7 @@ public class CompanyApiImpl implements ICompanyApi {
 		for (CompanyBankSta cbs : list) {
 			Map<String, String> map = new HashMap<>();
 			map.put("date", cbs.getDate());
+			map.put("id", String.valueOf(cbs.getId()));
 			map.put("ide_name",
 					cbs.getIdeName() == null ? "" : cbs.getIdeName());
 			map.put("ide_account",
@@ -481,6 +489,8 @@ public class CompanyApiImpl implements ICompanyApi {
 			map.put("status",
 					String.valueOf(cbs.getIdentifyStatus() == null ? 0 : cbs
 							.getIdentifyStatus()));
+			map.put("ide_date",
+					cbs.getIdeDate() == null ? "" : cbs.getIdeDate());
 			retList.add(map);
 		}
 		return retList.size() > 0 ? retList : null;
@@ -634,6 +644,7 @@ public class CompanyApiImpl implements ICompanyApi {
 			map.put("companyName", companyName);
 			map.put("cityName", salarySocialSecurity.getCityName());
 			map.put("type", salarySocialSecurity.getRegistryType() == 0?"城镇户籍" : "农村户籍");
+			map.put("file_name", salarySocialSecurity.getTemplate());
 			retList.add(map);
 		}
 		return retList;
@@ -653,5 +664,123 @@ public class CompanyApiImpl implements ICompanyApi {
 			retList.add(map);
 		}
 		return retList;
+	}
+
+	@Override
+	public boolean deleteCompanyBill(String idList, String realPath) {
+		String[] ids = idList.split(",");
+		for (String id : ids) {
+			CompanyBankSta  cbs = companyBankStaService.getCompanyBankStaById(Long.valueOf(id));
+			if(cbs == null) continue;
+			File file = new File(realPath + "/" + cbs.getFileName());
+			FileUtils.deleteQuietly(file);
+			companyBankStaService.deleteCompanyBankStaByCompanyId(Long.valueOf(id));
+		}
+		return true;
+	}
+
+	@Override
+	public Map<String, String> uploadCompanySales(MultipartFile file,
+			Map<String, String> params) {
+		Map<String, String> retMap = new HashMap<>();
+		try {
+			String userId = params.get("userId");
+			long companyId = userService.getCompanyIdByUserId(userId);
+			
+			String orginFileName = file.getOriginalFilename();
+				
+			String fileName = getGernarateFileName(file, userId);
+			FileUtils.copyInputStreamToFile(file.getInputStream(), new File(
+					params.get("realPath"), fileName));
+			
+			CompanySales cs = new CompanySales();
+			cs.setCompanyId(companyId);
+			cs.setFileName(fileName);
+			cs.setCreateTime(new Timestamp(System.currentTimeMillis()));
+			companySalesService.addCompanySales(cs);
+			retMap.put("error_code", "0");
+		} catch (IOException e) {
+			logger.debug("uploadCompanyBankSta exception : {}", e.toString());
+			retMap.put("error_code", "1");
+			retMap.put("error_message", "上传销售清单失败，请稍后重试！");
+		}
+		return retMap;
+	}
+
+	@Override
+	public List<Map<String, String>> getCompanySalesByCondition(
+			Map<String, String> params) {
+		String userId = params.get("userId");
+		if (userId == null || userId.isEmpty())
+			return null;
+		long companyId = userService.getCompanyIdByUserId(userId);
+		if (companyId <= 0)
+			return null;
+		String companyName = companyService.getCompanyName(companyId);
+		if (params.get("conditionType") == null
+				|| params.get("conditionType").isEmpty()
+				|| ("0").equals(params.get("conditionType"))
+				|| params.get("conditionValue") == null
+				|| params.get("conditionValue").isEmpty()) {
+			List<CompanySales> list = companySalesService
+					.getAllCompanySales(companyId);
+			return createCompanySalesList(list, companyName);
+		}
+		if (("1").equals(params.get("conditionType"))
+				&& params.get("conditionValue") != null) {
+			List<CompanySales> list = companySalesService
+					.getAllCompanySalesByDate(companyId,
+							params.get("conditionValue"));
+			return createCompanySalesList(list, companyName);
+		}
+		return null;
+	}
+	
+	private List<Map<String, String>> createCompanySalesList(
+			List<CompanySales> list, String companyName) {
+		List<Map<String, String>> retList = new ArrayList<>();
+		if (list == null)
+			return null;
+		for (CompanySales cs : list) {
+			Map<String, String> map = new HashMap<>();
+			map.put("company_name", companyName);
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+			map.put("date", formatter.format(cs.getCreateTime()));
+			map.put("file_name", cs.getFileName());
+			map.put("id", String.valueOf(cs.getId()));
+			retList.add(map);
+		}
+		return retList.size() > 0 ? retList : null;
+	}
+
+	@Override
+	public boolean deleteCompanySales(String idList, String realPath) {
+		String[] ids = idList.split(",");
+		for (String id : ids) {
+			CompanySales cs = companySalesService.getCompanySalesById(Long.valueOf(id));
+			if(cs == null) continue;
+			File file = new File(realPath + "/" + cs.getFileName());
+			FileUtils.deleteQuietly(file);
+			companySalesService.deleteCompanySalesById(Long.valueOf(id));
+		}
+		return true;
+	}
+
+	@Override
+	public boolean deleteCompanySalary(String idList, String realPath) {
+		String[] ids = idList.split(",");
+		for (String id : ids) {
+			CompanySalary cs = companySalaryService.getCompanySalaryById(Long.valueOf(id));
+			if(cs == null) continue;
+			File file = new File(realPath + "/" + cs.getSalaryFile());
+			FileUtils.deleteQuietly(file);
+			companySalaryService.deleteCompanySalaryById(Long.valueOf(id));
+		}
+		return true;
+	}
+
+	@Override
+	public boolean setTakeType(long companyId, String takeType) {
+		return companyService.updateCompanyTakeType(companyId, takeType);
 	}
 }

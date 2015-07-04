@@ -118,6 +118,21 @@ public class CompanyServiceImpl implements ICompanyService {
 	public List<Company> getAllCompany() {
 		return companyDao.getAllCompany();
 	}
+
+	@Override
+	public boolean updateCompanyTakeType(long companyId, String takeType) {
+		return companyDao.updateCompanyTakeType(companyId, takeType);
+	}
+
+	@Override
+	public boolean updateCompanyAccounter(long companyId, String accounterId) {
+		return companyDao.updateCompanyAccounter(companyId, accounterId);
+	}
+
+	@Override
+	public List<Company> getCompanyListByAccounterId(String accounterId) {
+		return companyDao.getCompanyListByAccounterId(accounterId);
+	}
 	
 	
 }

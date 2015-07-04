@@ -184,14 +184,47 @@ public class AccounterController {
 		return accounterService.getAllCompanyExpense(userId);
 	}
 	
-	@RequestMapping("/accounter/getCompanyExpenseByCompanyName")
-	@ResponseBody
-	public Map<String, List<Map<String, String>>> getCompanyExpenseByCompanyName(HttpServletRequest request) {
+	@RequestMapping("/accounter/uploadCompanySalaryTemplate")
+	public String uploadCompanySalaryTemplate(@RequestParam("files") MultipartFile file, HttpServletRequest request) {
 		String userId = (String) request.getSession().getAttribute(
 				SessionConstant.SESSION_USER_ID);
-		String companyName = request.getParameter("companyName");
-		if(companyName == null || companyName.isEmpty()) return null;
-		return accounterService.getCompanyExpenseByCompanyName(userId, companyName);
+		String companyId = request.getParameter("companyId");
+		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/files/company");
+		accounterService.uploadCompanySalaryTemplate(companyId, realPath, file, userId);
+		return "redirect:/views/webviews/accounter/company_salary_template_upload.html";
+	}
+	
+	@RequestMapping("/accounter/getAllAccounterCompany")
+	@ResponseBody
+	public List<Map<String, String>> getAllAccounterCompany(HttpServletRequest request) {
+		String userId = (String) request.getSession().getAttribute(
+				SessionConstant.SESSION_USER_ID);
+		return accounterService.getAllAccounterCompany(userId);
+	}
+	
+	@RequestMapping("/accounter/getAllAccounterCompanyWithoutCondition")
+	@ResponseBody
+	public List<Map<String, String>> getAllAccounterCompanyWithoutCondition(HttpServletRequest request) {
+		String userId = (String) request.getSession().getAttribute(
+				SessionConstant.SESSION_USER_ID);
+		return accounterService.getAllAccounterCompanyWithoutCondition(userId);
+	}
+	
+	@RequestMapping("/accounter/getAllCompanyExpenseByCondition")
+	@ResponseBody
+	public Map<String, List<Map<String, String>>> getAllCompanyExpenseByCondition(HttpServletRequest request) {
+		String userId = (String) request.getSession().getAttribute(
+				SessionConstant.SESSION_USER_ID);
+		String conditionType = request.getParameter("conditionType");
+		String conditionValue = request.getParameter("conditionValue");
+		return accounterService.getAllCompanyExpenseByCondition(userId, conditionType, conditionValue);
+	}
+	
+	@RequestMapping("/accounter/getTakeBillWay")
+	@ResponseBody
+	public Map<String, String> getTakeBillWay(HttpServletRequest request) {
+		String companyId = request.getParameter("companyId");
+		return accounterService.getTakeBillWay(companyId);
 	}
 	
 	@RequestMapping("/accounter/accounterHasBelongToCompany")

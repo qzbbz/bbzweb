@@ -209,4 +209,17 @@ public class UserQueryDaoImpl implements IUserQueryDao {
 		return userInvitecode;
 	}
 
+	@Override
+	public List<User> getAccounterUserList() {
+		List<User> list = null;
+		try {
+			String sql = "select * from user where type_id ='1'";
+			list = jdbcTemplate.query(sql, new RowMapperResultSetExtractor<User>(
+							new UserMapper()));
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return list;
+	}
+
 }

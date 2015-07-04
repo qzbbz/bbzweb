@@ -235,5 +235,15 @@ public class UserServiceImpl implements IUserService {
 	public UserInviteCode getUserInvitecodeByUserId(String userId) {
 		return userQueryDao.getUserInvitecodeByUserId(userId);
 	}
+
+	@Override
+	public List<User> getAccounterUserList() {
+		return userQueryDao.getAccounterUserList();
+	}
+ 
+	@Override
+	public boolean modifyUserPwdByUserId(String userPwd, String userId) {
+		return userOperationDao.updateUserPwd(userId, userPwd);
+	}
 }
 

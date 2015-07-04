@@ -17,7 +17,7 @@
             <div class="side-bar-content" id="menuTree"></div>
 			<div class="side-bar-bottom">
 				<ul>
-					<li><a href=""><i class="setting"></i>设置</a></li>
+					<li><a href="javascript:void(0);" id="setPwd"><i class="setting"></i>设置</a></li>
 					<li><a href="/logout"><i class="exit"></i>安全退出</a></li>
 				</ul>
 			</div>
@@ -28,24 +28,28 @@
 				<div class="form-horizontal onlineTools">
 					<div class="row show-grid">
 						<label class="control-label control-label-small"></label>
-                        <div class="controls"><select name="condition" id="condition" class="input input-normal"><option value='0'>所有</option><option value='1'>按公司名称检索</option></select><input type="text" id="content" class="input input-normal ml10"><button id="searchData" class="button button-success ml10">搜索</button></div>
+                        <div class="controls"><select name="condition" id="condition" class="input input-normal"><option value='0'>所有</option><option value='1'>按公司名称检索</option><option value='2'>按创建日期检索</option><option value='3'>按项目类型检索</option></select><input type="text" id="content" class="input input-normal ml10"><button id="searchData" class="button button-success ml10">搜索</button></div>
 					</div>
 				</div>
 			</div>
 			<div id="currentTips" class="tips tips-warning" style="display: none;"></div>
 			<table class="table center">
 	    		<colgroup>
-	    			<col style="width:25%;">
-	    			<col style="width:25%;">
-	    			<col style="width:25%;">
-	    			<col style="width:25%;">
+	    			<col style="width:20%;">
+	    			<col style="width:16%;">
+	    			<col style="width:16%;">
+	    			<col style="width:16%;">
+	    			<col style="width:16%;">
+	    			<col style="width:16%;">
 	    		</colgroup>
 	    		<thead id="records">
 	    			<tr>
 	    				<th>公司名称</th>
-	    				<th>日期</th>
-	    				<th>类型</th>
-	    				<th>金额</th>
+	    				<th>创建日期</th>
+	    				<th>项目类型</th>
+	    				<th>费用类型</th>
+	    				<th>费用金额</th>
+	    				<th>下载文件</th>
 	    			</tr>
 	    		</thead>
 	    		<tbody id='retData'>
@@ -57,7 +61,37 @@
 			</form>
 		</div>
 	</div>
-	
+	<div id="modifyPwd" style="display:none;">
+		<div id="form" class="form-horizontal">
+			<div class="control-group">
+				<label class="control-label">输入旧密码：</label>
+				<div class="controls">
+					<input id="old_pwd" type="password" class="input-large"
+						data-rules="{required : true}" style="width:250px;">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">输入新密码：</label>
+				<div class="controls control-row-auto">
+					<input id="new_pwd" type="password" class="input-large"
+						data-rules="{required : true}" style="width:250px;">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">再次输入新密码：</label>
+				<div class="controls control-row-auto">
+					<input id="confirm_new_pwd" type="password" class="input-large"
+						data-rules="{required : true}" style="width:250px;">
+				</div>
+			</div>
+			<div class="control-group">
+				<label id="modify_pwd_tips"></label>
+			</div>
+			<div class="control-group control-btn">
+				<div class="layer-wrap-footer"><a href="javascript:void(0);" id="modify_pwd_button" class="button button-success">确定修改</a></div>
+			</div>
+		</div>
+	</div>
 <!--该js需要修改js路径及修改seajs路径-->
 <script src="/js/webjs/jquery-1.11.1.js"></script>
 <script src="http://g.alicdn.com/bui/seajs/2.3.0/sea.js"></script>
@@ -65,6 +99,55 @@
 <script src="/js/webjs/menuTree.js"></script>
 <script type="text/javascript">
 	BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
+		var modifyPwdForm = new Overlay.Dialog({
+            title:'密码修改',
+            width:600,
+            height:280,
+            contentId:'modifyPwd',
+            success:function () {
+              	this.close();
+            },
+            buttons : []
+        });
+		$('#setPwd').click(function(){
+			modifyPwdForm.show();
+		})
+		$('#modify_pwd_button').click(function(){
+			var oldPwd = $('#old_pwd').val();
+			var newPwd = $('#new_pwd').val();
+			var confirmNewPwd = $('#confirm_new_pwd').val();
+			if(oldPwd == null || oldPwd == "") {
+				BUI.Message.Alert('请输入旧密码！','warning');
+				return;
+			}
+			if(newPwd == null || newPwd == "") {
+				BUI.Message.Alert('请输新密码！','warning');
+				return;
+			}
+			if(confirmNewPwd == null || confirmNewPwd == "") {
+				BUI.Message.Alert('请输入新密码！','warning');
+				return;
+			}
+			if(newPwd != confirmNewPwd) {
+				BUI.Message.Alert('两次输入的新密码不一致，请检查！','warning');
+				return;
+			}
+			$.ajax({
+				url : '/modifyPassword',
+				type : "POST",
+				data : {oldPwd:oldPwd, newPwd:newPwd},
+				success : function(data) {
+					if(data.error_code == "0") {
+						BUI.Message.Alert('修改密码成功！','success');
+					} else {
+						BUI.Message.Alert('修改密码失败！错误信息：' + data.error_msg,'warning');
+					}
+				},
+				error : function(data) {
+					BUI.Message.Alert('修改密码失败！错误信息：' + data.error_msg,'warning');
+				}
+			});
+		})
 		function createDataList(data) {
 			$('#retData').html("");
 			if(data == null || data == "") return;
@@ -75,14 +158,18 @@
 			var companyExpense = data.companyExpense;
 			var container = $('#retData');
 			for(var i=0; i<companyExpense.length; i++) {
-			    var a = $("<tr><td>"+companyExpense[i].companyName+"</td><td>"+companyExpense[i].date+"</td><td>公司相关费用</td><td><a href='javascript:void(0);'>点击下载后查看</a></td></tr>");
+				var trNode = $("<tr></tr>");
+				var tdNode = $("<td>"+companyExpense[i].companyName+"</td><td>"+companyExpense[i].date+"</td><td>"+companyExpense[i].item_type+"</td><td>"+companyExpense[i].type+"</td><td>"+companyExpense[i].amount+"</td>");
+			    var aNode = $("<td><a href='javascript:void(0);'>点击下载后查看</a></td>");
 			    var filesrc = companyExpense[i].file;
-			    a.attr("file-src", filesrc);
-			    a.click(function(event) {
+			    aNode.attr("file-src", filesrc);
+			    aNode.click(function(event) {
 			    	$('#fileName').val($(this).attr("file-src"));
 			    	$('#downloadForm').submit();
 			    });
-			    a.appendTo(container);
+			    tdNode.appendTo(trNode);
+			    aNode.appendTo(trNode);
+			    trNode.appendTo(container);
 			}
 			var companyInvoice = data.companyInvoice;
 			for(var i=0; i<companyInvoice.length; i++) {
@@ -129,7 +216,6 @@
 				BUI.Message.Alert('请输入需要检索内容的内容！','warning');
 				return;
 			}
-			return;
 			if(conditionType == '0') {
 				$.ajax({
 					url : '/accounter/getAllCompanyExpense',
@@ -141,9 +227,9 @@
 				});
 			} else {
 				$.ajax({
-					url : '/accounter/getCompanyExpenseByCompanyName',
+					url : '/accounter/getAllCompanyExpenseByCondition',
 					type : "POST",
-					data : {companyName:conditionValue},
+					data : {conditionType:conditionType,conditionValue:conditionValue},
 					success : function(data) {
 						createDataList(data);
 					}
@@ -166,6 +252,8 @@
         var menu = new menuTree(
             {"nodes" : [
 					{text : '公司费用信息',id : '10',href:"/views/webviews/accounter/company_expense_records.html", leaf:false, expanded : false,children: []},
+					{text : '公司工资模板上传',id : '30',href:"/views/webviews/accounter/company_salary_template_upload.html", leaf:false, expanded : false,children: []},
+					{text : '预约取发票方式查询',id : '40',href:"/views/webviews/accounter/take_bill_way.html", leaf:false, expanded : false,children: []},
 					{text : '完善注册信息',id : '20',href:"/views/webviews/accounter/finish_reg_info.html",  leaf:false, expanded : false,children: []}
 					]
             },"menuTree"

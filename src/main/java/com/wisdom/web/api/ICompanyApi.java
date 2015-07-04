@@ -26,7 +26,11 @@ public interface ICompanyApi {
 	
 	public Map<String, String> uploadCompanyBankSta(MultipartFile file, Map<String, String> params);
 	
+	public Map<String, String> uploadCompanySales(MultipartFile file, Map<String, String> params);
+	
 	public List<Map<String, String>> getCompanyBankStaByCondition(Map<String, String> params);
+	
+	public List<Map<String, String>> getCompanySalesByCondition(Map<String, String> params);
 	
 	public Map<String, String> getCompanyDetailInfo(String userId);
 	
@@ -37,5 +41,13 @@ public interface ICompanyApi {
 	public List<Map<String, String>> getSalaryTemplateHistory(long companyId);
 	
 	public List<Map<String, String>> getSalaryHistory(long companyId);
+	
+	public boolean deleteCompanySales(String idList, String realPath);
+	
+	public boolean deleteCompanyBill(String idList, String realPath);
+	
+	public boolean deleteCompanySalary(String idList, String realPath);
+	
+	public boolean setTakeType(long companyId, String takeType);
 		
 }

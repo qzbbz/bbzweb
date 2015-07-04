@@ -14,9 +14,15 @@ public interface ICompanyDao {
 	
 	public boolean updateCompany(Company company);
 	
+	public boolean updateCompanyTakeType(long companyId, String takeType);
+	
 	public boolean updateCompanyName(String companyName, long companyId);
 	
+	public boolean updateCompanyAccounter(long companyId, String accounterId);
+	
 	List<Company> getSubCompanyListByCompanyId(long companyId);
+	
+	List<Company> getCompanyListByAccounterId(String accounterId);
 	
 	List<Company> getAllCompany();
 		

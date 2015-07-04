@@ -35,4 +35,14 @@ public class CompanySalaryServiceImpl implements ICompanySalaryService {
 		return companySalaryDao.getAllCompanySalary(companyId);
 	}
 
+	@Override
+	public boolean deleteCompanySalaryById(long id) {
+		return companySalaryDao.deleteCompanySalaryById(id);
+	}
+
+	@Override
+	public CompanySalary getCompanySalaryById(long id) {
+		return companySalaryDao.getCompanySalaryById(id);
+	}
+
 }

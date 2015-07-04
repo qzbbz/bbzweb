@@ -119,4 +119,34 @@ public class CompanyDaoImpl implements ICompanyDao {
 		return list;
 	}
 
+	@Override
+	public boolean updateCompanyTakeType(long companyId, String takeType) {
+		String sql = "update company set take_type=? where id=?";
+		int affectedRows = jdbcTemplate.update(sql, takeType, companyId);
+		logger.debug("updateCompanyTakeType result : {}", affectedRows);
+		return affectedRows != 0;
+	}
+
+	@Override
+	public boolean updateCompanyAccounter(long companyId, String accounterId) {
+		String sql = "update company set accounter_id=? where id=?";
+		int affectedRows = jdbcTemplate.update(sql, accounterId, companyId);
+		logger.debug("updateCompanyAccounter result : {}", affectedRows);
+		return affectedRows != 0;
+	}
+
+	@Override
+	public List<Company> getCompanyListByAccounterId(String accounterId) {
+		List<Company> list = null;
+		try {
+			String sql = "select * from company where accounter_id=?";
+			list = jdbcTemplate.query(sql, new Object[]{accounterId},
+					new RowMapperResultSetExtractor<Company>(
+							new CompanyMapper()));
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return list;
+	}
+
 }

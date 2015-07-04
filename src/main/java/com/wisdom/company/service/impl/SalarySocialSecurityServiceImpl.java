@@ -47,4 +47,14 @@ public class SalarySocialSecurityServiceImpl implements ISalarySocialSecuritySer
 		return salarySocialSecurityDao.getSSSByCompanyId(companyId);
 	}
 
+	@Override
+	public SalarySocialSecurity getSSSById(long id) {
+		return salarySocialSecurityDao.getSSSById(id);
+	}
+
+	@Override
+	public boolean setTemplate(long companyId, String fileName) {
+		return salarySocialSecurityDao.setTemplate(companyId, fileName);
+	}
+
 }

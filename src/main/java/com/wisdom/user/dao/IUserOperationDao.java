@@ -44,6 +44,8 @@ public interface IUserOperationDao {
 	
 	public boolean updateUserPwd(UserPwd userPwd);
 	
+	public boolean updateUserPwd(String userId, String userPwd);
+	
 	public boolean addUserPhone(UserPhone userPhone);
 	
 	public boolean deleteUserPhone(UserPhone userPhone);

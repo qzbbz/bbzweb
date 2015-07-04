@@ -12,6 +12,10 @@ public interface ICompanySalaryService {
 	
 	public boolean deleteCompanySalaryByCompanyId(long companyId);
 	
+	public boolean deleteCompanySalaryById(long id);
+	
 	public List<CompanySalary> getAllCompanySalary(long companyId);
+	
+	public CompanySalary getCompanySalaryById(long id);
 	
 }

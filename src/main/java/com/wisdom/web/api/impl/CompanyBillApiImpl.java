@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -94,6 +95,10 @@ public class CompanyBillApiImpl implements ICompanyBillApi {
 			Timestamp stamp = cb.getCreateTime();
 			map.put("id", String.valueOf(cb.getId()));
 			map.put("date", sdf.format(stamp));
+			Double amount = cb.getAmount() == null?0:cb.getAmount();
+			DecimalFormat format = new DecimalFormat("#0.000");
+			map.put("amount", format.format(amount));
+			map.put("expense_type", cb.getType());
 			map.put("file_name", cb.getFileName() == null ? "" : cb.getFileName());
 			map.putAll(extraParams);
 			retList.add(map);
@@ -124,8 +129,14 @@ public class CompanyBillApiImpl implements ICompanyBillApi {
 
 	@Override
 	public boolean modifyCompanyBill(String id, String amount, String type) {
-		
-		return false;
+		try {
+			Long id_ = Long.valueOf(id);
+			Double amount_ = Double.valueOf(amount);
+			companyBillService.updateCompanyBill(amount_, type, id_);
+		} catch(Exception e) {
+			logger.debug("Exception : {}", e.toString());
+		}
+		return true;
 	}
 	
 }

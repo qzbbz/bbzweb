@@ -42,6 +42,8 @@ public interface IUserService {
 	
 	public boolean setUserPwdByUserId(String userPwd, String userId);
 	
+	public boolean modifyUserPwdByUserId(String userPwd, String userId);
+	
 	public boolean checkUserAuth(String userId,String appovalUser);
 	
 	public List<String> getApprovalUserList(String userId);
@@ -51,5 +53,7 @@ public interface IUserService {
 	public boolean deleteUser(String userId);
 	
 	public UserInviteCode getUserInvitecodeByUserId(String userId);
+	
+	public List<User> getAccounterUserList();
 	
 }

@@ -101,4 +101,20 @@ public class CompanyBillController {
 		}
 		return retMap;
 	}
+	
+	@RequestMapping("/company/modifyCompanyBill")
+	@ResponseBody
+	public Map<String, String> modifyCompanyBill(
+			HttpServletRequest request) {
+		Map<String, String> retMap = new HashMap<>();
+		String id = (String)request.getParameter("id");
+		String amount = (String)request.getParameter("amount");
+		String type = (String)request.getParameter("type");
+		if(companyBillApi.modifyCompanyBill(id, amount, type)) {
+			retMap.put("error_code", "0");
+		} else {
+			 retMap.put("error_code", "1");
+		}
+		return retMap;
+	}
 }

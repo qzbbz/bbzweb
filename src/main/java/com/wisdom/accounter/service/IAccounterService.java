@@ -3,6 +3,10 @@ package com.wisdom.accounter.service;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.web.multipart.MultipartFile;
+
 import com.wisdom.common.model.Accounter;
 
 public interface IAccounterService {
@@ -26,10 +30,18 @@ public interface IAccounterService {
 	
 	public Map<String, List<Map<String, String>>> getAllCompanyExpense(String userId);
 	
-	public Map<String, List<Map<String, String>>> getCompanyExpenseByCompanyName(String userId, String companyName);
+	public List<Map<String, String>> getAllAccounterCompany(String userId);
+	
+	public List<Map<String, String>> getAllAccounterCompanyWithoutCondition(String userId);
+		
+	public Map<String, List<Map<String, String>>> getAllCompanyExpenseByCondition(String userId, String conditionType, String conditionValue);
 	
 	public Map<String, String> accounterBelongToCompany(String userId);
 	
 	public Map<String, String> accounterHasFinishRegister(String userId);
+	
+	public Map<String, String> uploadCompanySalaryTemplate(String companyId, String realPath, MultipartFile file, String userId);
+	
+	public Map<String, String> getTakeBillWay(String companyId);
 	
 }

@@ -25,4 +25,10 @@ public interface ICompanyService {
 	public Result delCompany(long companyId);
 	
 	List<Company> getAllCompany();
+	
+	public boolean updateCompanyTakeType(long companyId, String takeType);
+	
+	public boolean updateCompanyAccounter(long companyId, String accounterId);
+	
+	List<Company> getCompanyListByAccounterId(String accounterId);
 }
