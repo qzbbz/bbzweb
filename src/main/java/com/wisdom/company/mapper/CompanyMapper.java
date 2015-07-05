@@ -12,7 +12,8 @@ public class CompanyMapper implements RowMapper<Company> {
 		Company u = new Company(rs.getLong("id"), rs.getString("name"),
 				rs.getLong("parent_id"), rs.getInt("month_expense"), 
 				rs.getString("perfect_moment"), rs.getString("take_type"),
-				rs.getString("accounter_id"), rs.getTimestamp("create_time"));
+				rs.getString("accounter_id"),rs.getString("company_code"), 
+				rs.getTimestamp("create_time"));
 		return u;
 	}
 }

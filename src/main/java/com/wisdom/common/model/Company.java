@@ -21,6 +21,7 @@ public class Company implements java.io.Serializable {
 	private String perfectMoment;
 	private String takeType;
 	private String accounterId;
+	private String companyCode;
 	private Timestamp createTime;
 
 	// Constructors
@@ -36,7 +37,7 @@ public class Company implements java.io.Serializable {
 
 	/** full constructor */
 	public Company(Long id, String name, Long parentId, Integer monthExpense,
-			String perfectMoment, String takeType, String accounterId, Timestamp createTime) {
+			String perfectMoment, String takeType, String accounterId, String companyCode, Timestamp createTime) {
 		this.id = id;
 		this.name = name;
 		this.parentId = parentId;
@@ -44,6 +45,7 @@ public class Company implements java.io.Serializable {
 		this.perfectMoment = perfectMoment;
 		this.takeType = takeType;
 		this.accounterId = accounterId;
+		this.companyCode = companyCode;
 		this.createTime = createTime;
 	}
 
@@ -103,6 +105,14 @@ public class Company implements java.io.Serializable {
 
 	public void setPerfectMoment(String perfectMoment) {
 		this.perfectMoment = perfectMoment;
+	}
+	
+	public String getCompanyCode() {
+		return companyCode;
+	}
+
+	public void setCompanyCode(String companyCode) {
+		this.companyCode = companyCode;
 	}
 
 	public Timestamp getCreateTime() {

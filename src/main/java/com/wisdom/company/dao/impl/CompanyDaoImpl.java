@@ -50,14 +50,15 @@ public class CompanyDaoImpl implements ICompanyDao {
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		long id = jdbcTemplate.update(new PreparedStatementCreator() {  
 	        public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {  
-	        	String sql = "insert into company (name, parent_id, month_expense, perfect_moment, create_time)"
-	    				+ " values (?, ?, ?, ?, ?)";
+	        	String sql = "insert into company (name, parent_id, month_expense, perfect_moment, company_code,create_time)"
+	    				+ " values (?, ?, ?, ?, ?, ?)";
 	               PreparedStatement ps = connection.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);  
 	               ps.setString(1, company.getName());  
 	               ps.setLong(2, company.getParentId());  
 	               ps.setInt(3, company.getMonthExpense());
 	               ps.setString(4, company.getPerfectMoment());
-	               ps.setTimestamp(5, company.getCreateTime());
+	               ps.setString(5, company.getCompanyCode());
+	               ps.setTimestamp(6, company.getCreateTime());
 	               return ps;  
 	        }  
 	    }, keyHolder);
@@ -96,6 +97,20 @@ public class CompanyDaoImpl implements ICompanyDao {
 		List<Company> list = null;
 		try {
 			String sql = "select * from company where parent_id=?";
+			list = jdbcTemplate.query(sql, new Object[]{companyId},
+					new RowMapperResultSetExtractor<Company>(
+							new CompanyMapper()));
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return list;
+	}
+	
+	@Override
+	public List<Company> getSubCompanyListByCompanyIdOrder(long companyId) {
+		List<Company> list = null;
+		try {
+			String sql = "select * from company where parent_id=? order by company_code desc";
 			list = jdbcTemplate.query(sql, new Object[]{companyId},
 					new RowMapperResultSetExtractor<Company>(
 							new CompanyMapper()));

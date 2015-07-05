@@ -23,6 +23,7 @@ public interface ICompanyDao {
 	List<Company> getSubCompanyListByCompanyId(long companyId);
 	
 	List<Company> getCompanyListByAccounterId(String accounterId);
+	public List<Company> getSubCompanyListByCompanyIdOrder(long companyId);
 	
 	List<Company> getAllCompany();
 		

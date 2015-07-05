@@ -109,7 +109,7 @@ public class DeptDaoImpl implements IDeptDao {
 	
 	@Override
 	public boolean updateDept(Dept dept) {
-		String sql = "update dept set name=?, company_id=?, parent_id=?, cost_center_encode=?, level=? where id=?";
+		String sql = "update dept set name=?, company_id=?, parent_id=?,dept_code=?, cost_center_encode=?, level=? where id=?";
 		if(dept.getName()== null || 
 				dept.getCompanyId() == null || 
 				dept.getCostCenterEncode() == null) {
@@ -119,6 +119,7 @@ public class DeptDaoImpl implements IDeptDao {
 				dept.getName(),
 				dept.getCompanyId(),
 				dept.getParentId() == null ? 0 : dept.getParentId(),
+				dept.getDeptCode(),
 				dept.getCostCenterEncode(),
 				dept.getLevel(),
 				dept.getId());
@@ -164,6 +165,7 @@ public class DeptDaoImpl implements IDeptDao {
 		return affectedRows != 0;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public long querySubDeptNumByIdAndCompanyId(long companyId, long id) {
 		String sql = "select count(id) from dept where company_id=? and parent_id=?";
@@ -175,4 +177,24 @@ public class DeptDaoImpl implements IDeptDao {
 		}
 		return 0;
 	}
+
+	@Override
+	public List<Dept> querySubDeptList(long comanyId, long parentId) {
+		if(comanyId == -1 || parentId == -1){
+			logger.error("parameter error!");
+			return null;
+		}
+		List<Dept> list = null;
+		try {
+			String sql = "select * from dept where company_id=? and parent_id=? order by dept_code desc";
+			list = jdbcTemplate.query(sql, new Object[]{ comanyId, parentId}, new RowMapperResultSetExtractor<Dept>(new DeptMapper()));
+		} catch (Exception e) {
+			logger.error("querySubDeptList error!");
+			logger.error(e.toString());
+		}
+		
+		return list;
+	}
+	
+	
 }

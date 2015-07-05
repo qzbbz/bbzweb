@@ -20,6 +20,12 @@ public class DeptServiceImpl implements IDeptService {
 	@Autowired
 	private IDeptDao deptDao;
 	
+	
+	@Override
+	public Dept getDeptById(long id){
+		return deptDao.getDeptByDeptId(id);
+	}
+	
 	@Override
 	public String getDeptNameById(long id) {
 		Dept dept = deptDao.getDeptByDeptId(id);
@@ -69,5 +75,17 @@ public class DeptServiceImpl implements IDeptService {
 		dept.setId(deptId);
 		return deptDao.deleteDept(dept);
 	}
+
+	@Override
+	public List<Dept> querySubDeptList(long companyId, long parentId) {
+		return deptDao.querySubDeptList(companyId, parentId);
+	}
+
+	@Override
+	public boolean updateDept(Dept dept) {
+		return deptDao.updateDept(dept);
+	}
+	
+	
 
 }

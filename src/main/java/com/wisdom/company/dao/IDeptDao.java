@@ -22,4 +22,6 @@ public interface IDeptDao {
 	
 	public long querySubDeptNumByIdAndCompanyId(long companyId,long id);
 	
+	public List<Dept> querySubDeptList(long comanyId,long parentId);
+	
 }

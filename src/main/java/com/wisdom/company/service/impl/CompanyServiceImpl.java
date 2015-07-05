@@ -30,6 +30,20 @@ public class CompanyServiceImpl implements ICompanyService {
 	
 	@Override
 	public long addCompany(Company company) {
+		//增加costCenter中的公司编码部分
+		if(-1 == company.getParentId()){
+			company.setCompanyCode("10");
+		}else{
+			List<Company> list = companyDao.getSubCompanyListByCompanyIdOrder(company.getParentId());
+			if(null == list || list.size() == 0){
+				company.setCompanyCode("11");
+			}else{
+				long compCode = Long.valueOf(list.get(0).getCompanyCode());
+				company.setCompanyCode(String.valueOf(compCode + 1));
+			}
+		}
+		//add end
+		
 		return companyDao.addCompany(company);
 	}
 
