@@ -46,9 +46,7 @@ public class TestController {
 		
 		logger.debug("companyId:{},deptId:{}",companyId,deptId);
 		deptCostEncode = generateCostCenterApiService.genCostCenterAndUpdate(Long.parseLong(companyId), 
-															Long.parseLong(deptId),
-															1, 
-															false);
+															Long.parseLong(deptId));
 		result.addResult("costCode", deptCostEncode);
 		return result;
 	}

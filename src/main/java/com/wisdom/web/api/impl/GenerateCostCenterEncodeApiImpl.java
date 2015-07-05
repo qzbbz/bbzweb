@@ -38,9 +38,9 @@ public class GenerateCostCenterEncodeApiImpl implements IGenerateCostCenterEncod
 	 * @return null 失败   String 返回生成的code
 	 */
 	@Override
-	public String genCostCenterAndUpdate(long companyId,long  deptId,int deptLevel,boolean subCompany){
+	public String genCostCenterAndUpdate(long companyId,long  deptId){
 		if(companyId ==-1 || deptId == -1 ){
-			logger.error("parameter not valid error! companyId {},deptId {},deptLevel{}",companyId,deptId,deptLevel);
+			logger.error("parameter not valid error! companyId {},deptId {},",companyId,deptId);
 			return null;
 		}
 		//默认部门初始化编码
