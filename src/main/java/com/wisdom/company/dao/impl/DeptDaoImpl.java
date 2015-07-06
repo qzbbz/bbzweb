@@ -91,7 +91,7 @@ public class DeptDaoImpl implements IDeptDao {
 					ps.setString(1, dept.getName());
 					ps.setLong(2, dept.getCompanyId());
 					ps.setLong(3,dept.getParentId());
-					ps.setDouble(4, dept.getCostCenterEncode());
+					ps.setDouble(4, 0);
 					ps.setInt(5, dept.getLevel());
 					ps.setTimestamp(6,dept.getCreateTime() == null ? 
 									new Timestamp(System.currentTimeMillis()) : dept.getCreateTime() );

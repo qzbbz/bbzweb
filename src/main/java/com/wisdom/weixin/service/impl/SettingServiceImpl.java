@@ -115,4 +115,9 @@ public class SettingServiceImpl implements ISettingService {
 		return retMap;
 	}
 
+	@Override
+	public boolean userDisbindCompany(String openId) {
+		return userWeixinService.deleteUserOpenidByOpenid(openId);
+	}
+
 }

@@ -418,7 +418,7 @@
     		var oneLevelDeptSelectCostCenterEncode = $('#oneLevelDeptSelect option:selected').val();
     		var oneLevelDeptSelectName = $('#oneLevelDeptSelect option:selected').text();
     		var item = tree.getSelected();
-    		var companyId = (item == null || item=='' ? headCompanyId : item.companyId);
+    		var companyId = (item == null || item=='' ? headCompanyId : (item.id == null ? item.companyId : item.id));
     		$.ajax({
         		url : '/company/addDept',
         		type : "POST",

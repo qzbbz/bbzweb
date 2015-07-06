@@ -32,7 +32,7 @@ public class SheetCashDaoImpl implements ISheetCashDao {
 			sheetCash = jdbcTemplate.queryForObject(sql, new Object[] { companyId, date },
 					new SheetCashMapper());
 		} catch (Exception e) {
-			logger.debug("result is 0.");
+			logger.debug("result is 0. exception : {}" + e.toString());
 		}
 		return sheetCash;
 	}

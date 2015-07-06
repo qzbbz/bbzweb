@@ -402,7 +402,7 @@ function registerSelectPlanEvents() {
 			$(this).tooltip('hide');
 		})
 		$('#step3_btn_next').removeClass('btn-disabled');
-		$('#userCompanyIncomes').val('135');
+		$('#userCompanyIncomes').val('0-10K');
 		document.getElementById('plan1-info-step4').style.display = 'block';
 		document.getElementById('plan2-info-step4').style.display = 'none';
 		document.getElementById('plan3-info-step4').style.display = 'none';
@@ -418,7 +418,7 @@ function registerSelectPlanEvents() {
 			$(this).tooltip('hide');
 		})
 		$('#step3_btn_next').removeClass('btn-disabled');
-		$('#userCompanyIncomes').val('256');
+		$('#userCompanyIncomes').val('10K-25K');
 		document.getElementById('plan1-info-step4').style.display = 'none';
 		document.getElementById('plan2-info-step4').style.display = 'block';
 		document.getElementById('plan3-info-step4').style.display = 'none';
@@ -434,7 +434,7 @@ function registerSelectPlanEvents() {
 			$(this).tooltip('hide');
 		})
 		$('#step3_btn_next').removeClass('btn-disabled');
-		$('#userCompanyIncomes').val('556');
+		$('#userCompanyIncomes').val('25K-45K');
 		document.getElementById('plan1-info-step4').style.display = 'none';
 		document.getElementById('plan2-info-step4').style.display = 'none';
 		document.getElementById('plan3-info-step4').style.display = 'block';
@@ -450,7 +450,7 @@ function registerSelectPlanEvents() {
 			$(this).tooltip('hide');
 		})
 		$('#step3_btn_next').removeClass('btn-disabled');
-		$('#userCompanyIncomes').val('780');
+		$('#userCompanyIncomes').val('>45K');
 		document.getElementById('plan1-info-step4').style.display = 'none';
 		document.getElementById('plan2-info-step4').style.display = 'none';
 		document.getElementById('plan3-info-step4').style.display = 'none';

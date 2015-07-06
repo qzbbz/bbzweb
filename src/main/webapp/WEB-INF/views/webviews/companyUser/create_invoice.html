@@ -313,7 +313,7 @@
                     "desc" : par.find("input[name='desc']").val(),
                     "desc_snap" : par.find("input[name='desc']").val().length > 8 ? par.find("input[name='desc']").val().substr(0,8)+"..." : par.find("input[name='desc']").val(),
                 }
-                var re = /^\d+(\.\d)?$/;
+                var re = /^-?[1-9]+(\.\d+)?$|^-?0(\.\d+)?$|^-?[1-9]+[0-9]*(\.\d+)?$/;
                 if(!re.test(d.amount)) {
                 	BUI.use(['bui/overlay'], function(Overlay){
     					BUI.Message.Alert('金额只能是数字，请检查！','warning');

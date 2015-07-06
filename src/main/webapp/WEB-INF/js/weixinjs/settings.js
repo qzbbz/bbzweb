@@ -355,6 +355,45 @@ $(function(){
 			this.bindEvent();
 		}
 	}
+	
+	controler['disbindAccount'] = {
+			render: function(){
+				var self = this;
+				var template = getTemplate('disbindAccount');
+				
+				var html = Mustache.render(template, companyInfo);
+				appendTemplate(html);
+				$('[data-role="tabs"]').tabs();
+			},
+			bindEvent: function() {
+				$('#disbindCompany').click(function() {
+					$.ajax({ 
+							type : "POST", 
+					        url  : "/userDisbindCompany",  
+					        cache : false,
+					        data : Object.toparams({'openId': userOpenId}), 
+					        success :  userDisbindCompanySuccess, 
+					        error : userDisbindCompanyError 
+					 });
+				});
+				function userDisbindCompanySuccess(data, status) {
+					if (data.error_code != "0") {
+						alert("无法获取您的微信Openid,请稍后重试！");
+					} else {
+						alert("解除绑定成功！");
+					}
+					companyInfo = null;
+					controler['help'].init();
+				};
+				function userDisbindCompanyError() {
+					alert("解除绑定失败，请稍后重试！");
+				};
+			},
+			init: function(){
+				this.render();
+				this.bindEvent();
+			}
+		}
 
 	controler['help'] = {
 		render: function(){

@@ -121,7 +121,7 @@ public class CompanyApiImpl implements ICompanyApi {
 
 		Company company = new Company();
 		company.setName(userCompanyName);
-		company.setMonthExpense(Integer.valueOf(userCompanyIncomes));
+		company.setMonthExpense(userCompanyIncomes);
 		company.setParentId((long) -1);
 		company.setPerfectMoment(userCalledTime);
 		company.setCreateTime(new Timestamp(System.currentTimeMillis()));

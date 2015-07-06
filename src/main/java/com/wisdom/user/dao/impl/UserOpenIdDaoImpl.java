@@ -46,4 +46,30 @@ public class UserOpenIdDaoImpl implements IUserOpenIdDao {
 		logger.debug("addUserOpenid result : {}", affectedRows);
 		return affectedRows != 0;
 	}
+
+	@Override
+	public UserOpenid getUserOpenidByOpenId(String userOpenId) {
+		String sql = "select * from user_openid where openid = ?";
+		UserOpenid userOpenid = null;
+		try {
+			userOpenid = jdbcTemplate.queryForObject(sql,
+					new Object[] { userOpenId }, new UserOpenidMapper());
+		} catch (Exception e) {
+			logger.debug("result size is 0.");
+		}
+		return userOpenid;
+	}
+
+	@Override
+	public boolean deleteUserOpenidByOpenid(String openId) {
+		boolean status = true;
+		try{
+			String sql= "delete from user_openid where openid=?";
+			int num = jdbcTemplate.update(sql,new Object[]{openId});
+		}catch(Exception e){
+			status = false;
+			logger.error(e.toString());
+		}
+		return status;
+	}
 }

@@ -110,23 +110,41 @@ public class UserServiceImpl implements IUserService {
 		List<String> userIdList = new ArrayList<>();
 		UserDept userDept = userDeptDao.getUserDeptByUserId(userId);
 		if(userDept == null) return userIdList;
-		long deptId = userDept.getDeptId();
-		long deptParentId = deptService.getParentDeptIdById(deptId);
-		if(deptParentId == 0) {
-			userIdList.add(userId);
+		List<UserDept> userDeptList = userDeptDao.getUserDeptListByDeptId(userDept.getDeptId());
+		for(UserDept ud : userDeptList) {
+			if(ud.getStatus() == 1) {
+				userIdList.add(ud.getUserId());
+			}
+		}
+		if(userIdList.size() != 0) {
+			logger.debug("getApprovalUserList deptId : {}", userDept.getDeptId());
+			logger.debug("userIdList : {}", userIdList);
 			return userIdList;
 		}
-		List<UserDept> userDeptList = userDeptDao.getUserDeptListByDeptId(deptParentId);
-		if(userDeptList == null || userDeptList.size() <= 0) return userIdList;
-		for(UserDept ud : userDeptList) {
-			userIdList.add(ud.getUserId());
-		}
-		logger.debug("getApprovalUserList deptId : {}", deptId);
-		logger.debug("getApprovalUserList deptParentId : {}", deptParentId);
+		
+		recusiveGetApprovalUserList(userIdList, userDept.getDeptId());
+		
+		logger.debug("getApprovalUserList deptId : {}", userDept.getDeptId());
 		logger.debug("userIdList : {}", userIdList);
 		return userIdList;
 	}
 
+	private void recusiveGetApprovalUserList(List<String> userIdList, long deptId) {
+		long dId = deptService.getParentDeptIdById(deptId);
+		if(dId == 0) return;
+		List<UserDept> userDeptList = userDeptDao.getUserDeptListByDeptId(dId);
+		for(UserDept ud : userDeptList) {
+			if(ud.getStatus() == 1) {
+				userIdList.add(ud.getUserId());
+			}
+		}
+		if(userIdList.size() != 0) {
+			return;
+		} else {
+			recusiveGetApprovalUserList(userIdList, dId);
+		}
+	}
+	
 	@Override
 	public boolean ifNeedSuperApproval(String userId, String approvalId,
 			double amount) {

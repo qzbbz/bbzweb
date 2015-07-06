@@ -1,5 +1,7 @@
 package com.wisdom.web.api.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,9 +9,14 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -17,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.wisdom.accounter.service.IAccounterService;
 import com.wisdom.common.model.Company;
 import com.wisdom.common.model.CompanyDetail;
+import com.wisdom.common.model.SalarySocialSecurity;
 import com.wisdom.common.model.User;
 import com.wisdom.common.model.UserPhone;
 import com.wisdom.company.service.ICompanyDetailService;
@@ -96,6 +104,7 @@ public class AdminController {
 				long companyId = companyDetail.getCompanyId();
 				String companyName = companyService.getCompanyName(companyId);
 				Map<String, String> map = new HashMap<>();
+				map.put("companyId", String.valueOf(companyId));
 				map.put("companyName", companyName);
 				map.put("coporation", companyDetail.getCorporation());
 				map.put("zhuzhiCode", companyDetail.getOrgCode());
@@ -177,5 +186,80 @@ public class AdminController {
 			}
 		}
 		return retList;
+	}
+	
+	@RequestMapping("/admin/downloadCompanyFile")
+	public ResponseEntity<byte[]> downloadCompanyFile(HttpServletRequest request) {
+		String userId = (String) request.getSession().getAttribute("userId");
+		String cId = request.getParameter("companyId");
+		long companyId = Long.valueOf(cId);
+		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF");
+		ResponseEntity<byte[]> re = null;
+		CompanyDetail companyDetail = companyDetailService.getCompanyDetailByCompanyId(companyId);
+		if (companyDetail == null)
+			return null;
+		File file = new File(realPath + "/" + companyDetail.getCompanyResFile());
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentDispositionFormData("attachment", new String(
+					companyDetail.getCompanyResFile().getBytes("UTF-8"), "iso-8859-1"));
+			headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+			re = new ResponseEntity<byte[]>(
+					FileUtils.readFileToByteArray(file), headers,
+					HttpStatus.CREATED);
+		} catch (IOException e) {
+			logger.debug("download exception : {}", e.toString());
+		}
+		return re;
+	}
+	
+	@RequestMapping("/admin/downloadShuiWuFile")
+	public ResponseEntity<byte[]> downloadShuiWuFile(HttpServletRequest request) {
+		String userId = (String) request.getSession().getAttribute("userId");
+		String cId = request.getParameter("companyId");
+		long companyId = Long.valueOf(cId);
+		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF");
+		ResponseEntity<byte[]> re = null;
+		CompanyDetail companyDetail = companyDetailService.getCompanyDetailByCompanyId(companyId);
+		if (companyDetail == null)
+			return null;
+		File file = new File(realPath + "/" + companyDetail.getTaxCodeFile());
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentDispositionFormData("attachment", new String(
+					companyDetail.getTaxCodeFile().getBytes("UTF-8"), "iso-8859-1"));
+			headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+			re = new ResponseEntity<byte[]>(
+					FileUtils.readFileToByteArray(file), headers,
+					HttpStatus.CREATED);
+		} catch (IOException e) {
+			logger.debug("download exception : {}", e.toString());
+		}
+		return re;
+	}
+	
+	@RequestMapping("/admin/downloadZhuZhiFile")
+	public ResponseEntity<byte[]> downloadZhuZhiFile(HttpServletRequest request) {
+		String userId = (String) request.getSession().getAttribute("userId");
+		String cId = request.getParameter("companyId");
+		long companyId = Long.valueOf(cId);
+		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF");
+		ResponseEntity<byte[]> re = null;
+		CompanyDetail companyDetail = companyDetailService.getCompanyDetailByCompanyId(companyId);
+		if (companyDetail == null)
+			return null;
+		File file = new File(realPath + "/" + companyDetail.getOrgCodeFile());
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentDispositionFormData("attachment", new String(
+					companyDetail.getOrgCodeFile().getBytes("UTF-8"), "iso-8859-1"));
+			headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+			re = new ResponseEntity<byte[]>(
+					FileUtils.readFileToByteArray(file), headers,
+					HttpStatus.CREATED);
+		} catch (IOException e) {
+			logger.debug("download exception : {}", e.toString());
+		}
+		return re;
 	}
 }

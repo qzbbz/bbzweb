@@ -45,6 +45,27 @@ public class SettingController {
         return result;
     }
     
+    @RequestMapping("/userDisbindCompany")
+    @ResponseBody
+    public Map<String, String> userDisbindCompany(HttpServletRequest request) {
+        logger.debug("userDisbindCompany");
+        Map<String, String> result = new HashMap<>();
+        String openId = request.getParameter("openId");
+        if (openId == null || openId.isEmpty()) {
+            result.put("error_code", "1");
+        } else {
+        	logger.debug("call settingService");
+            if(settingService.userDisbindCompany(openId)) {
+            	result.put("error_code", "0");
+            } else {
+            	result.put("error_code", "1");
+            }
+        }
+        logger.debug("finishUserDisbindCompany");
+        logger.debug("resultMap :{}", result.toString());
+        return result;
+    }
+    
     @RequestMapping("/updateUserInfo")
     @ResponseBody
     public Map<String, String> updateUserInfo(HttpServletRequest request) {

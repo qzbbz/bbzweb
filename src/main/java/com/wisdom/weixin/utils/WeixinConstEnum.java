@@ -16,10 +16,10 @@ public enum WeixinConstEnum {
 
 	COMPANY_APP_SECRET("64e526f157d961831850e1aa764ed795"),
 
-	COMPANY_ACCESS_TOKEN_URL("https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=APPID&corpsecret=APPSECRET"),
+	COMPANY_ACCESS_TOKEN_URL("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET"),
 	//COMPANY_ACCESS_TOKEN_URL("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET"),
 
-	COMPANY_JS_TICKE_TURL("https://qyapi.weixin.qq.com/cgi-bin/get_jsapi_ticket?access_token=ACCESSTOKEN");
+	COMPANY_JS_TICKE_TURL("https://api.weixin.qq.com/cgi-bin/ticket/getticket?type=jsapi&access_token=ACCESSTOKEN");
 	//COMPANY_JS_TICKE_TURL("https://api.weixin.qq.com/cgi-bin/ticket/getticket?type=jsapi&access_token=ACCESSTOKEN");
 	
 	private final String constStr;

@@ -55,7 +55,7 @@ public class CompanyDaoImpl implements ICompanyDao {
 	               PreparedStatement ps = connection.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);  
 	               ps.setString(1, company.getName());  
 	               ps.setLong(2, company.getParentId());  
-	               ps.setInt(3, company.getMonthExpense());
+	               ps.setString(3, company.getMonthExpense());
 	               ps.setString(4, company.getPerfectMoment());
 	               ps.setString(5, company.getCompanyCode());
 	               ps.setTimestamp(6, company.getCreateTime());

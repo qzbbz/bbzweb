@@ -50,7 +50,7 @@ public class SheetBalanceMapper implements RowMapper<SheetBalance> {
 				rs.getDouble("total_current_assets_ending_balance"),
 				rs.getDouble("total_current_assets_beginning_balance"),
 				rs.getDouble("long_term_investments_in_bonds_ending_balance"),
-				rs.getDouble("long_term_investments_in_bonds__beginning_balance"),
+				rs.getDouble("long_term_investments_in_bonds_beginning_balance"),
 				rs.getDouble("long_term_investment_on_stocks_ending_balance"),
 				rs.getDouble("long_term_investment_on_stocks_beginning_balance"),
 				rs.getDouble("fixed_assets_original_cost_ending_balance"),

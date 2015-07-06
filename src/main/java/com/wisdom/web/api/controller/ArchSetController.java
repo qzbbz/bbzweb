@@ -57,7 +57,7 @@ public class ArchSetController {
 		String companyId = request.getParameter("companyId");
 		String parentId = request.getParameter("curDeptId");
 		String level = request.getParameter("level");
-		String deptCostEncode = request.getParameter("deptCostEncode");
+		//String deptCostEncode = request.getParameter("deptCostEncode");
 		String parentCostCenterEncode = request.getParameter("parentCostCenterEncode");
 
 		if (StringUtils.isEmpty(deptName)) {
@@ -87,12 +87,12 @@ public class ArchSetController {
 			dept.setLevel(Integer.parseInt(level) + 1); // 添加子部门时，level + 1
 			dept.setName(deptName);
 			dept.setParentId(Long.parseLong(parentId));
-			if(deptCostEncode == null || deptCostEncode.isEmpty()) {
+			/*if(deptCostEncode == null || deptCostEncode.isEmpty()) {
 				String encode = generateCostCenterEncodeApi.generateCostCenterEncode(parentCostCenterEncode);
 				dept.setCostCenterEncode(Long.valueOf(0L));//TODO
 			} else {
 				dept.setCostCenterEncode(Long.valueOf(deptCostEncode));
-			}
+			}*/
 		} catch (NumberFormatException e) {
 			logger.error("convert parameter error");
 			e.printStackTrace();
@@ -101,6 +101,9 @@ public class ArchSetController {
 		}
 
 		long retId = deptService.addDeptAndGetKey(dept);
+		String deptCode = generateCostCenterEncodeApi.genCostCenterAndUpdate(
+				Long.parseLong(companyId), retId);
+		logger.debug("deptId:{}, deptCode : {}", retId, deptCode);
 		result.getResultMap().put("deptId", retId);
 		result.setMsg("增加部门信息成功");
 		result.setResultCode(ResultCode.success.code);
@@ -133,7 +136,7 @@ public class ArchSetController {
 		Company company = new Company();
 		try {
 			company.setName(companyName);
-			company.setMonthExpense(0);
+			company.setMonthExpense(monthExpense);
 			company.setParentId(Long.parseLong(parentId));
 			company.setPerfectMoment("");
 		} catch (Exception e) {

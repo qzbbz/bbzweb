@@ -64,6 +64,7 @@
 	    	<div class="pagination"></div>
 	    	<form id="downloadForm" method="POST">
         		<input type="hidden" id="fileName" name="fileName">
+        		<input type="hidden" id="companyId" name="companyId">
 			</form>
 		</div>
 	</div>
@@ -170,21 +171,27 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 			    var shuiWuFileSrc = data[i].shuiWuFile;
 			    var zhuZhiFileSrc = data[i].zhuZhiFile;
 			    companyFileNode.attr("file-src", companyFileSrc);
+			    companyFileNode.attr("company-id", data[i].companyId);
 			    companyFileNode.click(function(event) {
 			    	$('#fileName').val($(this).attr("file-src"));
 			    	$('#downloadForm').attr('action', '/admin/downloadCompanyFile');
+			    	$('#companyId').val($(this).attr("company-id"));
 			    	$('#downloadForm').submit();
 			    });
 			    shuiWuFileNode.attr("file-src", shuiWuFileSrc);
+			    shuiWuFileNode.attr("company-id", data[i].companyId);
 			    shuiWuFileNode.click(function(event) {
 			    	$('#fileName').val($(this).attr("file-src"));
 			    	$('#downloadForm').attr('action', '/admin/downloadShuiWuFile');
+			    	$('#companyId').val($(this).attr("company-id"));
 			    	$('#downloadForm').submit();
 			    });
 			    zhuZhiFileNode.attr("file-src", zhuZhiFileSrc);
+			    zhuZhiFileNode.attr("company-id", data[i].companyId);
 			    zhuZhiFileNode.click(function(event) {
 			    	$('#fileName').val($(this).attr("file-src"));
 			    	$('#downloadForm').attr('action', '/admin/downloadZhuZhiFile');
+			    	$('#companyId').val($(this).attr("company-id"));
 			    	$('#downloadForm').submit();
 			    });
 			    tdNode.appendTo(trNode);

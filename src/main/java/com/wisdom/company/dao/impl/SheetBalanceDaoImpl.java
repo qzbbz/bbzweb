@@ -30,7 +30,7 @@ public class SheetBalanceDaoImpl implements ISheetBalanceDao {
 			sheetBalance = jdbcTemplate.queryForObject(sql, new Object[] { companyId, date },
 					new SheetBalanceMapper());
 		} catch (Exception e) {
-			logger.debug("result is 0.");
+			logger.debug("result is 0. exception : {}" + e.toString());
 		}
 		return sheetBalance;
 	}

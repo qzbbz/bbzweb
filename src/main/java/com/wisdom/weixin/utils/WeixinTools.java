@@ -10,6 +10,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,9 +32,12 @@ public class WeixinTools {
 		String timestamp = createTimestamp();
 		String string1;
 		String signature = "";
-		string1 = "jsapi_ticket=" + WeixinCache.getJsTicket()
-				+ "&noncestr=" + nonce_str + "&timestamp=" + timestamp
-				+ "&url=" + url;
+		String jsapiTicket = WeixinCache.getJsTicket();
+		String[] paramArr = new String[] {"jsapi_ticket=" + jsapiTicket,
+                "timestamp=" + timestamp, "noncestr=" + nonce_str, "url=" + url};
+		Arrays.sort(paramArr);
+		string1 = paramArr[0].concat("&"+paramArr[1]).concat("&"+paramArr[2])
+                .concat("&"+paramArr[3]);
 		logger.debug("sign url : {}", string1);
 
 		try {
@@ -126,5 +130,9 @@ public class WeixinTools {
 		if (map.containsKey("openid"))
 			openId = (String) map.get("openid");
 		return openId;
+	}
+	
+	public static void main(String[] args) {
+		System.out.println(WeixinTools.getSign("http://www.bangbangzhang.com/views/weixinviews/expense_account.html?userOpenId=oJO1gtyVvLuWxm6N4T1JuYMzgysw"));
 	}
 }

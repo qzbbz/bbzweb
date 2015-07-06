@@ -70,7 +70,7 @@ public class TestController {
 		logger.debug("companyId:{},deptId:{}",name,parentId);
 		Company company = new Company();
 		company.setName(name);
-		company.setMonthExpense(100);
+		company.setMonthExpense("100");
 		company.setPerfectMoment("");
 		company.setCreateTime(new Timestamp(System.currentTimeMillis()));
 		company.setParentId(Long.parseLong(parentId));

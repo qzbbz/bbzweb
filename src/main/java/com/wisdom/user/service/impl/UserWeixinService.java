@@ -3,6 +3,7 @@ package com.wisdom.user.service.impl;
 import com.wisdom.common.model.UserInviteCode;
 import com.wisdom.user.dao.IUserInviteCodeDao;
 import com.wisdom.user.dao.IUserOpenIdDao;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,11 @@ public class UserWeixinService implements IUserWeixinService {
 		if (userOpenid != null)
 			return true;
 		return userOpenIdDao.addUserOpenid(userId, openId);
+	}
+
+	@Override
+	public boolean deleteUserOpenidByOpenid(String openId) {
+		return userOpenIdDao.deleteUserOpenidByOpenid(openId);
 	}
 
 }

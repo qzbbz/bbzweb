@@ -8,7 +8,11 @@ import com.wisdom.common.model.UserOpenid;
 public interface IUserOpenIdDao {
 
     public UserOpenid getUserOpenidByUserId(String userId);
+    
+    public UserOpenid getUserOpenidByOpenId(String userOpendId);
 
     public boolean addUserOpenid(String userId, String openId);
+    
+    public boolean deleteUserOpenidByOpenid(String openId);
 
 }

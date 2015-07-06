@@ -8,4 +8,6 @@ public interface IUserWeixinService {
 
 	public boolean addOpenId(String userId, String openId);
 	
+	public boolean deleteUserOpenidByOpenid(String openId);
+	
 }

@@ -18,7 +18,7 @@ import com.wisdom.company.dao.ISheetSalaryTaxDao;
 import com.wisdom.company.mapper.DeptMapper;
 import com.wisdom.company.mapper.SheetSalaryTaxMapper;
 
-@Repository("sheetIncomeDao")
+@Repository("sheetSalaryTaxDao")
 public class SheetSalaryTaxDaoImpl implements ISheetSalaryTaxDao {
 
 	private static final Logger logger = LoggerFactory
