@@ -763,6 +763,7 @@ public class CompanyController {
 		Map<String, String> retMap = new HashMap<>();
 		retMap.put("result_is_null", "true");
 		retMap.put("openid_exist", "true");
+		String date = (String)request.getParameter("date");
 		String userOpenId = (String)request.getParameter("userOpenId");
 		logger.debug("getNewestSheetBalance  userOpenId : {}", userOpenId);
 		UserOpenid uod = userOpenIdDao.getUserOpenidByOpenId(userOpenId);
@@ -772,8 +773,9 @@ public class CompanyController {
 			return retMap;
 		}
 		long companyId = userService.getCompanyIdByUserId(uod.getUserId());
+		logger.debug("getNewestSheetBalance  date : {}", date);
 		logger.debug("getNewestSheetBalance  companyId : {}", companyId);
-		SheetBalance sheetBalance = sheetBalanceDao.getNewestSheetBalanceDateByCompanyId(companyId);
+		SheetBalance sheetBalance = sheetBalanceDao.getSheetBalanceDateByCompanyIdAndDate(companyId, date);
 		logger.debug("getNewestSheetBalance  sheetBalance : {}", sheetBalance);
 		if(sheetBalance != null) {
 			retMap.put("result_is_null", "false");
@@ -901,6 +903,7 @@ public class CompanyController {
 		Map<String, String> retMap = new HashMap<>();
 		retMap.put("result_is_null", "true");
 		retMap.put("openid_exist", "true");
+		String date = (String)request.getParameter("date");
 		String userOpenId = (String)request.getParameter("userOpenId");
 		logger.debug("getNewestSheetCash  userOpenId : {}", userOpenId);
 		UserOpenid uod = userOpenIdDao.getUserOpenidByOpenId(userOpenId);
@@ -911,7 +914,7 @@ public class CompanyController {
 		}
 		long companyId = userService.getCompanyIdByUserId(uod.getUserId());
 		logger.debug("getNewestSheetCash  companyId : {}", companyId);
-		SheetCash sheetCash = sheetCashDao.getNewestSheetCashDateByCompanyId(companyId);
+		SheetCash sheetCash = sheetCashDao.getSheetCashDateByCompanyIdAndDate(companyId, date);
 		if(sheetCash != null) {
 			retMap.put("result_is_null", "false");
 			DecimalFormat format = new DecimalFormat("#0.000");
@@ -975,6 +978,7 @@ public class CompanyController {
 		Map<String, String> retMap = new HashMap<>();
 		retMap.put("result_is_null", "true");
 		retMap.put("openid_exist", "true");
+		String date = (String)request.getParameter("date");
 		String userOpenId = (String)request.getParameter("userOpenId");
 		logger.debug("getNewestSheetIncome  userOpenId : {}", userOpenId);
 		UserOpenid uod = userOpenIdDao.getUserOpenidByOpenId(userOpenId);
@@ -985,7 +989,7 @@ public class CompanyController {
 		}
 		long companyId = userService.getCompanyIdByUserId(uod.getUserId());
 		logger.debug("getNewestSheetIncome  companyId : {}", companyId);
-		SheetIncome sheetIncome = sheetIncomeDao.getNewestSheetIncomeDateByCompanyId(companyId);
+		SheetIncome sheetIncome = sheetIncomeDao.getSheetIncomeDateByCompanyIdAndDate(companyId, date);
 		if(sheetIncome != null) {
 			retMap.put("result_is_null", "false");
 			DecimalFormat format = new DecimalFormat("#0.000");
@@ -1069,6 +1073,7 @@ public class CompanyController {
 		Map<String, String> retMap = new HashMap<>();
 		retMap.put("result_is_null", "true");
 		retMap.put("openid_exist", "true");
+		String date = (String)request.getParameter("date");
 		String userOpenId = (String)request.getParameter("userOpenId");
 		logger.debug("getNewestSheetSalaryTax  userOpenId : {}", userOpenId);
 		UserOpenid uod = userOpenIdDao.getUserOpenidByOpenId(userOpenId);
@@ -1079,7 +1084,7 @@ public class CompanyController {
 		}
 		long companyId = userService.getCompanyIdByUserId(uod.getUserId());
 		logger.debug("getNewestSheetSalaryTax  companyId : {}", companyId);
-		SheetSalaryTax sheetSalaryTax = sheetSalaryTaxDao.getNewestSheetSalaryTaxDateByCompanyId(companyId);
+		SheetSalaryTax sheetSalaryTax = sheetSalaryTaxDao.getSheetSalaryTaxDateByCompanyIdAndDate(companyId, date);
 		if(sheetSalaryTax != null) {
 			retMap.put("result_is_null", "false");
 			DecimalFormat format = new DecimalFormat("#0.000");

@@ -222,4 +222,17 @@ public class UserQueryDaoImpl implements IUserQueryDao {
 		return list;
 	}
 
+	@Override
+	public User getCompanyAdminUserByCompanyId(long companyId) {
+		String sql = "select * from user where company_id = ? and type_id='2'";
+		User user = null;
+		try {
+			user = jdbcTemplate.queryForObject(sql, new Object[] { companyId },
+					new UserMapper());
+		} catch (Exception e) {
+			logger.error("resuly is 0, exception : " + e.toString());
+		}
+		return user;
+	}
+
 }

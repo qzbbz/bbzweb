@@ -38,12 +38,14 @@
 	    			<col style="width:20%;">
 	    			<col style="width:20%;">
 	    			<col style="width:20%;">
+	    			<col style="width:20%;">
 	    		</colgroup>
 	    		<thead id="records">
 	    			<tr>
 	    				<th>公司名称</th>
 	    				<th>注册日期</th>
 	    				<th>每月费用</th>
+	    				<th>联系电话</th>
 	    				<th>电话联系时间</th>
 	    			</tr>
 	    		</thead>
@@ -148,7 +150,7 @@
 			var container = $('#retData');
 			for(var i=0; i<data.length; i++) {
 				var trNode = $("<tr></tr>");
-				var tdNode = $("<td>"+data[i].companyName+"</td><td>"+data[i].date+"</td><td>"+data[i].expense+"</td><td>"+data[i].callTime+"</td>");
+				var tdNode = $("<td>"+data[i].companyName+"</td><td>"+data[i].date+"</td><td>"+data[i].expense+"</td><td>"+data[i].phone+"</td><td>"+data[i].callTime+"</td>");
 			    tdNode.appendTo(trNode);
 			    trNode.appendTo(container);
 			}

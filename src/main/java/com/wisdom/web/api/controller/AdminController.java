@@ -61,11 +61,19 @@ public class AdminController {
 		if(companyList != null && companyList.size() != 0) {
 			for(Company company : companyList) {
 				if(company.getParentId() != -1) continue;
+				logger.debug("companyId: {}", company.getId());
+				User user =userQueryDao.getCompanyAdminUserByCompanyId(company.getId());
+				if(user == null) continue;
+				logger.debug("userId: {}", user.getUserId());
+				UserPhone userPhone = userQueryDao.getUserPhoneByUserId(user.getUserId());
+				String phone = (userPhone == null || userPhone.getPhone().isEmpty() ? "未设定" : userPhone.getPhone()); 
+				logger.debug("userPhone: {}", phone);
 				Map<String, String> map = new HashMap<>();
 				map.put("companyName", company.getName() == null ? "未设定" : company.getName());
 				map.put("date", company.getCreateTime().toString().substring(0, 10));
 				map.put("expense", String.valueOf(company.getMonthExpense()));
 				map.put("callTime", company.getPerfectMoment());
+				map.put("phone", phone);
 				retList.add(map);
 			}
 		}

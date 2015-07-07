@@ -38,7 +38,7 @@
 	
 	function checkBindCompanySuccess(data, status) {
 		if(data.bind_status == "has_bind") {
-			$.ajax({
+			/*$.ajax({
 				url : '/getNewestSheetIncome',
 				type : "POST",
 				data : Object.toparams({userOpenId:userOpenId}),
@@ -57,11 +57,38 @@
 				error : function(data) {
 					alert("服务器暂时无法响应您的请求，请稍后重试或联系系统管理员！");
 				}
-			});
+			});*/
 		} else {
 			alert("您还没有绑定公司，因此无法获取数据，请先绑定公司！");
 		}
 	}
+	
+	$('#searchData').click(
+			function() {
+				var date = $('#table_date').val();
+				if (date == null || date == "") {
+					alert('请先输入日期！', 'warning');
+				} else {
+					$.ajax({
+						url : '/getNewestSheetIncome',
+						type : "POST",
+						data : {userOpenId:userOpenId,date:date},
+						success : function(data) {
+							if (data == null || data.result_is_null == 'true') {
+								alert('没有查询到数据，请更换日期后重试！',
+										'warning');
+							} else {
+								fillData(data);
+							}
+						},
+						error : function(data) {
+							alert('服务器无法获取到数据，请稍后重试！',
+									'warning');
+						}
+					});
+				}
+			});
+	
 			function fillData(data) {
 				$('#create_time').html(data.create_time);
 				$('#preparedby').html(data.preparedby);

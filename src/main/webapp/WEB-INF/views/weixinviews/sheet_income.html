@@ -3,10 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <title>利润表</title>
+<link rel="stylesheet" type="text/css" href="/css/webcss/bui.css">
+<link rel="stylesheet" type="text/css" href="/css/webcss/golbal.css">
+<link rel="stylesheet" type="text/css" href="/css/webcss/layout.css">
 <link rel="stylesheet" type="text/css"
 	href="/css/webcss/sheet_style.css">
 </head>
 <body>
+<div class="main">
+			<div class="menu">
+				<a href="#" class="active">资产负债表</a>
+			</div>
+			<div class="well mt20">
+				<div class="form-horizontal onlineTools">
+					<div class="row show-grid">
+						<label class="control-label" style="margin-left: -50px;">请输入日期：</label>
+						<div class="controls">
+							<input name="sname" id="table_date" name="table_date" type="text"
+								class="input input-normal calendar"
+								data-rules="{required : true}">
+						</div>
+						<button id="searchData" class="button button-success ml10">搜索</button>
+					</div>
+					<div id="selectMonth" style="display:none;position:relative; z-index:99999;"></div>
+				</div>
+			</div>
+			<div class="menu" style="margin-bottom: 20px;"></div>
+			<div style="margin-bottom: 40px;">
 					<table border=0 cellpadding=0 cellspacing=0 width=674
 					style='border-collapse: collapse; table-layout: fixed; width: 606pt'>
 					<col class=xl140 width=304
@@ -551,9 +574,38 @@
 						<td width=168 style='width: 126pt'></td>
 					</tr>
 				</table>
-
+	</div>
+	</div>
 	<!--该js需要修改js路径及修改seajs路径-->
 	<script type="text/javascript" src="../../js/weixinjs/jquery-1.11.1.min.js"></script>
+	<script src="http://g.alicdn.com/bui/seajs/2.3.0/sea.js"></script>
+	<script src="http://g.alicdn.com/bui/bui/1.1.17/config.js"></script>
+	<script src="/js/webjs/bui.js"></script>
 	<script type="text/javascript" src="../../js/weixinjs/sheet_income.js"></script>
+	<script type="text/javascript">
+	$('#table_date').click(function(){
+		$('#selectMonth').show();
+		var Calendar = BUI.Calendar
+        var monthpicker = new BUI.Calendar.MonthPicker({
+	        render:'#selectMonth',
+	        month:1,
+	        align : {
+	          points:['tl','tl']
+	        },
+	        year:2000,
+	        success:function(){
+	        	var month = (this.get('month') + 1).toString();
+	        	if(month.length == 1) month = "0" + month;
+	          	$("#table_date").val(this.get('year') + "-" + month);
+	          	monthpicker.close();
+	        },
+	        cancel:function() {
+	        	alert('cancel');
+	        	monthpicker.close();
+	        }
+      	});
+      	monthpicker.show();
+	});
+	</script>
 </body>
 </html>
