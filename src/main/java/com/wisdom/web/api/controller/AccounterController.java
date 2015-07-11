@@ -189,7 +189,9 @@ public class AccounterController {
 		String userId = (String) request.getSession().getAttribute(
 				SessionConstant.SESSION_USER_ID);
 		String companyId = request.getParameter("companyId");
-		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/files/company");
+		String realPath = request.getSession().getServletContext()
+				.getRealPath("/WEB-INF").substring(0);
+		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
 		accounterService.uploadCompanySalaryTemplate(companyId, realPath, file, userId);
 		return "redirect:/views/webviews/accounter/company_salary_template_upload.html";
 	}
@@ -246,7 +248,9 @@ public class AccounterController {
 	@RequestMapping("/accounter/downloadCompanyExpense")
 	public ResponseEntity<byte[]> downloadCompanyExpense(HttpServletRequest request) {
 		String fileName = request.getParameter("fileName");
-		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/files/company");		
+		String realPath = request.getSession().getServletContext()
+				.getRealPath("/WEB-INF").substring(0);
+		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";	
 		ResponseEntity<byte[]> re = null;
 		File file = new File(realPath + "/" + fileName);
 		try {
@@ -255,7 +259,7 @@ public class AccounterController {
 			headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
 			re = new ResponseEntity<byte[]>(
 					FileUtils.readFileToByteArray(file), headers,
-					HttpStatus.CREATED);
+					HttpStatus.OK);
 		} catch (IOException e) {
 			logger.debug("download exception : {}", e.toString());
 		}

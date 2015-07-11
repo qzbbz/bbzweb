@@ -174,7 +174,7 @@
 			}
 			var companyInvoice = data.companyInvoice;
 			for(var i=0; i<companyInvoice.length; i++) {
-			    var a = $("<tr><td>"+companyInvoice[i].companyName+"</td><td>"+companyInvoice[i].date+"</td><td>个人发票</td><td>"+companyInvoice[i].amount+"</td></tr>");
+			    var a = $("<tr><td>"+companyInvoice[i].companyName+"</td><td>"+companyInvoice[i].date+"</td><td>"+companyInvoice[i].item_type+"</td><td>"+companyInvoice[i].type+"</td><td>"+companyInvoice[i].amount+"</td><td>无文件需要下载</td></tr>");
 			    a.appendTo(container);
 			}
 		};

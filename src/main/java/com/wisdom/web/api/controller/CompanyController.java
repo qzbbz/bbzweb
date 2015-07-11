@@ -133,6 +133,7 @@ public class CompanyController {
 	public String orgInfoSettings(@RequestParam("files") MultipartFile[] files , HttpServletRequest request) {
 		Map<String, String> params = new HashMap<>();
 		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/files/company");
+		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
 		params.put("realPath", realPath);
 		params.put("userId", (String) request.getSession().getAttribute("userId"));
 		params.put("companyName", request.getParameter("companyName"));
@@ -209,6 +210,7 @@ public class CompanyController {
 	public String uploadSalary(@RequestParam("files") MultipartFile file, HttpServletRequest request) {
 		String userId = (String) request.getSession().getAttribute("userId");
 		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/files/company");
+		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
 		companyApi.uploadCompanySalary(userId, realPath, file);
 		return "redirect:/views/webviews/company/salary_welfare_upload.html";
 	}
@@ -233,6 +235,7 @@ public class CompanyController {
 		logger.debug("===>uploadBankSta");
 		String userId = (String) request.getSession().getAttribute("userId");
 		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/files/company");
+		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
 		String date = request.getParameter("date");
 		Map<String, String> params = new HashMap<>();
 		params.put("userId", userId);
@@ -256,6 +259,7 @@ public class CompanyController {
 		logger.debug("===>uploadBankSta");
 		String userId = (String) request.getSession().getAttribute("userId");
 		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/files/company");
+		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
 		Map<String, String> params = new HashMap<>();
 		params.put("userId", userId);
 		params.put("realPath", realPath);
@@ -277,6 +281,7 @@ public class CompanyController {
 		String idList = (String)request.getParameter("deleteIdList");
 		String realPath = request.getSession().getServletContext()
 				.getRealPath("/WEB-INF/files/company");
+		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
 		if(companyApi.deleteCompanyBill(idList, realPath)) {
 			retMap.put("error_code", "0");
 		} else {
@@ -313,6 +318,7 @@ public class CompanyController {
 		String cityName = request.getParameter("currentCity");
 		String type = request.getParameter("currentType");
 		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/files/company");
+		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
 		ResponseEntity<byte[]> re = companyApi.downloadSalarySocialSecurityTemplate(userId, cityName, type, realPath);
 		return re;
 	}
@@ -361,6 +367,7 @@ public class CompanyController {
 		String idList = (String)request.getParameter("deleteIdList");
 		String realPath = request.getSession().getServletContext()
 				.getRealPath("/WEB-INF/files/company");
+		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
 		if(companyApi.deleteCompanySales(idList, realPath)) {
 			retMap.put("error_code", "0");
 		} else {
@@ -377,6 +384,7 @@ public class CompanyController {
 		String idList = (String)request.getParameter("deleteIdList");
 		String realPath = request.getSession().getServletContext()
 				.getRealPath("/WEB-INF/files/company");
+		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
 		if(companyApi.deleteCompanySalary(idList, realPath)) {
 			retMap.put("error_code", "0");
 		} else {

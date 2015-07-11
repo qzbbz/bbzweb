@@ -30,6 +30,7 @@ import com.wisdom.common.model.Company;
 import com.wisdom.common.model.CompanyBankSta;
 import com.wisdom.common.model.CompanyBill;
 import com.wisdom.common.model.CompanySalary;
+import com.wisdom.common.model.CompanySales;
 import com.wisdom.common.model.Invoice;
 import com.wisdom.common.model.SalarySocialSecurity;
 import com.wisdom.common.model.User;
@@ -38,6 +39,7 @@ import com.wisdom.company.dao.ICompanyBankStaDao;
 import com.wisdom.company.dao.ICompanyBillDao;
 import com.wisdom.company.dao.impl.CompanyBillDaoImpl;
 import com.wisdom.company.service.ICompanySalaryService;
+import com.wisdom.company.service.ICompanySalesService;
 import com.wisdom.company.service.ICompanyService;
 import com.wisdom.company.service.IExpenseTypeService;
 import com.wisdom.company.service.ISalarySocialSecurityService;
@@ -86,6 +88,9 @@ public class AccounterServiceImpl implements IAccounterService {
 	
 	@Autowired
 	private ISalarySocialSecurityService salarySocialSecurityService;
+	
+	@Autowired
+	private ICompanySalesService companySalesService;
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(AccounterServiceImpl.class);
@@ -233,6 +238,19 @@ public class AccounterServiceImpl implements IAccounterService {
 						retMap.get("companyExpense").add(map);
 					}
 				}
+				List<CompanySales> companySalseList = companySalesService.getAllCompanySales(companyId);
+				if(companySalseList != null ) {
+					for(CompanySales companySales : companySalseList) {
+						Map<String, String> map = new HashMap<>();
+						map.put("date", companySales.getCreateTime().toString().substring(0, 10));
+						map.put("file", companySales.getFileName());
+						map.put("amount", "无");
+						map.put("type", "无");
+						map.put("companyName", companyName);
+						map.put("item_type", "公司销售清单");
+						retMap.get("companyExpense").add(map);
+					}
+				}
 				List<CompanySalary> companySalaryList = companySalaryService.getAllCompanySalary(companyId);
 				if(companySalaryList != null) {
 					for(CompanySalary companySalary : companySalaryList) {
@@ -347,6 +365,37 @@ public class AccounterServiceImpl implements IAccounterService {
 							map.put("type", "无");
 							map.put("companyName", companyName);
 							map.put("item_type", "公司银行对账单");
+							retMap.get("companyExpense").add(map);
+						}
+					}
+				}
+				List<CompanySales> companySalesList = companySalesService.getAllCompanySales(companyId);
+				if(companySalesList != null ) {
+					if(conditionType.equals("3")) {
+						if(("公司银行对账单").indexOf(conditionValue) != -1) {
+							for(CompanySales companySales : companySalesList) {
+								Map<String, String> map = new HashMap<>();
+								map.put("date", companySales.getCreateTime().toString().substring(0, 10));
+								map.put("file", companySales.getFileName());
+								map.put("amount", "无");
+								map.put("type", "无");
+								map.put("companyName", companyName);
+								map.put("item_type", "公司销售清单");
+								retMap.get("companyExpense").add(map);
+							}
+						}
+					} else {
+						for(CompanySales companySales : companySalesList) {
+							if(conditionType.equals("2")) {
+								if(companySales.getCreateTime().toString().substring(0, 10).indexOf(conditionValue) == -1) continue;
+							}
+							Map<String, String> map = new HashMap<>();
+							map.put("date", companySales.getCreateTime().toString().substring(0, 10));
+							map.put("file", companySales.getFileName());
+							map.put("amount", "无");
+							map.put("type", "无");
+							map.put("companyName", companyName);
+							map.put("item_type", "公司销售清单");
 							retMap.get("companyExpense").add(map);
 						}
 					}

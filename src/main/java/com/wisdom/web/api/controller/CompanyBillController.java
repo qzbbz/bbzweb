@@ -55,9 +55,12 @@ public class CompanyBillController {
 	public String uploadCompanyBill(
 			DefaultMultipartHttpServletRequest multipartRequest,
 			HttpServletRequest request) {
+		logger.debug("entrance uploadCompanyBill");
 		String userId = (String) request.getSession().getAttribute("userId");
 		String realPath = request.getSession().getServletContext()
-				.getRealPath("/WEB-INF/files/company");
+				.getRealPath("/WEB-INF").substring(0);
+		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
+		logger.debug("uploadCompanyBill realPath : {}", realPath);
 		Map<String, String> params = new HashMap<>();
 		params.put("userId", userId);
 		params.put("realPath", realPath);
@@ -94,6 +97,7 @@ public class CompanyBillController {
 		String idList = (String)request.getParameter("deleteIdList");
 		String realPath = request.getSession().getServletContext()
 				.getRealPath("/WEB-INF/files/company");
+		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
 		if(companyBillApi.deleteCompanyBill(idList, realPath)) {
 			retMap.put("error_code", "0");
 		} else {
