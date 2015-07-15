@@ -36,8 +36,9 @@ public class ExpenseAccountController {
 	@ResponseBody
 	public Map<String, String> downloadUserBill(@RequestBody UploadBillEntityWrapper wrapper, HttpServletRequest request) {
 		String openId = request.getParameter("openId");
-		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/img/billImg");
-		logger.debug("openId : {}", openId);
+		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/files/company");
+		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
+		logger.debug("openId realPath : {}, {}", openId, realPath);
 		Map<String, String> retMap = new HashMap<>();
 		if(openId == null || openId.isEmpty()) {
 			retMap.put("error_code", "3");

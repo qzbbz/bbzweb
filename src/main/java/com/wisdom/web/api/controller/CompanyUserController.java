@@ -29,7 +29,9 @@ public class CompanyUserController {
 	@RequestMapping("/companyUser/uploadCompanyUserBill")
 	public String uploadSalary(@RequestParam("files") MultipartFile file, HttpServletRequest request) {
 		String userId = (String) request.getSession().getAttribute("userId");
-		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/img/billImg");
+		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/files/company");
+		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
+		logger.debug("uploadCompanyUserBill realPath : {}", realPath);
 		Map<String, String> params = new HashMap<>();
 		params.put("userId", userId);
 		params.put("realPath", realPath);

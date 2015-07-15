@@ -227,7 +227,7 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 				for(var i=0; i<data.length; i++) {
 					var container = $('#retData');
 				    var a = $("<tr><td>"+data[i].invoice_id+"</td><td>"+data[i].create_time+"</td><td>"+data[i].cost_center+"</td><td>"+data[i].identify_status+"</td><td><a href='javascript:void(0);'>点击预览发票</a></td></tr>");
-				    var imgsrc = data[i].file_name;
+				    var imgsrc =  '/files/company/' + data[i].file_name;
 					a.attr("img-src", imgsrc);
 				    a.click(function(event) {
 				    	viewContent.set('imgSrc', ($(this).attr("img-src") == null  ?"":$(this).attr("img-src")));

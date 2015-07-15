@@ -204,7 +204,7 @@ public class ExpenseAccountServiceImpl implements IExpenseAccountService {
 			logger.debug("userId : {}", userId);
 			if (userId != null && !userId.isEmpty()) {
 				Map<String, Object> retMap = invoiceService
-						.createInvoiceProcess(userId, "../../img/billImg/" + base64ImageStr, "0", "1",
+						.createInvoiceProcess(userId, base64ImageStr, "0", "1",
 								params);
 				if (!retMap.containsKey("success")
 						|| !(boolean) retMap.get("success")) {

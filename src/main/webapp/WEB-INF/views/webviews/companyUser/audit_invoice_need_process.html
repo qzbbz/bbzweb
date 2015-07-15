@@ -244,7 +244,7 @@
 					    var div2 = $("<div class='span2'></div>");
 					    var a = $("<a class='data-img' href='javascript:void(0);'>点击查看</a>");
 					    var div3 = $("<div class='span2'><a class='text-hide data-add-reasons' href='javascript:void(0)'>添加审核理由</a></div>");
-					    a.attr("img-src", data[i].bill_img);
+					    a.attr("img-src",  data[i].bill_img);
 					    a.click(function(event) {
 					    	viewContent.set('imgSrc', ($(this).attr("img-src") == null  ?"":$(this).attr("img-src")));
 						    dialogForm.show();

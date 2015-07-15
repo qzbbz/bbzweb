@@ -72,8 +72,9 @@ public class CompanyUserApiImpl implements ICompanyUserApi {
 			String fileName = getGernarateFileName(file, userId);
 			FileUtils.copyInputStreamToFile(file.getInputStream(), new File(
 					params.get("realPath"), fileName));
+			logger.debug("realPath , fileName : {}, {}", params.get("realPath"), fileName);
 			Map<String, Object> invoiceRetMap = invoiceService
-					.createDraftInvoice(userId, "/img/billImg/" + fileName,
+					.createDraftInvoice(userId, fileName,
 							costCenterCode);
 			if (invoiceRetMap != null && (boolean) invoiceRetMap.get("success")) {
 				retMap.put("error_code", "0");

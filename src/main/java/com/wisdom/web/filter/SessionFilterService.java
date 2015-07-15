@@ -34,10 +34,12 @@ public class SessionFilterService extends OncePerRequestFilter {
 
 		String uri = request.getRequestURI();
 		boolean doFilter = false;
-		for (String url : filterUrls) {
-			if (uri.indexOf(url) != -1) {
-				doFilter = true;
-				break;
+		if(uri.indexOf("files/company") == -1) {
+			for (String url : filterUrls) {
+				if (uri.indexOf(url) != -1) {
+					doFilter = true;
+					break;
+				}
 			}
 		}
 		if (doFilter) {

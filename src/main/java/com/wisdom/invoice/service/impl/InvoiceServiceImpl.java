@@ -31,14 +31,19 @@ import com.wisdom.invoice.service.IInvoiceService;
 import com.wisdom.invoice.service.ISingleInvoiceService;
 import com.wisdom.invoice.service.IUserInvoiceService;
 import com.wisdom.user.service.IUserService;
+import com.wisdom.web.api.impl.CompanyUserApiImpl;
 
 import org.springframework.util.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 @Component
 @Service("invoiceService")
 public class InvoiceServiceImpl implements IInvoiceService {
 	private static final Log log = LogFactory.getLog(InvoiceServiceImpl.class);
+	private static final Logger logger = LoggerFactory
+			.getLogger(InvoiceServiceImpl.class);
 	@Autowired
 	private IDispatcherService dispatcherService;
 	@Autowired
@@ -102,6 +107,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		}
 		log.debug("addAttachMentRecord");
 		boolean blRet = attachmentService.addAttachMentRecord(invoiceId,image);
+		logger.debug("attachmentService image : " + image);
 		if(!blRet){
 			log.error("addAttachMentRecord error");
 			return retMap;
@@ -155,7 +161,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 	public Map<String,Object> createDraftInvoice(String userId, String image, String costCenterCode) {
 		Map<String,Object> retMap = new HashMap<String,Object>();
 		retMap.put("success", false);
-		log.debug("createInvoiceProcess");
+		logger.debug("createInvoiceProcess");
 		if(StringUtils.isEmpty(userId)||StringUtils.isEmpty(image)){
 			log.error("null pointor error");
 			return retMap;
@@ -172,6 +178,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		}
 		log.debug("addAttachMentRecord");
 		boolean blRet = attachmentService.addAttachMentRecord(invoiceId,image);
+		logger.debug("attachmentService image : " + image);
 		if(!blRet){
 			log.error("addAttachMentRecord error");
 			return retMap;
@@ -387,7 +394,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		
 		Attachment attach = attachmentService.getAttachMentByInvoiceId(invoice.getId());
 		if(null != attach){
-			map.put("bill_img", attach.getImage());
+			map.put("bill_img", "/files/company/" + attach.getImage());
 		}
 
 		return map;
@@ -441,7 +448,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			map.put("bill_expenseTypeName", expenseTypeService.getExpenseTypeNameById(invoice.getExpenseTypeId()));
 			Attachment attach = attachmentService.getAttachMentByInvoiceId(invoice.getId());
 			if(null != attach){
-				map.put("bill_img", attach.getImage());
+				map.put("bill_img", "/files/company/" + attach.getImage());
 			}
 			
 			if(0 == invoiceApproval.getStatus()){
