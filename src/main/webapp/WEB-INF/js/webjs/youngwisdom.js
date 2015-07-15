@@ -808,14 +808,16 @@ angular.module('ywWidgets')
 			
 			toggle.on('click', function(){
 				if(el.attr('type') === 'password'){
-					el.attr('type', 'text');
+					//el.attr('type', 'text');
+					el[0].type="text";
 					toggle.removeClass('glyphicon-eye-open');
 					toggle.addClass('glyphicon-eye-close');
 					if(hints)
 						hints.html('隐藏');
 				}
 				else{
-					el.attr('type', 'password');
+					//el.attr('type', 'password');
+					el[0].type="password";
 					toggle.removeClass('glyphicon-eye-close');
 					toggle.addClass('glyphicon-eye-open');
 					if(hints)

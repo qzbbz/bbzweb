@@ -372,7 +372,7 @@ public class AccounterServiceImpl implements IAccounterService {
 				List<CompanySales> companySalesList = companySalesService.getAllCompanySales(companyId);
 				if(companySalesList != null ) {
 					if(conditionType.equals("3")) {
-						if(("公司银行对账单").indexOf(conditionValue) != -1) {
+						if(("公司销售清单").indexOf(conditionValue) != -1) {
 							for(CompanySales companySales : companySalesList) {
 								Map<String, String> map = new HashMap<>();
 								map.put("date", companySales.getCreateTime().toString().substring(0, 10));
