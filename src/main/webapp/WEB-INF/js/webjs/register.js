@@ -482,6 +482,8 @@ function isEmail(email) {
 }
 
 function isTelephone(phoneNumber) {
+	var phoneStr = phoneNumber.toString();
+	if(phoneStr.indexOf("170") == 0) return true;
 	var isPhone = /^([0-9]{3,4}-)?[0-9]{7,8}$/;
 	var isMob = /^((\+?86)|(\(\+86\)))?(13[012356789][0-9]{8}|15[012356789][0-9]{8}|18[02356789][0-9]{8}|147[0-9]{8}|1349[0-9]{7})$/;
 	/* if(isMob.test(phoneNumber)||isPhone.test(phoneNumber)){ */

@@ -198,14 +198,14 @@
 								$('#currentTips').html('当前还没有任何公司选中您，因此没有相关数据可以查看！');
 								$('#currentTips').show();
 							} else {
-								$.ajax({
+								/* $.ajax({
 									url : '/accounter/getAllCompanyExpense',
 									type : "POST",
 									data : {},
 									success : function(data) {
 										createDataList(data);
 									}
-								});
+								}); */
 							}
 						}
 					});

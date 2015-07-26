@@ -47,6 +47,7 @@ public class NotifyScheduleImpl implements NotifySchedule {
 		}
 		for(Dispatcher dispatch:dispatchList){
 			boolean blRet = false;
+			boolean blWeixinRet = false;
 			String userId = dispatch.getUserId();
 			String userName = dispatch.getUserName();
 			if(StringUtils.isEmpty(userName)){
@@ -64,14 +65,14 @@ public class NotifyScheduleImpl implements NotifySchedule {
 				}
 				if(!StringUtils.isEmpty(dispatch.getOpenId())){
 					log.debug("callpushTextMessage,threadId:" + Thread.currentThread().getId());
-					blRet =  weixinPushService.pushTextMessage(dispatch.getOpenId(), weixinBody);
-					if(!blRet){
+					blWeixinRet =  weixinPushService.pushTextMessage(dispatch.getOpenId(), weixinBody);
+					if(!blWeixinRet){
 						log.error("push weixin message error,openId:" + dispatch.getOpenId());
 					}
 				}
 			}else if(channelType==2){
-				blRet =  weixinPushService.pushTextMessage(dispatch.getOpenId(), weixinBody);
-				if(!blRet){
+				blWeixinRet =  weixinPushService.pushTextMessage(dispatch.getOpenId(), weixinBody);
+				if(!blWeixinRet){
 					log.error("push weixin message error,openId:" + dispatch.getOpenId());
 				}
 			}else{
@@ -81,7 +82,7 @@ public class NotifyScheduleImpl implements NotifySchedule {
 				}
 			}
 			
-			if(blRet){//更新发票通知状态
+			if(blRet || blWeixinRet){//更新发票通知状态
 				if(dispatcherService.updateDispatcherStatus(dispatch.getInvoiceId())){
 					log.debug("update dispatch status success");
 				}else{
