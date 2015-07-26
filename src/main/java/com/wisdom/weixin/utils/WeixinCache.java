@@ -41,8 +41,8 @@ public class WeixinCache {
 		if (map != null && map.containsKey("ticket")
 				&& map.containsKey("expires_in")) {
 			jsTicket = (String) map.get("ticket");
-			jsTicketExpire += System.currentTimeMillis() / 1000
-					+ (Integer) map.get("expires_in") - 300;
+			jsTicketExpire = System.currentTimeMillis() / 1000
+					+ (Integer) map.get("expires_in") - 180;
 		} else {
 			jsTicket = "";
 			jsTicketExpire = 0;
@@ -58,8 +58,8 @@ public class WeixinCache {
 		if (map != null && map.containsKey("access_token")
 				&& map.containsKey("expires_in")) {
 			accessToken = (String) map.get("access_token");
-			accessTokenExpire += System.currentTimeMillis() / 1000
-					+ (Integer) map.get("expires_in") - 300;
+			accessTokenExpire = System.currentTimeMillis() / 1000
+					+ (Integer) map.get("expires_in") - 180;
 		} else {
 			accessToken = "";
 			accessTokenExpire = 0;
