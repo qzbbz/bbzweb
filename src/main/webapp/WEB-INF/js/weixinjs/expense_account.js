@@ -251,14 +251,14 @@ $(function(){
 		main.empty().html(html);
 	}
 
-	$(document).on('scrollstart', '#content', function(event) {
+	/*$(document).on('scrollstart', '#content', function(event) {
 		setTimeout(function() {
 			var cc = $(window).scrollTop();
 			if (cc < 10) {
 				controler[curC] && controler[curC].refresh && controler[curC].refresh();
 			}
 		}, 100);
-	})
+	})*/
 
 	var controler = {};
 
