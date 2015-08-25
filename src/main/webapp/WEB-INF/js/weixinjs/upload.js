@@ -353,7 +353,7 @@ $(function(){
 						}
 					})
 					self.submit(ids);
-				})
+				});
 			},
 			submit: function(ids){
 					if(ids == null || ids.length == 0) {
@@ -486,6 +486,18 @@ $(function(){
 						}
 					})
 					self.check(ids);
+				});
+				$('#onePressSelect').click(function(){
+					self.uploadBillListview.find('li').each(function(index, obj){
+						var obj = $(obj), check = obj.find('input[type="checkbox"]');
+						if(check.is(':checked')) {
+							check.removeAttr("checked");
+							check.prop("checked", false);
+						} else {
+							check.attr("checked", true);
+							check.prop("checked", true);
+						}
+					})
 				})
 			},
 

@@ -698,6 +698,18 @@ $(function(){
 					}
 				})
 				self.submitAudit(ids, "1");
+			});
+			$('#onePressSelect').click(function(){
+				self.needAuditBillListview.find('li').each(function(index, obj){
+					var obj = $(obj), check = obj.find('input[type="checkbox"]');
+					if(check.is(':checked')) {
+						check.removeAttr("checked");
+						check.prop("checked", false);
+					} else {
+						check.attr("checked", true);
+						check.prop("checked", true);
+					}
+				})
 			})
 		},
 		

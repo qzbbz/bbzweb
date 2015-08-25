@@ -37,7 +37,7 @@
 			</div>
 			<div id="draftBill" class="ui-content">
 				<div id="inbox">
-					<h6 style="margin-bottom:30px;color:#38c;">您可以一键提交审核 
+					<h6 style="margin-bottom:30px;color:#38c;">您可以一键提交审核
 						<button id="onePressSubmitAudit" class="ladda-button small" data-shadow="true" style="background :rgba(239, 109, 68, 0.8);">提交审核
 					</h6>
 				</div>				
@@ -130,7 +130,7 @@
 				<p class="amount">金额: {{amount}}元</p>
 				<p class="man">费用类型: {{expenseTypeName}}</p>
 				<p class="date">创建时间: {{time}}</p>
-				<input type="checkbox" name="choose" value="{{id}}">
+				<input type="checkbox" name="checkbox" value="{{id}}">
 			</li>
 		{{/allUploadBillList}}
 		{{^allUploadBillList}}
@@ -140,7 +140,7 @@
 
 	<script id="uploadBill" type="text/template">
 		<div id="uploadBill">
-			<h5>请上传您的发票 <button id="onePressUpload" class="ladda-button small" data-shadow="true" style="background :rgba(239, 109, 68, 0.8);">一键上传</h5>
+			<h5>请上传您的发票 <button id="onePressSelect" class="ladda-button small" data-shadow="true" style="background :rgba(239, 109, 68, 0.8);margin-right:10px;">全选/取消<button id="onePressUpload" class="ladda-button small" data-shadow="true" style="background :rgba(239, 109, 68, 0.8);">一键上传</h5>
 			<div id="upload-bill" class="ui-content">
 				<ul id="upload-bill-list" class="bill-list-upload">
 				</ul>
@@ -209,6 +209,6 @@
 	<script type="text/javascript" src="../../js/weixinjs/jquery-1.11.1.min.js"></script>
 	<script type="text/javascript" src="../../js/weixinjs/libs/jquery.mobile-1.4.5/jquery.mobile-1.4.5.js"></script>
 	<script type="text/javascript" src="../../js/weixinjs/mustache.js"></script>
-	<script type="text/javascript" src="../../js/weixinjs/upload.js?201507221232"></script>
+	<script type="text/javascript" src="../../js/weixinjs/upload.js?201508251528"></script>
 </body>
 </html>	

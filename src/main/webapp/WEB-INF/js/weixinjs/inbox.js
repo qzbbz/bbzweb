@@ -354,6 +354,18 @@ $(function(){
 					})
 					self.submit(ids);
 				})
+				$('#onePressSelect').click(function(){
+					self.draftBillListview.find('li').each(function(index, obj){
+						var obj = $(obj), check = obj.find('input[type="checkbox"]');
+						if(check.is(':checked')) {
+							check.removeAttr("checked");
+							check.prop("checked", false);
+						} else {
+							check.attr("checked", true);
+							check.prop("checked", true);
+						}
+					})
+				})
 			},
 			submit: function(ids){
 					if(ids == null || ids.length == 0) {
