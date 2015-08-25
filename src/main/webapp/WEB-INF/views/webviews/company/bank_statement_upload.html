@@ -90,15 +90,18 @@
 	<script src="/js/webjs/bui.js"></script>
 	<script type="text/javascript">
 	$('#date').click(function(){
+		var currentDate = new Date();
+		var currentYear = currentDate.getFullYear();
+		var currentMonth = currentDate.getMonth();
 		$('#selectMonth').show();
 		var Calendar = BUI.Calendar
         var monthpicker = new BUI.Calendar.MonthPicker({
 	        render:'#selectMonth',
-	        month:1,
+	        month:currentMonth,
 	        align : {
 	          points:['tl','tl']
 	        },
-	        year:2000,
+	        year:currentYear,
 	        success:function(){
 	        	var month = (this.get('month') + 1).toString();
 	        	if(month.length == 1) month = "0" + month;
@@ -106,7 +109,7 @@
 	          	monthpicker.close();
 	        },
 	        cancel:function() {
-	        	alert('cancel');
+	        	
 	        	monthpicker.close();
 	        }
       	});

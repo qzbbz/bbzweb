@@ -22,6 +22,10 @@ public interface IUserService {
 	
 	public int getUserTypeIdByUserId(String userId);
 	
+	public int getUserAuditStatusByUserId(String userId);
+	
+	public boolean updateUserAuditStatusByUserId(int status, String userId);
+	
 	public boolean updateUserRegStatusByUserId(int status, String userId);
 	
 	public boolean userIdExist(String userId);

@@ -85,4 +85,9 @@ public class UserValidateApiImpl implements IUserValidateApi {
 		else
 			return true;
 	}
+
+	@Override
+	public int getUserAuditStatusByUserId(String userId) {
+		return userService.getUserAuditStatusByUserId(userId);
+	}
 }

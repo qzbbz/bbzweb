@@ -11,6 +11,8 @@ public interface IUserValidateApi {
 	
 	public int getUserTypeByUserId(String userId);
 	
+	public int getUserAuditStatusByUserId(String userId);
+	
 	public boolean companyHasFinishRegister(String userId);
 		
 }

@@ -49,6 +49,10 @@ public class UserValidateController {
 				} else if (userTypeId == 2
 						&& !userValidateApi.companyHasFinishRegister(userId)) {
 					retMap.put("error_code", "4");
+				} else if((userTypeId == 1 || userTypeId == 2) && userValidateApi.getUserAuditStatusByUserId(userId) == 0) {
+					retMap.put("error_code", "100");
+				} else if((userTypeId == 1 || userTypeId == 2) && userValidateApi.getUserAuditStatusByUserId(userId) == 2) {
+					retMap.put("error_code", "102");
 				} else {
 					httpSession.setAttribute(SessionConstant.SESSION_USER_ID,
 							userId);

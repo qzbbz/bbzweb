@@ -337,11 +337,23 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 			    aNode.appendTo(tdNode2);
 			    
 			    operateNode.attr("bill-id", data[i].id);
-			    operateNode.click(function(event) {
+			    var tmpData = data[i];
+			    (function(tmpData){
+                    operateNode.click(function(event) {
+						$('#modify_amount').val('0');
+						$('#current_modify_id').val($(this).attr("bill-id"));
+						$('#modify_type').val(tmpData.expense_type);
+						$('#modify_amount').val(tmpData.amount);
+						modifyInfoForm.show();
+					});				
+				}(data[i]));
+			    /* operateNode.click(function(event) {
 			    	$('#modify_amount').val('0');
-			    	$('#current_modify_id').val($(this).attr("bill-id"))
+			    	$('#current_modify_id').val($(this).attr("bill-id"));
+			    	$('#modify_type').val(tmpData.expense_type);
+			    	$('#modify_amount').val(tmpData.amount);
 			    	modifyInfoForm.show();
-			    });
+			    }); */
 			    operateNode.appendTo(tdNode3);
 			    
 			    checkNode.appendTo(trNode);

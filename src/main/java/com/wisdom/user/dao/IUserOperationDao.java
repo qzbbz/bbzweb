@@ -22,6 +22,8 @@ public interface IUserOperationDao {
 	
 	public boolean updateUserRegStatus(int status, String userId);
 	
+	public boolean updateUserAuditStatus(int status, String userId);
+	
 	public boolean updateUserMsgEmail(String email, String userId);
 	
 	public boolean updateUserNameByUserId(String userName, String userId);

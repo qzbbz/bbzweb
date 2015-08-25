@@ -263,5 +263,16 @@ public class UserServiceImpl implements IUserService {
 	public boolean modifyUserPwdByUserId(String userPwd, String userId) {
 		return userOperationDao.updateUserPwd(userId, userPwd);
 	}
+
+	@Override
+	public int getUserAuditStatusByUserId(String userId) {
+		User user = userQueryDao.getUserByUserId(userId);
+		return user != null ? user.getAuditStatus() : 0;
+	}
+
+	@Override
+	public boolean updateUserAuditStatusByUserId(int status, String userId) {
+		return userOperationDao.updateUserAuditStatus(status, userId);
+	}
 }
 

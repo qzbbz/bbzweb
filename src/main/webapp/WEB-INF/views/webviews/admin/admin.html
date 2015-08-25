@@ -35,10 +35,12 @@
 			<table class="table center">
 	    		<colgroup>
 	    			<col style="width:20%;">
+	    			<col style="width:12%;">
+	    			<col style="width:12%;">
+	    			<col style="width:12%;">
 	    			<col style="width:20%;">
-	    			<col style="width:20%;">
-	    			<col style="width:20%;">
-	    			<col style="width:20%;">
+	    			<col style="width:12%;">
+	    			<col style="width:12%;">
 	    		</colgroup>
 	    		<thead id="records">
 	    			<tr>
@@ -47,6 +49,8 @@
 	    				<th>每月费用</th>
 	    				<th>联系电话</th>
 	    				<th>电话联系时间</th>
+	    				<th>审核状态</th>
+	    				<th>操作</th>
 	    			</tr>
 	    		</thead>
 	    		<tbody id='retData'>
@@ -150,8 +154,50 @@
 			var container = $('#retData');
 			for(var i=0; i<data.length; i++) {
 				var trNode = $("<tr></tr>");
-				var tdNode = $("<td>"+data[i].companyName+"</td><td>"+data[i].date+"</td><td>"+data[i].expense+"</td><td>"+data[i].phone+"</td><td>"+data[i].callTime+"</td>");
-			    tdNode.appendTo(trNode);
+				var tdNode1 = $("<td>"+data[i].companyName+"</td><td>"+data[i].date+"</td><td>"+data[i].expense+"</td><td>"+data[i].phone+"</td><td>"+data[i].callTime+"</td><td>"+data[i].auditStatus+"</td>");
+			    var tdNode2 = $("<td></td>");
+			    var operateAuditReject = $("<a href='javascript:void(0)'>审核拒绝</a>");
+			    var operateAuditPass = $("<a href='javascript:void(0)'>审核通过</a>");
+			    (function(tempData){
+			    	operateAuditReject.click(function(event) {
+			    		$.ajax({
+			    			url : '/admin/auditUser',
+			    			type : "POST",
+			    			data : {userId:tempData.userId, auditStatus:2},
+			    			success : function() {
+			    				$.ajax({
+			    					url : '/admin/getAllRegisterCompanyInfo',
+			    					type : "POST",
+			    					data : {},
+			    					success : function(data) {
+			    						createDataList(data);
+			    					}
+			    				});
+			    			}
+			    		});
+					});
+			    	operateAuditPass.click(function(event) {
+			    		$.ajax({
+			    			url : '/admin/auditUser',
+			    			type : "POST",
+			    			data : {userId:tempData.userId, auditStatus:1},
+			    			success : function() {
+			    				$.ajax({
+			    					url : '/admin/getAllRegisterCompanyInfo',
+			    					type : "POST",
+			    					data : {},
+			    					success : function(data) {
+			    						createDataList(data);
+			    					}
+			    				});
+			    			}
+			    		});
+					});
+				}(data[i]));
+			    operateAuditReject.appendTo(tdNode2);
+			    operateAuditPass.appendTo(tdNode2);
+				tdNode1.appendTo(trNode);
+				tdNode2.appendTo(trNode);
 			    trNode.appendTo(container);
 			}
 		};

@@ -22,29 +22,39 @@ public class User implements java.io.Serializable {
 	private String userLevel;
 	private Long companyId;
 	private String userEncode;
+	private Integer auditStatus;
 	private Timestamp createTime;
 
 	// Constructors
 
+	public User(Long id, String userId, String userName, String msgEmail, Integer typeId, String userLevel,
+			Long companyId, String userEncode, Integer auditStatus, Timestamp createTime) {
+		super();
+		this.id = id;
+		this.userId = userId;
+		this.userName = userName;
+		this.msgEmail = msgEmail;
+		this.typeId = typeId;
+		this.userLevel = userLevel;
+		this.companyId = companyId;
+		this.userEncode = userEncode;
+		this.auditStatus = auditStatus;
+		this.createTime = createTime;
+	}
+	
 	/** default constructor */
 	public User() {
 	}
 
-	/** full constructor */
-	public User(Long id, String userName, String msgEmail, String userEncode, String userId, Integer typeId, String userLevel,Long companyId,
-			Timestamp createTime) {
-		this.id = id;
-		this.userId = userId;
-		this.typeId = typeId;
-		this.userLevel = userLevel;
-		this.msgEmail = msgEmail;
-		this.userName = userName;
-		this.companyId = companyId;
-		this.createTime = createTime;
-		this.userEncode = userEncode;
+	// Property accessors
+
+	public Integer getAuditStatus() {
+		return auditStatus;
 	}
 
-	// Property accessors
+	public void setAuditStatus(Integer auditStatus) {
+		this.auditStatus = auditStatus;
+	}
 
 	public Long getId() {
 		return this.id;

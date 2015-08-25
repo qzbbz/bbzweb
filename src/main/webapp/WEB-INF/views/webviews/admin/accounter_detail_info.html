@@ -35,15 +35,17 @@
 			<div id="currentTips" class="tips tips-warning" style="display: none;"></div>
 			<table class="table center">
 	    		<colgroup>
-	    			<col style="width:10%;">
-	    			<col style="width:10%;">
-	    			<col style="width:10%;">
-	    			<col style="width:10%;">
-	    			<col style="width:10%;">
-	    			<col style="width:10%;">
-	    			<col style="width:10%;">
-	    			<col style="width:10%;">
-	    			<col style="width:10%;">
+	    			<col style="width:9%;">
+	    			<col style="width:9%;">
+	    			<col style="width:9%;">
+	    			<col style="width:9%;">
+	    			<col style="width:9%;">
+	    			<col style="width:9%;">
+	    			<col style="width:9%;">
+	    			<col style="width:9%;">
+	    			<col style="width:7%;">
+	    			<col style="width:8%;">
+	    			<col style="width:12%;">
 	    		</colgroup>
 	    		<thead id="records">
 	    			<tr>
@@ -56,6 +58,8 @@
 	    				<th>工作证书</th>
 	    				<th>工作地区</th>
 	    				<th>头像预览</th>
+	    				<th>审核状态</th>
+	    				<th>操作</th>
 	    			</tr>
 	    		</thead>
 	    		<tbody id='retData'>
@@ -242,8 +246,54 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 					    dialogForm.show();
 				    });
 			    }
+			    
+			    var tdNode2 = $("<td></td>");
+			    var tdNode3 = $("<td>"+data[i].auditStatus+"</td>");
+			    var operateAuditReject = $("<a href='javascript:void(0)'>审核拒绝</a>");
+			    var operateAuditPass = $("<a href='javascript:void(0)'>审核通过</a>");
+			    (function(tempData){
+			    	operateAuditReject.click(function(event) {
+			    		$.ajax({
+			    			url : '/admin/auditUser',
+			    			type : "POST",
+			    			data : {userId:tempData.userId, auditStatus:2},
+			    			success : function() {
+			    				$.ajax({
+			    					url : '/admin/getAllAccounterDetailInfo',
+			    					type : "POST",
+			    					data : {},
+			    					success : function(data) {
+			    						createDataList(data);
+			    					}
+			    				});
+			    			}
+			    		});
+					});
+			    	operateAuditPass.click(function(event) {
+			    		$.ajax({
+			    			url : '/admin/auditUser',
+			    			type : "POST",
+			    			data : {userId:tempData.userId, auditStatus:1},
+			    			success : function() {
+			    				$.ajax({
+			    					url : '/admin/getAllAccounterDetailInfo',
+			    					type : "POST",
+			    					data : {},
+			    					success : function(data) {
+			    						createDataList(data);
+			    					}
+			    				});
+			    			}
+			    		});
+					});
+				}(data[i]));
+			    
+			    operateAuditReject.appendTo(tdNode2);
+			    operateAuditPass.appendTo(tdNode2);
 			    tdNode.appendTo(trNode);
 			    imgNode.appendTo(trNode);
+			    tdNode3.appendTo(trNode);
+			    tdNode2.appendTo(trNode);
 			    trNode.appendTo(container);
 			}
 		};

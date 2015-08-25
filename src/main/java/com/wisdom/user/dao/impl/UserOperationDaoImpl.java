@@ -376,4 +376,12 @@ public class UserOperationDaoImpl implements IUserOperationDao {
 		return affectedRows != 0;
 	}
 
+	@Override
+	public boolean updateUserAuditStatus(int status, String userId) {
+		String sql = "update user set audit_status=? where user_id=?";
+		int affectedRows = jdbcTemplate.update(sql, status, userId);
+		logger.debug("updateUserAuditStatus result : {}", affectedRows);
+		return affectedRows != 0;
+	}
+
 }

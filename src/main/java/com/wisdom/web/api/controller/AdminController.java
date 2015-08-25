@@ -74,10 +74,29 @@ public class AdminController {
 				map.put("expense", String.valueOf(company.getMonthExpense()));
 				map.put("callTime", company.getPerfectMoment());
 				map.put("phone", phone);
+				map.put("userId", user.getUserId());
+				int auditStatus = user.getAuditStatus();
+				if(auditStatus == 0) {
+					map.put("auditStatus", "正在审核");
+				} else if(auditStatus == 1) {
+					map.put("auditStatus", "审核通过");
+				} else if(auditStatus == 2) {
+					map.put("auditStatus", "审核未通过");
+				}
 				retList.add(map);
 			}
 		}
 		return retList;
+	}
+	
+	@RequestMapping("/admin/auditUser")
+	@ResponseBody
+	public Map<String, String> auditUser(HttpServletRequest request) {
+		String userId = request.getParameter("userId");
+		String status = request.getParameter("auditStatus");
+		Map<String, String> retMap = new HashMap<>();
+		userService.updateUserAuditStatusByUserId(Integer.valueOf(status), userId);
+		return retMap;
 	}
 	
 	@RequestMapping("/admin/getAllRegisterCompanyInfoByName")
@@ -175,6 +194,15 @@ public class AdminController {
 				map.put("userId", userId);
 				map.put("userName", userName);
 				map.put("phone", phone);
+				
+				int auditStatus = user.getAuditStatus();
+				if(auditStatus == 0) {
+					map.put("auditStatus", "正在审核");
+				} else if(auditStatus == 1) {
+					map.put("auditStatus", "审核通过");
+				} else if(auditStatus == 2) {
+					map.put("auditStatus", "审核未通过");
+				}
 				
 				Map<String, String> accounterMap = accounterService.getAccounterByUserId(userId);
 				if(accounterMap == null || accounterMap.size() == 0) {

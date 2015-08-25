@@ -111,7 +111,11 @@ angular.module('ywLanding')
 					$scope.companyUserPwd = userPwd;
 					loginErrorMsg.html("<p style='color: #419088;'>登陆成功，您还没有完成信息录入，5秒后系统将自动转向信息录入页面......</p>");
 					setTimeout(function(){$location.path('/signup-steps');$scope.$apply();loginErrorMsg.hide();}, 3000);
-				} else  if(data.error_code == '1' || data.error_code == '2') {
+				} else if(data.error_code == '100') {
+					loginErrorMsg.html("<p style='color: #FD7A50;'>您注册的帐号正在审核中,请稍候重试!</p>");
+				} else if(data.error_code == '102') {
+					loginErrorMsg.html("<p style='color: #FD7A50;'>您注册的帐号没有通过审核,请联系管理员!</p>");
+				} else if(data.error_code == '1' || data.error_code == '2') {
 					loginErrorMsg.html("<p style='color: #FD7A50;'>" + data.error_message + "</p>");
 				}
 			},
