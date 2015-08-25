@@ -11,16 +11,13 @@
 	<div data-role="page" id="ticket">
 
 		<header>
-			<i class="icon-menu iconfont fa"></i>
-			<span class="current-menu"></span>
+			<div style="text-align:center;padding-top:15px;"><span class="current-menu"></span></div>
 			<ul class="menu">
 				<li menu-page="inbox"><i class="icon-inbox iconbigfont"></i>收件箱</li>
 				<li menu-page="uploadBill"><i class="icon-upload5 iconbigfont"></i>发票上传</li>
 				<li menu-page="auditBill"><i class="icon-adminbill iconbigfont"></i>发票审核</li>
 				<li menu-page="help"><i class="icon-help iconbigfont"></i>服务与帮助</li>
 			</ul>
-
-			<i id="camera" class="icon-camera1 iconfont take"></i>
 		</header>
 
 		<div id="content">
@@ -150,48 +147,6 @@
 		</div>
 	</script>
 
-	<script id="help" type="text/template">
-		<div data-role="tabs">
-			<div class="navbar">
-				<ul>
-			      <li><a href="#service" data-theme="ab" class="ui-btn-active">服务</a></li>
-			      <li><a href="#help" data-theme="ab">帮助</a></li>
-			    </ul>
-			</div>
-
-			<div id="service" class="ui-content typo">
-				<p style="color:#38c;">微信帮帮账</p>
-						<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;微信帮帮账服务是上海元升财务咨询有限公司提供的微信报销审批服务，通过该服务，您可以高效的完成报销审批的工作。</p>
-			</div>		
-			<div id="help" class="ui-content typo">
-				<p style="color:#38c;">如何上传发票</p>
-				<p>1.点击屏幕右上角拍照按钮。</p>
-				<p>2.在打开的页面中选择拍照或从图片库中直接选择图片。</p>
-				<p>3.在选择的发票中，点击每一个发票，在弹出的窗口中填写发票金额同时选择费用类型。</p>
-				<p>4.只有填写过发票金额的发票才可以上传，默认发票费用类型为电话费用，请注意更改。</p>
-				<p>5.填写完金额后，可在上传发票界面勾选多个发票，然后点击一键上传即可。</p>
-				<p style="color:#38c;">如何审核发票</p>
-				<p>1.点击屏幕左上角菜单按钮。</p>
-				<p>2.在下方弹出的子菜单中选择发票审核。</p>
-				<p>3.在发票审核界面可以勾选多个发票，选择一键审核通过或一键审核拒绝，即可。</p>
-				<p style="color:#38c;">如何查看已提交的发票</p>
-				<p>1.点击屏幕左上角菜单按钮。</p>
-				<p>2.在下方弹出的子菜单中选择我的收件箱。</p>
-				<p>3.在我的收件箱界面可以查看已上传的草稿发票和已经审核过的发票。</p>
-			</div>
-		</div>
-	</script>
-
-	<script id="auditBill" type="text/template">
-		<div id="auditBill">
-			<h5 style="color:#38c;">请对发票进行审核 <button id="onePressReject" class="ladda-button small" style="background :rgba(239, 109, 68, 0.8);">拒绝<button id="onePressPass" class="ladda-button small" style="margin-left:10px;background :#419088;">通过</h5>
-			<div id="audit-bill" class="ui-content">
-				<ul id="audit-bill-list" class="ticket-list">
-				</ul>
-			</div>
-		</div>
-	</script>
-
 	<script id="editTicket" type="text/template">
 		<div id="editTicket" class="typo">
 			<img src="{{src}}" style="max-width:250px;max-height:150px;">
@@ -211,6 +166,6 @@
 	<script type="text/javascript" src="../../js/weixinjs/jquery-1.11.1.min.js"></script>
 	<script type="text/javascript" src="../../js/weixinjs/libs/jquery.mobile-1.4.5/jquery.mobile-1.4.5.js"></script>
 	<script type="text/javascript" src="../../js/weixinjs/mustache.js"></script>
-	<script type="text/javascript" src="../../js/weixinjs/expense_account.js?201507221232"></script>
+	<script type="text/javascript" src="../../js/weixinjs/inbox.js?201507221232"></script>
 </body>
 </html>	
