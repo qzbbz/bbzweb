@@ -1,6 +1,7 @@
 package com.wisdom.web.api.controller;
 
 import java.io.File;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Timestamp;
@@ -33,6 +34,7 @@ import com.wisdom.user.service.IUserService;
 import com.wisdom.web.utils.Base64Converter;
 import com.wisdom.web.utils.ErrorCode;
 import com.wisdom.web.utils.SessionConstant;
+import com.wisdom.web.api.controller.AlipayController;
 
 @Controller
 public class AccounterController {
@@ -100,6 +102,16 @@ public class AccounterController {
 		}
 		logger.debug("finish getAllAccounter");
 		return retMap;
+	}
+	
+	@RequestMapping("/payBill")
+	@ResponseBody
+	public String payBill(HttpServletRequest request) {
+		logger.debug("enter payBill");
+		AlipayController alipayController = new AlipayController();
+		alipayController.buildAlipayRequest();
+		System.out.println("PAAAAAAAAYYYYYYYY");
+		return "hello from controller";
 	}
 	
 	@RequestMapping("/getAllAccounterByCondition")
