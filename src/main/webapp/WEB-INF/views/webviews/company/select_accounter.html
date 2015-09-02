@@ -176,11 +176,12 @@
     <script type="text/javascript">
     function payBill(){
 
-    	alert('pay!');
+    	//alert('pay!');
     		$.post('/payBill', function(data){
-    			alert(data);
+    			$("#payBill").html(data);
     			
     		});
+    		return false;
     	
     }
     BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){

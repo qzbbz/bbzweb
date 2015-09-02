@@ -109,9 +109,10 @@ public class AccounterController {
 	public String payBill(HttpServletRequest request) {
 		logger.debug("enter payBill");
 		AlipayController alipayController = new AlipayController();
-		alipayController.buildAlipayRequest();
+		String sHtml = "";
+		sHtml = alipayController.buildAlipayRequest();
 		System.out.println("PAAAAAAAAYYYYYYYY");
-		return "hello from controller";
+		return sHtml;
 	}
 	
 	@RequestMapping("/getAllAccounterByCondition")

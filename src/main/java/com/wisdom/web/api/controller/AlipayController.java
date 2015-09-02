@@ -23,11 +23,11 @@ import com.alipay.config.*;
 import com.alipay.util.* ;
 import java.util.HashMap ;
 import java.util.Map;
-
+import java.util.UUID;
 public class AlipayController {
 	public String buildAlipayRequest(){
 		////////////////////////////////////请求参数//////////////////////////////////////
-/*
+
 		//支付类型
 		String payment_type = "1";
 		//必填，不能修改
@@ -41,7 +41,8 @@ public class AlipayController {
 		//需http://格式的完整路径，不能加?id=123这类自定义参数，不能写成http://localhost/
 
 		//商户订单号
-		String out_trade_no = new String("abcdefg");
+		UUID uuid = UUID.randomUUID();
+		String out_trade_no = new String(uuid.toString());
 		//商户网站订单系统中唯一订单号，必填
 
 		//订单名称
@@ -49,7 +50,7 @@ public class AlipayController {
 		//必填
 
 		//付款金额
-		String total_fee = new String("0.1");
+		String total_fee = new String("0.01");
 		//必填
 
 		//订单描述
@@ -88,10 +89,17 @@ public class AlipayController {
 		sParaTemp.put("exter_invoke_ip", exter_invoke_ip);
 		
 		//建立请求
-		String sHtmlText = AlipaySubmit.buildRequest(sParaTemp,"get","确认");
+		String sHtmlText = "";
+		try {
+			sHtmlText = AlipaySubmit.buildRequest(sParaTemp,"get","确认");
+		} catch (Exception e) {
+			e.getCause();
+			System.out.println(e.getCause());
+			
+		}
 		System.out.println(sHtmlText);
-*/
-		return "hello";
+
+		return sHtmlText;
 
 	}
 }

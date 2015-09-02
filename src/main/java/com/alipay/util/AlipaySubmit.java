@@ -59,6 +59,7 @@ public class AlipaySubmit {
      */
     private static Map<String, String> buildRequestPara(Map<String, String> sParaTemp) {
         //除去数组中的空值和签名参数
+
         Map<String, String> sPara = AlipayCore.paraFilter(sParaTemp);
         //生成签名结果
         String mysign = buildRequestMysign(sPara);
