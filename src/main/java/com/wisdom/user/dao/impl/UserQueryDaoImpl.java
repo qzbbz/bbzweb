@@ -234,5 +234,4 @@ public class UserQueryDaoImpl implements IUserQueryDao {
 		}
 		return user;
 	}
-
 }

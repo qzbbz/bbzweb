@@ -12,7 +12,8 @@ public class UserMapper implements RowMapper<User> {
 		User u = new User(rs.getLong("id"), rs.getString("user_id"), rs.getString("user_name"),
 				rs.getString("msg_email"), rs.getInt("type_id"),
 				rs.getString("user_level"), rs.getLong("company_id"), 
-				rs.getString("user_encode"), rs.getInt("audit_status"), rs.getTimestamp("create_time"));
+				rs.getString("user_encode"), rs.getInt("audit_status"), 
+				rs.getString("bill_audit_user"), rs.getTimestamp("create_time"));
 		return u;
 	}
 }

@@ -33,6 +33,7 @@ import com.wisdom.common.model.CompanySales;
 import com.wisdom.common.model.CostCenter;
 import com.wisdom.common.model.Dept;
 import com.wisdom.common.model.SalarySocialSecurity;
+import com.wisdom.common.model.User;
 import com.wisdom.company.service.ICompanyBankStaService;
 import com.wisdom.company.service.ICompanyDetailService;
 import com.wisdom.company.service.ICompanySalaryService;
@@ -782,5 +783,23 @@ public class CompanyApiImpl implements ICompanyApi {
 	@Override
 	public boolean setTakeType(long companyId, String takeType) {
 		return companyService.updateCompanyTakeType(companyId, takeType);
+	}
+
+	@Override
+	public List<Map<String, String>> getAllUser(long companyId) {
+		List<Map<String, String>> retList = new ArrayList<>();
+		List<Company> subCompanyList = companyService.getSubCompanyListByCompanyId(companyId);
+		List<User> userList = userService.getUserListByCompanyId(companyId);
+		for(Company company : subCompanyList) {
+			userList.addAll(userService.getUserListByCompanyId(company.getId()));
+		}
+		for(User user : userList) {
+			if(user.getUserName() == null || user.getUserName().isEmpty()) continue;
+			Map<String, String> userMap = new HashMap<>();
+			userMap.put("userId", user.getUserId());
+			userMap.put("userName", user.getUserName());
+			retList.add(userMap);
+		}
+		return retList;
 	}
 }

@@ -23,12 +23,13 @@ public class User implements java.io.Serializable {
 	private Long companyId;
 	private String userEncode;
 	private Integer auditStatus;
+	private String billAuditUser;
 	private Timestamp createTime;
 
 	// Constructors
 
 	public User(Long id, String userId, String userName, String msgEmail, Integer typeId, String userLevel,
-			Long companyId, String userEncode, Integer auditStatus, Timestamp createTime) {
+			Long companyId, String userEncode, Integer auditStatus, String billAuditUser, Timestamp createTime) {
 		super();
 		this.id = id;
 		this.userId = userId;
@@ -39,14 +40,23 @@ public class User implements java.io.Serializable {
 		this.companyId = companyId;
 		this.userEncode = userEncode;
 		this.auditStatus = auditStatus;
+		this.billAuditUser = billAuditUser;
 		this.createTime = createTime;
 	}
 	
 	/** default constructor */
 	public User() {
 	}
-
+	
 	// Property accessors
+
+	public String getBillAuditUser() {
+		return billAuditUser;
+	}
+
+	public void setBillAuditUser(String billAuditUser) {
+		this.billAuditUser = billAuditUser;
+	}
 
 	public Integer getAuditStatus() {
 		return auditStatus;

@@ -145,10 +145,13 @@
 				<div class="panel-body" style="min-height: 300px;">
 					<table class="table table-bordered table-head-bordered center">
 						<colgroup>
-							<col style="width: 19%;">
-							<col style="width: 19%;">
-							<col style="width: 19%;">
-							<col style="width: 19%;">
+							<col style="width: 13%;">
+							<col style="width: 13%;">
+							<col style="width: 13%;">
+							<col style="width: 13%;">
+							<col style="width: 13%;">
+							<col style="width: 20%;">
+							<col style="width: 15%;">
 							<col>
 						</colgroup>
 						<thead>
@@ -157,6 +160,7 @@
 								<th>所在部门</th>
 								<th>员工编号</th>
 								<th>员工职级</th>
+								<th>审批人</th>
 								<th>微信邀请码</th>
 								<th>操作</th>
 							</tr>
@@ -216,6 +220,12 @@
 					<input type="text" id="dept_user_level" class="input-large" style="width:250px;"></input>
 				</div>
 			</div>
+			<div class="control-group">
+				<label class="control-label">审批人：</label>
+				<div class="controls control-row-auto">
+					<select class="input input-normal" id="dept_user_audit" style="width: 260px;"></select>
+				</div>
+			</div>
 			<div class="control-group control-btn">
 				<div class="layer-wrap-footer"><a href="javascript:void(0);" id="dept_user_submit" class="button button-success">确定添加</a></div>
 			</div>
@@ -267,6 +277,12 @@
 				<label class="control-label"><s>*</s>员工职级：</label>
 				<div class="controls control-row-auto">
 					<input type="text" id="modify_dept_user_level" class="input-large" style="width:250px;"></input>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">审批人：</label>
+				<div class="controls control-row-auto">
+					<select class="input input-normal" id="modify_dept_user_audit" style="width: 260px;"></select>
 				</div>
 			</div>
 			<div class="control-group control-btn">
@@ -430,6 +446,21 @@
         				return;
         			} else {
         				store.load(null);
+        				$.ajax({
+        		    		url : '/company/getAllUser',
+        		    		type : "POST",
+        		    		async: false,
+        		    		data : {companyId:headCompanyId},
+        		    		success : function(data) {
+        		    			if(data == null || data == '') return;
+        		    			$('#modify_dept_user_audit').append("<option value='0'>默认</option>");
+        		    			$('#dept_user_audit').append("<option value='0'>默认</option>");
+        		    			for(var i=0; i<data.length; i++) {
+        		    				$('#modify_dept_user_audit').append("<option value='"+data[i].userId+"'>" + data[i].name + "</option>");
+        		    				$('#dept_user_audit').append("<option value='"+data[i].userId+"'>" + data[i].name + "</option>");
+        		    			}
+        		    		}
+        		    	});
         			}        			
         		}
         	});
@@ -450,6 +481,21 @@
         				return;
         			} else {
         				store.load(null);
+        				$.ajax({
+        		    		url : '/company/getAllUser',
+        		    		type : "POST",
+        		    		async: false,
+        		    		data : {companyId:headCompanyId},
+        		    		success : function(data) {
+        		    			if(data == null || data == '') return;
+        		    			$('#modify_dept_user_audit').append("<option value='0'>默认</option>");
+        		    			$('#dept_user_audit').append("<option value='0'>默认</option>");
+        		    			for(var i=0; i<data.length; i++) {
+        		    				$('#modify_dept_user_audit').append("<option value='"+data[i].userId+"'>" + data[i].name + "</option>");
+        		    				$('#dept_user_audit').append("<option value='"+data[i].userId+"'>" + data[i].name + "</option>");
+        		    			}
+        		    		}
+        		    	});
         			}        			
         		}
         	});
@@ -470,6 +516,21 @@
         				return;
         			} else {
         				store.load(null);
+        				$.ajax({
+        		    		url : '/company/getAllUser',
+        		    		type : "POST",
+        		    		async: false,
+        		    		data : {companyId:headCompanyId},
+        		    		success : function(data) {
+        		    			if(data == null || data == '') return;
+        		    			$('#modify_dept_user_audit').append("<option value='0'>默认</option>");
+        		    			$('#dept_user_audit').append("<option value='0'>默认</option>");
+        		    			for(var i=0; i<data.length; i++) {
+        		    				$('#modify_dept_user_audit').append("<option value='"+data[i].userId+"'>" + data[i].name + "</option>");
+        		    				$('#dept_user_audit').append("<option value='"+data[i].userId+"'>" + data[i].name + "</option>");
+        		    			}
+        		    		}
+        		    	});
         			}        			
         		}
         	});
@@ -492,6 +553,21 @@
         				return;
         			} else {
         				store.load(null);
+        				$.ajax({
+        		    		url : '/company/getAllUser',
+        		    		type : "POST",
+        		    		async: false,
+        		    		data : {companyId:headCompanyId},
+        		    		success : function(data) {
+        		    			if(data == null || data == '') return;
+        		    			$('#modify_dept_user_audit').append("<option value='0'>默认</option>");
+        		    			$('#dept_user_audit').append("<option value='0'>默认</option>");
+        		    			for(var i=0; i<data.length; i++) {
+        		    				$('#modify_dept_user_audit').append("<option value='"+data[i].userId+"'>" + data[i].name + "</option>");
+        		    				$('#dept_user_audit').append("<option value='"+data[i].userId+"'>" + data[i].name + "</option>");
+        		    			}
+        		    		}
+        		    	});
         			}        			
         		}
         	});
@@ -517,6 +593,21 @@
         				return;
         			} else {
         				store.load(null);
+        				$.ajax({
+        		    		url : '/company/getAllUser',
+        		    		type : "POST",
+        		    		async: false,
+        		    		data : {companyId:headCompanyId},
+        		    		success : function(data) {
+        		    			if(data == null || data == '') return;
+        		    			$('#modify_dept_user_audit').append("<option value='0'>默认</option>");
+        		    			$('#dept_user_audit').append("<option value='0'>默认</option>");
+        		    			for(var i=0; i<data.length; i++) {
+        		    				$('#modify_dept_user_audit').append("<option value='"+data[i].userId+"'>" + data[i].name + "</option>");
+        		    				$('#dept_user_audit').append("<option value='"+data[i].userId+"'>" + data[i].name + "</option>");
+        		    			}
+        		    		}
+        		    	});
         			}        			
         		}
         	});
@@ -538,6 +629,21 @@
             				return;
             			} else {
             				store.load(null);
+            				$.ajax({
+            		    		url : '/company/getAllUser',
+            		    		type : "POST",
+            		    		async: false,
+            		    		data : {companyId:headCompanyId},
+            		    		success : function(data) {
+            		    			if(data == null || data == '') return;
+            		    			$('#modify_dept_user_audit').append("<option value='0'>默认</option>");
+            		    			$('#dept_user_audit').append("<option value='0'>默认</option>");
+            		    			for(var i=0; i<data.length; i++) {
+            		    				$('#modify_dept_user_audit').append("<option value='"+data[i].userId+"'>" + data[i].name + "</option>");
+            		    				$('#dept_user_audit').append("<option value='"+data[i].userId+"'>" + data[i].name + "</option>");
+            		    			}
+            		    		}
+            		    	});
             			}        			
             		}
             	});
@@ -589,7 +695,8 @@
     				userCode:$('#modify_dept_user_code').val(),
     				userLevel:$('#modify_dept_user_level').val(),
     				companyId:tree.getSelected().companyId,
-    				msgMail:""
+    				msgMail:"",
+    				auditUserId:$('#modify_dept_user_audit option:selected').val()
     				}
     		var fullMask = new Mask.LoadMask({
                 el : 'body',
@@ -649,7 +756,8 @@
     				userCode:$('#dept_user_code').val(),
     				userLevel:$('#dept_user_level').val(),
     				companyId:tree.getSelected().companyId,
-    				msgMail:""
+    				msgMail:"",
+    				auditUserId:$('#dept_user_audit option:selected').val()
     				}
     		var fullMask = new Mask.LoadMask({
                 el : 'body',
@@ -711,6 +819,21 @@
     			if(data == null || data == '') return;
     			for(var i=0; i<data.length; i++) {
     				$('#oneLevelDeptSelect').append("<option value='"+data[i].encode+"'>"+data[i].name+ (data[i].alias==null || data[i].alias=="" ? "": ("("+data[i].alias+")")) + "</option>");
+    			}
+    		}
+    	});
+    	$.ajax({
+    		url : '/company/getAllUser',
+    		type : "POST",
+    		async: false,
+    		data : {companyId:headCompanyId},
+    		success : function(data) {
+    			if(data == null || data == '') return;
+    			$('#modify_dept_user_audit').append("<option value='0'>默认</option>");
+    			$('#dept_user_audit').append("<option value='0'>默认</option>");
+    			for(var i=0; i<data.length; i++) {
+    				$('#modify_dept_user_audit').append("<option value='"+data[i].userId+"'>" + data[i].userName + "</option>");
+    				$('#dept_user_audit').append("<option value='"+data[i].userId+"'>" + data[i].userName + "</option>");
     			}
     		}
     	});
@@ -818,7 +941,7 @@
     		for(var i=0; i<deptUser.length; i++) {
     			var container = $('#deptUserList');
     			var tr = $("<tr></tr>");
-    			var td1 = $("<td>"+deptUser[i].userName+"</td><td>"+deptUser[i].deptName+"</td><td>"+deptUser[i].userCode+"</td><td>"+deptUser[i].userLevel+ (deptUser[i].charger == 1 ? "<span class='highlight'>负责人</span>" : "") +"</td><td>"+deptUser[i].inviteCode+"</td>");
+    			var td1 = $("<td>"+deptUser[i].userName+"</td><td>"+deptUser[i].deptName+"</td><td>"+deptUser[i].userCode+"</td><td>"+deptUser[i].userLevel+ (deptUser[i].charger == 1 ? "<span class='highlight'>负责人</span>" : "") +"</td><td>"+(deptUser[i].auditUserName == null || deptUser[i].auditUserName == "" ? "默认":deptUser[i].auditUserName )+"</td><td>"+deptUser[i].inviteCode+"</td>");
     			var td2 = $("<td></td>");
     			var a1 = $("<a href='javascript:void(0)'>修改</a>");
     			var a2 = $("<a href='javascript:void(0)'>删除</a>");
@@ -833,6 +956,7 @@
 		    				$('#modify_dept_user_dept_name').val(deptUser[i].deptName);
 		    				$('#modify_dept_user_code').val(deptUser[i].inviteCode);
 		    				$('#modify_dept_user_level').val(deptUser[i].userLevel);
+		    				$('#modify_dept_user_audit option[value="'+deptUser[i].auditUserId+'"]').attr("selected", true);
 		    				modifyUserDialogForm.show();		
 			    		}
 			    	}

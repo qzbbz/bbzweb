@@ -108,6 +108,12 @@ public class UserServiceImpl implements IUserService {
 	@Override
 	public List<String> getApprovalUserList(String userId) {
 		List<String> userIdList = new ArrayList<>();
+		User user = userQueryDao.getUserByUserId(userId);
+		if(user != null && user.getBillAuditUser() != null && 
+				!user.getBillAuditUser().isEmpty() && !("0").equals(user.getBillAuditUser())) {
+			userIdList.add(user.getBillAuditUser());
+			return userIdList;
+		}
 		UserDept userDept = userDeptDao.getUserDeptByUserId(userId);
 		if(userDept == null) return userIdList;
 		List<UserDept> userDeptList = userDeptDao.getUserDeptListByDeptId(userDept.getDeptId());
@@ -273,6 +279,18 @@ public class UserServiceImpl implements IUserService {
 	@Override
 	public boolean updateUserAuditStatusByUserId(int status, String userId) {
 		return userOperationDao.updateUserAuditStatus(status, userId);
+	}
+
+	@Override
+	public boolean setBillAuditUser(String userId, String auditUserId) {
+		return userOperationDao.setBillAuditUser(userId, auditUserId);
+	}
+
+	@Override
+	public String getBillAuditUser(String userId) {
+		User user = userQueryDao.getUserByUserId(userId);
+		if(user == null || user.getBillAuditUser() == null || user.getBillAuditUser().isEmpty()) return "";
+		return user.getBillAuditUser(); 
 	}
 }
 

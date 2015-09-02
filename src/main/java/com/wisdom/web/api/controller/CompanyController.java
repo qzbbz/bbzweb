@@ -343,6 +343,14 @@ public class CompanyController {
 		return companyApi.getAllCostCenterCode();
 	}
 	
+	@RequestMapping("/company/getAllUser")
+	@ResponseBody
+	public List<Map<String, String>> getAllUser(HttpServletRequest request) {
+		String userId = (String) request.getSession().getAttribute("userId");
+		long companyId = userService.getCompanyIdByUserId(userId);
+		return companyApi.getAllUser(companyId);
+	}
+	
 	@RequestMapping("/company/getSalaryTemplateHistory")
 	@ResponseBody
 	public List<Map<String, String>> getSalaryTemplateHistory(HttpServletRequest request) {

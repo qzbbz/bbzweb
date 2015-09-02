@@ -384,4 +384,12 @@ public class UserOperationDaoImpl implements IUserOperationDao {
 		return affectedRows != 0;
 	}
 
+	@Override
+	public boolean setBillAuditUser(String userId, String auditUserId) {
+		String sql = "update user set bill_audit_user=? where user_id=?";
+		int affectedRows = jdbcTemplate.update(sql, auditUserId, userId);
+		logger.debug("setBillAuditUser result : {}", affectedRows);
+		return affectedRows != 0;
+	}
+
 }

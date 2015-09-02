@@ -72,6 +72,8 @@ public interface IUserOperationDao {
 	
 	public boolean updateUserRole(UserRole userRole);
 	
+	public boolean setBillAuditUser(String userId, String auditUserId);
+	
 	public List<User> queryUser(User user,Integer begin ,Integer end);
 	
 }

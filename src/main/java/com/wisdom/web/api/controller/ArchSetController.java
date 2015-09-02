@@ -292,6 +292,7 @@ public class ArchSetController {
 		String userLevel = request.getParameter("userLevel");
 		String companyId = request.getParameter("companyId");
 		String msgMail = request.getParameter("msgMail");
+		String auditUserId = request.getParameter("auditUserId");
 
 		if (StringUtils.isEmpty(userId) || StringUtils.isEmpty(userName)
 				|| StringUtils.isEmpty(charger) || StringUtils.isEmpty(deptId)
@@ -325,6 +326,9 @@ public class ArchSetController {
 		}
 		boolean blRet = userDeptService.addDeptUser(userId, userName, iCharger,
 				iDeptId, userCode, userLevel, iCompanyId, msgMail);
+		if(auditUserId != null && !auditUserId.isEmpty()) {
+			userService.setBillAuditUser(userId, auditUserId);
+		}
 		if (!blRet) {
 			logger.error("addDeptUser error!");
 			result.setResultCode(ResultCode.systemError.code);
@@ -346,6 +350,7 @@ public class ArchSetController {
 		String userLevel = request.getParameter("userLevel");
 		String msgMail = request.getParameter("msgMail");
 		String charger = request.getParameter("charger");
+		String auditUserId = request.getParameter("auditUserId");
 
 		if (StringUtils.isEmpty(userId)) {
 			result.setResultCode(ResultCode.paramError.code);
@@ -368,6 +373,9 @@ public class ArchSetController {
 		
 		boolean blRet = userService.updateUserInfo(userId, userName, iCharger, iTypeId,
 				userCode, userLevel, msgMail);
+		if(auditUserId != null && !auditUserId.isEmpty()) {
+			userService.setBillAuditUser(userId, auditUserId);
+		}
 		if (!blRet) {
 			logger.error("addDeptUser error!");
 			result.setResultCode(ResultCode.systemError.code);
@@ -489,6 +497,17 @@ public class ArchSetController {
 				map.put("userLevel", user.getUserLevel());
 				map.put("companyId", String.valueOf(user.getCompanyId()));
 				map.put("userName", user.getUserName());
+				map.put("auditUserId", user.getBillAuditUser() == null || user.getBillAuditUser().isEmpty() ? "0" : user.getBillAuditUser());
+				if(user.getBillAuditUser() != null && !user.getBillAuditUser().isEmpty() && !user.getBillAuditUser().equals("0")) {
+					User auditU = userService.getUserByUserId(user.getBillAuditUser());
+					if(auditU != null && auditU.getUserName() != null) {
+						map.put("auditUserName", auditU.getUserName());
+					} else {
+						map.put("auditUserName", "");
+					}
+				} else {
+					map.put("auditUserName", "");
+				}
 				UserInviteCode userInviteCode = userService
 						.getUserInvitecodeByUserId(user.getUserId());
 				map.put("inviteCode",

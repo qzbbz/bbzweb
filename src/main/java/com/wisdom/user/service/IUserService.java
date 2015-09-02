@@ -60,4 +60,8 @@ public interface IUserService {
 	
 	public List<User> getAccounterUserList();
 	
+	public boolean setBillAuditUser(String userId, String auditUserId);
+	
+	public String getBillAuditUser(String userId);
+	
 }
