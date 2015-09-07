@@ -179,6 +179,8 @@ class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer
 	<context:component-scan base-package="com.wisdom.weixin.service.impl" />
 	<!-- weixin end -->
 	
+	<context:component-scan base-package="com.wisdom.contactus.utils" />
+	
 	<!-- import resources -->
 	<import resource="classpath:spring-config-message.xml"/>
 

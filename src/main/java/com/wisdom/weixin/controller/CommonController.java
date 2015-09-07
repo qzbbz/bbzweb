@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import com.wisdom.common.model.ContactUs;
+import com.wisdom.contactus.utils.ContactUsDaoImpl;
+import com.wisdom.contactus.utils.IContactUsDao;
 import com.wisdom.weixin.service.IMessageProcessService;
 import com.wisdom.weixin.service.ISettingService;
 import com.wisdom.weixin.service.ITokenCheckService;
@@ -35,6 +38,9 @@ public class CommonController {
 	
 	@Autowired
 	private ISettingService settingService;
+	
+	@Autowired
+	private IContactUsDao contactUsDao;
 
 	@RequestMapping("/weixinRequest")
 	@ResponseBody
@@ -67,6 +73,24 @@ public class CommonController {
 		logger.debug("url : {}", url);
 		result = WeixinTools.getSign(url);
 		logger.debug("finishGetJsConfigInfo");
+		logger.debug("resultMap :{}", result.toString());
+		return result;
+	}
+	
+	@RequestMapping("/contactus")
+	@ResponseBody
+	public Map<String, String> contactus(HttpServletRequest request) {
+		logger.debug("contactus");
+		Map<String, String> result = new HashMap<>();
+		String userName = request.getParameter("userName");
+		String userPhone = request.getParameter("userPhone");
+		String userCompanyName = request.getParameter("userCompanyName");
+		ContactUs cus = new ContactUs();
+		cus.setUserName(userName);
+		cus.setUserPhone(userPhone);
+		cus.setUserCompanyName(userCompanyName);
+		contactUsDao.addContactUs(cus);
+		logger.debug("finishcontactus");
 		logger.debug("resultMap :{}", result.toString());
 		return result;
 	}
