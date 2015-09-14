@@ -264,7 +264,7 @@ p {
   position: absolute;
   height: 88px;
   line-height: 88px;
-  width: 100%;
+  width: 100vw;
   color: white;
   z-index: 1;
   transition: height 0.5s ease, padding-left 0.5s ease, color 0.5s ease, background-color 0.5s ease, right 0.5s ease;
@@ -286,7 +286,7 @@ p {
 }
 .header.header-fixed .logo {
   color: #535353;
-  padding-left: 22px;
+  padding-left: 1vw;
 }
 .header.header-fixed .nav {
   right: 22px;
@@ -298,7 +298,8 @@ p {
   color: white;
 }
 .nav {
-  position: absolute;
+  float: right;
+  font-size: 1.5vw;
   right: 44px;
   top: 0;
   display: inline-block;
@@ -311,19 +312,19 @@ p {
   display: inline-block;
   color: white;
   font-size: 16px;
-  padding: 0 1em;
+  padding: 0 1vw;
   min-width: 44px;
   transition: height 0.5s ease, padding-left 0.5s ease, color 0.5s ease, background-color 0.5s ease, right 0.5s ease;
 }
 .nav .yw-button {
-  padding: 15px 22px;
+  padding: 1vh 1vw;
 }
 @media all and (max-width: 700px) {
   .header .logo {
-    padding-left: 0;
+    padding-left: 1vw;
   }
   .header.header-fixed .logo {
-    padding-left: 0;
+    padding-left: 1vw;
   }
   .header.header-fixed .nav {
     right: 0;
@@ -361,6 +362,7 @@ p {
   margin: 22px;
   font-size: 16px;
   color: #535353;
+  word-wrap: break-word;
 }
 #screen-contact .glyphicon {
   box-sizing: content-box;
@@ -768,11 +770,17 @@ p {
   background: rgba(210, 210, 210, 0.9);
   border-radius: 2px;
   line-height: 47px;
+  float: left;
+  width: 300px;
+  margin-left: 10vw;
+  margin-top: 1%;
+  margin-bottom: 1%;
 }
 #screen-signup .signup-form button {
   display: inline-block;
   width: 171px;
   border-radius: 4px;
+  margin-top: 1%;
 }
 #screen-signup .signup-form button:hover {
   background-color: #c85535;
@@ -1490,4 +1498,24 @@ button.down,
 
 * {
   font-family: Microsoft YaHei, '宋体', Tahoma, Helvetica, Arial, "\5b8b\4f53", sans-serif;
+}
+
+.ng-binding {
+	margin-left: 0;
+	margin-right: 0;
+    padding-left: 1vw;
+    padding-right: 1vw;
+}
+
+
+h3.company-name {
+	white-space: nowrap;
+}
+
+div.logo-div {
+	float: left;
+	margin-right: 0px;
+}
+img.logo {
+	width: 20vw;
 }

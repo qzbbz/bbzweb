@@ -91,6 +91,82 @@
 			</div>
 		</div>
 	</div>
+	<div id="payBill" style="display:none;">
+			<div id="main">
+		<div id="head">
+            <dl class="alipay_link">
+                <a target="_blank" href="http://www.alipay.com/">
+                	<span>支付宝首页</span>
+                </a>|
+                <a target="_blank" href="https://b.alipay.com/home.htm"><span>商家服务</span></a>|
+                <a target="_blank" href="http://help.alipay.com/support/index_sh.htm"><span>帮助中心</span></a>
+            </dl>
+            <span class="title">支付宝即时到账交易接口快速通道</span>
+		</div>
+        <div class="cashier-nav">
+            <ol>
+				<li class="current">1、确认信息 →</li>
+				<li>2、点击确认 →</li>
+				<li class="last">3、确认完成</li>
+            </ol>
+        </div>
+        <form name=alipayment onSubmit="JavaScript:payBill();"target="_blank">
+            <div id="body" style="clear:left">
+                <dl class="content">
+					<dt>商户订单号：</dt>
+					<dd>
+						<span class="null-star">*</span>
+						<input size="30" name="WIDout_trade_no" />
+						<span>商户网站订单系统中唯一订单号，必填
+</span>
+					</dd>
+					<dt>订单名称：</dt>
+					<dd>
+						<span class="null-star">*</span>
+						<input size="30" name="WIDsubject" />
+						<span>必填
+</span>
+					</dd>
+					<dt>付款金额：</dt>
+					<dd>
+						<span class="null-star">*</span>
+						<input size="30" name="WIDtotal_fee" />
+						<span>必填
+</span>
+					</dd>
+					<dt>订单描述
+：</dt>
+					<dd>
+						<span class="null-star">*</span>
+						<input size="30" name="WIDbody" />
+						<span></span>
+					</dd>
+					<dt>商品展示地址：</dt>
+					<dd>
+						<span class="null-star">*</span>
+						<input size="30" name="WIDshow_url" />
+						<span>需以http://开头的完整路径，例如：http://www.商户网址.com/myorder.html
+</span>
+					</dd>
+                    <dt></dt>
+                    <dd>
+                        <span class="new-btn-login-sp">
+                            <button class="new-btn-login" type="submit" style="text-align:center;">确 认</button>
+                        </span>
+                    </dd>
+                </dl>
+            </div>
+		</form>
+        <div id="foot">
+			<ul class="foot-ul">
+				<li><font class="note-help">如果您点击“确认”按钮，即表示您同意该次的执行操作。 </font></li>
+				<li>
+					支付宝版权所有 2011-2015 ALIPAY.COM 
+				</li>
+			</ul>
+		</div>
+	</div>
+	</div>>
 	<div style="position:fixed; bottom: 0; right: 0;"><a target="_blank" href="http://sighttp.qq.com/authd?IDKEY=a1a51fb184a88bbb4c1756a211f1ff1fbc9d47079f63eb30"><img border="0" src="http://wpa.qq.com/imgd?IDKEY=a1a51fb184a88bbb4c1756a211f1ff1fbc9d47079f63eb30&pic=41" alt="点我联系我" title="点我联系我"/></a></div>
     <script src="/js/webjs/jquery-1.8.1.min.js"></script>
     <script src="/js/webjs/sea.js"></script>
@@ -98,6 +174,16 @@
     <script src="/js/webjs/menuTree.js"></script>
 	<script src="/js/webjs/layout.js"></script>
     <script type="text/javascript">
+    function payBill(){
+
+    	//alert('pay!');
+    		$.post('/payBill', function(data){
+    			$("#payBill").html(data);
+    			
+    		});
+    		return false;
+    	
+    }
     BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 		var modifyPwdForm = new Overlay.Dialog({
             title:'密码修改',
@@ -274,7 +360,17 @@
 								success : function() {
 									BUI.use('bui/overlay',function(overlay){
 										function show () {
-											BUI.Message.Alert('您已成功选择会计师！',function(){
+											var payBillForm = new overlay.Dialog({
+									            title:'支付页面',
+									            width:600,
+									            height:480,
+									            contentId:'payBill',
+									            success:function () {
+									              	this.close();
+									            },
+									            buttons : []
+									        });
+											payBillForm.show('您已成功选择会计师！',function(){
 											},'warning');
 										}
 										show();
