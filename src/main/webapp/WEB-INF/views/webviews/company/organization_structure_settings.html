@@ -387,6 +387,10 @@
 	//竖状菜单
     var menu = new menuTree(
             {"nodes" : [
+{text : '组织架构',id : '50',href:"javascript:void(0);",  expanded : false,children: [
+                                                          						{text : '基本信息设置',id : '51', href:"/views/webviews/company/organization_information_settings.html"},
+                                                          						{text : '组织架构设置',id : '52', href:"/views/webviews/company/organization_structure_settings.html"}                                           
+                                                          					]},
 					{text : '公司发票',id : '10',href:"javascript:void(0);",  expanded : false,children: [
 						{text : '发票上传',id : '11', href:"/views/webviews/company/expense_account_upload.html"},
 						{text : '发票历史记录',id : '12', href:"/views/webviews/company/expense_account_history.html"}                                           
@@ -409,10 +413,7 @@
 					{text : '预约取发票',id : '40',href:"javascript:void(0);", expanded : false,children: [
 						{text : '方式选择',id : '41', href:"/views/webviews/company/take_expense_account_mode_select.html"}                                           
 					]},
-					{text : '组织架构',id : '50',href:"javascript:void(0);",  expanded : true,children: [
-						{text : '基本信息设置',id : '51', href:"/views/webviews/company/organization_information_settings.html"},
-						{text : '组织架构设置',id : '52', href:"/views/webviews/company/organization_structure_settings.html"}                                           
-					]},
+					
 					{text : '基本报表',id : '70',href:"javascript:void(0);",  expanded : false,children: [
 					                                                          						{text : '资产负债表',id : '71', href:"/views/webviews/company/sheet_balance.html"},
 					                                                          						{text : '利润表',id : '72', href:"/views/webviews/company/sheet_income.html"},
