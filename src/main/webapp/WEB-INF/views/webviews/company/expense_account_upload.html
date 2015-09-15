@@ -30,10 +30,18 @@
 				<div class="form-window form-uploader">
                     <div class="hd"><i class="iconfont">&#xe60b;</i></div>
                     <div class="bd">
-                        <h2>发票上传</h2>
-                        <p>这里您可以上传除增值税和员工报销以外的发票</p>
+                        <h2>企业发票上传</h2>
                     </div>
-                    <div class="uploader-wrap">
+                    <div class="form-horizontal" style="padding-bottom:30px;">
+                    	<div class="row">
+                        	<label for="" class="control-label">发票日期：</label>
+                        	<div class="controls">
+                        		<input name="sname" id="bill_date" name="bill_date" type="text" class="input input-normal" style="width:300px;">
+                        	</div>
+                        </div>
+                    	<div id="selectMonth" style="display:none;position:relative; z-index:99999;margin-left:170px;"></div>
+                    </div>
+                    <div class="uploader-wrap" style="">
                         <div class="uploader-label">文件列表：</div>
                         <div id="J_Uploader">
 	                        <div class="bui-uploader defaultTheme" aria-disabled="false" aria-pressed="false">
@@ -92,7 +100,34 @@
 	<script src="/js/webjs/sea.js"></script>
 	<script src="/js/webjs/config.js"></script>
 	<script src="/js/webjs/menuTree.js"></script>
+	<script src="/js/webjs/bui.js"></script>
 	<script type="text/javascript">
+	$('#bill_date').click(function(){
+		var currentDate = new Date();
+		var currentYear = currentDate.getFullYear();
+		var currentMonth = currentDate.getMonth();
+		$('#selectMonth').show();
+		var Calendar = BUI.Calendar
+        var monthpicker = new BUI.Calendar.MonthPicker({
+	        render:'#selectMonth',
+	        month:currentMonth,
+	        align : {
+	          points:['tl','tl']
+	        },
+	        year:currentYear,
+	        success:function(){
+	        	var month = (this.get('month') + 1).toString();
+	        	if(month.length == 1) month = "0" + month;
+	          	$("#date").val(this.get('year') + "-" + month);
+	          	monthpicker.close();
+	        },
+	        cancel:function() {
+	        	
+	        	monthpicker.close();
+	        }
+      	});
+      	monthpicker.show();
+	});
 	BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 		var modifyPwdForm = new Overlay.Dialog({
             title:'密码修改',

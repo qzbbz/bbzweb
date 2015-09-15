@@ -16,6 +16,7 @@ public class CompanySales implements java.io.Serializable {
 	private Double amount;
 	private String type;
 	private String fileName;
+	private String salesDate;
 	private Timestamp createTime;
 
 	// Constructors
@@ -30,13 +31,14 @@ public class CompanySales implements java.io.Serializable {
 	}
 
 	public CompanySales(Long id, Long companyId, Double amount, String type,
-			String fileName, Timestamp createTime) {
+			String fileName, String salesDate, Timestamp createTime) {
 		super();
 		this.id = id;
 		this.companyId = companyId;
 		this.amount = amount;
 		this.type = type;
 		this.fileName = fileName;
+		this.salesDate = salesDate;
 		this.createTime = createTime;
 	}
 
@@ -86,6 +88,14 @@ public class CompanySales implements java.io.Serializable {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public String getSalesDate() {
+		return salesDate;
+	}
+
+	public void setSalesDate(String salesDate) {
+		this.salesDate = salesDate;
 	}
 
 	@Override

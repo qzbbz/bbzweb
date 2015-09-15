@@ -11,7 +11,7 @@ public class CompanyBillMapper implements RowMapper<CompanyBill> {
 	public CompanyBill mapRow(ResultSet rs, int index) throws SQLException {
 		CompanyBill u = new CompanyBill(rs.getLong("id"), rs.getLong("company_id"),
 				rs.getDouble("amount"), rs.getString("type"), rs.getString("file_name"), 
-				rs.getTimestamp("create_time"));
+				rs.getString("bill_date"), rs.getTimestamp("create_time"));
 		return u;
 	}
 }
