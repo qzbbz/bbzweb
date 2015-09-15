@@ -3,12 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <title>上海元升财务咨询有限公司</title>
-<link rel="stylesheet" type="text/css"
-	href="../../../css/webcss/bui.css">
-<link rel="stylesheet" type="text/css"
-	href="../../../css/webcss/golbal.css">
-<link rel="stylesheet" type="text/css"
-	href="../../../css/webcss/layout.css">
+ <link rel="stylesheet" type="text/css" href="/css/webcss/bui.css">
+	<link rel="stylesheet" type="text/css" href="/css/webcss/golbal.css">
+	<link rel="stylesheet" type="text/css" href="/css/webcss/layout.css">
 </head>
 <body>
 	<div class="wrap">
@@ -30,10 +27,19 @@
 				<div class="form-window form-uploader">
                     <div class="hd"><i class="iconfont">&#xe60b;</i></div>
                     <div class="bd">
-                        <h2>发票上传</h2>
-                        <p>这里您可以上传除增值税和员工报销以外的发票</p>
+                        <h2>企业发票上传</h2>
                     </div>
-                    <div class="uploader-wrap">
+                     <div class="form-horizontal" style="margin-top:20px;">
+                            <div class="row">
+                                <label for="" class="control-label">会计期间：</label>
+                                <div class="controls">
+                                  <input name="sname" id="date" name="date" type="text" class="input input-normal" style="width:300px;">
+                                </div>
+                            </div>
+                            <div id="selectMonth" style="display:none;position:relative; z-index:99999;margin-left:170px;"></div>
+                        </div>
+                   <p> &nbsp;&nbsp;</p>
+                    <div class="uploader-wrap" style="">
                         <div class="uploader-label">文件列表：</div>
                         <div id="J_Uploader">
 	                        <div class="bui-uploader defaultTheme" aria-disabled="false" aria-pressed="false">
@@ -88,11 +94,39 @@
 	</div>
 	<div style="position:fixed; bottom: 0; right: 0;"><a target="_blank" href="http://sighttp.qq.com/authd?IDKEY=a1a51fb184a88bbb4c1756a211f1ff1fbc9d47079f63eb30"><img border="0" src="http://wpa.qq.com/imgd?IDKEY=a1a51fb184a88bbb4c1756a211f1ff1fbc9d47079f63eb30&pic=41" alt="点我联系我" title="点我联系我"/></a></div>
 	<!--该js需要修改js路径及修改seajs路径-->
-	<script src="/js/webjs/jquery-1.8.1.min.js"></script>
+	<script src="http://g.tbcdn.cn/fi/bui/jquery-1.8.1.min.js"></script>
 	<script src="/js/webjs/sea.js"></script>
 	<script src="/js/webjs/config.js"></script>
 	<script src="/js/webjs/menuTree.js"></script>
+	<script src="/js/webjs/layout.js"></script>
+	<script src="/js/webjs/bui.js"></script>
 	<script type="text/javascript">
+	$('#date').click(function(){
+		var currentDate = new Date();
+		var currentYear = currentDate.getFullYear();
+		var currentMonth = currentDate.getMonth();
+		$('#selectMonth').show();
+		var Calendar = BUI.Calendar
+        var monthpicker = new BUI.Calendar.MonthPicker({
+	        render:'#selectMonth',
+	        month:currentMonth,
+	        align : {
+	          points:['tl','tl']
+	        },
+	        year:currentYear,
+	        success:function(){
+	        	var month = (this.get('month') + 1).toString();
+	        	if(month.length == 1) month = "0" + month;
+	          	$("#date").val(this.get('year') + "-" + month);
+	          	monthpicker.close();
+	        },
+	        cancel:function() {
+	        	
+	        	monthpicker.close();
+	        }
+      	});
+      	monthpicker.show();
+	});
 	BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 		var modifyPwdForm = new Overlay.Dialog({
             title:'密码修改',

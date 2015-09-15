@@ -22,7 +22,7 @@ public interface ICompanyApi {
 	
 	public Map<String, String> checkTemplateExist(String userId, String cityName, String type);
 	
-	public Map<String, String> uploadCompanySalary(String userId, String realPath, MultipartFile file);
+	public Map<String, String> uploadCompanySalary(String userId, String realPath, MultipartFile file,String date);
 	
 	public Map<String, String> uploadCompanyBankSta(MultipartFile file, Map<String, String> params);
 	

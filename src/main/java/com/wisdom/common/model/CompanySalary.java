@@ -14,6 +14,7 @@ public class CompanySalary implements java.io.Serializable {
 	private Long id;
 	private Long companyId;
 	private String salaryFile;
+	private String salaryDate;
 	private Timestamp createTime;
 
 	// Constructors
@@ -59,12 +60,21 @@ public class CompanySalary implements java.io.Serializable {
 		this.createTime = createTime;
 	}
 
+	public String getSalaryDate() {
+		return salaryDate;
+	}
+
+	public void setSalaryDate(String salaryDate) {
+		this.salaryDate = salaryDate;
+	}
+
 	public CompanySalary(Long id, Long companyId, String salaryFile,
-			Timestamp createTime) {
+			String salaryDate, Timestamp createTime) {
 		super();
 		this.id = id;
 		this.companyId = companyId;
 		this.salaryFile = salaryFile;
+		this.salaryDate = salaryDate;
 		this.createTime = createTime;
 	}
 

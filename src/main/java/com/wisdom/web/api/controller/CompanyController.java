@@ -1,6 +1,9 @@
 package com.wisdom.web.api.controller;
 
+import java.sql.Date;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -207,11 +210,13 @@ public class CompanyController {
 	}
 	
 	@RequestMapping("/company/uploadSalary")
-	public String uploadSalary(@RequestParam("files") MultipartFile file, HttpServletRequest request) {
+	public String uploadSalary(@RequestParam("files") MultipartFile file, HttpServletRequest request) throws ParseException {
+		String date=request.getParameter("date");
+		
 		String userId = (String) request.getSession().getAttribute("userId");
 		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/files/company");
 		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
-		companyApi.uploadCompanySalary(userId, realPath, file);
+		companyApi.uploadCompanySalary(userId, realPath, file,date);
 		return "redirect:/views/webviews/company/salary_welfare_upload.html";
 	}
 	
@@ -234,6 +239,7 @@ public class CompanyController {
 			HttpServletRequest request) {
 		logger.debug("===>uploadBankSta");
 		String userId = (String) request.getSession().getAttribute("userId");
+		
 		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/files/company");
 		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
 		String date = request.getParameter("date");
@@ -258,11 +264,13 @@ public class CompanyController {
 			HttpServletRequest request) {
 		logger.debug("===>uploadBankSta");
 		String userId = (String) request.getSession().getAttribute("userId");
+		String date=request.getParameter("date");
 		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/files/company");
 		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
 		Map<String, String> params = new HashMap<>();
 		params.put("userId", userId);
 		params.put("realPath", realPath);
+		params.put("date", date);
 		if (multipartRequest != null) {
 			Iterator<String> iterator = multipartRequest.getFileNames();
 			while (iterator.hasNext()) {

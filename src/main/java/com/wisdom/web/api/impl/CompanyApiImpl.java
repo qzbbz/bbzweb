@@ -2,6 +2,7 @@ package com.wisdom.web.api.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -362,7 +363,7 @@ public class CompanyApiImpl implements ICompanyApi {
 
 	@Override
 	public Map<String, String> uploadCompanySalary(String userId,
-			String realPath, MultipartFile file) {
+			String realPath, MultipartFile file,String date) {
 		Map<String, String> retMap = new HashMap<>();
 		try {
 			long companyId = userService.getCompanyIdByUserId(userId);
@@ -372,6 +373,7 @@ public class CompanyApiImpl implements ICompanyApi {
 			CompanySalary cs = new CompanySalary();
 			cs.setCompanyId(companyId);
 			cs.setSalaryFile(fileName);
+			cs.setSalaryDate(date);
 			cs.setCreateTime(new Timestamp(System.currentTimeMillis()));
 			companySalaryService.addCompanySalary(cs);
 			retMap.put("error_code", "0");
@@ -686,6 +688,7 @@ public class CompanyApiImpl implements ICompanyApi {
 		Map<String, String> retMap = new HashMap<>();
 		try {
 			String userId = params.get("userId");
+			String date=params.get("date");
 			long companyId = userService.getCompanyIdByUserId(userId);
 			
 			String orginFileName = file.getOriginalFilename();
@@ -697,6 +700,7 @@ public class CompanyApiImpl implements ICompanyApi {
 			CompanySales cs = new CompanySales();
 			cs.setCompanyId(companyId);
 			cs.setFileName(fileName);
+			cs.setSalesDate(date);
 			cs.setCreateTime(new Timestamp(System.currentTimeMillis()));
 			companySalesService.addCompanySales(cs);
 			retMap.put("error_code", "0");

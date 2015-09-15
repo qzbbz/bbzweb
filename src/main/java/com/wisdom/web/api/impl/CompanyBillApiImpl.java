@@ -45,6 +45,7 @@ public class CompanyBillApiImpl implements ICompanyBillApi {
 		Map<String, String> retMap = new HashMap<>();
 		try {
 			String userId = params.get("userId");
+			String date=params.get("date");
 			long companyId = userService.getCompanyIdByUserId(userId);
 			String fileName = getGernarateFileName(file, userId);
 			FileUtils.copyInputStreamToFile(file.getInputStream(),
@@ -52,6 +53,7 @@ public class CompanyBillApiImpl implements ICompanyBillApi {
 			CompanyBill cb = new CompanyBill();
 			cb.setCompanyId(companyId);
 			cb.setFileName(fileName);
+			cb.setBillDate(date);
 			cb.setCreateTime(new Timestamp(System.currentTimeMillis()));
 			companyBillService.addCompanyBill(cb);
 			retMap.put("error_code", "0");
