@@ -12,17 +12,16 @@ public class JavaMailService {
 	private String password;
 	
 	public boolean sendMailOut(String to,String subject,String body,String from_user){
-//		JavaMail javaMail = new JavaMail("smtp.163.com");
-		/*javaMail.setNamePass(username, password);
+		JavaMail javaMail = new JavaMail("smtp.bangbangzhang.com");
+		javaMail.setNamePass(username, password);
 		javaMail.setNeedAuth(true);
 		javaMail.setFrom(username);
 		javaMail.setTo(to);
 		javaMail.setSubject(subject);
 		javaMail.setBody(body);
 		StringBuffer strRet = new StringBuffer();
-		boolean blRet = javaMail.sendout(strRet);*/
-		//return blRet;
-		return false;
+		boolean blRet = javaMail.sendout(strRet);
+		return blRet;
 	}
 //	
 //	public static final void main(String[] args){

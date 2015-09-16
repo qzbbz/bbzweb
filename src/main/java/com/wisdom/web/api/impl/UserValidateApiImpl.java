@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.wisdom.accounter.service.IAccounterService;
 import com.wisdom.common.model.Accounter;
 import com.wisdom.common.model.User;
+import com.wisdom.dispatch.service.impl.JavaMailService;
 import com.wisdom.user.service.IUserService;
 import com.wisdom.web.api.IUserValidateApi;
 import com.wisdom.web.utils.UserPwdMD5Encrypt;
@@ -25,6 +26,9 @@ public class UserValidateApiImpl implements IUserValidateApi {
  
 	@Autowired
 	private IUserService userService;
+	
+	@Autowired
+	private JavaMailService javaMailService;
 	
 	@Autowired
 	private IAccounterService accounterService;
@@ -63,6 +67,9 @@ public class UserValidateApiImpl implements IUserValidateApi {
 							UserPwdMD5Encrypt.getPasswordByMD5Encrypt(userPwd),
 							userId)) {				
 				retMap.put("error_code", "0");
+				String mailSubject = "欢迎您注册帮帮账";
+				String mailBody = "尊敬的用户您好！<br>非常欢迎您注册帮帮账，您当前注册的用户名是："+ userId +"，密码是："+userPwd + "。<br>请您妥善保管账号信息！<br>本邮件是系统自动发送的邮件，请勿回复！<br><br>上海元升财务咨询有限公司<br>上海市杨浦区国定东路200号1号楼514室<br>联系电话:4000-866-018";
+				javaMailService.sendMailOut(userId, mailSubject, mailBody, "");
 			} else {
 				retMap.put("error_code", "100");
 				retMap.put("error_message", "服务器系统出错了，请您稍后重试！");

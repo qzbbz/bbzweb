@@ -39,7 +39,7 @@ public class NotifyScheduleImpl implements NotifySchedule {
 	@Override
 	public void invoiceApprovalNotify() {
 		//查询一批记录
-		log.error("schedule working");
+		log.debug("schedule working");
 		List<Dispatcher> dispatchList =  dispatcherService.getDispatcherByStatusAndNum(0,5);
 		if(null == dispatchList || !(dispatchList.size() > 0)){
 			log.debug("no record need to be send");
