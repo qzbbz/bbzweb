@@ -211,7 +211,7 @@ public class CompanyController {
 	
 	@RequestMapping("/company/uploadSalary")
 	public String uploadSalary(@RequestParam("files") MultipartFile file, HttpServletRequest request) throws ParseException {
-		String date=request.getParameter("date");
+		String date=request.getParameter("salary_date");
 		
 		String userId = (String) request.getSession().getAttribute("userId");
 		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/files/company");
@@ -264,7 +264,7 @@ public class CompanyController {
 			HttpServletRequest request) {
 		logger.debug("===>uploadBankSta");
 		String userId = (String) request.getSession().getAttribute("userId");
-		String date=request.getParameter("date");
+		String date=request.getParameter("sales_date");
 		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/files/company");
 		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
 		Map<String, String> params = new HashMap<>();

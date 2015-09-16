@@ -59,7 +59,7 @@ public class CompanyBillController {
 		String userId = (String) request.getSession().getAttribute("userId");
 		String realPath = request.getSession().getServletContext()
 				.getRealPath("/WEB-INF").substring(0);
-		String date=request.getParameter("date");
+		String date=request.getParameter("bill_date");
 		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
 		logger.debug("uploadCompanyBill realPath : {}", realPath);
 		Map<String, String> params = new HashMap<>();

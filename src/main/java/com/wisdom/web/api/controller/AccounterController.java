@@ -135,8 +135,10 @@ public class AccounterController {
 		String certificate = request.getParameter("certificateName");
 		String industry = request.getParameter("industryName");
 		String career = request.getParameter("careerName");
+		String image = request.getParameter("image");
 		String realPath = request.getSession().getServletContext()
-				.getRealPath("/WEB-INF/img/webimg");
+				.getRealPath("/WEB-INF").substring(0);
+		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/image";
 		Map<Integer, String> retMap = new HashMap<>();
 		boolean updateSuccess = false;
 		if (userId != null && !userId.isEmpty()) {
@@ -148,12 +150,13 @@ public class AccounterController {
 			accounter.setCertificate(certificate);
 			accounter.setCareer(career);
 			accounter.setIndustry(industry);
+			accounter.setImage(image);
 			if (!file.isEmpty()) {
 				String fileName = getGernarateFileName(file, userId);
 				try {
 					FileUtils.copyInputStreamToFile(file.getInputStream(),
 							new File(realPath, fileName));
-					accounter.setImage("/img/webimg/" + fileName);
+					accounter.setImage(fileName);
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}

@@ -63,6 +63,7 @@
 					<input id="industryName" name ="industryName" type="hidden">
 					<input id="careerName" name ="careerName" type="hidden">
 					<input id="certificateName" name ="certificateName" type="hidden">
+					<input id="image" name ="image" type="hidden">
 					</form>
 				</div>
 			</div>
@@ -106,6 +107,19 @@
 	<script src="http://g.alicdn.com/bui/bui/1.1.17/config.js"></script>
 	<script src="/js/webjs/menuTree.js"></script>
 	<script type="text/javascript">
+	var globalData;
+	$.ajax({
+		url : '/getAccounterInfo',
+		type : "POST",
+		async : false,
+		data : {},
+		success : function(data) {
+			globalData = data;
+			$('#userName').val(data.userName);
+			$('#userPhone').val(data.userPhone);
+			$('#image').val(data.image);
+		}
+	});
 	BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 		var modifyPwdForm = new Overlay.Dialog({
             title:'密码修改',
@@ -193,7 +207,11 @@
 				data : {},
 				success : function(data) {
 					$.each(data,function(name,value) {
-						$('#industry').append("<option value='"+name+"'>"+value+"</option>");
+						if(value == globalData.industry) {
+							$('#industry').append("<option value='"+name+"' selected>"+value+"</option>");
+						} else {
+							$('#industry').append("<option value='"+name+"'>"+value+"</option>");
+						}
 					});
 				}
 			});
@@ -206,7 +224,11 @@
 				data : {},
 				success : function(data) {
 					$.each(data,function(name,value) {
-						$('#career').append("<option value='"+name+"'>"+value+"</option>");
+						if(value == globalData.career) {
+							$('#career').append("<option value='"+name+"' selected>"+value+"</option>");
+						} else {
+							$('#career').append("<option value='"+name+"'>"+value+"</option>");
+						}
 					});
 				}
 			});
@@ -219,7 +241,11 @@
 				data : {},
 				success : function(data) {
 					$.each(data,function(name,value) {
-						$('#certificate').append("<option value='"+name+"'>"+value+"</option>");
+						if(value == globalData.certificate) {
+							$('#certificate').append("<option value='"+name+"' selected>"+value+"</option>");
+						} else {
+							$('#certificate').append("<option value='"+name+"'>"+value+"</option>");
+						}
 					});
 				}
 			});
@@ -232,7 +258,11 @@
 				data : {},
 				success : function(data) {
 					$.each(data,function(name,value) {
-						obj.append("<option value='"+name+"'>"+value+"</option>");
+						if(value == globalData.province) {
+							obj.append("<option value='"+name+"' selected>"+value+"</option>");
+						} else {
+							obj.append("<option value='"+name+"'>"+value+"</option>");
+						}
 					});
 					addCity($('#city'), $('#province option:selected').val());
 				}
@@ -247,7 +277,11 @@
 				data : {provinceId:provinceId},
 				success : function(data) {
 					$.each(data,function(name,value) {
-						obj.append("<option value='"+name+"'>"+value+"</option>");
+						if(value == globalData.city) {
+							obj.append("<option value='"+name+"' selected>"+value+"</option>");
+						} else {
+							obj.append("<option value='"+name+"'>"+value+"</option>");
+						}
 					});
 					addArea($('#area'), $('#city option:selected').val());
 				}
@@ -262,7 +296,11 @@
 				data : {cityId:cityId},
 				success : function(data) {
 					$.each(data,function(name,value) {
-						obj.append("<option value='"+name+"'>"+value+"</option>");
+						if(value == globalData.area) {
+							obj.append("<option value='"+name+"' selected>"+value+"</option>");
+						} else {
+							obj.append("<option value='"+name+"'>"+value+"</option>");
+						}
 					});
 				}
 			});

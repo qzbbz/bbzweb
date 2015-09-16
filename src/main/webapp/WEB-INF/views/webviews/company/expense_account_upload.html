@@ -32,9 +32,9 @@
 
                      <div class="form-horizontal" style="margin-top:20px;">
                             <div class="row">
-                                <label for="" class="control-label">会计期间：</label>
+                                <label for="" class="control-label">发票日期：</label>
                                 <div class="controls">
-                                  <input name="sname" id="date" name="date" type="text" class="input input-normal" style="width:300px;">
+                                  <input name="sname" id="bill_date" name="bill_date" type="text" class="input input-normal" style="width:300px;">
                                 </div>
                             </div>
                             <div id="selectMonth" style="display:none;position:relative; z-index:99999;margin-left:170px;"></div>
@@ -103,7 +103,7 @@
 	<script src="/js/webjs/layout.js"></script>
 	<script src="/js/webjs/bui.js"></script>
 	<script type="text/javascript">
-	$('#date').click(function(){
+	$('#bill_date').click(function(){
 		var currentDate = new Date();
 		var currentYear = currentDate.getFullYear();
 		var currentMonth = currentDate.getMonth();
@@ -119,7 +119,7 @@
 	        success:function(){
 	        	var month = (this.get('month') + 1).toString();
 	        	if(month.length == 1) month = "0" + month;
-	          	$("#date").val(this.get('year') + "-" + month);
+	          	$("#bill_date").val(this.get('year') + "-" + month);
 	          	monthpicker.close();
 	        },
 	        cancel:function() {
@@ -288,7 +288,7 @@
 					{text : '工资社保',id : '30',href:"javascript:void(0);", expanded : false,children: [
 						{text : '参数设置',id : '31', href:"/views/webviews/company/salary_welfare_args_settings.html"},
 						{text : '下载工资计算模板',id : '32', href:"/views/webviews/company/salary_welfare_template_download.html"},                                           
-						{text : '上传本月工资',id : '33', href:"/views/webviews/company/salary_welfare_upload.html"},
+						{text : '上传工资单',id : '33', href:"/views/webviews/company/salary_welfare_upload.html"},
 						{text : '工资历史记录',id : '34', href:"/views/webviews/company/salary_history.html"},
 						{text : '工资计算模板历史记录',id : '35', href:"/views/webviews/company/salary_template_history.html"}
 					]},

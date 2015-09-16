@@ -64,4 +64,6 @@ public interface IUserService {
 	
 	public String getBillAuditUser(String userId);
 	
+	public UserPhone getUserPhone(String userId);
+	
 }

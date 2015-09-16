@@ -292,5 +292,10 @@ public class UserServiceImpl implements IUserService {
 		if(user == null || user.getBillAuditUser() == null || user.getBillAuditUser().isEmpty()) return "";
 		return user.getBillAuditUser(); 
 	}
+
+	@Override
+	public UserPhone getUserPhone(String userId) {
+		return userQueryDao.getUserPhoneByUserId(userId);
+	}
 }
 

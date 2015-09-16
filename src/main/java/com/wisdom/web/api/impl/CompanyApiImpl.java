@@ -688,7 +688,7 @@ public class CompanyApiImpl implements ICompanyApi {
 		Map<String, String> retMap = new HashMap<>();
 		try {
 			String userId = params.get("userId");
-			String date=params.get("date");
+			String date=params.get("sales_date");
 			long companyId = userService.getCompanyIdByUserId(userId);
 			
 			String orginFileName = file.getOriginalFilename();

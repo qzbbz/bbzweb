@@ -35,6 +35,7 @@ import com.wisdom.common.model.Invoice;
 import com.wisdom.common.model.SalarySocialSecurity;
 import com.wisdom.common.model.User;
 import com.wisdom.common.model.UserInvoice;
+import com.wisdom.common.model.UserPhone;
 import com.wisdom.company.dao.ICompanyBankStaDao;
 import com.wisdom.company.dao.ICompanyBillDao;
 import com.wisdom.company.dao.impl.CompanyBillDaoImpl;
@@ -177,7 +178,13 @@ public class AccounterServiceImpl implements IAccounterService {
 		map.put("certificate", accounter.getCertificate());
 		map.put("industry", accounter.getIndustry());
 		map.put("career", accounter.getCareer());
+		map.put("userName", "");
+		map.put("userPhone", "");
 		String userName = userService.getUserNameByUserId(accounter.getUserId());
+		UserPhone userPhone = userService.getUserPhone(accounter.getUserId());
+		if(userPhone != null) {
+			map.put("userPhone", userPhone.getPhone());
+		}
 		if(userName != null) {
 			map.put("userName", userName);
 		}

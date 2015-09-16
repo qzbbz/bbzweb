@@ -260,7 +260,7 @@
 					$('#retData').html('');
 					$.each(data,function(name,data) {
 						var li = $('<li style="padding 0 20px;margin-bottom:20px;" ></li>');
-						var img = $('<div class="member-photo"><img src="'+data.image+'" width="200px" height="200px">');
+						var img = $('<div class="member-photo"><img src="/files/image/'+data.image+'" width="200px" height="200px">');
 						var detail = $('<div class="member-text"><p><label for="">姓名：</label>'+data.userName+'</p><p><label for="">职业经历：</label>'+data.career+'</p><p><label for="">职业证书：</label>'+data.certificate+'</p><p><label for="">行业：</label>'+data.industry+'</p><p><label for="">地区：</label>'+data.province+data.city+data.area+'</p></div>');
 						var a = $('<a href="javascript:void(0)" class="button button-success" style="width:180px;">点选当前会计</a>');
 						li.append(img);
@@ -404,7 +404,7 @@
 					{text : '工资社保',id : '30',href:"javascript:void(0);", expanded : false,children: [
 						{text : '参数设置',id : '31', href:"/views/webviews/company/salary_welfare_args_settings.html"},
 						{text : '下载工资计算模板',id : '32', href:"/views/webviews/company/salary_welfare_template_download.html"},                                           
-						{text : '上传本月工资',id : '33', href:"/views/webviews/company/salary_welfare_upload.html"},
+						{text : '上传工资单',id : '33', href:"/views/webviews/company/salary_welfare_upload.html"},
 						{text : '工资历史记录',id : '34', href:"/views/webviews/company/salary_history.html"},
 						{text : '工资计算模板历史记录',id : '35', href:"/views/webviews/company/salary_template_history.html"}
 					]},
