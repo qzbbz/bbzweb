@@ -177,6 +177,10 @@
 				BUI.use(['bui/overlay'], function(Overlay){
 					BUI.Message.Alert('请先选择文件，再上传！','warning');
 				});
+			} else if($('#salary_date').val() == null || $('#salary_date').val() == '') {
+				BUI.use(['bui/overlay'], function(Overlay){
+					BUI.Message.Alert('工资单日期不能为空，请检查！','warning');
+				});
 			} else {
 				$('#salaryUpload').submit();
 			}

@@ -93,6 +93,7 @@ class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer
 	<mvc:resources mapping="/views/webviews/error/**" location="/WEB-INF/views/webviews/error/" cache-period="0" />
 	
 	<mvc:resources mapping="/files/company/**" location="file:/home/files/company/" cache-period="0" />
+	<mvc:resources mapping="/files/image/**" location="file:/home/files/image/" cache-period="0" />
 	<mvc:resources mapping="/files/accounter/**" location="/WEB-INF/files/accounter/" cache-period="0" />
 	
 	<mvc:resources mapping="/other/**" location="/WEB-INF/other/" cache-period="0" />

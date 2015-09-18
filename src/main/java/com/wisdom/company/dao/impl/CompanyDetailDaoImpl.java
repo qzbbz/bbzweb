@@ -41,13 +41,16 @@ public class CompanyDetailDaoImpl implements ICompanyDetailDao {
 
 	@Override
 	public long addCompanyDetail(CompanyDetail companyDetail) {
-		String sql = "insert into company_detail (company_id, company_res_file, corporation, reg_address, org_code, org_code_file, tax_code, tax_code_file, bank_name, create_time)"
-				+ " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		String sql = "insert into company_detail (company_id, company_res_file, corporation, province, city, area, extra, org_code, org_code_file, tax_code, tax_code_file, bank_name, create_time)"
+				+ " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		int affectedRows = jdbcTemplate.update(sql, 
 				companyDetail.getCompanyId() == null ? 0 : companyDetail.getCompanyId(),
 				companyDetail.getCompanyResFile() == null ? "" : companyDetail.getCompanyResFile(),
 				companyDetail.getCorporation() == null ? "" : companyDetail.getCorporation(),
-				companyDetail.getRegAddress() == null ? "" : companyDetail.getRegAddress(),
+				companyDetail.getProvince() == null ? "" : companyDetail.getProvince(),
+				companyDetail.getCity() == null ? "" : companyDetail.getCity(),
+				companyDetail.getArea() == null ? "" : companyDetail.getArea(),
+				companyDetail.getExtra() == null ? "" : companyDetail.getExtra(),
 				companyDetail.getOrgCode() == null ? "" : companyDetail.getOrgCode(),
 				companyDetail.getOrgCodeFile() == null ? "" : companyDetail.getOrgCodeFile(),
 				companyDetail.getTaxCode() == null ? "" : companyDetail.getTaxCode(),
@@ -69,11 +72,14 @@ public class CompanyDetailDaoImpl implements ICompanyDetailDao {
 	@Override
 	public boolean updateCompanyDetail(CompanyDetail companyDetail) {
 		logger.debug("companyDetail : {}", companyDetail.toString());
-		String sql = "update company_detail set company_res_file=?, corporation=?, reg_address=?, org_code=?, org_code_file=?, tax_code=?, tax_code_file=?, bank_name=? where company_id=?";
+		String sql = "update company_detail set company_res_file=?, corporation=?, province=?, city=?, area=?, extra=?, org_code=?, org_code_file=?, tax_code=?, tax_code_file=?, bank_name=? where company_id=?";
 		int affectedRows = jdbcTemplate.update(sql,
 				companyDetail.getCompanyResFile() == null ? "" : companyDetail.getCompanyResFile(),
 				companyDetail.getCorporation() == null ? "" : companyDetail.getCorporation(),
-				companyDetail.getRegAddress() == null ? "" : companyDetail.getRegAddress(),
+				companyDetail.getProvince() == null ? "" : companyDetail.getProvince(),
+				companyDetail.getCity() == null ? "" : companyDetail.getCity(),
+				companyDetail.getArea() == null ? "" : companyDetail.getArea(),
+				companyDetail.getExtra() == null ? "" : companyDetail.getExtra(),
 				companyDetail.getOrgCode() == null ? "" : companyDetail.getOrgCode(),
 				companyDetail.getOrgCodeFile() == null ? "" : companyDetail.getOrgCodeFile(),
 				companyDetail.getTaxCode() == null ? "" : companyDetail.getTaxCode(),

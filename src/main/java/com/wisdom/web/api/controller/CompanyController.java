@@ -148,6 +148,9 @@ public class CompanyController {
 		params.put("area", areaService.getAreaNameByAreaId(request.getParameter("area")));
 		params.put("addExtra", request.getParameter("addExtra"));
 		params.put("bankName", request.getParameter("bankName"));
+		params.put("companyResFile", request.getParameter("companyResFile"));
+		params.put("orgCodeFile", request.getParameter("orgCodeFile"));
+		params.put("taxCodeFile", request.getParameter("taxCodeFile"));
 		companyApi.companyInfoSettings(files, params);
 		return "redirect:/views/webviews/company/organization_structure_settings.html";
 	}

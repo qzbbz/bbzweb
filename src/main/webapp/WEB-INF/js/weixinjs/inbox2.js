@@ -264,8 +264,25 @@ $(function(){
 
 	//  我的收件箱
 	controler['inbox'] = {
+			draftBillListview:null,
 			progressingAuditListview: null,
 			finishedAuditListview: null,
+			listDraftBill : function(shouldRefresh) {
+				var data = null;
+				if(draftBillList != null && draftBillList.length != 0) {
+					data = {draftBillList:draftBillList};
+				}
+				var template = getTemplate('draftBillList');
+				Mustache.parse(template)
+				var html = Mustache.render(template, data);
+
+				this.draftBillListview.html(html);
+				if(!shouldRefresh) {
+					this.draftBillListview.listview();
+				} else {
+					this.draftBillListview.listview('refresh');
+				}
+			},
 			listProgressingBill : function(shouldRefresh) {
 				var data = null;
 				if(progressingBillList != null && progressingBillList.length != 0) {
@@ -300,9 +317,12 @@ $(function(){
 				var html = getTemplate('inbox');
 
 				appendTemplate(html);
+
+				this.draftBillListview = $('#draft-bill-list');
 				this.progressingAuditListview = $('#progressing-audit-list');
 				this.finishedAuditListview = $('#finished-audit-list');
 
+				this.listDraftBill(false);
 				this.listProgressingBill(false);
 				this.listFinishedBill(false);
 
@@ -314,14 +334,132 @@ $(function(){
 				box.content.addClass("box-content-gif");
 				box.loading('<html><body><img src="../../img/weixinimg/loading1.gif"></body></html>');
 				getInboxBills(false);
+				this.listDraftBill(true);
 				this.listProgressingBill(true);
 				this.listFinishedBill(true);
 				box.wrap.removeClass("box-wrap-gif");
 				box.content.removeClass("box-content-gif");
 				box.clearLoading();
 			},
+			
+			bindEvent: function(){
+				var self = this;
+				$('#onePressSubmitAudit').click(function(){
+					var ids = [];
+					self.draftBillListview.find('li').each(function(index, obj){
+						var obj = $(obj), check = obj.find('input[type="checkbox"]');
+						if(check.is(':checked')){
+							ids.push(check.val());
+						}
+					})
+					self.submit(ids);
+				})
+				$('#onePressSelect').click(function(){
+					self.draftBillListview.find('li').each(function(index, obj){
+						var obj = $(obj), check = obj.find('input[type="checkbox"]');
+						if(check.is(':checked')) {
+							check.removeAttr("checked");
+							check.prop("checked", false);
+						} else {
+							check.attr("checked", true);
+							check.prop("checked", true);
+						}
+					})
+				})
+			},
+			submit: function(ids){
+					if(ids == null || ids.length == 0) {
+						alert("请勾选需要提交审核的发票！");
+					} else {
+						box.wrap.addClass("box-wrap-gif");
+						box.content.addClass("box-content-gif");
+						box.loading('<html><body><img src="../../img/weixinimg/loading1.gif"></body></html>');
+						var isValid = true;
+						var submitList = new Array();
+						for(var i=0; i<ids.length && isValid; i++) {
+							for(var j=0; j<draftBillList.length; j++) {
+								if(draftBillList[j].invoice_id == ids[i]) {
+									if(draftBillList[j].amount=="0" || draftBillList[j].amount==0) {
+										isValid = false;
+										alert("您勾选的发票中，还存在没有填写金额的发票，请检查！");
+										break;
+									} else if(draftBillList[j].bill_expenseTypeId == null) {
+										isValid = false;
+										alert("您勾选的发票中，还存在没有选择费用类型的发票，请检查！");
+										break;
+									} else {
+										submitList.push(draftBillList[j]);
+									}
+								}
+							}
+						}
+						if(isValid) {
+							var tmp = new Array();
+							for(var i=0; i<submitList.length; i++) {
+								var da = {"invoice_id":submitList[i].invoice_id, "bill_amount":submitList[i].bill_amount,"bill_expenseTypeId":submitList[i].bill_expenseTypeId};
+								tmp.push(da);
+							}
+							var jsonData = "{\"submitBillEntities\":" +  JSON.stringify(tmp) + "}";
+							$.ajax({ 
+						        type : "POST", 
+						        url  : "/submitBillListAudit?openId=" + userOpenId,
+						        cache : false,
+						        data : jsonData,
+						        headers : {  
+				                    'Content-Type' : 'application/json;charset=utf-8'  
+				                },
+						        success :  submitSuccess, 
+						        error : submitError 
+						    });
+						} else {
+							box.wrap.removeClass("box-wrap-gif");
+							box.content.removeClass("box-content-gif");
+							box.clearLoading();
+						}
+						function submitSuccess(data) {
+							if (data.error_code == "0") {
+								alert("您提交审核的发票已经全部提交成功！");
+								var tmp = data.ids.split(" ");
+								if(tmp != null && tmp.length != 0) {
+									for(var i=0; i<tmp.length; i++) {
+										for(var j=0; j<draftBillList.length; j++) {
+											if(draftBillList[j].invoice_id == tmp[i]) {
+												draftBillList.splice(j,1);
+											}
+										}
+									}
+								}
+							} else if(data.error_code == "1" || data.error_code == "2"){
+								alert(data.error_message);
+							} else {
+								alert(data.error_message + data.submit_count);
+								var tmp = data.ids.split(" ");
+								if(tmp != null && tmp.length != 0) {
+									for(var i=0; i<tmp.length; i++) {
+										for(var j=0; j<draftBillList.length; j++) {
+											if(draftBillList[j].invoice_id == tmp[i]) {
+												draftBillList.splice(j,1);
+											}
+										}
+									}
+								}
+							}
+							box.wrap.removeClass("box-wrap-gif");
+							box.content.removeClass("box-content-gif");
+							box.clearLoading();
+							controler['inbox'].render();
+						}
+						function submitError() {
+							alert("提交审核失败，可能是网络原因，请检查！");
+							box.wrap.removeClass("box-wrap-gif");
+							box.content.removeClass("box-content-gif");
+							box.clearLoading();
+						}
+					}
+				},
 				init: function(){
 					this.render();
+					this.bindEvent();
 				}
 		}
 

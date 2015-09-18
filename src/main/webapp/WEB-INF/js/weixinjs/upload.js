@@ -811,12 +811,16 @@ $(function(){
 		}
 	}
 
-	function setSelectOptions(obj) {
+	function setSelectOptions(obj, expenseType) {
 		obj.append("<option value='null'>请选择</option>");
 		for(var i=0; i<expenseTypeList.length; i++) {
 			var value = expenseTypeList[i].value;
 			var text = expenseTypeList[i].name;
-			obj.append("<option value='"+value+"'>"+text+"</option>");	
+			if(text == expenseType) {
+				obj.append("<option value='"+value+"' selected>"+text+"</option>");
+			} else {
+				obj.append("<option value='"+value+"'>"+text+"</option>");
+			}
 		}
 	}
 
@@ -825,17 +829,19 @@ $(function(){
 		$(document).on("click", ".bill-list-upload li", function(event) {
 			if(event.target.nodeName == "INPUT") return;
 			var obj = $(this), src = obj.data('src');
-			edit(obj, src);
+			var amount = obj.find(".amount_info").text();
+			var exType = obj.find(".expenseTypeName_info").text();
+			edit(obj, src, amount, exType);
 		})
 
-		function edit(obj, src){
+		function edit(obj, src, amount, exType) {
 			var template = getTemplate('editTicket');
 			Mustache.parse(template)
-			var html = Mustache.render(template, {src: src});
+			var html = Mustache.render(template, {src: src, price:amount});
 
 			box.html(html);
 			box.wrap.center($('#editTicket'));
-			setSelectOptions($('#expenseType'));
+			setSelectOptions($('#expenseType'), exType);
 			box.show();
 			$(window).bind( 'touchmove', touchScroll );
 			box.done(function(){
@@ -1074,9 +1080,9 @@ $(function(){
 			localId: [],
 		    serverId: []
 		};
-		box.wrap.addClass("box-wrap-gif");
+		/*box.wrap.addClass("box-wrap-gif");
 		box.content.addClass("box-content-gif");
-		box.loading('<html><body><img src="../../img/weixinimg/loading1.gif"></body></html>');
+		box.loading('<html><body><img src="../../img/weixinimg/loading1.gif"></body></html>');*/
 		
 		wx.chooseImage({
 			success: function (res) {
@@ -1089,13 +1095,13 @@ $(function(){
 								(date.getHours() < 10 ? "0" + date.getHours() : date.getHours()) + ":" +
 								(date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes()) + ":" + 
 								(date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds());
-						var billData = {"id":date.getTime() + Math.floor(Math.random()*10000+1), "img":res.localIds[i].toString(), "time":time, "amount": 0, "expenseTypeName":"", "expenseTypeId":null, "mediaId":null}
+						var billData = {"id":date.getTime() + Math.floor(Math.random()*10000+1), "img":res.localIds[i].toString(), "time":time, "amount": "", "expenseTypeName":"", "expenseTypeId":null, "mediaId":null}
 						uploadBillList.push(billData);
 					}
 				}
-				box.wrap.removeClass("box-wrap-gif");
+				/*box.wrap.removeClass("box-wrap-gif");
 				box.content.removeClass("box-content-gif");
-				box.clearLoading();
+				box.clearLoading();*/
 				controler['uploadBill'].init();
 				setMenu('发票上传');				
 		    },
@@ -1106,9 +1112,9 @@ $(function(){
 		    	} else {
 		    		alert(res.errMsg);
 		    	}
-		    	box.wrap.removeClass("box-wrap-gif");
+		    	/*box.wrap.removeClass("box-wrap-gif");
 				box.content.removeClass("box-content-gif");
-				box.clearLoading();
+				box.clearLoading();*/
 		    }
 		});
 	})

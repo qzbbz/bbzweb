@@ -81,12 +81,13 @@ public class CompanySalesDaoImpl implements ICompanySalesDao {
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {  
 	        public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {  
-	        	String sql = "insert into company_sales (company_id, file_name, create_time)"
+	        	String sql = "insert into company_sales (company_id, file_name, sales_date, create_time)"
 	    				+ " values (?, ?, ?)";
 	               PreparedStatement ps = connection.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);  
 	               ps.setLong(1, companySales.getCompanyId() == null ? 0 : companySales.getCompanyId());  
 	               ps.setString(2, companySales.getFileName() == null ? "" : companySales.getFileName());
-	               ps.setTimestamp(3, companySales.getCreateTime() == null ? new Timestamp(System.currentTimeMillis()) : companySales.getCreateTime());
+	               ps.setString(3, companySales.getSalesDate() == null ? "" : companySales.getSalesDate());
+	               ps.setTimestamp(4, companySales.getCreateTime() == null ? new Timestamp(System.currentTimeMillis()) : companySales.getCreateTime());
 	               return ps;  
 	        }  
 	    }, keyHolder);

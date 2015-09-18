@@ -127,8 +127,8 @@
 		{{#allUploadBillList}}
 			<li data-src="{{img}}">
 				<img src="{{img}}" class="avatar">
-				<p class="amount">金额: {{amount}}元</p>
-				<p class="man">费用类型: {{expenseTypeName}}</p>
+				<p class="amount">金额: <span class="amount_info">{{amount}}</span>元</p>
+				<p class="man">费用类型: <span class="expenseTypeName_info">{{expenseTypeName}}</span></p>
 				<p class="date">创建时间: {{time}}</p>
 				<input type="checkbox" name="checkbox" value="{{id}}">
 			</li>

@@ -137,7 +137,7 @@ public class AdminController {
 				map.put("zhuzhiCode", companyDetail.getOrgCode());
 				map.put("shuiwuCode", companyDetail.getTaxCode());
 				map.put("bank", companyDetail.getBankName());
-				map.put("address", companyDetail.getRegAddress());
+				map.put("address", companyDetail.getProvince()+companyDetail.getCity()+companyDetail.getArea()+companyDetail.getExtra());
 				map.put("companyFile", companyDetail.getCompanyResFile());
 				map.put("zhuZhiFile", companyDetail.getOrgCodeFile());
 				map.put("shuiWuFile", companyDetail.getTaxCodeFile());
@@ -165,7 +165,7 @@ public class AdminController {
 				map.put("zhuzhiCode", companyDetail.getOrgCode());
 				map.put("shuiwuCode", companyDetail.getTaxCode());
 				map.put("bank", companyDetail.getBankName());
-				map.put("address", companyDetail.getRegAddress());
+				map.put("address", companyDetail.getProvince()+companyDetail.getCity()+companyDetail.getArea()+companyDetail.getExtra());
 				map.put("companyFile", companyDetail.getCompanyResFile());
 				map.put("zhuZhiFile", companyDetail.getOrgCodeFile());
 				map.put("shuiWuFile", companyDetail.getTaxCodeFile());

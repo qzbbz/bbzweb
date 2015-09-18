@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.wisdom.user.service.IUserService;
 import com.wisdom.weixin.service.IExpenseAccountService;
+import com.wisdom.weixin.service.IWeixinPushService;
 import com.wisdom.weixin.utils.SubmitAuditBillResultEntity;
 import com.wisdom.weixin.utils.SubmitAuditBillResultEntityWrapper;
 import com.wisdom.weixin.utils.SubmitBillEntity;
@@ -31,7 +33,11 @@ public class ExpenseAccountController {
 	
 	@Autowired
 	private IExpenseAccountService expenseAccounterService;
-
+	@Autowired
+	private IWeixinPushService weixinPushService;
+	@Autowired
+	private IUserService userService;
+	
 	@RequestMapping(value="/downloadUserBill", method=RequestMethod.POST, consumes="application/json")
 	@ResponseBody
 	public Map<String, String> downloadUserBill(@RequestBody UploadBillEntityWrapper wrapper, HttpServletRequest request) {
@@ -107,6 +113,7 @@ public class ExpenseAccountController {
 		}
 		int sum = 0;
 		StringBuffer sb = new StringBuffer();
+		Map<String, String> auditProcess = new HashMap<>();
 		for(SubmitAuditBillResultEntity bill : sabr) {
 			logger.debug("SubmitAuditBillResultEntity : {}", bill.toString());
 			String userId = bill.getUser_id();
@@ -118,6 +125,13 @@ public class ExpenseAccountController {
 				sum++;
 				sb.append(bill.getInvoice_id());
 				sb.append(" ");
+				if(!auditProcess.containsKey(userId)) {
+					auditProcess.put(userId, "");
+					String toUser = userService.getOpenIdByUserId(userId);
+					String auditName = userService.getUserNameByUserId(userId);
+					String msgBody = "您的发票已被审核人"+ auditName +"审核，<a href='https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx333ea15ba860f932&redirect_uri=http%3a%2f%2fwww.bangbangzhang.com%2fgetOpenIdRedirect%3fview%3dinbox.html&response_type=code&scope=snsapi_base&state=1#wechat_redirect'>点此查看审核结果！</a>";
+					weixinPushService.pushTextMessage(toUser, msgBody);
+				}
 			}
 		}
 		if(sum != sabr.size()) {

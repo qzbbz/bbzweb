@@ -57,6 +57,9 @@
                             <div class="controls"><a class="button button-success" onclick="checkInput();">确认保存</a></div>
 						</div>
 					</div>
+					<input id="companyResFile" name ="companyResFile" type="hidden">
+					<input id="orgCodeFile" name ="orgCodeFile" type="hidden">
+					<input id="taxCodeFile" name ="taxCodeFile" type="hidden">
 					</form>
 				</div>
 			</div>
@@ -100,6 +103,25 @@
 	<script src="http://g.alicdn.com/bui/bui/1.1.17/config.js"></script>
 	<script src="/js/webjs/menuTree.js"></script>
 	<script type="text/javascript">
+	var globalData;
+	$.ajax({
+		url : '/company/getCompanyDetailInfo',
+		type : "POST",
+		async : false,
+		data : {},
+		success : function(data) {
+			globalData = data;
+			$('#companyName').val(data.company_name);
+			$('#corparation').val(data.corporation);
+			$('#orgCode').val(data.org_code);
+			$('#taxCode').val(data.tax_code);
+			$('#bankName').val(data.bank_name);
+			$('#addExtra').val(data.extra);
+			$('#companyResFile').val(data.companyResFile);
+			$('#orgCodeFile').val(data.orgCodeFile);
+			$('#taxCodeFile').val(data.taxCodeFile);
+		}
+	});
 	BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 		var modifyPwdForm = new Overlay.Dialog({
             title:'密码修改',
@@ -179,9 +201,9 @@
 			var orgCode = $('#orgCode').val();
 			var taxCode = $('#taxCode').val();
 			var bankName = $('#bankName').val();
-			var comFile = $('#comFile').val();
-			var orgFile = $('#orgFile').val();
-			var taxFile = $('#taxFile').val();
+			var comFile = $('#comFile').val() == "" ? $('#companyResFile').val() : $('#comFile').val();
+			var orgFile = $('#orgFile').val() == "" ? $('#orgCodeFile').val() : $('#orgFile').val();
+			var taxFile = $('#taxFile').val() == "" ? $('#taxCodeFile').val() : $('#taxFile').val();
 			if(companyName == '' || corparation == '' ||
 					province=='' || city == '' || area == '' ||
 					addExtra == '' || orgCode == '' ||
@@ -201,7 +223,11 @@
 				data : {},
 				success : function(data) {
 					$.each(data,function(name,value) {
-						obj.append("<option value='"+name+"'>"+value+"</option>");
+						if(value == globalData.province) {
+							obj.append("<option value='"+name+"' selected>"+value+"</option>");
+						} else {
+							obj.append("<option value='"+name+"'>"+value+"</option>");
+						}
 					});
 					addCity($('#city'), $('#province option:selected').val());
 				}
@@ -216,7 +242,11 @@
 				data : {provinceId:provinceId},
 				success : function(data) {
 					$.each(data,function(name,value) {
-						obj.append("<option value='"+name+"'>"+value+"</option>");
+						if(value == globalData.city) {
+							obj.append("<option value='"+name+"' selected>"+value+"</option>");
+						} else {
+							obj.append("<option value='"+name+"'>"+value+"</option>");
+						}
 					});
 					addArea($('#area'), $('#city option:selected').val());
 				}
@@ -231,7 +261,11 @@
 				data : {cityId:cityId},
 				success : function(data) {
 					$.each(data,function(name,value) {
-						obj.append("<option value='"+name+"'>"+value+"</option>");
+						if(value == globalData.city) {
+							obj.append("<option value='"+name+"' selected>"+value+"</option>");
+						} else {
+							obj.append("<option value='"+name+"'>"+value+"</option>");
+						}
 					});
 				}
 			});

@@ -323,7 +323,12 @@
 	            autoUpload:false
 	            }).render();
 	            $('#uplaodFiles').click(function(){
-	            	uploader.upload();
+	            	if($('#bill_date').val() == null || $('#bill_date').val() == '') {
+	            		BUI.Message.Alert('发票日期不能为空，请检查！','warning');
+	            	} else {
+	            		uploader.set('data', {bill_date:$('#bill_date').val()});
+	            		uploader.upload();
+	            	}
 	            })
 	        });
 	</script>

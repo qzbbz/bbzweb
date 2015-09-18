@@ -332,15 +332,18 @@
 				});
     			return;
     		}
-    		if(userFile == null || userFile == '') {
-    			BUI.use('bui/overlay',function(overlay){
-					function show () {
-						BUI.Message.Alert('头像文件没有选择，请检查！',function(){
-						},'warning');
-					}
-					show();	      
-				});
-    			return;
+    		var imageTmp = $('#image').val();
+    		if(imageTmp == "" || imageTmp.length == 0) {
+	    		if(userFile == null || userFile == '') {
+	    			BUI.use('bui/overlay',function(overlay){
+						function show () {
+							BUI.Message.Alert('头像文件没有选择，请检查！',function(){
+							},'warning');
+						}
+						show();	      
+					});
+	    			return;
+	    		}
     		}
     		if(userPhone == null || userPhone == '' || !isTelephone(userPhone)) {
     			BUI.use('bui/overlay',function(overlay){
@@ -414,7 +417,7 @@
 	    
 	    function isTelephone(phoneNumber) {
 	    	var isPhone = /^([0-9]{3,4}-)?[0-9]{7,8}$/;
-	    	var isMob = /^((\+?86)|(\(\+86\)))?(13[012356789][0-9]{8}|15[012356789][0-9]{8}|18[02356789][0-9]{8}|147[0-9]{8}|1349[0-9]{7})$/;
+	    	var isMob = /^((\+?86)|(\(\+86\)))?(13[012356789][0-9]{8}|15[012356789][0-9]{8}|18[012356789][0-9]{8}|147[0-9]{8}|1349[0-9]{7})$/;
 	    	/* if(isMob.test(phoneNumber)||isPhone.test(phoneNumber)){ */
 	    	if (isMob.test(phoneNumber)) {
 	    		return true;

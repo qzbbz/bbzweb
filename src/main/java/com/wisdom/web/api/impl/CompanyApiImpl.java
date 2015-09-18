@@ -160,10 +160,15 @@ public class CompanyApiImpl implements ICompanyApi {
 		companyDetail.setBankName(params.get("bankName"));
 		companyDetail.setCorporation(params.get("corparation"));
 		companyDetail.setOrgCode(params.get("orgCode"));
-		companyDetail.setRegAddress(params.get("province") + params.get("city")
-				+ params.get("area") + params.get("addExtra"));
+		companyDetail.setProvince(params.get("province"));
+		companyDetail.setCity(params.get("city"));
+		companyDetail.setArea(params.get("area"));
+		companyDetail.setExtra(params.get("addExtra"));
 		companyDetail.setTaxCode(params.get("taxCode"));
 		companyDetail.setCreateTime(new Timestamp(System.currentTimeMillis()));
+		companyDetail.setCompanyResFile(params.get("companyResFile"));
+		companyDetail.setOrgCodeFile(params.get("orgCodeFile"));
+		companyDetail.setTaxCodeFile(params.get("taxCodeFile"));
 		try {
 			String fileName = getGernarateFileName(files[0], userId);
 			FileUtils.copyInputStreamToFile(files[0].getInputStream(),
@@ -516,8 +521,17 @@ public class CompanyApiImpl implements ICompanyApi {
 				detail.getOrgCode() == null ? "" : detail.getOrgCode());
 		retMap.put("corporation",
 				detail.getCorporation() == null ? "" : detail.getCorporation());
-		retMap.put("reg_address",
-				detail.getRegAddress() == null ? "" : detail.getRegAddress());
+		retMap.put("province",
+				detail.getProvince());
+		retMap.put("city",
+				detail.getCity());
+		retMap.put("area",
+				detail.getArea());
+		retMap.put("extra",
+				detail.getExtra());
+		retMap.put("companyResFile", detail.getCompanyResFile());
+		retMap.put("orgCodeFile", detail.getOrgCodeFile());
+		retMap.put("taxCodeFile", detail.getTaxCodeFile());
 		retMap.put("bank_name",
 				detail.getBankName() == null ? "" : detail.getBankName());
 		retMap.put("tax_code",

@@ -129,7 +129,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			return retMap;
 		}
 		
-		/*//先生成一条审批记录
+		//先生成一条审批记录
 		blRet = invoiceApprovalService.addInvoiceApprovalRecord(invoiceId,receiver,0);
 		if(!blRet){
 			log.error("add invoiceAppovalRecord failed");
@@ -147,7 +147,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		if(!blRet){
 			log.error("add dispatcher log error!" + "userId:" + userId + ",reciever:" + receiver + ",InvoiceId:" + invoice.getId());
 			return retMap;
-		}*/
+		}
 		//成功后put相关信息
 		retMap.put("invoiceId", invoice.getId());
 		retMap.put("receiver",receiver);

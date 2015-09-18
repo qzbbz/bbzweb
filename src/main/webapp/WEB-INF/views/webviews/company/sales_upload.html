@@ -324,7 +324,12 @@
 	            autoUpload:false
 	            }).render();
 	            $('#uplaodFiles').click(function(){
-	            	uploader.upload();
+	            	if($('#sales_date').val() == null || $('#sales_date').val() == '') {
+	            		BUI.Message.Alert('销售清单日期不能为空，请检查！','warning');
+	            	} else {
+	            		uploader.set('data', {sales_date:$('#sales_date').val()});
+	            		uploader.upload();
+	            	}
 	            })
 	        });
 	</script>

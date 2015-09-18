@@ -54,7 +54,7 @@ public class NotifyScheduleImpl implements NotifySchedule {
 				userName =  userId;
 			}
 			String mailBody = "您有一个来自" + userName + "的新报销单据需要您审批，请登录系统查看!";
-			String weixinBody ="您有一个来自" + userName + "的新报销单据需要您审批，请到收件箱查看!";
+			String weixinBody ="您有一个来自" + userName + "的新报销单据需要您审批，<a href='https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx333ea15ba860f932&redirect_uri=http%3a%2f%2fwww.bangbangzhang.com%2fgetOpenIdRedirect%3fview%3daudit.html&response_type=code&scope=snsapi_base&state=1#wechat_redirect'>点击查看!</a>";
 			log.debug("dispatch.getUserName" + userName);
 			String fromUser = "";
 			int channelType = dispatch.getChannelTypeId();

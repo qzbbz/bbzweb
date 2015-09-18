@@ -29,9 +29,20 @@
 		<div data-role="tabs">
 			<div class="navbar">
 				<ul>
+			      <li><a href="#draftBill" data-theme="ab" class="ui-btn-active">草稿箱</a></li>
+			      <li><a href="#progressingAudit" data-theme="ab">待审核</a></li>
 			      <li><a href="#finishedAudit" data-theme="ab">已审核</a></li>
-				  <li><a href="#progressingAudit" data-theme="ab">待审核</a></li>
 			    </ul>
+			</div>
+			<div id="draftBill" class="ui-content">
+				<div id="inbox">
+					<h6 style="margin-bottom:30px;color:#38c;">您可以一键提交审核
+						<button id="onePressSelect" class="ladda-button small" data-shadow="true" style="background :rgba(239, 109, 68, 0.8);margin-right:10px;">全选/取消 
+						<button id="onePressSubmitAudit" class="ladda-button small" data-shadow="true" style="background :rgba(239, 109, 68, 0.8);">提交审核
+					</h6>
+				</div>				
+				<ul data-role="listview" id="draft-bill-list" class="draft-bill-list">
+				</ul>
 			</div>		
 			<div id="progressingAudit" class="ui-content">
 				<ul data-role="listview" id="progressing-audit-list" class="ticket-list">
@@ -44,7 +55,23 @@
 				</ul>
 			</div>
 		</div>
-	</script>    
+	</script>
+
+	<script id="draftBillList" type="x-tmpl-mustache">
+		{{#draftBillList}}
+			<li data-src="{{bill_img}}">
+				<img src="{{bill_img}}" class="avatar">
+				<p class="amount">金额: {{bill_amount}}元</p>
+				<p class="man">费用类型: {{bill_expenseTypeName}}</p>
+				<p class="date">创建时间: {{bill_date}}</p>
+				<input type="checkbox" name="choose" value="{{invoice_id}}">
+			</li>
+		{{/draftBillList}}
+		{{^draftBillList}}
+			<div style="margin-top: 10px;"><h6 style="color:#38c;">&nbsp;&nbsp;&nbsp;&nbsp;暂时没有数据，可以尝试下拉刷新。</h6></div>
+		{{/draftBillList}}
+    </script>
+    
     <script id="progressingBillList" type="x-tmpl-mustache">
 		{{#progressingBillList}}
 			<li data-src="{{bill_img}}">

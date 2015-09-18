@@ -11,7 +11,9 @@ public class CompanyDetailMapper implements RowMapper<CompanyDetail> {
 	public CompanyDetail mapRow(ResultSet rs, int index) throws SQLException {
 		CompanyDetail u = new CompanyDetail(rs.getLong("id"), rs.getLong("company_id"),
 				rs.getString("company_res_file"), rs.getString("corporation"), 
-				rs.getString("reg_address"), rs.getString("org_code"),
+				rs.getString("province"), rs.getString("city"),
+				rs.getString("area"), rs.getString("extra"),
+				rs.getString("org_code"),
 				rs.getString("org_code_file"), rs.getString("tax_code"),
 				rs.getString("tax_code_file"), rs.getString("bank_name"),
 				rs.getTimestamp("create_time"));
