@@ -24,6 +24,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
 import com.wisdom.area.service.IAreaService;
+import com.wisdom.common.model.Company;
+import com.wisdom.common.model.CompanyPay;
 import com.wisdom.common.model.SheetBalance;
 import com.wisdom.common.model.SheetCash;
 import com.wisdom.common.model.SheetIncome;
@@ -33,6 +35,7 @@ import com.wisdom.company.dao.ISheetBalanceDao;
 import com.wisdom.company.dao.ISheetCashDao;
 import com.wisdom.company.dao.ISheetIncomeDao;
 import com.wisdom.company.dao.ISheetSalaryTaxDao;
+import com.wisdom.company.service.ICompanyPayService;
 import com.wisdom.company.service.ICompanyService;
 import com.wisdom.user.dao.IUserOpenIdDao;
 import com.wisdom.user.service.IUserModifyService;
@@ -49,6 +52,9 @@ public class CompanyController {
 
 	@Autowired
 	private ICompanyService companyService;
+	
+	@Autowired
+	private ICompanyPayService companyPayService;
 
 	@Autowired
 	private IUserService userService;
@@ -108,10 +114,40 @@ public class CompanyController {
 		logger.info("enter selectOneAccounter");
 		Map<Integer, String> retMap = new HashMap<>();
 		String accounterUserId = request.getParameter("accounterId");
+		String alipayMonth = request.getParameter("alipayMonth");
+		String alipayAmount = request.getParameter("alipayAmount");
 		String userId = (String) request.getSession().getAttribute("userId");
 		long companyId = userService.getCompanyIdByUserId(userId);
+		
 		companyService.updateCompanyAccounter(companyId, accounterUserId);
 		logger.info("leave selectOneAccounter");
+		return retMap;
+	}
+	
+	@RequestMapping("/company/checkSelectAccounter")
+	@ResponseBody
+	public Map<String, String> checkSelectAccounter(HttpServletRequest request) {
+		logger.info("enter checkSelectAccounter");
+		Map<String, String> retMap = new HashMap<>();
+		String userId = (String) request.getSession().getAttribute("userId");
+		long companyId = userService.getCompanyIdByUserId(userId);
+		Company company = companyService.getCompanyByCompanyId(companyId);
+		if(company != null && company.getAccounterId() != null && !company.getAccounterId().isEmpty()) {
+			CompanyPay companyPay = companyPayService.getCompanyPayByCompanyIdAndPayStatus(companyId, 1);
+			if(companyPay != null) {
+				String accounterId = company.getAccounterId();
+				String accounterName = userService.getUserNameByUserId(accounterId);
+				int serviceTime = companyPay.getServiceTime();
+				String payTime = companyPay.getCreateTime().toString();
+				retMap.put("selected", "true");
+				retMap.put("info", "您已选择了会计师："+accounterName+",您购买的服务时间为:"+String.valueOf(serviceTime)+"个月,您付款的时间为："+payTime+"。");
+			} else {
+				retMap.put("selected", "false");
+			}
+		} else {
+			retMap.put("selected", "false");
+		}
+		logger.info("leave checkSelectAccounter");
 		return retMap;
 	}
 	

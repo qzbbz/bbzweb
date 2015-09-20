@@ -91,6 +91,30 @@
 			</div>
 		</div>
 	</div>
+	<div id="alipayForm" style="display:none;">
+		<div style="text-align:center;width:150px;height:50px;float:right;">
+			<img src="/img/webimg/855x300.png" style="width:150px;height:50px;">
+		</div>
+		<div style="margin-bottom:10px;">
+			<h4>当前支付方式仅支持支付宝支付</h4>
+		</div>
+		<div class="control-group">
+				<label class="control-label">请选择时间(每月仅需99元)：</label>
+				<div class="controls" style="margin-top:10px;">
+					<select id="alipay_time" name="alipay_time" style="width:200px;">
+						<option value ="3">3个月</option>
+						<option value ="6">6个月</option>
+						<option value="12">12个月</option>
+					</select>
+				</div>
+		</div>
+		<div style="margin-top:10px;margin-bottom:10px;">
+			<h4>您总共需要支付人民币：<span id="alipay_sum" name="alipay_sum" style="color:red;">297</span>元</h4>
+		</div>
+		<div class="control-group control-btn">
+				<div class="layer-wrap-footer1"><a href="javascript:void(0);" id="alipay_button" class="button button-success">确定购买</a></div>
+		</div>
+	</div>
 	<div style="position:fixed; bottom: 0; right: 0;"><a target="_blank" href="http://sighttp.qq.com/authd?IDKEY=a1a51fb184a88bbb4c1756a211f1ff1fbc9d47079f63eb30"><img border="0" src="http://wpa.qq.com/imgd?IDKEY=a1a51fb184a88bbb4c1756a211f1ff1fbc9d47079f63eb30&pic=41" alt="点我联系我" title="点我联系我"/></a></div>
     <script src="/js/webjs/jquery-1.8.1.min.js"></script>
     <script src="/js/webjs/sea.js"></script>
@@ -98,6 +122,72 @@
     <script src="/js/webjs/menuTree.js"></script>
 	<script src="/js/webjs/layout.js"></script>
     <script type="text/javascript">
+    $.ajax({
+		url : '/company/checkSelectAccounter',
+		type : "POST",
+		async:false,
+		data : {},
+		success : function(data) {
+			if(data.selected == true) {
+				$('#tipInfo').html(data.info);
+				$('#tipInfo').show();
+				$('#tipInfoSearch').hide();
+				$('#searchAccounter').attr('disabled',"true");
+				$('#dispalyAllAccounter').attr('disabled',"true");
+			} else {
+				$('#tipInfoSearch').show();
+			}
+		},
+		error : function() {
+			alert('服务器暂时不可用，请稍后重试！');
+			$('#tipInfoSearch').show();
+		}
+	});
+    var globalAlipayForm;
+    BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
+		var alipayForm = new Overlay.Dialog({
+            title:'支付页面',
+            width:400,
+            height:250,
+            contentId:'alipayForm',
+            success:function () {
+              	this.close();
+            },
+            buttons : []
+        });
+		globalAlipayForm = alipayForm;
+		$('#alipay_time').change(function(){
+			var time = $('#alipay_time option:selected').val();
+			if(time == '3') $('#alipay_sum').html('297');
+			if(time == '6') $('#alipay_sum').html('594');
+			if(time == '12') $('#alipay_sum').html('1188');
+		});
+		$('#alipay_button').click(function(){
+			$.ajax({
+				url : '/company/selectOneAccounter',
+				type : "POST",
+				data : {accounterId:$(this).attr("accounter_user_id"), alipayMonth:$('#alipay_time option:selected').val(), alipayAmount:$('#alipay_sum').html()},
+				success : function() {
+					BUI.use('bui/overlay',function(overlay){
+						function show () {
+							BUI.Message.Alert('您已成功选择会计师！',function(){
+							},'warning');
+						}
+						show();
+					});	
+				},
+				error : function() {
+					BUI.use('bui/overlay',function(overlay){
+						function show () {
+							BUI.Message.Alert('选择会计师失败，请稍后重试！',function(){
+							},'warning');
+						}
+						show();	      
+					});	
+				}
+			});
+		});
+	});
     BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 		var modifyPwdForm = new Overlay.Dialog({
             title:'密码修改',
@@ -228,8 +318,6 @@
 			});
 		}
 		
-		$('#tipInfoSearch').show();
-		
 		function addArea(obj, cityId) {
 			obj.empty();
 			$.ajax({
@@ -267,7 +355,8 @@
 						li.append(detail);
 						a.attr("accounter_user_id", data.user_id);
 					    a.click(function(event) {
-					    	$.ajax({
+					    	globalAlipayForm.show();
+					    	/* $.ajax({
 								url : '/company/selectOneAccounter',
 								type : "POST",
 								data : {accounterId:$(this).attr("accounter_user_id")},
@@ -289,7 +378,7 @@
 										show();	      
 									});	
 								}
-							});		    	
+							});	 */	    	
 					    });
 						li.append(a);
 						$('#retData').append(li);

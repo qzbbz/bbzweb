@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
 
 import com.wisdom.common.model.CompanyBill;
+import com.wisdom.common.model.CompanyPay;
 
 public class CompanyBillMapper implements RowMapper<CompanyBill> {
 	public CompanyBill mapRow(ResultSet rs, int index) throws SQLException {
