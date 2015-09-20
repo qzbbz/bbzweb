@@ -120,6 +120,25 @@ public class AccounterController {
 		logger.debug("finish getAllAccounterByCondition");
 		return retMap;
 	}
+	
+	@RequestMapping("/accounter/uploadPhotoDraft")
+	@ResponseBody
+	public List<Map<String, String>> uploadPhotoDraft(HttpServletRequest request) {
+		logger.debug("enter getAllAccounterByCondition");
+		String userId = (String) request.getSession().getAttribute(
+				SessionConstant.SESSION_USER_ID);
+		String province = request.getParameter("province");
+		String city = request.getParameter("city");
+		String area = request.getParameter("area");
+		String industry = request.getParameter("industry");
+		String career = request.getParameter("career");
+		List<Map<String, String>> retMap = new ArrayList<>();
+		if (userId != null && !userId.isEmpty()) {
+			retMap = accounterService.getAllAccounterByCondition(province, city, area, industry, career);
+		}
+		logger.debug("finish getAllAccounterByCondition");
+		return retMap;
+	}
 
 	@RequestMapping("/accounter/updateAccounterInfo")
 	public String updateAccounterInfo(

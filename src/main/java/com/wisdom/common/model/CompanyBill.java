@@ -17,6 +17,8 @@ public class CompanyBill implements java.io.Serializable {
 	private String type;
 	private String fileName;
 	private String billDate;
+	private String supplyName;
+	private Integer isFixedAssets;
 	private Timestamp createTime;
 
 	// Constructors
@@ -31,7 +33,7 @@ public class CompanyBill implements java.io.Serializable {
 	}
 
 	public CompanyBill(Long id, Long companyId, Double amount, String type,
-			String fileName, String billDate, Timestamp createTime) {
+			String fileName, String billDate, String supplyName, Integer isFixedAssets, Timestamp createTime) {
 		super();
 		this.id = id;
 		this.companyId = companyId;
@@ -39,6 +41,8 @@ public class CompanyBill implements java.io.Serializable {
 		this.type = type;
 		this.fileName = fileName;
 		this.billDate = billDate;
+		this.supplyName = supplyName;
+		this.isFixedAssets = isFixedAssets;
 		this.createTime = createTime;
 	}
 
@@ -52,6 +56,22 @@ public class CompanyBill implements java.io.Serializable {
 
 	public Long getCompanyId() {
 		return companyId;
+	}
+
+	public String getSupplyName() {
+		return supplyName;
+	}
+
+	public void setSupplyName(String supplyName) {
+		this.supplyName = supplyName;
+	}
+
+	public Integer getIsFixedAssets() {
+		return isFixedAssets;
+	}
+
+	public void setIsFixedAssets(Integer isFixedAssets) {
+		this.isFixedAssets = isFixedAssets;
 	}
 
 	public void setCompanyId(Long companyId) {

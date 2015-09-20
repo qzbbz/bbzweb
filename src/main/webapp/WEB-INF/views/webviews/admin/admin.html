@@ -160,6 +160,7 @@
 			    var operateAuditPass = $("<a href='javascript:void(0)'>审核通过</a>");
 			    (function(tempData){
 			    	operateAuditReject.click(function(event) {
+			    		BUI.Message.Alert('审核拒绝该用户！','warning');
 			    		$.ajax({
 			    			url : '/admin/auditUser',
 			    			type : "POST",
@@ -177,6 +178,7 @@
 			    		});
 					});
 			    	operateAuditPass.click(function(event) {
+			    		BUI.Message.Alert('审核通过该用户！','warning');
 			    		$.ajax({
 			    			url : '/admin/auditUser',
 			    			type : "POST",

@@ -120,7 +120,7 @@
     		if($.browser.msie){//判断是否为ie浏览器
     			$("#perPic").attr("src",$(this).val())
     			//$("#info").text("当前选择的文件:"+$(this).val())
-    			alert("当前选择的文件:"+$(this).val());
+    			//alert("当前选择的文件:"+$(this).val());
     		}else{//不是IE浏览器
     			//$("#info").text("当前选择的文件:"+$(this).val())
     			var objUrl=getObjectURL(this.files[0]);
@@ -193,7 +193,6 @@
 							globalIndustrySelected = globalIndustrySelected + "," + name;
 						}
 					}
-					break;
 				}
 			});
 		}
@@ -219,7 +218,6 @@
 							globalCertificateSelected = globalCertificateSelected + "," + name;
 						}
 					}
-					break;
 				}
 			});
 		}
@@ -418,9 +416,9 @@
         	var province = $('#province option:selected').text();
     		var city = $('#city option:selected').text();
     		var area = $('#area option:selected').text();
-    		var industry = $('#industry').val();
+    		var industry = $('#industryName').val();
     		var career = $('#career option:selected').text();
-    		var certificate = $('#certificate').val();
+    		var certificate = $('#certificateName').val();
     		var userName = $('#userName').val();
     		var userPhone = $('#userPhone').val();
     		var userFile = $("#userFile").val();

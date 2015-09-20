@@ -60,12 +60,16 @@ public class CompanyBillController {
 		String realPath = request.getSession().getServletContext()
 				.getRealPath("/WEB-INF").substring(0);
 		String date=request.getParameter("bill_date");
+		String supplyName = request.getParameter("supplyName");
+		String isFixedAssets = request.getParameter("isFixedAssets");
 		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
 		logger.debug("uploadCompanyBill realPath : {}", realPath);
 		Map<String, String> params = new HashMap<>();
 		params.put("userId", userId);
 		params.put("realPath", realPath);
 		params.put("date", date);
+		params.put("supplyName", supplyName);
+		params.put("isFixedAssets", isFixedAssets);
 		logger.debug("params : {}", params.toString());
 		if (multipartRequest != null) {
 			Iterator<String> iterator = multipartRequest.getFileNames();

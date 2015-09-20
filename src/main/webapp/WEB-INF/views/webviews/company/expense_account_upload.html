@@ -29,8 +29,19 @@
                     <div class="bd">
                         <h2>企业发票上传</h2>
                     </div>
-
-                     <div class="form-horizontal" style="margin-top:20px;">
+                    <div class="form-horizontal" style="">
+                            <div class="row">
+                                <label for="" class="control-label">供应商名称：</label>
+                                <div class="controls">
+                                  <input name="sname" id="supplyName" name="supplyName" type="text" class="input input-normal" style="width:150px;">
+                                </div>
+                                <div class="controls">
+                                  	<input type="checkbox" name="isFixedAssets" id="isFixedAssets">固定资产
+                                </div>
+                            </div>
+                            <div id="selectMonth" style="display:none;position:relative; z-index:99999;margin-left:170px;"></div>
+                        </div>
+                     <div class="form-horizontal" style="">
                             <div class="row">
                                 <label for="" class="control-label">发票日期：</label>
                                 <div class="controls">
@@ -311,7 +322,7 @@
 		        $("#"+id).parent().addClass("bui-menu-item-selected")
 		    }
 	       BUI.use('bui/uploader',function (Uploader) {
-	            /**
+	    	   /**
 	            * 返回数据的格式
 	            *
 	            *  默认是 {url : 'url'},否则认为上传失败
@@ -323,10 +334,11 @@
 	            autoUpload:false
 	            }).render();
 	            $('#uplaodFiles').click(function(){
+	            	var flag = $("#isFixedAssets").prop('checked') ? 1 : 0;
 	            	if($('#bill_date').val() == null || $('#bill_date').val() == '') {
 	            		BUI.Message.Alert('发票日期不能为空，请检查！','warning');
 	            	} else {
-	            		uploader.set('data', {bill_date:$('#bill_date').val()});
+	            		uploader.set('data', {bill_date:$('#bill_date').val(),supplyName:$('#supplyName').val(), isFixedAssets:flag});
 	            		uploader.upload();
 	            	}
 	            })

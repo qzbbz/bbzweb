@@ -78,13 +78,15 @@ public class CompanyBillDaoImpl implements ICompanyBillDao {
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {  
 	        public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {  
-	        	String sql = "insert into company_bill (company_id, file_name, bill_date, create_time)"
-	    				+ " values (?, ?, ?, ?)";
+	        	String sql = "insert into company_bill (company_id, file_name, bill_date, supply_name, is_fixed_assets, create_time)"
+	    				+ " values (?, ?, ?, ?, ?, ?)";
 	               PreparedStatement ps = connection.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);  
 	               ps.setLong(1, companyBill.getCompanyId() == null ? 0 : companyBill.getCompanyId());  
 	               ps.setString(2, companyBill.getFileName() == null ? "" : companyBill.getFileName());
 	               ps.setString(3, companyBill.getBillDate() == null ? "" : companyBill.getBillDate());
-	               ps.setTimestamp(4, companyBill.getCreateTime() == null ? new Timestamp(System.currentTimeMillis()) : companyBill.getCreateTime());
+	               ps.setString(4, companyBill.getSupplyName() == null ? "" : companyBill.getSupplyName());
+	               ps.setInt(5, companyBill.getIsFixedAssets() == null ? 0 : companyBill.getIsFixedAssets());
+	               ps.setTimestamp(6, companyBill.getCreateTime() == null ? new Timestamp(System.currentTimeMillis()) : companyBill.getCreateTime());
 	               return ps;  
 	        }  
 	    }, keyHolder);
