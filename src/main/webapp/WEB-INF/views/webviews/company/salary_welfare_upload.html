@@ -28,22 +28,22 @@
 					<div class="hd">
 						<i class="iconfont">&#xe60b;</i>
 					</div>
+					<form id="salaryUpload" action="/company/uploadSalary" method="POST"	enctype="multipart/form-data">
 					<div class="bd">
 						<h2>工资单上传</h2>
 						<p>
 							请在这里上传公司的工资单
 						</p>
-						  <div class="form-horizontal" style="margin-top:20px;">
+						  <div class="form-horizontal" >
                             <div class="row">
                                 <label for="" class="control-label">工资单日期：</label>
                                 <div class="controls">
-                                  <input name="sname" id="salary_date" name="salary_date" type="text" class="input input-normal" style="width:300px;">
+                                  <input id="salary_date" name="salary_date" type="text" class="input input-normal" style="width:300px;">
                                 </div>
                             </div>
                             <div id="selectMonth" style="display:none;position:relative; z-index:99999;margin-left:170px;"></div>
                         </div>
                     </div>
-						<form id="salaryUpload" action="/company/uploadSalary" method="POST"	enctype="multipart/form-data">
 							<div id="fileInfo" style="height: 50px;" class="text-primary"></div>
 							<a href="javascript:;" class="file button button-success file-green">选择工资单文件
 								<input type="file" id="salaryFile" name="files">

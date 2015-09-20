@@ -138,7 +138,7 @@ public class UserValidateController {
 	
 	@RequestMapping("/company/expenseAccountUpload")
 	public String getCompanyAdminHtml(HttpSession httpSession) {
-		return "redirect:/views/webviews/company/expense_account_upload.html";
+		return "redirect:/views/webviews/company/organization_information_settings.html";
 	}
 	
 	@RequestMapping("/companyUser/expenseAccountUpload")

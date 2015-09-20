@@ -66,4 +66,6 @@ public interface IUserService {
 	
 	public UserPhone getUserPhone(String userId);
 	
+	public boolean setUserPhone(String userId, String userPhone);
+	
 }

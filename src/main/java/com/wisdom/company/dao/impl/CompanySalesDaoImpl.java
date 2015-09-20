@@ -82,7 +82,7 @@ public class CompanySalesDaoImpl implements ICompanySalesDao {
 		jdbcTemplate.update(new PreparedStatementCreator() {  
 	        public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {  
 	        	String sql = "insert into company_sales (company_id, file_name, sales_date, create_time)"
-	    				+ " values (?, ?, ?)";
+	    				+ " values (?, ?, ?, ?)";
 	               PreparedStatement ps = connection.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);  
 	               ps.setLong(1, companySales.getCompanyId() == null ? 0 : companySales.getCompanyId());  
 	               ps.setString(2, companySales.getFileName() == null ? "" : companySales.getFileName());

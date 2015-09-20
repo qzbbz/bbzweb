@@ -163,6 +163,7 @@ public class AccounterController {
 			}
 			updateSuccess = accounterService.updateAccounter(accounter);
 			updateSuccess = updateSuccess && userService.setUserNameByUserId(name, userId);
+			updateSuccess = updateSuccess && userService.setUserPhone(userId, phone);
 		}
 		if (updateSuccess) {
 			retMap.put(ErrorCode.NO_ERROR_CODE, ErrorCode.NO_ERROR_MESSAGE);
@@ -176,7 +177,7 @@ public class AccounterController {
 
 	@RequestMapping("/accounter/finishDeatilRegInfo")
 	public String finishDeatilRegInfo(HttpServletRequest request) {
-		return "redirect:/views/webviews/accounter/company_expense_records.html";
+		return "redirect:/views/webviews/accounter/finish_reg_info.html";
 	}
 	
 	@RequestMapping("/accounter/getAllCompanyExpense")

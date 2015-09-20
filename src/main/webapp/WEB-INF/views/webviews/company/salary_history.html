@@ -196,7 +196,7 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 		function createDataList(data) {
 			$('#retData').html("");
 			if(data == null || data == '') return;
-			data.sort(function(a,b){return a.id<b.id?-1:1});
+			data.sort(function(a,b){return a.id>b.id?-1:1});
 			for(var i=0; i<data.length; i++) {
 				var container = $('#retData');
 			    var a = $("<tr><td><input type='checkbox' value='"+data[i].id+"' style='margin-top:0px;' class='data-check-id'></td><td>"+data[i].date+"</td><td>"+data[i].companyName+"</td><td>"+data[i].fileName+"</td></tr>");

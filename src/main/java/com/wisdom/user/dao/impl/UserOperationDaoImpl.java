@@ -8,9 +8,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import com.wisdom.common.model.Invoice;
 import com.wisdom.common.model.User;
 import com.wisdom.common.model.UserDept;
 import com.wisdom.common.model.UserInviteCode;
@@ -19,8 +21,10 @@ import com.wisdom.common.model.UserPhone;
 import com.wisdom.common.model.UserPhoneType;
 import com.wisdom.common.model.UserPwd;
 import com.wisdom.common.model.UserRole;
+import com.wisdom.invoice.mapper.InvoiceMapper;
 import com.wisdom.user.dao.IUserOperationDao;
 import com.wisdom.user.mapper.UserMapper;
+import com.wisdom.user.mapper.UserPhoneMapper;
 
 @Repository("userOperationDao")
 public class UserOperationDaoImpl implements IUserOperationDao {
@@ -390,6 +394,29 @@ public class UserOperationDaoImpl implements IUserOperationDao {
 		int affectedRows = jdbcTemplate.update(sql, auditUserId, userId);
 		logger.debug("setBillAuditUser result : {}", affectedRows);
 		return affectedRows != 0;
+	}
+
+	@Override
+	public boolean setUserPhone(String userId, String userPhone) {
+		List<UserPhone> list = null;
+		String sql = "select * from user_phone where user_id = ?";
+		try {
+			list = jdbcTemplate.query(sql, new Object[] { userId}, new RowMapperResultSetExtractor<UserPhone>(
+					new UserPhoneMapper()));
+		} catch (DataAccessException e) {
+			logger.error("query user error!");
+			e.printStackTrace();
+		}
+		if(list == null || list.size() == 0) {
+			String sqlInsert = "insert into user_phone (user_id, phone, create_time)"
+					+ " values (?, ?, ?)";
+			jdbcTemplate.update(sqlInsert,
+					userId, userPhone, new Timestamp(System.currentTimeMillis()));
+		} else {
+			String sqlUpdate = "update user_phone set phone=? where user_id=?";
+			jdbcTemplate.update(sqlUpdate, userPhone, userId);
+		}
+		return true;
 	}
 
 }

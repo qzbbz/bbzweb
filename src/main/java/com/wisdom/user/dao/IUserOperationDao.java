@@ -74,6 +74,8 @@ public interface IUserOperationDao {
 	
 	public boolean setBillAuditUser(String userId, String auditUserId);
 	
+	public boolean setUserPhone(String userId, String userPhone);
+	
 	public List<User> queryUser(User user,Integer begin ,Integer end);
 	
 }

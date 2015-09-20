@@ -297,5 +297,10 @@ public class UserServiceImpl implements IUserService {
 	public UserPhone getUserPhone(String userId) {
 		return userQueryDao.getUserPhoneByUserId(userId);
 	}
+
+	@Override
+	public boolean setUserPhone(String userId, String userPhone) {
+		return userOperationDao.setUserPhone(userId, userPhone);
+	}
 }
 
