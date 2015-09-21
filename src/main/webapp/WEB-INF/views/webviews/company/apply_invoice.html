@@ -24,40 +24,13 @@
 			</div>
 		</div>
 		<div class="main">
-            <div class="menu"><a href="" class="active">点将财会</a></div>
-			<div class="well mt20">
-				<div class="form-horizontal onlineTools">
-                    <div class="row-fluid show-grid">
-                        <div >
-                            <label class="control-label control-label-small" style="margin-left:-40px;">选择地区</label>
-                            <select class="input input-mini" id="province" name="province" style="width:140px;margin-left:10px;"></select><select class="input input-mini ml10" id="city" name="city" style="width:140px;"></select><select class="input input-mini ml10" id="area" name="area" style="width:140px;"></select>
-                            <a href="javascript:void(0)" id="dispalyAllAccounter" class="button button-success" style="margin-left:15px;">所有会计师</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-horizontal onlineTools">
-                    <div class="row-fluid show-grid">
-                        <div >
-                            <label class="control-label control-label-small" style="margin-left:-40px;">选择行业</label>
-                            <div class="controls"><select id="accounter_industry" class="input input-normal"></select></div>
-                        </div>
-                        <div style="margin-left:260px;">
-                            <label class="control-label control-label-small">选择职业</label>
-                            <div class="controls"><select id="accounter_career" class="input input-normal"></select></div>
-                        </div>
-                        <a href="javascript:void(0)" id="searchAccounter" class="button button-success" style="margin-left:20px;">查询会计师</a>
-                    </div>
-                </div>
-			</div>
+            <div class="menu"><a href="" class="active"></a></div>
+			
 			
 			<div class="tips tips-warning mt20" id="tipInfo" style="display:none;"></div>
 			
 			<div class="tips tips-success mt20" id="tipInfoSearch">请选择条件，然后点击查询会计师！</div>
 			
-			<div class="member-wrap" style="margin-bottom:30px;">
-				<ul id="retData">
-				</ul>
-			</div>
         </div>
 	</div>
 	<div id="modifyPwd" style="display:none;">
@@ -91,30 +64,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="alipayForm" style="display:none;">
-		<div style="text-align:center;width:150px;height:50px;float:right;">
-			<img src="/img/webimg/855x300.png" style="width:150px;height:50px;">
-		</div>
-		<div style="margin-bottom:10px;">
-			<h4>当前支付方式仅支持支付宝支付</h4>
-		</div>
-		<div class="control-group">
-				<label class="control-label">请选择时间(每月仅需99元)：</label>
-				<div class="controls" style="margin-top:10px;">
-					<select id="alipay_time" name="alipay_time" style="width:200px;">
-						<option value ="3">3个月</option>
-						<option value ="6">6个月</option>
-						<option value="12">12个月</option>
-					</select>
-				</div>
-		</div>
-		<div style="margin-top:10px;margin-bottom:10px;">
-			<h4>您总共需要支付人民币：<span id="alipay_sum" name="alipay_sum" style="color:red;">297</span>元</h4>
-		</div>
-		<div class="control-group control-btn">
-				<div class="layer-wrap-footer1"><a href="javascript:void(0);" id="alipay_button" class="button button-success">确定购买</a></div>
-		</div>
-	</div>
+	
 	<div style="position:fixed; bottom: 0; right: 0;"><a target="_blank" href="http://sighttp.qq.com/authd?IDKEY=a1a51fb184a88bbb4c1756a211f1ff1fbc9d47079f63eb30"><img border="0" src="http://wpa.qq.com/imgd?IDKEY=a1a51fb184a88bbb4c1756a211f1ff1fbc9d47079f63eb30&pic=41" alt="点我联系我" title="点我联系我"/></a></div>
     <div id="payHtml" ></div>
     <script src="/js/webjs/jquery-1.8.1.min.js"></script>
@@ -144,46 +94,7 @@
 			$('#tipInfoSearch').show();
 		}
 	});
-    var globalAlipayForm;
-    var globalSelectedAccounterId;
-    BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
-		var alipayForm = new Overlay.Dialog({
-            title:'支付页面',
-            width:400,
-            height:250,
-            contentId:'alipayForm',
-            success:function () {
-              	this.close();
-            },
-            buttons : []
-        });
-		globalAlipayForm = alipayForm;
-		$('#alipay_time').change(function(){
-			var time = $('#alipay_time option:selected').val();
-			if(time == '3') $('#alipay_sum').html('297');
-			if(time == '6') $('#alipay_sum').html('594');
-			if(time == '12') $('#alipay_sum').html('1188');
-		});
-		$('#alipay_button').click(function(){
-			$.ajax({
-				url : '/company/selectOneAccounter',
-				type : "POST",
-				data : {accounterId:globalSelectedAccounterId, alipayMonth:$('#alipay_time option:selected').val(), alipayAmount:$('#alipay_sum').html()},
-				success : function(data) {
-					$('#payHtml').html(data);
-				},
-				error : function() {
-					BUI.use('bui/overlay',function(overlay){
-						function show () {
-							BUI.Message.Alert('选择会计师失败，请稍后重试！',function(){
-							},'warning');
-						}
-						show();	      
-					});	
-				}
-			});
-		});
-	});
+ 
     BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 		var modifyPwdForm = new Overlay.Dialog({
             title:'密码修改',
@@ -246,229 +157,6 @@
             });
         })()
         
-        addProvince($('#province'), $('#city'));
-		$("#province").change(function(){
-			$("#city").empty();
-			addCity($('#city'), $('#province option:selected').val());
-		});
-		$("#city").change(function(){
-			$("#area").empty();
-			addArea($('#area'), $('#city option:selected').val());
-		});
-		
-		addIndustry();
-		addCareer();
-		
-		function addIndustry() {
-			$.ajax({
-				url : '/getAllAccounterIndustry',
-				type : "POST",
-				data : {},
-				success : function(data) {
-					$.each(data,function(name,value) {
-						$('#accounter_industry').append("<option value='"+name+"'>"+value+"</option>");
-					});
-				}
-			});
-		}
-        
-		function addCareer() {
-			$.ajax({
-				url : '/getAllAccounterCareer',
-				type : "POST",
-				data : {},
-				success : function(data) {
-					$.each(data,function(name,value) {
-						$('#accounter_career').append("<option value='"+name+"'>"+value+"</option>");
-					});
-				}
-			});
-		}
-		
-        function addProvince(obj) {
-			$.ajax({
-				url : '/getAllProvinces',
-				type : "POST",
-				data : {},
-				success : function(data) {
-					$.each(data,function(name,value) {
-						obj.append("<option value='"+name+"'>"+value+"</option>");
-					});
-					addCity($('#city'), $('#province option:selected').val());
-				}
-			});
-		}
-
-		function addCity(obj, provinceId) {
-			obj.empty();
-			$.ajax({
-				url : '/getCities',
-				type : "POST",
-				data : {provinceId:provinceId},
-				success : function(data) {
-					$.each(data,function(name,value) {
-						obj.append("<option value='"+name+"'>"+value+"</option>");
-					});
-					addArea($('#area'), $('#city option:selected').val());
-				}
-			});
-		}
-		
-		function addArea(obj, cityId) {
-			obj.empty();
-			$.ajax({
-				url : '/getAreas',
-				type : "POST",
-				data : {cityId:cityId},
-				success : function(data) {
-					$.each(data,function(name,value) {
-						obj.append("<option value='"+name+"'>"+value+"</option>");
-					});
-				}
-			});
-		}
-		
-		$('#dispalyAllAccounter').click(function(){
-			$.ajax({
-				url : '/getAllAccounter',
-				type : "POST",
-				data : {},
-				success : function(data) {
-					if(data==null || data=='') {
-						$('#retData').html('');
-						$('#tipInfo').html('当前系统中还没有任何会计师信息，请稍后重试！');
-						$('#tipInfo').show();
-						return;
-					}
-					$('#tipInfo').hide();
-					$('#retData').html('');
-					$.each(data,function(name,data) {
-						var li = $('<li style="padding 0 20px;margin-bottom:20px;" ></li>');
-						var img = $('<div class="member-photo"><img src="/files/image/'+data.image+'" width="200px" height="200px">');
-						var detail = $('<div class="member-text"><p><label for="">姓名：</label>'+data.userName+'</p><p><label for="">职业经历：</label>'+data.career+'</p><p><label for="">职业证书：</label>'+data.certificate+'</p><p><label for="">行业：</label>'+data.industry+'</p><p><label for="">地区：</label>'+data.province+data.city+data.area+'</p></div>');
-						var a = $('<a href="javascript:void(0)" class="button button-success" style="width:180px;">点选当前会计</a>');
-						li.append(img);
-						li.append(detail);
-						a.attr("accounter_user_id", data.user_id);
-					    a.click(function(event) {
-					    	globalSelectedAccounterId = $(this).attr("accounter_user_id");
-					    	globalAlipayForm.show();
-					    	/* $.ajax({
-								url : '/company/selectOneAccounter',
-								type : "POST",
-								data : {accounterId:$(this).attr("accounter_user_id")},
-								success : function() {
-									BUI.use('bui/overlay',function(overlay){
-										function show () {
-											BUI.Message.Alert('您已成功选择会计师！',function(){
-											},'warning');
-										}
-										show();
-									});	
-								},
-								error : function() {
-									BUI.use('bui/overlay',function(overlay){
-										function show () {
-											BUI.Message.Alert('选择会计师失败，请稍后重试！',function(){
-											},'warning');
-										}
-										show();	      
-									});	
-								}
-							});	 */	    	
-					    });
-						li.append(a);
-						$('#retData').append(li);
-					});
-				},
-				error : function() {
-					$('#retData').html('');
-					$('#tipInfo').html('服务器暂时无法响应您的请求，请稍后重试！');
-					$('#tipInfo').show();
-				}
-			});
-		});
-		
-		$('#searchAccounter').click(function(){
-			$('#tipInfo').hide();
-			$('#tipInfoSearch').hide();
-			var province = $('#province option:selected').text();
-			var city = $('#city option:selected').text();
-			var area = $('#area option:selected').text();
-			var accounter_industry = $('#accounter_industry option:selected').text();
-			var accounter_career = $('#accounter_career option:selected').text();
-			if(province == null || province =='' ||
-					city == null || city == '' ||
-					area == null || area == '' ||
-					accounter_industry == null || accounter_industry == '' ||
-					accounter_career == null || accounter_career == '') {
-				BUI.use('bui/overlay',function(overlay){
-					function show () {
-						BUI.Message.Alert('查询条件不能为空，请检查！',function(){
-						},'warning');
-					}
-					show();	      
-				});
-				return;
-			}
-			$.ajax({
-				url : '/getAllAccounterByCondition',
-				type : "POST",
-				data : {province:province, city:city, area:area, industry:accounter_industry,career:accounter_career},
-				success : function(data) {
-					if(data==null || data=='') {
-						$('#retData').html('');
-						$('#tipInfo').html('没有查询到符合条件的会计师，请更换查询条件或稍后重试！');
-						$('#tipInfo').show();
-						return;
-					}
-					$('#tipInfo').hide();
-					$('#retData').html('');
-					$.each(data,function(name,data) {
-						var li = $('<li style="padding 0 10px;margin-bottom:20px;"></li>');
-						var img = $('<div class="member-photo"><img src="'+data.image+'" width="200px" height="200px">');
-						var detail = $('<div class="member-text"><p><label for="">姓名：</label>'+data.userName+'</p><p><label for="">职业经历：</label>'+data.career+'</p><p><label for="">职业证书：</label>'+data.certificate+'</p><p><label for="">行业：</label>'+data.industry+'</p><p><label for="">地区：</label>'+data.province+data.city+data.area+'</p></div>');
-						var a = $('<a href="javascript:void(0)" class="button button-success" style="width:180px;">点选当前会计</a>');
-						li.append(img);
-						li.append(detail);
-						a.attr("accounter_user_id", data.user_id);
-					    a.click(function(event) {
-					    	$.ajax({
-								url : '/company/selectOneAccounter',
-								type : "POST",
-								data : {accounterId:$(this).attr("accounter_user_id")},
-								success : function() {
-									BUI.use('bui/overlay',function(overlay){
-										function show () {
-											BUI.Message.Alert('您已成功选择会计师！',function(){
-											},'warning');
-										}
-										show();
-									});	
-								},
-								error : function() {
-									BUI.use('bui/overlay',function(overlay){
-										function show () {
-											BUI.Message.Alert('选择会计师失败，请稍后重试！',function(){
-											},'warning');
-										}
-										show();	      
-									});	
-								}
-							});		    	
-					    });
-						li.append(a);
-						$('#retData').append(li);
-					});
-				},
-				error : function() {
-					$('#retData').html('');
-					$('#tipInfo').html('没有查询到符合条件的会计师，请更换查询条件或稍后重试！');
-					$('#tipInfo').show();
-				}
-			});
-		})
-		
         var menu = new menuTree(
             {"nodes" : [
 {text : '组织架构',id : '50',href:"javascript:void(0);",  expanded : false,children: [
