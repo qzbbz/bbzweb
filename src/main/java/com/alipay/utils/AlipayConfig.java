@@ -25,18 +25,15 @@ public class AlipayConfig {
 	
 	//↓↓↓↓↓↓↓↓↓↓请在这里配置您的基本信息↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 	// 合作身份者ID，以2088开头由16位纯数字组成的字符串
-	public static String partner = "2088xxxx";
+	public static String partner = "2088021143789247";
 	
 	// 收款支付宝账号
-	public static String seller_email = "";
+	public static String seller_email = "jzzbeyond@aliyun.com";
 	// 商户的私钥
-	public static String key = "";
-
-	//↑↑↑↑↑↑↑↑↑↑请在这里配置您的基本信息↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
-	
+	public static String key = "isigajpi3tiuaj82xp3gm9sdpgpsluyg";	
 
 	// 调试用，创建TXT日志文件夹路径
-	public static String log_path = "";
+	public static String log_path = "/tmp/logs/";
 
 	// 字符编码格式 目前支持 gbk 或 utf-8
 	public static String input_charset = "utf-8";

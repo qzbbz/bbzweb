@@ -6,6 +6,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /* *
  *类名：AlipayNotify
@@ -22,6 +25,9 @@ import java.util.Map;
  */
 public class AlipayNotify {
 
+	private static final Logger logger = LoggerFactory
+			.getLogger(AlipayNotify.class);
+	
     /**
      * 支付宝消息验证地址
      */
@@ -47,9 +53,10 @@ public class AlipayNotify {
 	    boolean isSign = getSignVeryfy(params, sign);
 
         //写日志记录（若要调试，请取消下面两行注释）
-        //String sWord = "responseTxt=" + responseTxt + "\n isSign=" + isSign + "\n 返回回来的参数：" + AlipayCore.createLinkString(params);
-	    //AlipayCore.logResult(sWord);
-
+        String sWord = "responseTxt=" + responseTxt + "\n isSign=" + isSign + "\n 返回回来的参数：" + AlipayCore.createLinkString(params);
+	    AlipayCore.logResult(sWord);
+	    logger.info("verify : " + sign);
+	    logger.info("debug sWord : " + sWord);
         if (isSign && responseTxt.equals("true")) {
             return true;
         } else {

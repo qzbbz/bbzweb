@@ -12,6 +12,10 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.wisdom.web.api.controller.CompanyController;
 
 /* *
  *类名：AlipaySubmit
@@ -26,6 +30,9 @@ import org.dom4j.io.SAXReader;
 
 public class AlipaySubmit {
     
+	private static final Logger logger = LoggerFactory
+			.getLogger(AlipaySubmit.class);
+	
     /**
      * 支付宝提供给商户的服务接入网关URL(新)
      */
@@ -60,7 +67,7 @@ public class AlipaySubmit {
         //签名结果与签名方式加入请求提交参数组中
         sPara.put("sign", mysign);
         sPara.put("sign_type", AlipayConfig.sign_type);
-
+        logger.info("buildRequestMysign : " + mysign);
         return sPara;
     }
 

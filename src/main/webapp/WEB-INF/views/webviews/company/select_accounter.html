@@ -116,6 +116,7 @@
 		</div>
 	</div>
 	<div style="position:fixed; bottom: 0; right: 0;"><a target="_blank" href="http://sighttp.qq.com/authd?IDKEY=a1a51fb184a88bbb4c1756a211f1ff1fbc9d47079f63eb30"><img border="0" src="http://wpa.qq.com/imgd?IDKEY=a1a51fb184a88bbb4c1756a211f1ff1fbc9d47079f63eb30&pic=41" alt="点我联系我" title="点我联系我"/></a></div>
+    <div id="payHtml" ></div>
     <script src="/js/webjs/jquery-1.8.1.min.js"></script>
     <script src="/js/webjs/sea.js"></script>
     <script src="/js/webjs/config.js"></script>
@@ -128,7 +129,7 @@
 		async:false,
 		data : {},
 		success : function(data) {
-			if(data.selected == true) {
+			if(data.selected == 'true') {
 				$('#tipInfo').html(data.info);
 				$('#tipInfo').show();
 				$('#tipInfoSearch').hide();
@@ -144,6 +145,7 @@
 		}
 	});
     var globalAlipayForm;
+    var globalSelectedAccounterId;
     BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 		var alipayForm = new Overlay.Dialog({
             title:'支付页面',
@@ -166,15 +168,9 @@
 			$.ajax({
 				url : '/company/selectOneAccounter',
 				type : "POST",
-				data : {accounterId:$(this).attr("accounter_user_id"), alipayMonth:$('#alipay_time option:selected').val(), alipayAmount:$('#alipay_sum').html()},
-				success : function() {
-					BUI.use('bui/overlay',function(overlay){
-						function show () {
-							BUI.Message.Alert('您已成功选择会计师！',function(){
-							},'warning');
-						}
-						show();
-					});	
+				data : {accounterId:globalSelectedAccounterId, alipayMonth:$('#alipay_time option:selected').val(), alipayAmount:$('#alipay_sum').html()},
+				success : function(data) {
+					$('#payHtml').html(data);
 				},
 				error : function() {
 					BUI.use('bui/overlay',function(overlay){
@@ -355,6 +351,7 @@
 						li.append(detail);
 						a.attr("accounter_user_id", data.user_id);
 					    a.click(function(event) {
+					    	globalSelectedAccounterId = $(this).attr("accounter_user_id");
 					    	globalAlipayForm.show();
 					    	/* $.ajax({
 								url : '/company/selectOneAccounter',

@@ -1,5 +1,6 @@
 package com.wisdom.company.service.impl;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,9 +50,21 @@ public class CompanyPayServiceImpl implements ICompanyPayService {
 	}
 
 	@Override
-	public boolean updateCompanyPayStatusByOrderNo(String orderNo, int status) {
+	public boolean updateCompanyPayStatusAndTimeByOrderNo(String orderNo, int status, Timestamp time) {
 		// TODO Auto-generated method stub
-		return companyPayDao.updateCompanyPayStatusByOrderNo(orderNo, status);
+		return companyPayDao.updateCompanyPayStatusAndTimeByOrderNo(orderNo, status, time);
+	}
+
+	@Override
+	public CompanyPay getCompanyPayByCompanyId(long companyId) {
+		// TODO Auto-generated method stub
+		return companyPayDao.getCompanyPayByCompanyId(companyId);
+	}
+
+	@Override
+	public boolean updateCompanyPayByCompanyId(Long companyId, Double amount, String orderNo, int serviceTime) {
+		// TODO Auto-generated method stub
+		return companyPayDao.updateCompanyPayByCompanyId(companyId, amount, orderNo, serviceTime);
 	}
 
 }

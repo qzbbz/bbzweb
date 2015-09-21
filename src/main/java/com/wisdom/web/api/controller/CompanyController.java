@@ -1,6 +1,8 @@
 package com.wisdom.web.api.controller;
 
+import java.io.UnsupportedEncodingException;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -8,6 +10,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,6 +26,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
+import com.alipay.utils.AlipayNotify;
+import com.alipay.utils.AlipayService;
 import com.wisdom.area.service.IAreaService;
 import com.wisdom.common.model.Company;
 import com.wisdom.common.model.CompanyPay;
@@ -110,18 +115,83 @@ public class CompanyController {
 	
 	@RequestMapping("/company/selectOneAccounter")
 	@ResponseBody
-	public Map<Integer, String> selectOneAccounter(HttpServletRequest request) {
+	public String selectOneAccounter(HttpServletRequest request) {
 		logger.info("enter selectOneAccounter");
-		Map<Integer, String> retMap = new HashMap<>();
 		String accounterUserId = request.getParameter("accounterId");
 		String alipayMonth = request.getParameter("alipayMonth");
 		String alipayAmount = request.getParameter("alipayAmount");
 		String userId = (String) request.getSession().getAttribute("userId");
 		long companyId = userService.getCompanyIdByUserId(userId);
-		
+		CompanyPay companyPay = companyPayService.getCompanyPayByCompanyId(companyId);
+		UUID uuid = UUID.randomUUID();
+		String orderNo = uuid.toString();
+		if(companyPay == null) {
+			CompanyPay newPay = new CompanyPay();
+			newPay.setCompanyId(companyId);
+			newPay.setOrderNo(orderNo);
+			newPay.setPayAmount(Double.valueOf(alipayAmount));
+			newPay.setServiceTime(Integer.valueOf(alipayMonth));
+			newPay.setCreateTime(new Timestamp(System.currentTimeMillis()));
+			companyPayService.addCompanyPay(companyPay);
+		} else {
+			companyPayService.updateCompanyPayByCompanyId(companyId, Double.valueOf(alipayAmount), orderNo, Integer.valueOf(alipayMonth));
+		}
 		companyService.updateCompanyAccounter(companyId, accounterUserId);
+		AlipayService alipayService = new AlipayService();
+		String resHtml = alipayService.buildAlipayRequest(Double.valueOf(alipayAmount), orderNo);
 		logger.info("leave selectOneAccounter");
-		return retMap;
+		return resHtml;
+	}
+	
+	@RequestMapping("/alipayFinish")
+	public String alipayFinish(HttpServletRequest request) throws UnsupportedEncodingException {
+		Map<String,String> params = new HashMap<String,String>();
+		Map requestParams = request.getParameterMap();
+		for (Iterator iter = requestParams.keySet().iterator(); iter.hasNext();) {
+			String name = (String) iter.next();
+			String[] values = (String[]) requestParams.get(name);
+			String valueStr = "";
+			for (int i = 0; i < values.length; i++) {
+				valueStr = (i == values.length - 1) ? valueStr + values[i]
+						: valueStr + values[i] + ",";
+			}
+			//乱码解决，这段代码在出现乱码时使用。如果mysign和sign不相等也可以使用这段代码转化
+			//valueStr = new String(valueStr.getBytes("ISO-8859-1"), "utf-8");
+			params.put(name, valueStr);
+		}
+		params.put("body", "感谢您购买元升财务咨询的服务!");
+		params.put("subject", "元升财务咨询服务费用");
+		//获取支付宝的通知返回参数，可参考技术文档中页面跳转同步通知参数列表(以下仅供参考)//
+		//商户订单号
+		String out_trade_no = new String(request.getParameter("out_trade_no").getBytes("ISO-8859-1"),"utf-8");
+		//支付宝交易号
+		String trade_no = new String(request.getParameter("trade_no").getBytes("ISO-8859-1"),"utf-8");
+		//交易状态
+		String trade_status = new String(request.getParameter("trade_status").getBytes("ISO-8859-1"),"utf-8");
+		//获取支付宝的通知返回参数，可参考技术文档中页面跳转同步通知参数列表(以上仅供参考)//
+		//计算得出通知验证结果
+		boolean verify_result = AlipayNotify.verify(params);
+		logger.info("alipayFinish : out_trade_no" + out_trade_no);
+		if(verify_result){//验证成功
+			logger.info("alipayFinish : verify success");
+			if(trade_status.equals("TRADE_FINISHED") || trade_status.equals("TRADE_SUCCESS")){
+				//判断该笔订单是否在商户网站中已经做过处理
+				//如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
+				//如果有做过处理，不执行商户的业务程序
+				logger.info("alipayFinish : TRADE_FINISHED || TRADE_SUCCESS");
+				companyPayService.updateCompanyPayStatusAndTimeByOrderNo(out_trade_no, 1, new Timestamp(System.currentTimeMillis()));
+			}
+			
+			//该页面可做页面美工编辑
+			//out.println("验证成功<br />");
+			//——请根据您的业务逻辑来编写程序（以上代码仅作参考）——
+			
+		}else{
+			//该页面可做页面美工编辑
+			//out.println("验证失败");
+			logger.info("alipayFinish : verify failed");
+		}
+		return "redirect:/views/webviews/company/select_accounter.html";
 	}
 	
 	@RequestMapping("/company/checkSelectAccounter")
