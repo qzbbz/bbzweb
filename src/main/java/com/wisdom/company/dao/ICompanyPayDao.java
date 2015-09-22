@@ -10,6 +10,8 @@ public interface ICompanyPayDao {
 	
 	public CompanyPay getCompanyPayByCompanyId(long companyId);
 	
+	public CompanyPay getCompanyPayByOrderNo(String orderNo);
+	
 	public long addCompanyPay(CompanyPay companyPay);
 	
 	public boolean deleteCompanyPayByCompanyId(long companyId);
@@ -18,8 +20,10 @@ public interface ICompanyPayDao {
 	
 	public boolean updateCompanyOrderNoByCompanyId(long companyId, String orderNo);
 	
-	public boolean updateCompanyPayStatusAndTimeByOrderNo(String orderNo, int status, Timestamp time);
+	public boolean updateCompanyPayStatusAndTimeByOrderNo(String orderNo, int status, Timestamp time, String contractFile);
 	
 	public boolean updateCompanyPayByCompanyId(Long companyId, Double amount, String orderNo, int serviceTime);
+	
+	public boolean updateApplyInvoiceByCompanyId(Long companyId, int applyInvoice, String address);
 	
 }

@@ -86,9 +86,9 @@ public class CompanyPayDaoImpl implements ICompanyPayDao {
 	}
 
 	@Override
-	public boolean updateCompanyPayStatusAndTimeByOrderNo(String orderNo, int status, Timestamp time) {
-		String sql = "update company_pay set pay_status=?, create_time=? where order_no=?";
-		int affectedRows = jdbcTemplate.update(sql, status, time, orderNo);
+	public boolean updateCompanyPayStatusAndTimeByOrderNo(String orderNo, int status, Timestamp time, String contractFile) {
+		String sql = "update company_pay set pay_status=?, create_time=?, contract_file=? where order_no=?";
+		int affectedRows = jdbcTemplate.update(sql, status, time, contractFile, orderNo);
 		logger.debug("updateCompanyPay result : {}", affectedRows);
 		return affectedRows != 0;
 	}
@@ -112,5 +112,26 @@ public class CompanyPayDaoImpl implements ICompanyPayDao {
 		int affectedRows = jdbcTemplate.update(sql, amount, serviceTime, orderNo, companyId);
 		logger.debug("updateCompanyPay result : {}", affectedRows);
 		return affectedRows != 0;
+	}
+
+	@Override
+	public boolean updateApplyInvoiceByCompanyId(Long companyId, int applyInvoice, String address) {
+		String sql = "update company_pay set apply_invoice=? , mail_address = ? where company_id=?";
+		int affectedRows = jdbcTemplate.update(sql, applyInvoice, address, companyId);
+		logger.debug("updateApplyInvoiceByCompanyId result : {}", affectedRows);
+		return affectedRows != 0;
+	}
+
+	@Override
+	public CompanyPay getCompanyPayByOrderNo(String orderNo) {
+		String sql = "select * from company_pay where order_no=?";
+		CompanyPay companyPay = null;
+		try {
+			companyPay = jdbcTemplate.queryForObject(sql,
+				new Object[] { orderNo }, new CompanyPayMapper());
+		} catch(Exception e) {
+			logger.debug("result is 0. exception : {}", e.toString());
+		}
+		return companyPay;
 	}
 }

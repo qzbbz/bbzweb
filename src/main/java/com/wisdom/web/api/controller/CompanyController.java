@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -48,6 +49,7 @@ import com.wisdom.user.service.IUserService;
 import com.wisdom.web.api.ICompanyApi;
 import com.wisdom.web.utils.CompanyOrgStructure;
 import com.wisdom.web.utils.ErrorCode;
+import com.wisdom.web.utils.PdfProcess;
 
 @Controller
 public class CompanyController {
@@ -110,6 +112,17 @@ public class CompanyController {
 					ErrorCode.COMPANY_SELECT_ACCOUNTER_ERROR_MESSAGE);
 		}
 		logger.info("leave selectAccounter");
+		return retMap;
+	}
+	
+	@RequestMapping("/company/applyMailInvoice")
+	@ResponseBody
+	public Map<Integer, String> applyMailInvoice(HttpServletRequest request) {
+		Map<Integer, String> retMap = new HashMap<>();
+		String userId = (String) request.getSession().getAttribute("userId");
+		String mailAddress = request.getParameter("address");
+		long companyId = userService.getCompanyIdByUserId(userId);
+		companyPayService.updateApplyInvoiceByCompanyId(companyId, 1, mailAddress);
 		return retMap;
 	}
 	
@@ -179,7 +192,24 @@ public class CompanyController {
 				//如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
 				//如果有做过处理，不执行商户的业务程序
 				logger.info("alipayFinish : TRADE_FINISHED || TRADE_SUCCESS");
-				companyPayService.updateCompanyPayStatusAndTimeByOrderNo(out_trade_no, 1, new Timestamp(System.currentTimeMillis()));
+				CompanyPay companyPay = companyPayService.getCompanyPayByOrderNo(out_trade_no);
+				String contractFileName = "";
+				try {
+					Company company = companyService.getCompanyByCompanyId(companyPay.getCompanyId());
+					UUID uuid = UUID.randomUUID();
+					contractFileName = uuid.toString() + "_contract_" + String.valueOf(company.getId()) + ".pdf";
+					Calendar c = Calendar.getInstance();    
+				    SimpleDateFormat f = new SimpleDateFormat("yyyy年MM月dd日");    
+				    String date = f.format(c.getTime());
+				    String realPath = request.getSession().getServletContext()
+							.getRealPath("/WEB-INF").substring(0);
+					realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company/";
+					PdfProcess.generateContractPdf(realPath + contractFileName, company.getName(), String.valueOf(companyPay.getPayAmount()), date);
+				} catch(Exception e) {
+					logger.error(e.toString());
+				} finally {
+					companyPayService.updateCompanyPayStatusAndTimeByOrderNo(out_trade_no, 1, new Timestamp(System.currentTimeMillis()), contractFileName);
+				}
 			}
 			
 			//该页面可做页面美工编辑
@@ -211,6 +241,8 @@ public class CompanyController {
 				String payTime = companyPay.getCreateTime().toString();
 				retMap.put("selected", "true");
 				retMap.put("info", "您已选择了会计师："+accounterName+",您购买的服务时间为:"+String.valueOf(serviceTime)+"个月,您付款的时间为："+payTime+"。");
+				retMap.put("amount", String.valueOf(companyPay.getPayAmount()));
+				retMap.put("companyName", company.getName());
 			} else {
 				retMap.put("selected", "false");
 			}

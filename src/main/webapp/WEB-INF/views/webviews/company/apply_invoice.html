@@ -24,12 +24,21 @@
 			</div>
 		</div>
 		<div class="main">
-            <div class="menu"><a href="" class="active"></a></div>
+            <div class="menu"><a href="" class="active">发票申请</a></div>
 			
 			
 			<div class="tips tips-warning mt20" id="tipInfo" style="display:none;"></div>
 			
-			<div class="tips tips-success mt20" id="tipInfoSearch">请选择条件，然后点击查询会计师！</div>
+			<div id="applyInvoiceInfo">
+				<div class="well mt20">
+				<div style="margin-bottom:10px;"><label>发票单位名称:</label><input style="margin-left:46px;" class="input input-large ml10" id="companyName" type="text" disabled="disabled"/></div>
+				<div style="margin-bottom:10px;"><label>发票金额(人民币/元):</label><input class="input input-large ml10" id="amount" type="text" disabled="disabled"/></div>
+        		<div><label>发票邮寄地址:</label><input style="margin-left:46px;" class="input input-large ml10" id="address" type="text"/></div>
+        		</div>
+        		<div class="tips mt20">
+                <a href="#" class="button button-primary button-long mr20" id="applyButton">点击申请</a>
+            	</div>
+			</div>
 			
         </div>
 	</div>
@@ -79,22 +88,66 @@
 		async:false,
 		data : {},
 		success : function(data) {
-			if(data.selected == 'true') {
-				$('#tipInfo').html(data.info);
+			if(data.selected != 'true') {
+				$('#tipInfo').html("您当前没有可以申请的发票！");
 				$('#tipInfo').show();
-				$('#tipInfoSearch').hide();
-				$('#searchAccounter').attr('disabled',"true");
-				$('#dispalyAllAccounter').attr('disabled',"true");
+				$('#applyInvoiceInfo').hide();
 			} else {
-				$('#tipInfoSearch').show();
+				$('#companyName').val(data.companyName);
+				$('#amount').val(data.amount);
 			}
 		},
 		error : function() {
-			alert('服务器暂时不可用，请稍后重试！');
+			BUI.use('bui/overlay',function(overlay){
+				function show () {
+					BUI.Message.Alert('服务器暂时不可用，请稍后重试！',function(){
+					},'warning');
+				}
+				show();	      
+			});	
 			$('#tipInfoSearch').show();
 		}
 	});
  
+    $('#applyButton').click(function(){
+    	var address = $('#address').val();
+    	if(address == null || address == "") {
+    		BUI.use('bui/overlay',function(overlay){
+				function show () {
+					BUI.Message.Alert('发票邮寄地址不能为空，请检查！',function(){
+					},'warning');
+				}
+				show();	      
+			});	
+    	} else {
+    		$.ajax({
+    			url : '/company/applyMailInvoice',
+    			type : "POST",
+    			async:false,
+    			data : {address:address},
+    			success : function(data) {
+    				
+    			},
+    			error : function() {
+    				BUI.use('bui/overlay',function(overlay){
+    					function show () {
+    						BUI.Message.Alert('服务器暂时不可用，请稍后重试！',function(){
+    						},'warning');
+    					}
+    					show();	      
+    				});
+    			}
+    		});
+    		BUI.use('bui/overlay',function(overlay){
+				function show () {
+					BUI.Message.Alert('发票申请成功，我们会尽快将发票邮寄给您！',function(){
+					},'info');
+				}
+				show();	      
+			});	
+    	}
+    })
+    
     BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 		var modifyPwdForm = new Overlay.Dialog({
             title:'密码修改',

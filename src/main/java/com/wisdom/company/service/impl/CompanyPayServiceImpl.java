@@ -50,9 +50,9 @@ public class CompanyPayServiceImpl implements ICompanyPayService {
 	}
 
 	@Override
-	public boolean updateCompanyPayStatusAndTimeByOrderNo(String orderNo, int status, Timestamp time) {
+	public boolean updateCompanyPayStatusAndTimeByOrderNo(String orderNo, int status, Timestamp time, String contractFile) {
 		// TODO Auto-generated method stub
-		return companyPayDao.updateCompanyPayStatusAndTimeByOrderNo(orderNo, status, time);
+		return companyPayDao.updateCompanyPayStatusAndTimeByOrderNo(orderNo, status, time, contractFile);
 	}
 
 	@Override
@@ -65,6 +65,18 @@ public class CompanyPayServiceImpl implements ICompanyPayService {
 	public boolean updateCompanyPayByCompanyId(Long companyId, Double amount, String orderNo, int serviceTime) {
 		// TODO Auto-generated method stub
 		return companyPayDao.updateCompanyPayByCompanyId(companyId, amount, orderNo, serviceTime);
+	}
+
+	@Override
+	public boolean updateApplyInvoiceByCompanyId(Long companyId, int applyInvoice, String address) {
+		// TODO Auto-generated method stub
+		return companyPayDao.updateApplyInvoiceByCompanyId(companyId, applyInvoice, address);
+	}
+
+	@Override
+	public CompanyPay getCompanyPayByOrderNo(String orderNo) {
+		// TODO Auto-generated method stub
+		return companyPayDao.getCompanyPayByOrderNo(orderNo);
 	}
 
 }

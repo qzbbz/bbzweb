@@ -17,6 +17,9 @@ public class CompanyPay implements java.io.Serializable {
 	private Double payAmount;
 	private Integer serviceTime;
 	private String orderNo;
+	private Integer applyInvoice;
+	private String mailAddress;
+	private String contractFile;
 	private Timestamp createTime;
 
 	// Constructors
@@ -31,7 +34,7 @@ public class CompanyPay implements java.io.Serializable {
 	}
 
 	public CompanyPay(Long id, Long companyId, Integer payStatus, Double payAmount, Integer serviceTime,
-			String orderNo, Timestamp createTime) {
+			String orderNo, int applyInvoice, String mailAddress, String contractFile, Timestamp createTime) {
 		super();
 		this.id = id;
 		this.companyId = companyId;
@@ -39,6 +42,9 @@ public class CompanyPay implements java.io.Serializable {
 		this.payAmount = payAmount;
 		this.serviceTime = serviceTime;
 		this.orderNo = orderNo;
+		this.applyInvoice = applyInvoice;
+		this.mailAddress = mailAddress;
+		this.contractFile = contractFile;
 		this.createTime = createTime;
 	}
 
@@ -56,6 +62,30 @@ public class CompanyPay implements java.io.Serializable {
 
 	public void setCompanyId(Long companyId) {
 		this.companyId = companyId;
+	}
+
+	public String getContractFile() {
+		return contractFile;
+	}
+
+	public void setContractFile(String contractFile) {
+		this.contractFile = contractFile;
+	}
+
+	public String getMailAddress() {
+		return mailAddress;
+	}
+
+	public void setMailAddress(String mailAddress) {
+		this.mailAddress = mailAddress;
+	}
+
+	public Integer getApplyInvoice() {
+		return applyInvoice;
+	}
+
+	public void setApplyInvoice(Integer applyInvoice) {
+		this.applyInvoice = applyInvoice;
 	}
 
 	public Integer getPayStatus() {
