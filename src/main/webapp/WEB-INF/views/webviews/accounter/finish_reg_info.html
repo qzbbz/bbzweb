@@ -104,12 +104,6 @@
 			</div>
 		</div>
 	</div>
-	<form action="" name="form0" id="form0">
-		<input type="file" name="file0" id="file0" class="file0"/>
-		<a href="">选择图像</a>
-		<span id="info"></span>
-		<img src="" alt="" id="img0" width="100" />
-	</form>
 	<div style="position:fixed; bottom: 0; right: 0;"><a target="_blank" href="http://sighttp.qq.com/authd?IDKEY=a1a51fb184a88bbb4c1756a211f1ff1fbc9d47079f63eb30"><img border="0" src="http://wpa.qq.com/imgd?IDKEY=a1a51fb184a88bbb4c1756a211f1ff1fbc9d47079f63eb30&pic=41" alt="点我联系我" title="点我联系我"/></a></div>
 	
 	<!--该js需要修改js路径及修改seajs路径-->
@@ -206,7 +200,7 @@
 			$.each(data,function(name,value) {
 				var item = {text:value,value:name};
 				globalCertificateDataJson.push(item);
-				var certificateList;
+				var certificateList = new Array();
 				if(globalData.certificate != null && globalData.certificate != "") {
 					certificateList = globalData.certificate.split(",");
 				}
@@ -421,7 +415,7 @@
     		var certificate = $('#certificateName').val();
     		var userName = $('#userName').val();
     		var userPhone = $('#userPhone').val();
-    		var userFile = $("#userFile").val();
+    		var userFile = $("#files").val();
     		$('#provinceName').val(province);
     		$('#cityName').val(city);
     		$('#areaName').val(area);
