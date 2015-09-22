@@ -29,7 +29,7 @@
 			
 			<div class="tips tips-warning mt20" id="tipInfo" style="display:none;"></div>
 			
-			<div id="applyInvoiceInfo">
+			<div id="applyInvoiceInfo" style="display:none;">
 				<div class="well mt20">
 				<div style="margin-bottom:10px;"><label>发票单位名称:</label><input style="margin-left:46px;" class="input input-large ml10" id="companyName" type="text" disabled="disabled"/></div>
 				<div style="margin-bottom:10px;"><label>发票金额(人民币/元):</label><input class="input input-large ml10" id="amount" type="text" disabled="disabled"/></div>
@@ -93,6 +93,7 @@
 				$('#tipInfo').show();
 				$('#applyInvoiceInfo').hide();
 			} else {
+				$('#applyInvoiceInfo').show();
 				$('#companyName').val(data.companyName);
 				$('#amount').val(data.amount);
 			}
@@ -247,6 +248,7 @@
 					                                                          					]},
 					{text : '会计点将',id : '60',href:"/views/webviews/company/select_accounter.html",  leaf:false,expanded : false,children: []},
 					{text : '申请发票',id : '90',href:"/views/webviews/company/apply_invoice.html",  leaf:false,expanded : false,children: []},
+					{text : '查看合同文件',id : '100',href:"/views/webviews/company/contract.html",  leaf:false,expanded : false,children: []},
 					]
             },"menuTree"
         );
