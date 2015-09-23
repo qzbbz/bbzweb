@@ -56,9 +56,9 @@ public class CompanyBillApiImpl implements ICompanyBillApi {
 			cb.setCompanyId(companyId);
 			cb.setFileName(fileName);
 			cb.setBillDate(date);
-			cb.setSupplyName(supplyName);
+			/*cb.setSupplyName(supplyName);
 			Integer fixedAssetFlag = Integer.valueOf(isFixedAssets);
-			cb.setIsFixedAssets(fixedAssetFlag);
+			cb.setIsFixedAssets(fixedAssetFlag);*/
 			cb.setCreateTime(new Timestamp(System.currentTimeMillis()));
 			companyBillService.addCompanyBill(cb);
 			retMap.put("error_code", "0");
@@ -107,6 +107,8 @@ public class CompanyBillApiImpl implements ICompanyBillApi {
 			map.put("amount", format.format(amount));
 			map.put("expense_type", cb.getType());
 			map.put("file_name", cb.getFileName() == null ? "" : cb.getFileName());
+			map.put("supplyName", cb.getSupplyName());
+			map.put("isFixedAssets", String.valueOf(cb.getIsFixedAssets()));
 			map.putAll(extraParams);
 			retList.add(map);
 		}
@@ -135,11 +137,12 @@ public class CompanyBillApiImpl implements ICompanyBillApi {
 	}
 
 	@Override
-	public boolean modifyCompanyBill(String id, String amount, String type) {
+	public boolean modifyCompanyBill(String id, String amount, String type, String supplyName, String isFixedAssets) {
 		try {
 			Long id_ = Long.valueOf(id);
 			Double amount_ = Double.valueOf(amount);
-			companyBillService.updateCompanyBill(amount_, type, id_);
+			int isFixedAssets_ = Integer.valueOf(isFixedAssets);
+			companyBillService.updateCompanyBill(amount_, type, id_, supplyName, isFixedAssets_);
 		} catch(Exception e) {
 			logger.debug("Exception : {}", e.toString());
 		}

@@ -45,11 +45,11 @@ public class SalarySocialSecurityDaoImpl implements ISalarySocialSecurityDao {
 		String sql = "insert into sss (company_id, city_name, registry_type, pension_cratio, pension_pratio, pension_base, medical_cratio, medical_pratio, medical_base, unemploy_cratio, unemploy_pratio, unemploy_base, injury_cratio, injury_pratio, injury_base, birth_cratio, birth_pratio, birth_base, accfund_cratio, accfund_pratio, accfund_base, salary_cratio, salary_pratio, salary_base, bigmedical_cratio, bigmedical_pratio, bigmedical_base, create_time)"
 				+ " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		logger.debug("SalarySocialSecurity : {}", sss.toString());
-		if(sss.getCompanyId() == null || sss.getCityName() == null ||
+		/*if(sss.getCompanyId() == null || sss.getCityName() == null ||
 				sss.getRegistryType() == null) {
 			logger.debug("SalarySocialSecurity info is wrong.");
 			return false;
-		}
+		}*/
 		int affectedRows = jdbcTemplate.update(sql, 
 				sss.getCompanyId(),
 				sss.getCityName(),
@@ -138,7 +138,7 @@ public class SalarySocialSecurityDaoImpl implements ISalarySocialSecurityDao {
 	public List<SalarySocialSecurity> getSSSByCompanyId(long companyId) {
 		List<SalarySocialSecurity> list = null;
 		try {
-			String sql = "select * from sss where company_id=?";
+			String sql = "select * from sss where company_id=? order by create_time";
 			list = jdbcTemplate.query(sql, new Object[]{companyId},
 					new RowMapperResultSetExtractor<SalarySocialSecurity>(
 							new SalarySocialSecurityMapper()));

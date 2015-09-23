@@ -16,6 +16,6 @@ public interface ICompanyBillService {
 	
 	public boolean deleteCompanyBillById(long id);
 	
-	public boolean updateCompanyBill(double amount, String type, long id);
+	public boolean updateCompanyBill(double amount, String type, long id, String supplyName, int isFixedAssets);
 	
 }

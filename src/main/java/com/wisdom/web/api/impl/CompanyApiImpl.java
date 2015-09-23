@@ -324,19 +324,16 @@ public class CompanyApiImpl implements ICompanyApi {
 
 	@Override
 	public ResponseEntity<byte[]> downloadSalarySocialSecurityTemplate(
-			String userId, String cityName, String type, String realPath) {
+			String userId, String realPath) {
 		ResponseEntity<byte[]> re = null;
-		logger.debug("type : {}", type);
 		long companyId = userService.getCompanyIdByUserId(userId);
-		SalarySocialSecurity sss = salarySocialSecurityService
-				.getSSSByCompanyIdAndCityNameAndRegType(companyId, cityName,
-						Integer.valueOf(type));
-		if (sss == null)
+		List<SalarySocialSecurity> sssList = salarySocialSecurityService.getSSSByCompanyId(companyId);
+		if (sssList == null || sssList.size() ==0)
 			return null;
-		File file = new File(realPath + "/" + sss.getTemplate());
+		File file = new File(realPath + "/" + sssList.get(0).getTemplate());
 		try {
 			HttpHeaders headers = new HttpHeaders();
-			headers.setContentDispositionFormData("attachment", new String(sss
+			headers.setContentDispositionFormData("attachment", new String(sssList.get(0)
 					.getTemplate().getBytes("UTF-8"), "iso-8859-1"));
 			headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
 			re = new ResponseEntity<byte[]>(
@@ -353,11 +350,8 @@ public class CompanyApiImpl implements ICompanyApi {
 			String cityName, String type) {
 		Map<String, String> retMap = new HashMap<>();
 		long companyId = userService.getCompanyIdByUserId(userId);
-		SalarySocialSecurity sss = salarySocialSecurityService
-				.getSSSByCompanyIdAndCityNameAndRegType(companyId, cityName,
-						Integer.valueOf(type));
-		if (sss == null || sss.getTemplate() == null
-				|| sss.getTemplate().isEmpty()) {
+		List<SalarySocialSecurity> sssList = salarySocialSecurityService.getSSSByCompanyId(companyId);
+		if (sssList == null || sssList.size() == 0) {
 			retMap.put("error_code", "1");
 			retMap.put("error_message", "没有满足当前条件的模板，请尝试更换条件！");
 		} else {

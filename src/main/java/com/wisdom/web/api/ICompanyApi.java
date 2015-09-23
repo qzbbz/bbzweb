@@ -18,7 +18,7 @@ public interface ICompanyApi {
 	
 	public Map<String, String> updateSSSInfo(Map<String, String> params);
 	
-	public ResponseEntity<byte[]> downloadSalarySocialSecurityTemplate(String userId, String cityName, String type, String realPath);
+	public ResponseEntity<byte[]> downloadSalarySocialSecurityTemplate(String userId, String realPath);
 	
 	public Map<String, String> checkTemplateExist(String userId, String cityName, String type);
 	

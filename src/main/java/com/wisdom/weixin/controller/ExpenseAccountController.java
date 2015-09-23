@@ -128,7 +128,7 @@ public class ExpenseAccountController {
 				if(!auditProcess.containsKey(userId)) {
 					auditProcess.put(userId, "");
 					String toUser = userService.getOpenIdByUserId(userId);
-					String auditName = userService.getUserNameByUserId(userId);
+					String auditName = userService.getUserNameByUserId(approvalId);
 					String msgBody = "您的发票已被审核人"+ auditName +"审核，<a href='https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx333ea15ba860f932&redirect_uri=http%3a%2f%2fwww.bangbangzhang.com%2fgetOpenIdRedirect%3fview%3dinbox.html&response_type=code&scope=snsapi_base&state=1#wechat_redirect'>点此查看审核结果！</a>";
 					weixinPushService.pushTextMessage(toUser, msgBody);
 				}

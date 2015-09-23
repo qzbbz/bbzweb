@@ -6,6 +6,7 @@
     <link rel="stylesheet" type="text/css" href="/css/webcss/bui.css">
 	<link rel="stylesheet" type="text/css" href="/css/webcss/golbal.css">
 	<link rel="stylesheet" type="text/css" href="/css/webcss/layout.css">
+	<link rel="stylesheet" type="text/css" href="/css/webcss/iviewer.css">
 </head>
 <body>
 	<div class="wrap">
@@ -35,10 +36,12 @@
 			<table class="table center">
 	    		<colgroup>
 	    			<col style="width:5%;">
+	    			<col style="width:8%;">
+	    			<col style="width:10%;">
 	    			<col style="width:10%;">
 	    			<col style="width:15%;">
-	    			<col style="width:10%;">
-	    			<col style="width:34%;">
+	    			<col style="width:8%;">
+	    			<col style="width:20%;">
 	    			<col style="width:13%;">
 	    			<col style="width:13%;">
 	    		</colgroup>
@@ -48,6 +51,8 @@
 	    				<th>发票上传日期</th>
 	    				<th>公司名称</th>
 	    				<th>发票金额</th>
+	    				<th>供应商名称</th>
+	    				<th>固定资产</th>
 	    				<th>费用类型</th>
 	    				<th>发票预览</th>
 	    				<th>操作</th>
@@ -70,10 +75,23 @@
 				</div>
 			</div>
 			<div class="control-group">
+				<label class="control-label">供应商名称：</label>
+				<div class="controls control-row-auto">
+					<input id="supplyName" type="text" class="input-large"
+						data-rules="{required : true}" style="width:250px;">
+				</div>
+			</div>
+			<div class="control-group">
 				<label class="control-label">费用类型：</label>
 				<div class="controls control-row-auto">
 					<input id="modify_type" type="text" class="input-large"
 						data-rules="{required : true}" style="width:250px;">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">固定资产：</label>
+				<div class="controls control-row-auto" style="margin-top:6px;">
+					<input type="checkbox" name="isFixedAssets" id="isFixedAssets" style="width:20px;height:20px;">
 				</div>
 			</div>
 			<div class="control-group control-btn">
@@ -83,16 +101,21 @@
 		</div>
 	</div>
 	
-	<div id="contentImg" class="hide">
-		<div class="imgviewwrap">
-			<div id="imgviewWrap"></div>
-			<div class="controls-wrap">
-				<!-- <span class="resume"><i class="iconfont" title="原图">&#xe63b;</i>原图</span> -->
-				<span class="zoom"><i class="iconfont" title="放大">&#xe618;</i>放大</span>
-				<span class="micrify"><i class="iconfont" title="缩小">&#xe62c;</i>缩小</span>
-			</div>
-		</div>
-	</div>
+	<div id="iviewer">
+        <div class="loader"></div>
+
+        <div class="viewer"></div>
+
+        <ul class="controls">
+            <li class="close"></li>
+            <li class="zoomin"></li>
+            <li class="zoomout"></li>
+            <li class="angle"></li>
+        </ul>
+
+    
+    </div>
+	
 	<div id="modifyPwd" style="display:none;">
 		<div id="form" class="form-horizontal">
 			<div class="control-group">
@@ -126,11 +149,23 @@
 	</div>
 	<div style="position:fixed; bottom: 0; right: 0;"><a target="_blank" href="http://sighttp.qq.com/authd?IDKEY=a1a51fb184a88bbb4c1756a211f1ff1fbc9d47079f63eb30"><img border="0" src="http://wpa.qq.com/imgd?IDKEY=a1a51fb184a88bbb4c1756a211f1ff1fbc9d47079f63eb30&pic=41" alt="点我联系我" title="点我联系我"/></a></div>
 <!--该js需要修改js路径及修改seajs路径-->
-<script src="http://g.tbcdn.cn/fi/bui/jquery-1.8.1.min.js"></script>
+<!-- <script src="http://g.tbcdn.cn/fi/bui/jquery-1.8.1.min.js"></script> -->
+<script src="/js/webjs/jquery-1.7.2.min.js"></script>
 <script src="http://g.alicdn.com/bui/seajs/2.3.0/sea.js"></script>
 <script src="http://g.alicdn.com/bui/bui/1.1.17/config.js"></script>
 <script src="/js/webjs/menuTree.js"></script>
+<script src="/js/webjs/jquery-ui.js"></script>
+<script src="/js/webjs/jquery-mousewheel.js"></script>
+<script src="/js/webjs/jquery.iviewer.min.js"></script>
+<script src="/js/webjs/iviewer.js"></script>
 <script type="text/javascript">
+function isNumber(str){
+    var re = /^[0-9]+.?[0-9]*$/;
+    if (!re.test(str)){
+   	 return false;
+    }
+    return true;
+}
 BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 	var modifyPwdForm = new Overlay.Dialog({
         title:'密码修改',
@@ -223,9 +258,9 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 		}
 		
 		var modifyInfoForm = new Overlay.Dialog({
-            title:'修改金额、费用类型',
+            title:'修改发票相关信息',
             width:600,
-            height:230,
+            height:280,
             contentId:'modifyInfo',
             success:function () {
               	//alert('确认');
@@ -238,10 +273,24 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 			var id=$('#current_modify_id').val();
 			var amount=$('#modify_amount').val();
 			var type=$("#modify_type").val();
+			var supplyName=$('#supplyName').val();
+			var flag=$("#isFixedAssets").prop('checked') ? 1 : 0;
+			if(!isNumber(amount)) {
+				BUI.Message.Alert('金额必须为数字，请检查！','warning');
+				return;
+			}
+			if(supplyName == null || supplyName == "") {
+				BUI.Message.Alert('供应商名称不能为空，请检查！','warning');
+				return;
+			}
+			if(type == null || type == "") {
+				BUI.Message.Alert('费用类型不能为空，请检查！','warning');
+				return;
+			}
 			$.ajax({
 				url : '/company/modifyCompanyBill',
 				type : "POST",
-				data : {id:id, amount:amount, type:type},
+				data : {id:id, amount:amount, type:type, supplyName:supplyName, isFixedAssets:flag},
 				success : function(data) {
 					$.ajax({
 						url : '/company/getAllCompanyBill',
@@ -256,65 +305,6 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 			modifyInfoForm.close();
 		})
 		
-		var viewContent = new Imgview.ViewContent({
-            render: "#imgviewWrap",
-            autoRender: false, // 设置为true就自动渲染，默认为false！
-            // 以下属性全部可以set来修改。
-            width: 760,
-            height: 480,
-            imgSrc: "",
-            //rotateTime: 300, // 旋转时间,默认300
-            //scaleTime: 300, // 缩放时间,默认300
-            overflowSize: 100, // 边界回弹像素,默认100,实际上是取Math.min(overflowSize,imgNowWidth,imgNowHeight)
-            drag: true //是否可以拖动，默认为true
-        });
-		viewContent.render();
-		$(".controls-wrap").on('click',function(e){
-            var target = e.target;
-            if($.contains(this,target)){
-            var self = jQuery(target),
-            cls = self.attr("class");
-            if (cls == "viewImg") {
-                self.attr({"href" : viewContent.get('imgSrc'),"target" : "_blank"});
-                return true;
-                } else if (cls == "drag1") {
-                viewContent.set("drag", false);
-                } else if (cls == "drag2") {
-                viewContent.set("drag", true);
-                } else if (cls == "chgImg1") {
-                viewContent.set("imgSrc", "http://pic.sc.chinaz.com/files/pic/pic9/201505/apic11703.jpg");
-                } else if (cls == "chgImg2") {
-                viewContent.set("imgSrc", "http://b.hiphotos.baidu.com/image/pic/item/adaf2edda3cc7cd9840d6c923a01213fb80e915c.jpg");
-                } else if (cls == "resize1") {
-            var width = 800,height = 600;
-            $("#img-preview-wrap").width(width).height(height);
-            viewContent.resize({width : width,height : height});
-            viewContent.set('width', width);
-            viewContent.set('height', height);
-            } else if (cls == "resize2") {
-            // 测试resize
-            var width = 400,height = 300;
-            $("#img-preview-wrap").width(width).height(height);
-            // viewContent.resize({width : width,height : height});
-            viewContent.set('width', width);
-            viewContent.set('height', height);
-            }else{
-            // 为了方便,直接根据className调用
-            viewContent[cls]();
-            }
-            return false;
-            }
-        });
-		var dialogForm = new Overlay.Dialog({
-		    title:'发票图片',
-		    width:880,
-		    height:550,
-		    contentId:'contentImg',
-		    success:function () {
-		        this.close();
-		    },
-		    buttons : []
-		});
 		function createDataList(data) {
 			if(data == null || data == '') return;
 			data.sort(function(a,b){return a.date<b.date?1:-1});
@@ -323,7 +313,7 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 				var container = $('#retData');
 				var trNode = $("<tr></tr>");
 				var checkNode = $("<td><input type='checkbox' value='"+data[i].id+"' class='data-check-id'></td>");
-			    var tdNode1 = $("<td>"+data[i].date+"</td><td>"+data[i].company_name+"</td><td>"+(data[i].amount == null || data[i].amount == "" ? "0" : data[i].amount)+"</td><td>"+(data[i].expense_type == null || data[i].expense_type == "" ? "未设定" : data[i].expense_type)+"</td>");
+			    var tdNode1 = $("<td>"+data[i].date+"</td><td>"+data[i].company_name+"</td><td>"+(data[i].amount == null || data[i].amount == "" ? "0" : data[i].amount)+"</td><td>"+(data[i].supplyName == null || data[i].supplyName == "" ? "未设定" : data[i].supplyName)+"</td><td>"+(data[i].isFixedAssets == null || data[i].isFixedAssets == "0" ? "否" : "是")+"</td><td>"+(data[i].expense_type == null || data[i].expense_type == "" ? "未设定" : data[i].expense_type)+"</td>");
 			    var tdNode2 = $("<td></td>");
 			    var aNode = $("<a href='javascript:void(0)'>点击查看发票图片</a>");
 			    var tdNode3 = $("<td></td>");
@@ -331,8 +321,10 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 			    var imgsrc = '/files/company/' + data[i].file_name;
 			    aNode.attr("img-src", imgsrc);
 			    aNode.click(function(event) {
-			    	viewContent.set('imgSrc', $(this).attr("img-src"));
-				    dialogForm.show();
+			    	//viewContent.set('imgSrc', $(this).attr("img-src"));
+				    //dialogForm.show();
+			    	openBillImage($(this).attr("img-src"));
+			    	//openBillImage("/img/webimg/emily.jpg");
 			    });
 			    aNode.appendTo(tdNode2);
 			    
@@ -340,20 +332,15 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 			    var tmpData = data[i];
 			    (function(tmpData){
                     operateNode.click(function(event) {
-						$('#modify_amount').val('0');
 						$('#current_modify_id').val($(this).attr("bill-id"));
 						$('#modify_type').val(tmpData.expense_type);
 						$('#modify_amount').val(tmpData.amount);
+						$('#supplyName').val(tmpData.supplyName);
+						tmpData.isFixedAssets == null || tmpData.isFixedAssets == '0' ? $("#isFixedAssets").prop('checked', false) : $("#isFixedAssets").prop('checked', true);
 						modifyInfoForm.show();
 					});				
 				}(data[i]));
-			    /* operateNode.click(function(event) {
-			    	$('#modify_amount').val('0');
-			    	$('#current_modify_id').val($(this).attr("bill-id"));
-			    	$('#modify_type').val(tmpData.expense_type);
-			    	$('#modify_amount').val(tmpData.amount);
-			    	modifyInfoForm.show();
-			    }); */
+			   
 			    operateNode.appendTo(tdNode3);
 			    
 			    checkNode.appendTo(trNode);
@@ -420,7 +407,7 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 					                                                         						{text : '销售清单历史记录',id : '82', href:"/views/webviews/company/sales_history.html"}                                           
 					                                                         					]},
 					{text : '工资社保',id : '30',href:"javascript:void(0);", expanded : false,children: [
-						{text : '参数设置',id : '31', href:"/views/webviews/company/salary_welfare_args_settings.html"},
+						
 						{text : '下载工资计算模板',id : '32', href:"/views/webviews/company/salary_welfare_template_download.html"},                                           
 						{text : '上传工资单',id : '33', href:"/views/webviews/company/salary_welfare_upload.html"},
 						{text : '工资历史记录',id : '34', href:"/views/webviews/company/salary_history.html"},
@@ -445,6 +432,7 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
     function defaultSelect(id){ 
         $("#"+id).parent().addClass("bui-menu-item-selected")
     }
+    
 </script>
 </body>
 </html>

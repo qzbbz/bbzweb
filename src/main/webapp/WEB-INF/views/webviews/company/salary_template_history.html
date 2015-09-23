@@ -35,19 +35,15 @@
 			<table class="table center">
 	    		<colgroup>
 	    			<col style="width:5%;">
-	    			<col style="width:15%;">
-	    			<col style="width:20%;">
-	    			<col style="width:20%;">
-	    			<col style="width:20%;">
-	    			<col style="width:20%;">
+	    			<col style="width:25%;">
+	    			<col style="width:35%;">
+	    			<col style="width:35%;">
 	    		</colgroup>
 	    		<thead>
 	    			<tr>
 	    				<th>&nbsp;</th>
 	    				<th>创建日期</th>
 	    				<th>公司名称</th>
-	    				<th>城市名称</th>
-	    				<th>户籍类型</th>
 	    				<th>模板状态</th>
 	    			</tr>
 	    		</thead>
@@ -204,7 +200,7 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 			data.sort(function(a,b){return a.date<b.date?1:-1});
 			for(var i=0; i<data.length; i++) {
 				var container = $('#retData');
-			    var a = $("<tr><td><input type='checkbox' value='"+data[i].id+"' style='margin-top:0px;' class='data-check-id'></td><td>"+data[i].date+"</td><td>"+data[i].companyName+"</td><td>"+data[i].cityName+"</td><td>"+data[i].type+"</td><td>"+(data[i].file_name == null || data[i].file_name=="" ? "<span class='text-warning'>模板尚未生成，不可下载</span>" : "<span class='text-success'>模板已经生成，可以下载</span>")+"</td></tr>");
+			    var a = $("<tr><td><input type='checkbox' value='"+data[i].id+"' style='margin-top:0px;' class='data-check-id'></td><td>"+data[i].date+"</td><td>"+data[i].companyName+"</td><td><span class='text-success'>模板已经生成，可以下载</span></td></tr>");
 			    a.appendTo(container);
 			}
 			bindCheck();
@@ -252,7 +248,7 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 					                                                         						{text : '销售清单历史记录',id : '82', href:"/views/webviews/company/sales_history.html"}                                           
 					                                                         					]},
 					{text : '工资社保',id : '30',href:"javascript:void(0);", expanded : true,children: [
-						{text : '参数设置',id : '31', href:"/views/webviews/company/salary_welfare_args_settings.html"},
+						
 						{text : '下载工资计算模板',id : '32', href:"/views/webviews/company/salary_welfare_template_download.html"},                                           
 						{text : '上传工资单',id : '33', href:"/views/webviews/company/salary_welfare_upload.html"},
 						{text : '工资历史记录',id : '34', href:"/views/webviews/company/salary_history.html"},

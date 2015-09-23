@@ -13,6 +13,6 @@ public interface ICompanyBillApi {
 	
 	public boolean deleteCompanyBill(String idList, String realPath);
 	
-	public boolean modifyCompanyBill(String id, String amount, String type);
+	public boolean modifyCompanyBill(String id, String amount, String type, String supplyName, String isFixedAssets);
 	
 }

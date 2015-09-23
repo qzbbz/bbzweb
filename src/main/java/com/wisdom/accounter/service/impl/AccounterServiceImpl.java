@@ -521,7 +521,7 @@ public class AccounterServiceImpl implements IAccounterService {
 		if(companyList != null) {
 			for(Company company : companyList) {
 				List<SalarySocialSecurity> sssList= salarySocialSecurityService.getSSSByCompanyId(company.getId());
-				if(sssList == null || sssList.size() == 0) continue;
+				//if(sssList == null || sssList.size() == 0) continue;
 				Map<String, String> map = new HashMap<>();
 				map.put("companyName", company.getName());
 				map.put("companyId", String.valueOf(company.getId()));
@@ -540,7 +540,20 @@ public class AccounterServiceImpl implements IAccounterService {
 			String fileName = getGernarateFileName(file, userId);
 			FileUtils.copyInputStreamToFile(file.getInputStream(), new File(
 					realPath, fileName));
-			salarySocialSecurityService.setTemplate(companyId_, fileName);
+			SalarySocialSecurity sss = new SalarySocialSecurity();
+			sss.setCompanyId(companyId_);
+			sss.setTemplate(fileName);
+			salarySocialSecurityService.addSalarySocialSecurity(sss);
+			/*List<SalarySocialSecurity> listRet = salarySocialSecurityService.getSSSByCompanyId(companyId_);
+			
+			if(listRet == null || listRet.size() == 0) {
+				SalarySocialSecurity sss = new SalarySocialSecurity();
+				sss.setCompanyId(companyId_);
+				sss.setTemplate(fileName);
+				salarySocialSecurityService.addSalarySocialSecurity(sss);
+			} else {
+				salarySocialSecurityService.setTemplate(companyId_, fileName);
+			}*/
 			retMap.put("error_code", "0");
 		} catch (Exception e) {
 			logger.debug("upload template exception : {}", e.toString());

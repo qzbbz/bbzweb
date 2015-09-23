@@ -145,7 +145,7 @@ public class CompanyController {
 			newPay.setPayAmount(Double.valueOf(alipayAmount));
 			newPay.setServiceTime(Integer.valueOf(alipayMonth));
 			newPay.setCreateTime(new Timestamp(System.currentTimeMillis()));
-			companyPayService.addCompanyPay(companyPay);
+			companyPayService.addCompanyPay(newPay);
 		} else {
 			companyPayService.updateCompanyPayByCompanyId(companyId, Double.valueOf(alipayAmount), orderNo, Integer.valueOf(alipayMonth));
 		}
@@ -248,6 +248,9 @@ public class CompanyController {
 			}
 		} else {
 			retMap.put("selected", "false");
+			if(company == null) {
+				retMap.put("error", "companyinfo");
+			}
 		}
 		logger.info("leave checkSelectAccounter");
 		return retMap;
@@ -464,11 +467,9 @@ public class CompanyController {
 	@RequestMapping("/company/downloadSalarySocialSecurityTemplate")
 	public ResponseEntity<byte[]> downloadSalarySocialSecurityTemplate(HttpServletRequest request) {
 		String userId = (String) request.getSession().getAttribute("userId");
-		String cityName = request.getParameter("currentCity");
-		String type = request.getParameter("currentType");
 		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/files/company");
 		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
-		ResponseEntity<byte[]> re = companyApi.downloadSalarySocialSecurityTemplate(userId, cityName, type, realPath);
+		ResponseEntity<byte[]> re = companyApi.downloadSalarySocialSecurityTemplate(userId, realPath);
 		return re;
 	}
 	

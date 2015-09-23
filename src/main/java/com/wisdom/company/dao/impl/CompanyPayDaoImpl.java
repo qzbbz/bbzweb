@@ -52,7 +52,7 @@ public class CompanyPayDaoImpl implements ICompanyPayDao {
 				+ " values (?, ?, ?, ?, ?, ?)";
 		int affectedRows = jdbcTemplate.update(sql, 
 				companyPay.getCompanyId() == null ? 0 : companyPay.getCompanyId(),
-				companyPay.getPayStatus() == null ? "" : companyPay.getPayStatus(),
+				companyPay.getPayStatus() == null ? 0 : companyPay.getPayStatus(),
 				companyPay.getPayAmount() == null ? "" : companyPay.getPayAmount(),
 				companyPay.getServiceTime() == null ? "" : companyPay.getServiceTime(),
 				companyPay.getOrderNo() == null ? "" : companyPay.getOrderNo(),

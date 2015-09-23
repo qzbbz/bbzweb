@@ -29,18 +29,6 @@
                     <div class="bd">
                         <h2>企业发票上传</h2>
                     </div>
-                    <div class="form-horizontal" style="">
-                            <div class="row">
-                                <label for="" class="control-label">供应商名称：</label>
-                                <div class="controls">
-                                  <input name="sname" id="supplyName" name="supplyName" type="text" class="input input-normal" style="width:150px;">
-                                </div>
-                                <div class="controls">
-                                  	<input type="checkbox" name="isFixedAssets" id="isFixedAssets">固定资产
-                                </div>
-                            </div>
-                            <div id="selectMonth" style="display:none;position:relative; z-index:99999;margin-left:170px;"></div>
-                        </div>
                      <div class="form-horizontal" style="">
                             <div class="row">
                                 <label for="" class="control-label">发票日期：</label>
@@ -297,7 +285,7 @@
 					                                                         						{text : '销售清单历史记录',id : '82', href:"/views/webviews/company/sales_history.html"}                                           
 					                                                         					]},
 					{text : '工资社保',id : '30',href:"javascript:void(0);", expanded : false,children: [
-						{text : '参数设置',id : '31', href:"/views/webviews/company/salary_welfare_args_settings.html"},
+						
 						{text : '下载工资计算模板',id : '32', href:"/views/webviews/company/salary_welfare_template_download.html"},                                           
 						{text : '上传工资单',id : '33', href:"/views/webviews/company/salary_welfare_upload.html"},
 						{text : '工资历史记录',id : '34', href:"/views/webviews/company/salary_history.html"},
@@ -340,7 +328,7 @@
 	            	if($('#bill_date').val() == null || $('#bill_date').val() == '') {
 	            		BUI.Message.Alert('发票日期不能为空，请检查！','warning');
 	            	} else {
-	            		uploader.set('data', {bill_date:$('#bill_date').val(),supplyName:$('#supplyName').val(), isFixedAssets:flag});
+	            		uploader.set('data', {bill_date:$('#bill_date').val()});
 	            		uploader.upload();
 	            	}
 	            })

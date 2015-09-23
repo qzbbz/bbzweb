@@ -145,6 +145,9 @@
 				$('#tipInfoSearch').hide();
 				$('#searchAccounter').attr('disabled',"true");
 				$('#dispalyAllAccounter').attr('disabled',"true");
+			} else if(data.error == "companyinfo"){
+				$('#tipInfoSearch').html("请您先在组织架构菜单下面的基本信息设置中，完善您公司的基本信息！");
+				$('#tipInfoSearch').show();
 			} else {
 				$('#tipInfoSearch').show();
 			}
@@ -499,7 +502,7 @@
 					                                                         						{text : '销售清单历史记录',id : '82', href:"/views/webviews/company/sales_history.html"}                                           
 					                                                         					]},
 					{text : '工资社保',id : '30',href:"javascript:void(0);", expanded : false,children: [
-						{text : '参数设置',id : '31', href:"/views/webviews/company/salary_welfare_args_settings.html"},
+						
 						{text : '下载工资计算模板',id : '32', href:"/views/webviews/company/salary_welfare_template_download.html"},                                           
 						{text : '上传工资单',id : '33', href:"/views/webviews/company/salary_welfare_upload.html"},
 						{text : '工资历史记录',id : '34', href:"/views/webviews/company/salary_history.html"},
