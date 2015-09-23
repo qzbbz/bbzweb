@@ -194,9 +194,9 @@ public class AccounterController {
 		return "redirect:/views/webviews/accounter/finish_reg_info.html";
 	}
 
-	@RequestMapping("/accounter/finishDeatilRegInfo")
+	@RequestMapping("/accounter/companyExpenseRecords")
 	public String finishDeatilRegInfo(HttpServletRequest request) {
-		return "redirect:/views/webviews/accounter/finish_reg_info.html";
+		return "redirect:/views/webviews/accounter/company_expense_records.html";
 	}
 	
 	@RequestMapping("/accounter/getAllCompanyExpense")
