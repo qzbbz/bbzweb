@@ -139,7 +139,7 @@ public class SalarySocialSecurityDaoImpl implements ISalarySocialSecurityDao {
 	public List<SalarySocialSecurity> getSSSByCompanyId(long companyId) {
 		List<SalarySocialSecurity> list = null;
 		try {
-			String sql = "select * from sss where company_id=?";
+			String sql = "select * from sss where company_id=? order by create_time desc";
 			list = jdbcTemplate.query(sql, new Object[]{companyId},
 					new RowMapperResultSetExtractor<SalarySocialSecurity>(
 							new SalarySocialSecurityMapper()));
