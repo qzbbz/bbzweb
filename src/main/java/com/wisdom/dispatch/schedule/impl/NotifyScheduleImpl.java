@@ -82,13 +82,15 @@ public class NotifyScheduleImpl implements NotifySchedule {
 				}
 			}
 			
-			if(blRet || blWeixinRet){//更新发票通知状态
+			dispatcherService.updateDispatcherStatus(dispatch.getInvoiceId());
+			
+			/*if(blRet || blWeixinRet){//更新发票通知状态
 				if(dispatcherService.updateDispatcherStatus(dispatch.getInvoiceId())){
 					log.debug("update dispatch status success");
 				}else{
 					log.error("update dispatch status failed");
 				}
-			}
+			}*/
 		}
 		return;
 	}
