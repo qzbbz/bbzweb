@@ -78,7 +78,7 @@ public class AlipayService {
 		sParaTemp.put("return_url", return_url);
 		sParaTemp.put("out_trade_no", out_trade_no);
 		sParaTemp.put("subject", subject);
-		sParaTemp.put("total_fee", "0.01");
+		sParaTemp.put("total_fee", total_fee);
 		sParaTemp.put("body", body);
 		sParaTemp.put("show_url", show_url);
 		sParaTemp.put("anti_phishing_key", anti_phishing_key);

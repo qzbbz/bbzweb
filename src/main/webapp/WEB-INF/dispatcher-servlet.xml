@@ -112,7 +112,7 @@ class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer
 		<property name="url"
 			value="jdbc:mysql://121.40.63.208:3306/bbz?useUnicode=true&amp;characterEncoding=UTF-8"></property>
 		<property name="username" value="root"></property>
-		<property name="password" value="Cckzcbm110"></property>
+		<property name="password" value="cft67YGV"></property>
 		<property name="maxIdle" value="30"></property>
 		<property name="defaultAutoCommit" value="true"></property>
 	</bean>
