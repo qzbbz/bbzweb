@@ -99,17 +99,16 @@
 			<h4>当前支付方式仅支持支付宝支付</h4>
 		</div>
 		<div class="control-group">
-				<label class="control-label">请选择时间(每月仅需99元)：</label>
+				<label class="control-label">请选择时间：</label>
 				<div class="controls" style="margin-top:10px;">
 					<select id="alipay_time" name="alipay_time" style="width:200px;">
-						<option value ="3">3个月</option>
 						<option value ="6">6个月</option>
 						<option value="12">12个月</option>
 					</select>
 				</div>
 		</div>
 		<div style="margin-top:10px;margin-bottom:10px;">
-			<h4>您总共需要支付人民币：<span id="alipay_sum" name="alipay_sum" style="color:red;">297</span>元，合同范文如下：</h4>
+			<h4>您总共需要支付人民币：<span id="alipay_sum" name="alipay_sum" style="color:red;">768</span>元，合同范文如下：</h4>
 		</div>
 		<div style="margin-top:10px;margin-bottom:10px;">
 			<a id="contract" class="media {width:800, height:200}" href="/img/webimg/contract.pdf" target="_blank"></a>
@@ -173,8 +172,7 @@
 		globalAlipayForm = alipayForm;
 		$('#alipay_time').change(function(){
 			var time = $('#alipay_time option:selected').val();
-			if(time == '3') $('#alipay_sum').html('297');
-			if(time == '6') $('#alipay_sum').html('594');
+			if(time == '6') $('#alipay_sum').html('768');
 			if(time == '12') $('#alipay_sum').html('1188');
 		});
 		$('#alipay_button').click(function(){
