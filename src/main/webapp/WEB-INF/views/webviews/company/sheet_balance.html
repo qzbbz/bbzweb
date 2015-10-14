@@ -8,6 +8,13 @@
 <link rel="stylesheet" type="text/css" href="/css/webcss/layout.css">
 <link rel="stylesheet" type="text/css"
 	href="/css/webcss/sheet_style.css">
+<style>
+    /**内容超出 出现滚动条 **/
+    .bui-stdmod-body{
+      overflow-x : auto;
+      overflow-y : auto;
+    }
+  </style>
 </head>
 <body>
 	<div class="wrap">
@@ -1082,11 +1089,13 @@
 			</div>
 		</div>
 	</div>
-	<div id="fixedAssetsInfo" style="display: none;">
-		<table class="table center">
+	<div id="fixedAssetsInfo" style="display: none;" >
+	<form id='form'>
+		<table class="table center" style="table-layout:fixed;width:100%;word-break:break-all; word-wrap:break-word;">
 	    		<colgroup>
-	    			<col style="width:10%;">
-	    			<col style="width:15%;">
+	    			<col style="width:8%;">
+	    			<col style="width:8%;">
+	    			<col style="width:11%;">
 	    			<col style="width:8%;">
 	    			<col style="width:8%;">
 	    			<col style="width:6%;">
@@ -1100,6 +1109,7 @@
 	    		<thead>
 	    			<tr>
 	    				<th>记账月份</th>
+	    				<th>分类</th>
 	    				<th>名称</th>
 	    				<th>资产原值</th>
 	    				<th>预计残值</th>
@@ -1115,6 +1125,7 @@
 	    		<tbody id="fixedAssetsInfoData">
 	    		</tbody>
 	    	</table>
+	    	</form>
 	</div>
 	<div style="position:fixed; bottom: 0; right: 0;"><a target="_blank" href="http://sighttp.qq.com/authd?IDKEY=a1a51fb184a88bbb4c1756a211f1ff1fbc9d47079f63eb30"><img border="0" src="http://wpa.qq.com/imgd?IDKEY=a1a51fb184a88bbb4c1756a211f1ff1fbc9d47079f63eb30&pic=41" alt="点我联系我" title="点我联系我"/></a></div>
 	<!--该js需要修改js路径及修改seajs路径-->
@@ -1151,7 +1162,7 @@
       	});
       	monthpicker.show();
 	});
-		BUI.use([ 'bui/imgview', 'bui/overlay' ], function(Imgview, Overlay) {
+		BUI.use([ 'bui/imgview', 'bui/overlay', 'bui/form' ], function(Imgview, Overlay, Form) {
 			$('#searchData').click(
 					function() {
 						var date = $('#table_date').val();
@@ -1294,7 +1305,9 @@
 				$('#total_liabilities_and_owner_equity_ending_balance').html(data.total_liabilities_and_owner_equity_ending_balance);
 				$('#total_liabilities_and_owner_equity_beginning_balance').html(data.total_liabilities_and_owner_equity_beginning_balance);
 			
-			
+				 var form = new Form.HForm({
+				        srcNode : '#form'
+				      }).render();
 				var fixedAssetsInfoForm = new Overlay.Dialog({
 					title : '固定资产详细信息',
 					width : 1000,
@@ -1312,7 +1325,21 @@
 					for(var i=0; i<data.length; i++) {
 						var container = $('#fixedAssetsInfoData');
 						var trNode = $("<tr></tr>");
-					    var tdNode1 = $("<td>"+data[i].month+"</td><td>"+data[i].name+"</td><td>"+data[i].assetsValue+"</td><td>"+data[i].expectRemainingValue+"</td><td>"+data[i].amortizationDepreciationMonth+"</td><td>"+data[i].remainingRate+"%</td><td>"+data[i].monthDepreciationValue+"</td><td>"+data[i].amortizationMonth+"</td><td>"+data[i].provisionDepreciation+"</td><td>"+data[i].cumulativeClepreciation+"</td><td>"+data[i].netWorth+"</td>");
+						var type = data[i].category;
+						if(type=='1') {
+							type = '房屋建筑物';
+						} else if(type=='2') {
+							type = '飞机、火车、轮船、机器、机械和其它生产设备';
+						} else if(type=='3') {
+							type = '与生产经营活动有关的器具、工具和家具';
+						} else if(type=='4') {
+							type = '运输设备';
+						} else if(type='5') {
+							type = '电子设备及其它';
+						} else {
+							type = '未知分类';
+						}
+					    var tdNode1 = $("<td>"+data[i].month+"</td><td>"+type+"</td><td>"+data[i].name+"</td><td>"+data[i].assetsValue+"</td><td>"+data[i].expectRemainingValue+"</td><td>"+data[i].amortizationDepreciationMonth+"</td><td>"+data[i].remainingRate+"%</td><td>"+data[i].monthDepreciationValue+"</td><td>"+data[i].amortizationMonth+"</td><td>"+data[i].provisionDepreciation+"</td><td>"+data[i].cumulativeClepreciation+"</td><td>"+data[i].netWorth+"</td>");
 					    tdNode1.appendTo(trNode);
 					    trNode.appendTo(container);
 					}
