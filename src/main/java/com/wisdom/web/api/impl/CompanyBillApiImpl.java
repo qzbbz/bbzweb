@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.wisdom.common.model.Company;
 import com.wisdom.common.model.CompanyBill;
 import com.wisdom.company.service.ICompanyBillService;
 import com.wisdom.company.service.ICompanyService;
@@ -147,6 +148,25 @@ public class CompanyBillApiImpl implements ICompanyBillApi {
 			logger.debug("Exception : {}", e.toString());
 		}
 		return true;
+	}
+
+	@Override
+	public List<Map<String, String>> accounterGetCompanyBillByCondition(Map<String, String> params) {
+		List<Map<String, String>> resultList = new ArrayList<>();
+		String userId = params.get("userId");
+		if(userId == null || userId.isEmpty()) return resultList;
+		List<Company> companyList = companyService.getCompanyListByAccounterId(userId);
+		if(companyList == null) return resultList;
+		for(Company company : companyList) {
+			long companyId = company.getId();
+			if(companyId <= 0) continue;
+			String companyName = companyService.getCompanyName(companyId);
+			Map<String, String> extraParams = new HashMap<>();
+			extraParams.put("company_name", companyName);
+			List<CompanyBill> list = companyBillService.getAllCompanyBill(companyId);
+			resultList.addAll(createCompanyBillList(list, extraParams));
+		}
+		return resultList;
 	}
 	
 }

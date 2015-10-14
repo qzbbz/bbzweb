@@ -11,6 +11,8 @@ public interface ICompanyBillApi {
 	
 	public List<Map<String, String>> getCompanyBillByCondition(Map<String, String> params);
 	
+	public List<Map<String, String>> accounterGetCompanyBillByCondition(Map<String, String> params);
+	
 	public boolean deleteCompanyBill(String idList, String realPath);
 	
 	public boolean modifyCompanyBill(String id, String amount, String type, String supplyName, String isFixedAssets);

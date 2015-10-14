@@ -25,7 +25,6 @@
 		</div>
 		<div class="main">
 			<div class="menu"><a href="#" class="active">发票历史记录</a></div>
-					
 			<div class="well mt20">
 				<div class="form-horizontal onlineTools">
 					<div class="row show-grid">
@@ -56,7 +55,7 @@
 	    				<th>固定资产</th>
 	    				<th>费用类型</th>
 	    				<th>发票预览</th>
-	    				<th>识别状态</th>
+	    				<th>操作</th>
 	    			</tr>
 	    		</thead>
 	    		<tbody id="retData">
@@ -152,17 +151,14 @@
 <!--该js需要修改js路径及修改seajs路径-->
 <!-- <script src="http://g.tbcdn.cn/fi/bui/jquery-1.8.1.min.js"></script> -->
 <script src="/js/webjs/jquery-1.7.2.min.js"></script>
-<script src="/js/webjs/sea.js"></script>
-<script src="/js/webjs/config.js"></script>
+<script src="http://g.alicdn.com/bui/seajs/2.3.0/sea.js"></script>
+<script src="http://g.alicdn.com/bui/bui/1.1.17/config.js"></script>
 <script src="/js/webjs/menuTree.js"></script>
 <script src="/js/webjs/jquery-ui.js"></script>
 <script src="/js/webjs/jquery-mousewheel.js"></script>
 <script src="/js/webjs/jquery.iviewer.min.js"></script>
 <script src="/js/webjs/iviewer.js"></script>
 <script type="text/javascript">
-
-var globalRefresh = false;
-
 function isNumber(str){
     var re = /^[0-9]+.?[0-9]*$/;
     if (!re.test(str)){
@@ -321,8 +317,7 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 			    var tdNode2 = $("<td></td>");
 			    var aNode = $("<a href='javascript:void(0)'>点击查看发票图片</a>");
 			    var tdNode3 = $("<td></td>");
-			    var operateNode1 = $("<p>识别中<img style='height:20px;width:60px;' src='/img/webimg/progress2.gif'></p>");
-			    var operateNode2 = $("<p>识别已完成</p>");
+			    var operateNode = $("<a href='javascript:void(0)'>修改金额或费用类型</a>");
 			    var imgsrc = '/files/company/' + data[i].file_name;
 			    aNode.attr("img-src", imgsrc);
 			    aNode.click(function(event) {
@@ -332,12 +327,22 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 			    	//openBillImage("/img/webimg/emily.jpg");
 			    });
 			    aNode.appendTo(tdNode2);
-			    if(data[i].expense_type == null || data[i].expense_type == "") {
-			    	globalRefresh = true;
-			    	operateNode1.appendTo(tdNode3);
-			    } else {
-			    	operateNode2.appendTo(tdNode3);
-			    }			    
+			    
+			    operateNode.attr("bill-id", data[i].id);
+			    var tmpData = data[i];
+			    (function(tmpData){
+                    operateNode.click(function(event) {
+						$('#current_modify_id').val($(this).attr("bill-id"));
+						$('#modify_type').val(tmpData.expense_type);
+						$('#modify_amount').val(tmpData.amount);
+						$('#supplyName').val(tmpData.supplyName);
+						tmpData.isFixedAssets == null || tmpData.isFixedAssets == '0' ? $("#isFixedAssets").prop('checked', false) : $("#isFixedAssets").prop('checked', true);
+						modifyInfoForm.show();
+					});				
+				}(data[i]));
+			   
+			    operateNode.appendTo(tdNode3);
+			    
 			    checkNode.appendTo(trNode);
 			    tdNode1.appendTo(trNode);
 			    tdNode2.appendTo(trNode);
@@ -354,20 +359,6 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 				createDataList(data);
 			}
 		});
-		
-		setInterval(function() {
-			if(globalRefresh == true) {
-				$.ajax({
-					url : '/company/getAllCompanyBill',
-					type : "POST",
-					data : {},
-					success : function(data) {
-						createDataList(data);
-					}
-				});
-			}
-		},5000);
-		
 		$('#searchData').click(function(){
 			var conditionType = $('#condition option:selected').val();
 			var conditionValue = $('#content').val();
@@ -384,7 +375,6 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 				}
 			});
 		})
-		
 	});
 	
 	//侧栏高度

@@ -30,6 +30,7 @@ import com.wisdom.accounter.service.IAccounterService;
 import com.wisdom.common.model.Accounter;
 import com.wisdom.common.model.SalarySocialSecurity;
 import com.wisdom.user.service.IUserService;
+import com.wisdom.web.api.ICompanyBillApi;
 import com.wisdom.web.utils.Base64Converter;
 import com.wisdom.web.utils.ErrorCode;
 import com.wisdom.web.utils.SessionConstant;
@@ -42,6 +43,9 @@ public class AccounterController {
 
 	@Autowired
 	private IAccounterService accounterService;
+	
+	@Autowired
+	private ICompanyBillApi companyBillApi;
 	
 	@Autowired
 	private IUserService userService;
@@ -295,5 +299,36 @@ public class AccounterController {
 				file.getOriginalFilename().indexOf(".") + 1);
 		return userId + System.currentTimeMillis() + Math.abs(rdm.nextInt())
 				% 1000 + (extendName == null ? ".unknown" : "." + extendName);
+	}
+	
+	@RequestMapping("/accounter/getAllCompanyBill")
+	@ResponseBody
+	public List<Map<String, String>> getAllCompanyBill(
+			HttpServletRequest request) {
+		String userId = (String) request.getSession().getAttribute("userId");
+		Map<String, String> params = new HashMap<>();
+		params.put("conditionValue", request.getParameter("conditionValue"));
+		params.put("conditionType", request.getParameter("conditionType"));
+		params.put("userId", userId);
+		logger.debug("params : {}", params.toString());
+		return companyBillApi.accounterGetCompanyBillByCondition(params);
+	}
+	
+	@RequestMapping("/accounter/modifyCompanyBill")
+	@ResponseBody
+	public Map<String, String> accounterModifyCompanyBill(
+			HttpServletRequest request) {
+		Map<String, String> retMap = new HashMap<>();
+		String id = (String)request.getParameter("id");
+		String amount = (String)request.getParameter("amount");
+		String type = (String)request.getParameter("type");
+		String supplyName = (String)request.getParameter("supplyName");
+		String isFixedAssets = (String)request.getParameter("isFixedAssets");
+		if(companyBillApi.modifyCompanyBill(id, amount, type, supplyName, isFixedAssets)) {
+			retMap.put("error_code", "0");
+		} else {
+			 retMap.put("error_code", "1");
+		}
+		return retMap;
 	}
 }

@@ -34,14 +34,14 @@ public class SessionFilterService extends OncePerRequestFilter {
 
 		String uri = request.getRequestURI();
 		boolean doFilter = false;
-		if(uri.indexOf("files/company") == -1) {
+		/*if(uri.indexOf("files/company") == -1) {
 			for (String url : filterUrls) {
 				if (uri.indexOf(url) != -1) {
 					doFilter = true;
 					break;
 				}
 			}
-		}
+		}*/
 		if (doFilter) {
 			Object userId = request.getSession().getAttribute(
 					SessionConstant.SESSION_USER_ID);

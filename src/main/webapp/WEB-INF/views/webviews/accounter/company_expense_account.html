@@ -24,19 +24,17 @@
 			</div>
 		</div>
 		<div class="main">
-			<div class="menu"><a href="#" class="active">发票历史记录</a></div>
-					
-			<div class="well mt20">
+			<div class="menu" style="margin-bottom:20px;"><a href="#" class="active">公司已上传发票</a></div>
+			<!-- <div class="well mt20">
 				<div class="form-horizontal onlineTools">
 					<div class="row show-grid">
 						<label class="control-label control-label-small"></label>
                         <div class="controls"><select name="condition" id="condition" class="input input-normal"><option value='0'>所有</option><option value='1'>按日期检索</option></select><input type="text" id="content" class="input input-normal ml10"><button id="searchData" class="button button-success ml10">搜索</button><button id="deleteData" class="button button-danger ml10">一键删除</button></div>
 					</div>
 				</div>
-			</div>
+			</div> -->
 			<table class="table center">
 	    		<colgroup>
-	    			<col style="width:5%;">
 	    			<col style="width:8%;">
 	    			<col style="width:10%;">
 	    			<col style="width:10%;">
@@ -48,7 +46,6 @@
 	    		</colgroup>
 	    		<thead>
 	    			<tr>
-	    				<th>&nbsp;</th>
 	    				<th>发票上传日期</th>
 	    				<th>公司名称</th>
 	    				<th>发票金额</th>
@@ -56,7 +53,7 @@
 	    				<th>固定资产</th>
 	    				<th>费用类型</th>
 	    				<th>发票预览</th>
-	    				<th>识别状态</th>
+	    				<th>操作</th>
 	    			</tr>
 	    		</thead>
 	    		<tbody id="retData">
@@ -152,17 +149,14 @@
 <!--该js需要修改js路径及修改seajs路径-->
 <!-- <script src="http://g.tbcdn.cn/fi/bui/jquery-1.8.1.min.js"></script> -->
 <script src="/js/webjs/jquery-1.7.2.min.js"></script>
-<script src="/js/webjs/sea.js"></script>
-<script src="/js/webjs/config.js"></script>
+<script src="http://g.alicdn.com/bui/seajs/2.3.0/sea.js"></script>
+<script src="http://g.alicdn.com/bui/bui/1.1.17/config.js"></script>
 <script src="/js/webjs/menuTree.js"></script>
 <script src="/js/webjs/jquery-ui.js"></script>
 <script src="/js/webjs/jquery-mousewheel.js"></script>
 <script src="/js/webjs/jquery.iviewer.min.js"></script>
 <script src="/js/webjs/iviewer.js"></script>
 <script type="text/javascript">
-
-var globalRefresh = false;
-
 function isNumber(str){
     var re = /^[0-9]+.?[0-9]*$/;
     if (!re.test(str)){
@@ -228,12 +222,12 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 				BUI.Message.Alert('请先勾选需要删除的记录！','warning');
 			} else {
 				$.ajax({
-					url : '/company/deleteCompanyBill',
+					url : '/accounter/deleteCompanyBill',
 					type : "POST",
 					data : {deleteIdList:deleteIdList.join(",")},
 					success : function(data) {
 						$.ajax({
-							url : '/company/getAllCompanyBill',
+							url : '/accounter/getAllCompanyBill',
 							type : "POST",
 							data : {},
 							success : function(data) {
@@ -292,12 +286,12 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 				return;
 			}
 			$.ajax({
-				url : '/company/modifyCompanyBill',
+				url : '/accounter/modifyCompanyBill',
 				type : "POST",
 				data : {id:id, amount:amount, type:type, supplyName:supplyName, isFixedAssets:flag},
 				success : function(data) {
 					$.ajax({
-						url : '/company/getAllCompanyBill',
+						url : '/accounter/getAllCompanyBill',
 						type : "POST",
 						data : {},
 						success : function(data) {
@@ -316,13 +310,11 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 			for(var i=0; i<data.length; i++) {
 				var container = $('#retData');
 				var trNode = $("<tr></tr>");
-				var checkNode = $("<td><input type='checkbox' value='"+data[i].id+"' class='data-check-id'></td>");
 			    var tdNode1 = $("<td>"+data[i].date+"</td><td>"+data[i].company_name+"</td><td>"+(data[i].amount == null || data[i].amount == "" ? "0" : data[i].amount)+"</td><td>"+(data[i].supplyName == null || data[i].supplyName == "" ? "未设定" : data[i].supplyName)+"</td><td>"+(data[i].isFixedAssets == null || data[i].isFixedAssets == "0" ? "否" : "是")+"</td><td>"+(data[i].expense_type == null || data[i].expense_type == "" ? "未设定" : data[i].expense_type)+"</td>");
 			    var tdNode2 = $("<td></td>");
 			    var aNode = $("<a href='javascript:void(0)'>点击查看发票图片</a>");
 			    var tdNode3 = $("<td></td>");
-			    var operateNode1 = $("<p>识别中<img style='height:20px;width:60px;' src='/img/webimg/progress2.gif'></p>");
-			    var operateNode2 = $("<p>识别已完成</p>");
+			    var operateNode = $("<a href='javascript:void(0)'>修改金额或费用类型</a>");
 			    var imgsrc = '/files/company/' + data[i].file_name;
 			    aNode.attr("img-src", imgsrc);
 			    aNode.click(function(event) {
@@ -332,43 +324,37 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 			    	//openBillImage("/img/webimg/emily.jpg");
 			    });
 			    aNode.appendTo(tdNode2);
-			    if(data[i].expense_type == null || data[i].expense_type == "") {
-			    	globalRefresh = true;
-			    	operateNode1.appendTo(tdNode3);
-			    } else {
-			    	operateNode2.appendTo(tdNode3);
-			    }			    
-			    checkNode.appendTo(trNode);
+			    
+			    operateNode.attr("bill-id", data[i].id);
+			    var tmpData = data[i];
+			    (function(tmpData){
+                    operateNode.click(function(event) {
+						$('#current_modify_id').val($(this).attr("bill-id"));
+						$('#modify_type').val(tmpData.expense_type);
+						$('#modify_amount').val(tmpData.amount);
+						$('#supplyName').val(tmpData.supplyName);
+						tmpData.isFixedAssets == null || tmpData.isFixedAssets == '0' ? $("#isFixedAssets").prop('checked', false) : $("#isFixedAssets").prop('checked', true);
+						modifyInfoForm.show();
+					});				
+				}(data[i]));
+			   
+			    operateNode.appendTo(tdNode3);
 			    tdNode1.appendTo(trNode);
 			    tdNode2.appendTo(trNode);
 			    tdNode3.appendTo(trNode);
 			    trNode.appendTo(container);
 			}
-			bindCheck();
+			//bindCheck();
 		};
 		$.ajax({
-			url : '/company/getAllCompanyBill',
+			url : '/accounter/getAllCompanyBill',
 			type : "POST",
 			data : {},
 			success : function(data) {
 				createDataList(data);
 			}
 		});
-		
-		setInterval(function() {
-			if(globalRefresh == true) {
-				$.ajax({
-					url : '/company/getAllCompanyBill',
-					type : "POST",
-					data : {},
-					success : function(data) {
-						createDataList(data);
-					}
-				});
-			}
-		},5000);
-		
-		$('#searchData').click(function(){
+		/* $('#searchData').click(function(){
 			var conditionType = $('#condition option:selected').val();
 			var conditionValue = $('#content').val();
 			if(conditionType != '0' && (conditionValue == null || conditionValue == '')) {
@@ -376,15 +362,14 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 				return;
 			}
 			$.ajax({
-				url : '/company/getAllCompanyBill',
+				url : '/accounter/getAllCompanyBill',
 				type : "POST",
 				data : {conditionType : conditionType, conditionValue : conditionValue},
 				success : function(data) {
 					createDataList(data);
 				}
 			});
-		})
-		
+		}) */
 	});
 	
 	//侧栏高度
@@ -400,45 +385,15 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 	//竖状菜单
 	var menu = new menuTree(
             {"nodes" : [
-{text : '组织架构',id : '50',href:"javascript:void(0);",  expanded : false,children: [
-                                                          						{text : '基本信息设置',id : '51', href:"/views/webviews/company/organization_information_settings.html"},
-                                                          						{text : '组织架构设置',id : '52', href:"/views/webviews/company/organization_structure_settings.html"}                                           
-                                                          					]},
-					{text : '公司发票',id : '10',href:"javascript:void(0);",  expanded : true,children: [
-						{text : '发票上传',id : '11', href:"/views/webviews/company/expense_account_upload.html"},
-						{text : '发票历史记录',id : '12', href:"/views/webviews/company/expense_account_history.html"}                                           
-					]},
-					{text : '银行对账单',id : '20',href:"javascript:void(0);", expanded : false,children: [
-						{text : '上传对账单',id : '21', href:"/views/webviews/company/bank_statement_upload.html"},
-						{text : '对账单历史记录',id : '22', href:"/views/webviews/company/bank_statement_history.html"}                                           
-					]},
-					{text : '销售清单',id : '80',href:"javascript:void(0);", expanded : false,children: [
-					                                                         						{text : '上传销售清单',id : '81', href:"/views/webviews/company/sales_upload.html"},
-					                                                         						{text : '销售清单历史记录',id : '82', href:"/views/webviews/company/sales_history.html"}                                           
-					                                                         					]},
-					{text : '工资社保',id : '30',href:"javascript:void(0);", expanded : false,children: [
-						
-						{text : '下载工资计算模板',id : '32', href:"/views/webviews/company/salary_welfare_template_download.html"},                                           
-						{text : '上传工资单',id : '33', href:"/views/webviews/company/salary_welfare_upload.html"},
-						{text : '工资历史记录',id : '34', href:"/views/webviews/company/salary_history.html"},
-						{text : '工资计算模板历史记录',id : '35', href:"/views/webviews/company/salary_template_history.html"}
-					]},
-					{text : '预约取发票',id : '40',href:"javascript:void(0);", expanded : false,children: [
-						{text : '方式选择',id : '41', href:"/views/webviews/company/take_expense_account_mode_select.html"}                                           
-					]},
-					
-					{text : '基本报表',id : '70',href:"javascript:void(0);",  expanded : false,children: [
-					                                                          						{text : '资产负债表',id : '71', href:"/views/webviews/company/sheet_balance.html"},
-					                                                          						{text : '利润表',id : '72', href:"/views/webviews/company/sheet_income.html"},
-					                                                          						{text : '现金流量表',id : '73', href:"/views/webviews/company/sheet_cash.html"},
-					                                                          						{text : '薪酬及税费表',id : '74', href:"/views/webviews/company/sheet_salary.html"}
-					                                                          					]},
-					{text : '会计点将',id : '60',href:"/views/webviews/company/select_accounter.html",  leaf:false,expanded : false,children: []},
-					{text : '申请发票',id : '90',href:"/views/webviews/company/apply_invoice.html",  leaf:false,expanded : false,children: []},
-					{text : '查看合同文件',id : '100',href:"/views/webviews/company/contract.html",  leaf:false,expanded : false,children: []},]
+{text : '完善注册信息',id : '20',href:"/views/webviews/accounter/finish_reg_info.html",  leaf:false, expanded : false,children: []},
+{text : '公司费用信息',id : '10',href:"/views/webviews/accounter/company_expense_records.html", leaf:false, expanded : false,children: []},
+{text : '公司工资模板上传',id : '30',href:"/views/webviews/accounter/company_salary_template_upload.html", leaf:false, expanded : false,children: []},
+{text : '预约取发票方式查询',id : '40',href:"/views/webviews/accounter/take_bill_way.html", leaf:false, expanded : false,children: []},
+{text : '公司发票信息',id : '50',href:"/views/webviews/accounter/company_expense_account.html", leaf:false, expanded : false,children: []}
+						]
             },"menuTree"
         );
-    defaultSelect("12");
+    defaultSelect("50");
     function defaultSelect(id){ 
         $("#"+id).parent().addClass("bui-menu-item-selected")
     }
