@@ -17,7 +17,7 @@
 	.bui-dialog .bui-stdmod-body{ padding:0;}
 	.thead-bg{ background-color:#fafafa;}
 	.thead-bg tr th:nth-child(2){ padding-left:30px;}
-	.thead-bg tr th:nth-child(3){ padding-left:60px;}
+	.thead-bg tr th:nth-child(3){ padding-left:50px;}
 	.thead-bg tr th:nth-child(4){ padding-left:30px;}
     /**内容超出 出现滚动条 **/
     .bui-stdmod-body{
@@ -1322,7 +1322,7 @@
 				      }).render();
 				var fixedAssetsInfoForm = new Overlay.Dialog({
 					title : '固定资产详细信息',
-					width : 1100,
+					width : 1000,
 					height : 700,
 					contentId : 'fixedAssetsInfo',
 					success : function() {
@@ -1339,15 +1339,15 @@
 						var trNode = $("<tr></tr>");
 						var type = data[i].category;
 						if(type=='1') {
-							type = '房屋建筑物';
+							type = '房屋建筑物建筑物';
 						} else if(type=='2') {
-							type = '生产设备';
+							type = '飞机、火车、轮船';
 						} else if(type=='3') {
-							type = '工具、家具';
+							type = '与生产经营活动有';
 						} else if(type=='4') {
-							type = '运输设备';
+							type = '运输设备建筑物建';
 						} else if(type='5') {
-							type = '电子设备';
+							type = '电子设备及其它建';
 						} else {
 							type = '未知分类';
 						}
