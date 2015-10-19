@@ -1357,7 +1357,6 @@
 					}
 				}
 				$('#showFixedAssetsInfo').click(function() {
-					fixedAssetsInfoForm.show();
 					var date = $('#table_date').val();
 					$.ajax({
 						url : '/company/getAllCompanyFixed',
@@ -1371,6 +1370,7 @@
 										'warning');
 							} else {
 								fillFixedAssetsData(data);
+								fixedAssetsInfoForm.show();
 							}
 						},
 						error : function(data) {
