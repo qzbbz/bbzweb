@@ -1,76 +1,536 @@
-<!doctype html>
-<html ng-app="ywLanding">
-	<head>
-		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-		<title>上海元升财务咨询有限公司</title>
-		<script>
-		var _hmt = _hmt || [];
-		(function() {
-		  var hm = document.createElement("script");
-		  hm.src = "//hm.baidu.com/hm.js?854ba56143ecfad6d4dafde971f96770";
-		  var s = document.getElementsByTagName("script")[0]; 
-		  s.parentNode.insertBefore(hm, s);
-		})();
-		</script>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link rel="stylesheet" type="text/css" href="../../css/webcss/normalize.css">
-		<link rel="stylesheet" type="text/css" href="../../css/webcss/bootstrap.css">
-		<link rel="stylesheet" type="text/css" href="../../css/webcss/youngwisdom.css">
-		<link rel="stylesheet" type="text/css" href="../../css/webcss/jquery.fancybox-1.3.4.css">
-		<script type="text/javascript" src="../../js/webjs/main.page.utils.js"></script>
-		<!-- <script type="text/javascript" src="../../js/webjs/jquery-1.11.1.js"></script> -->
-		<script type="text/javascript" src="../../js/webjs/jquery-1.8.1.min.js"></script>
-		<script type="text/javascript" src="../../js/webjs/modernizr.custom.87166.js"></script>
-		<script type="text/javascript" src="../../js/webjs/angularjs/angular.min.js"></script>
-		<script type="text/javascript" src="../../js/webjs/angularjs/angular-route.min.js"></script>
-		<script type="text/javascript" src="../../js/webjs/angularjs/angular-animate.min.js"></script>
-		<script type="text/javascript" src="../../js/webjs/i18n/text-zh-CN.js"></script>
-		<script type="text/javascript" src="../../js/webjs/lodash.min.js"></script>
-		<script type="text/javascript" src="../../js/webjs/TweenMax.min.js"></script>
-		<script type="text/javascript" src="../../js/webjs/greensock/ScrollToPlugin.min.js"></script>
-		<script type="text/javascript" src="../../js/webjs/youngwisdom.js"></script>
-		<script src="/js/webjs/jquery.easing-1.3.pack.js"></script>
-		<script src="/js/webjs/jquery.fancybox-1.3.4.js"></script>
-		<script src="/js/webjs/jquery.fancybox-1.3.4.pack.js"></script>
-		<script src="/js/webjs/jquery.mousewheel-3.0.4.pack.js"></script>
-	</head>
-	<body ng-controller="main" yw-main >
-		<div class="header" ng-hide="hideHeader">
-			<a class="logo" href="/#/" style="margin-top:-20px;"><img src="../../img/webimg/logo.png"></a>
-			<div class="nav">
-				<a class="yw-link" href="/#/">{{t.home_page}}</a>
-				<a class="yw-link" href="/#/feature" >{{t.feature}}</a>
-				<!-- <a class="yw-link" href="/#/community" >{{t.community}}</a> -->
-				<a class="yw-link" href="/#/signin" >{{t.signin}}</a>
-				<a class="yw-link" href="/#/team" >{{t.team}}</a>
-				<a yw-button href="/#/signup" >{{t.signup}}</a>
-			</div>
-		</div>
-		<div ng-view class="lj-view yw-animation"></div>
-		
-		<div id="screen-contact" class="screen" ng-hide="hideContactScreen">
-			<span class="left">
-				<h3>上海元升财务咨询有限公司</h3>
-			</span><span class="right">
-				<span class="col"><i class="glyphicon glyphicon-home"></i>
-					<div class="feature-info">
-							中国上海市杨浦区
-					</div>
-				</span><span class="col"><i
-					class="glyphicon glyphicon-phone"></i>
-					<div class="feature-info">
-							4000-866-018
-					</div>
-				</span><span class="col"><i
-					class="glyphicon glyphicon-envelope"></i>
-					<div class="feature-info">
-							info@bangbangzhang.com
-					</div>
-				</span>
-			</span>
-		</div>
-		<div id="footer">
-			沪ICP备15012848号 | COPYRIGHT © 2014-2015, BANGBANGZHANG, ALL RIGHTS RESERVED
-		</div>		
-	</body>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh_cn" lang="zh">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <link href="style/css/screen.css" rel="stylesheet" type="text/css" media="screen, projection" />
+  <link rel="shortcut icon" href="style/favicon.ico">
+  <title>帮帮账</title>
+  
+  <style>
+  #sign-up-btn {
+    display: inline-block !important;
+    outline: 0 !important;
+    padding: 1em 1em 15px !important;
+    text-shadow: 0 1px 1px rgba(0,0,0,.2) !important;
+    border-bottom: 2px solid #a4523c !important;
+    font-weight: 600 !important;
+    background-color: #f16549 !important;
+    background-image: linear-gradient(to bottom,rgba(255,255,255,.075) 0,rgba(0,0,0,.075) 100%) !important;
+    color: #FFF !important;
+    width: 100% !important;
+    border-radius: 4px !important;
+    background-clip: padding-box !important;
+    transition: .2s all ease !important;
+    font-family: LLCircularWeb,"Helvetica Neue",Helvetica,Arial,sans-serif !important;
+    border: 0 !important;
+    font-size: 16px !important;
+    cursor: pointer !important;
+    align-items: flex-start !important;
+    text-align: center !important;
+    margin: 0em !important;
+  }
+  </style>
+</head>
+<body class="new-home video-bg">
+<header class="header-new js-header-new">
+  <nav>
+  <a href="index.html" class="header-new__links" style="float: left;">
+    <img src="style/images/logo.png" title="帮帮账">
+  </a>
+
+    <ul class="header-new__links">
+      <li><a href="features.html"><span>特点</span></a></li>
+      <li><a href="about.html"><span>团队</span></a></li>
+      <li><a href="Login.html"><span>登录</span></a></li>
+      <li><a href="Signup.html" class="header-new__links__signup">人才注册</a></li>
+    </ul>
+  </nav>
+</header>
+<header class="header-mobile-new">
+  <a href="index.html" class="header-new__links" style="float: left;">
+    <img src="style/images/logo.png" title="帮帮账">
+  </a>
+  <div class="header-mobile-new__menu">
+    <span class="header-mobile-new__menu__button js-mobile-navigation">
+      <span class="header-mobile-new__menu__button--one">|</span>
+      <span class="header-mobile-new__menu__button--two">|</span>
+      <span class="header-mobile-new__menu__button--three">|</span>
+    </span>
+    <div class="clear"></div>
+  </div>
+
+  <nav class="header-mobile-new__navigation">
+    <ul class="header-mobile-new__navigation__links">
+      <a href="index.html"><li>主页</li></a>
+      <a href="features.html"><li>特点</li></a>
+      <a href="about.html"><li>团队</li></a>
+      <a href="Login.html"><li>登录</li></a>
+      <a href="Signup.html" class="header-mobile-new__navigation__signup"><li>人才注册</li></a>
+    </ul>
+  </nav>
+</header>
+<div class="new-home__hero hero-video hero-cta-new">
+  <video preload="auto" loop="loop" autoplay="autoplay" id="broll-video" class="hero-video-broll hide-for-small">
+    <source src="style/B-Roll_Cropped.mp4" type="video/mp4">
+    <source src="style/B-Roll_Cropped.webm" type="video/webm">
+    <source src="style/B-Roll_Cropped.ogg" type="video/ogg">
+  </video>
+  <div class="movieindex" id="movieshow">
+    <video controls="controls" loop="loop" height="540" width="960" id="movieV">
+      <source src="style/movie.mp4">
+    </video>
+    <img src="style/images/delete.png" class="movieDet" height="20" width="20" id="movieDet">
+  </div>
+  <div class="new-home__hero__overlay">
+    <div id="linechart">
+      <div class="linechart__image"></div>
+    </div>
+  </div>
+  <div class="new-home__hero__content signup-new hero-cta-new" style="/*background: url(style/images/phone-background-luke.png)*/ background-color: transparent;">
+    <div id="account-form_container" class="home-video-form hide-for-small signup-form_container ">
+      <div id="home-introduction">
+        <h1>元升专业服务</h1>
+        <p>元升是一家在线财务咨询公司
+          旗下的帮帮账产品为您提供线上专业会计记账和报税服务</p>
+        <p><strong>现在注册即可免费试用一个月</strong></p>
+        <div class="play-btn hide-for-small" id="movieclick">
+          <div class="play-btn-arrow"></div>
+        </div>
+      </div>
+      <form id="account-form_form" class="account-form signup-form js-form-show-mobile" data-validate="parsley">
+        <div class="account-form__field account-form--email">
+          <label class="js-account-form-email"> <img data-state="closed" src="style/images/envelope.svg" class="iconic iconic-sm  email-icon" /> <input id="account-form_email" class="js-signup-email" name="email" type="text" placeholder="邮箱" data-trigger="change" data-required="true" data-type="email" data-remote="/api/v1/signup.json/account_available
+			" data-remote-message="此电子邮件存在于我们的服务器中" /> </label>
+        </div>
+        <div class="account-form__field account-form__form__field--password">
+          <div class="account-form__field__show js-toggle-password">
+            <img src="style/images/eye.svg" class="iconic iconic-sm " />
+            <span>显示</span>
+          </div>
+          <label class="js-account-form-password"> <img data-state="locked" src="style/images/lock.svg" class="iconic iconic-sm " /> <input class="password_visible" name="show-password" type="text" placeholder="密码" style="display: none" /> <input id="account-form_password" class="js-signup-password password_masked" name="password" type="password" placeholder="密码" data-required="true" data-trigger="keyup" data-error-message="请输入密码。" /> </label>
+        </div>
+        <div class="account-form__buttons">
+          <div class="account-form__buttons__button account-form__buttons__button--left">
+            <input type="button" class="signup-btn" id="sign-up-btn" value="企业用户注册"/>
+          </div>
+          <div class="account-form__buttons__button account-form__buttons__button--right">
+            <div class="account-form__buttons__button__questions js-questions-button">
+              <span>Questions</span>
+              <span class="account-form__buttons__button__questions__circle"> <img src="style/images/question-mark.svg" class="iconic iconic-sm" /> </span>
+            </div>
+            <div class="account-form__buttons__button__forgot js-forgot-button">
+              <span>忘记密码?</span>
+            </div>
+            <div class="account-form__buttons__button__forgot js-forgot-back-button">
+              <span>返回登录</span>
+            </div>
+          </div>
+        </div>
+        <div class="clear" style="clear: both;"></div>
+      </form>
+    </div>
+    <div id="account-form_container" class=" hide-for-small-and-up signup-form_container ">
+      <div id="home-introduction">
+        <h1>元升专业服务</h1>
+        <p>元升是一家在线财务咨询公司
+          旗下的帮帮账产品为您提供线上专业会计记账和报税服务，现在注册即可免费试用一个月</p>
+      </div>
+      <form id="account-form_form" class="account-form signup-form js-form-show-mobile" data-validate="parsley">
+        <div class="account-form__field account-form--name">
+          <label class="js-account-form-name"> <img data-state="closed" src="style/images/person.svg" class="iconic iconic-sm  name-icon" /> <input id="account-form_name" class="js-signup-name" name="name" type="text" placeholder="全名" data-required="true" data-trigger="change" data-error-message="请输入您的全名。" /> </label>
+        </div>
+        <div class="account-form__field account-form--email">
+          <label class="js-account-form-email"> <img data-state="closed" src="style/images/envelope.svg" class="iconic iconic-sm  email-icon" /> <input id="account-form_email" class="js-signup-email" name="email" type="text" placeholder="邮箱" data-trigger="change" data-required="true" data-type="email" data-remote="/api/v1/signup.json/account_available
+			" data-remote-message="此电子邮件存在于我们的服务器中" /> </label>
+        </div>
+        <div class="account-form__field account-form--phone">
+          <label class="js-account-form-phone"> <img data-state="closed" src="style/images/iphone.svg" class="iconic iconic-sm  phone-icon" /> <input id="account-form_phone" class="js-signup-phone" name="phone" type="text" placeholder="电话号码" data-type="phone" data-required="true" data-error-message="请输入您的电话号码。" maxlength="10" pattern=".{10,}" data-trigger="change" /> </label>
+        </div>
+        <div class="account-form__buttons">
+          <div class="account-form__buttons__button account-form__buttons__button--left">
+            <button type="submit" class="js-signup-submit-phone js-account-button">注册 </button>
+          </div>
+          <div class="account-form__buttons__button account-form__buttons__button--right">
+            <div class="account-form__buttons__button__questions js-questions-button">
+              <span>问题</span>
+              <span class="account-form__buttons__button__questions__circle"> <img src="style/images/question-mark.svg" class="iconic iconic-sm" /> </span>
+            </div>
+            <div class="account-form__buttons__button__forgot js-forgot-button">
+              <span>忘记密码?</span>
+            </div>
+            <div class="account-form__buttons__button__forgot js-forgot-back-button">
+              <span>返回登录</span>
+            </div>
+            <div class="overlay-video-btn">
+              <div class="overlay-video-btn__icon hide-for-small">
+                <img src="style/images/media.svg" class="iconic iconic-md icon-white" />
+              </div>
+              <span>观看我们的视频</span>
+            </div>
+          </div>
+        </div>
+        <div class="clear" style="clear: both;"></div>
+      </form>
+      <div class="call-cta">
+        <div class="play-btn hide">
+          <div class="play-btn-arrow"></div>
+        </div>
+        <a href="javascript:;">现在对我们说话</a>
+        <a href="javascript:;" class="hide charcoal-button book-cta-btn">打电话</a>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="new-home__section new-home__section--no-top-padding">
+  <h2>通过帮帮账</h2>
+  <p>您可以获得专业的线上会计和税务人员为您准备财务和税务报表，您可以通过简洁易用的软件直接审阅报表。 </p>
+  <div class="new-home__section__background"></div>
+  <div class="new-home__section__timeline">
+    <div class="new-home__section__timeline__line">
+      <div class="new-home__section__timeline__line__red js-animate-timeline"></div>
+      <div class="new-home__section__timeline__dot dot-one js-animate-timeline" style="left: 0"></div>
+      <div class="new-home__section__timeline__dot dot-two js-animate-timeline" style="left: 33%"></div>
+      <div class="new-home__section__timeline__dot dot-three js-animate-timeline" style="left: 66%"></div>
+      <div class="new-home__section__timeline__dot dot-four js-animate-timeline" style="right: 0"></div>
+    </div>
+  </div>
+  <div class="row new-home__section__steps" style="margin-top: 50px">
+    <div class="columns large-3 text-one js-animate-timeline">
+      <div class="center">
+        <img src="style/images/calendar.svg" class="iconic iconic-sm icon-blue" />
+      </div>
+      <p><strong>免费试用</strong></p>
+      <p>免费试用一个月，您无需承担任何风险。我们的服务将向您证明帮帮账是您的最优选择。</p>
+    </div>
+    <div class="columns large-3 text-two js-animate-timeline">
+      <div class="center">
+        <img src="style/images/person.svg" class="iconic iconic-sm icon-blue" />
+      </div>
+      <p><strong>专属人员</strong></p>
+      <p>将有您的专属财税人员深入了解您的业务、及时解决您的疑问，为您记账和报税。</p>
+    </div>
+    <div class="columns large-3 text-three js-animate-timeline">
+      <div class="center">
+        <img src="style/images/loop-circular.svg" class="iconic iconic-sm icon-blue" />
+      </div>
+      <p><strong>操作简便</strong></p>
+      <p>员工通过微信平台手机拍照上传发票报销，企业主通过我们的网站微信端审批，搞定财税就是那么简单。</p>
+    </div>
+    <div class="columns large-3 text-four js-animate-timeline">
+      <div class="center">
+        <img src="style/images/check.svg" class="iconic iconic-sm icon-blue" />
+      </div>
+      <p><strong>为您解忧</strong></p>
+      <p>不用再为财税烦恼，我们将保证您获得及时准确的财务报表，做好纳税申报。</p>
+    </div>
+  </div>
+</div>
+<div class="new-home__section" style="background-color: #FFF; padding-bottom: 0">
+  <h2>我们为您提供的服务</h2>
+</div>
+<div class="new-home__section new-home__what-we-do js-background-replace" data-background-src="style/images/desk_background.jpg" style="background-color: #FFF">
+  <div class="row">
+    <div class="columns large-4 padding-start">
+      <p><img src="style/images/briefcase.svg" class="iconic iconic-sm icon-blue" /><strong>专业记账</strong></p>
+      <p>记账不仅仅是依靠软件即可完成的，帮帮账为您提供专业会计人员的记账服务。</p>
+    </div>
+    <div class="columns large-4 padding-middle">
+      <p><img src="style/images/list.svg" class="iconic iconic-sm icon-brown" /><strong>即时财务数据</strong></p>
+      <p>通过帮帮账客户端的报告，您可及时分析您的费用明细。您可以随时查看从银行对账单到原始发票凭证。</p>
+    </div>
+    <div class="columns large-4 padding-end">
+      <p><img src="style/images/lock.svg" class="iconic iconic-sm icon-green" /><strong>银行级数据安全</strong></p>
+      <p>帮帮账采用高级别的加密文件来保护您的财务数据，确保您的数据安全不受侵害。</p>
+    </div>
+  </div>
+  <div class="row padding-top">
+    <div class="columns large-4 padding-start">
+      <p><img src="style/images/laptop.svg" class="iconic iconic-sm icon-red" /><strong>无纸化记账</strong></p>
+      <p>通过邮件照片或者快递的形式将您的凭证寄给帮帮账，我们将为您扫描并上传到你的账户。</p>
+    </div>
+    <div class="columns large-4 padding-middle">
+      <p><img src="style/images/person.svg" class="iconic iconic-sm icon-blue" /><strong>财务专家</strong></p>
+      <p>无论你是对报税、最新的会计准则，或是对投资者的尽职调查与审计有疑问于困惑，帮帮账有最专业的人士为您提供帮助与辅导。</p>
+    </div>
+    <div class="columns large-4 padding-end">
+      <p><img src="style/images/timer.svg" class="iconic iconic-sm icon-brown" /><strong>税务专家</strong></p>
+      <p>帮帮账的专业人士将会与你们一起合作，高效率、高质量地完成你们的纳税申报。</p>
+    </div>
+  </div>
+</div>
+<div class="new-home__section new-home__clients testimonials" style="background-color: #FFF; padding-top: 20px">
+  <h2>我们的客户都这样说</h2>
+  <div class="new-home__clients__container">
+    <div class="new-home__clients__container__half new-home__clients__container__half--left">
+      <div class="new-home__clients__client">
+        <div class="new-home__clients__client__bubble">
+          <span>没有帮帮账的帮助，不像在运营我自己的公司。</span>
+        </div>
+        <img class="new-home__clients__client__head" src="style/images/glenn.jpg" />
+        <div class="new-home__clients__client__info">
+          <span class="new-home__clients__client__info__name">Glenn Rogers</span>
+          <span class="new-home__clients__client__info__company">Float Schedule</span>
+        </div>
+      </div>
+      <div class="new-home__clients__client">
+        <div class="new-home__clients__client__bubble">
+          <span>我从来没有遇到一个团队对记账报税服务如此热情，帮帮账轻松为我们解决了大问题。</span>
+        </div>
+        <img class="new-home__clients__client__head" src="style/images/jess.png" />
+        <div class="new-home__clients__client__info">
+          <span class="new-home__clients__client__info__name">Jess Eddy</span>
+          <span class="new-home__clients__client__info__company">User Experience Designer</span>
+        </div>
+      </div>
+      <div class="new-home__clients__client">
+        <div class="new-home__clients__client__bubble">
+          <span>没有帮帮账的帮助，不像在运营我自己的公司。</span>
+        </div>
+        <img class="new-home__clients__client__head" src="style/images/jeff.png" />
+        <div class="new-home__clients__client__info">
+          <span class="new-home__clients__client__info__name">Jeff Saliture</span>
+          <span class="new-home__clients__client__info__company">MyWorkster</span>
+        </div>
+      </div>
+    </div>
+    <div class="new-home__clients__container__half new-home__clients__container__half--right">
+      <div class="new-home__clients__client">
+        <div class="new-home__clients__client__bubble">
+          <span>作为公司的创业者，我业务十分繁忙，帮帮账在财税方面提供给了我十分到位的帮助和支持。</span>
+        </div>
+        <img class="new-home__clients__client__head" src="style/images/don.jpg" />
+        <div class="new-home__clients__client__info">
+          <span class="new-home__clients__client__info__name">Don Crow</span>
+          <span class="new-home__clients__client__info__company">Verge Pipe Media</span>
+        </div>
+      </div>
+      <div class="new-home__clients__client">
+        <div class="new-home__clients__client__bubble">
+          <span>我爱上了帮帮账，也推荐给了我身边创业的朋友。 我感到我的账本交给帮帮账十分放心。</span>
+        </div>
+        <img class="new-home__clients__client__head" src="style/images/nick.png" />
+        <div class="new-home__clients__client__info">
+          <span class="new-home__clients__client__info__name">Nick Gray</span>
+          <span class="new-home__clients__client__info__company">Museum Hack</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<section class="fixed-overlay table hide">
+  <div class="cell-center">
+    <div class="confirmation-overlay">
+      <div class="confirmation-top">
+        <h2>
+          <svg xmlns="http://www.w3.org/2000/svg" version="1.1" data-icon="check" width="128" height="128" class="iconic iconic-check iconic-injected-svg iconic iconic-lg icon-white checkmark" viewbox="0 0 128 128">
+            <g class="iconic-metadata">
+              <title>Check</title>
+            </g>
+            <g data-width="124" data-height="98" class="iconic-container iconic-lg" display="inline" transform="translate(2 15)">
+              <path stroke="#000" stroke-width="16" stroke-linecap="square" stroke-miterlimit="10" class="iconic-property-stroke" d="M112.5 11.5l-70.5 74.9-30-29.4" fill="none"></path>
+            </g>
+            <g data-width="32" data-height="27" class="iconic-container iconic-md" display="none" transform="scale(4) translate(0 2)">
+              <path stroke="#000" stroke-width="6" stroke-linecap="square" stroke-miterlimit="10" class="iconic-property-stroke" d="M27.5 4.5l-16.5 17.5-6.5-6.5" fill="none"></path>
+            </g>
+            <g data-width="16" data-height="13" class="iconic-container iconic-sm" display="none" transform="scale(8) translate(0 1)">
+              <path stroke="#000" stroke-width="4" stroke-linecap="square" stroke-miterlimit="10" class="iconic-property-stroke" d="M13 3l-7 7-3-3" fill="none"></path>
+            </g>
+          </svg> Thanks for signing up for Bench! </h2>
+        <span class="close-btn"><img src="style/images/x.svg" class="iconic iconic-sm icon-white" /></span>
+      </div>
+      <div class="confirmation-bottom">
+        <p>We’ll be in touch within one business day to get your free trial started.</p>
+      </div>
+    </div>
+  </div>
+</section>
+<div id="modular__signup_container" class="modular__signup hide-for-small-and-up signup-form_container  cta-signup-footer cta-signup-footer--dark-image ">
+  <div id="home-introduction">
+  </div>
+  <h2>准备开始?</h2>
+  <form id="modular__signup_form" class="cta-signup-footer__form signup-form js-form-show-mobile" data-validate="parsley">
+    <div class="cta-signup-footer__form__field cta-signup-footer__form--name">
+      <label class="js-account-form-name"> <img data-state="closed" src="style/images/person.svg" class="iconic iconic-sm  name-icon" /> <input id="modular__signup_name" class="js-signup-name" name="name" type="text" placeholder="全名" data-required="true" data-trigger="change" data-error-message="请输入您的全名。" /> </label>
+    </div>
+    <div class="cta-signup-footer__form__field cta-signup-footer__form--email">
+      <label class="js-account-form-email"> <img data-state="closed" src="style/images/envelope.svg" class="iconic iconic-sm  email-icon" /> <input id="modular__signup_email" class="js-signup-email" name="email" type="text" placeholder="邮箱" data-trigger="change" data-required="true" data-type="email" data-remote="/api/v1/signup.json/account_available
+			" data-remote-message="此电子邮件存在于我们的服务器中" /> </label>
+    </div>
+    <div class="cta-signup-footer__form__field cta-signup-footer__form--phone">
+      <label class="js-account-form-phone"> <img data-state="closed" src="style/images/iphone.svg" class="iconic iconic-sm  phone-icon" /> <input id="modular__signup_phone" class="js-signup-phone" name="phone" type="text" placeholder="电话号码" data-type="phone" data-required="true" data-error-message="请输入您的电话号码。" maxlength="10" pattern=".{10,}" data-trigger="change" /> </label>
+    </div>
+    <div class="cta-signup-footer__form__submit">
+      <button type="submit" class="js-signup-submit-phone js-account-button" id="btn--login"> <span>开始</span> </button>
+    </div>
+    <div class="clear" style="clear: both;"></div>
+  </form>
+</div>
+<div id="modular__signup_container" class="modular__signup hide-for-small signup-form_container  cta-signup-footer cta-signup-footer--dark-image ">
+  <div id="home-introduction">
+  </div>
+  <h2></h2>
+  <div class="cta-signup-footer__icons">
+    <div class="cta-signup-footer__icon">
+      <img data-gender="genderless" src="style/images/footerPeo.jpg" class="iconic iconic-md iconic-one" />
+      <span>注册一个帐号</span>
+    </div>
+    <div class="cta-signup-footer__dots cta-signup-footer__dots--one">
+      <svg width="36" height="6" viewbox="0 0 36 6" version="1.1" xmlns="http://www.w3.org/2000/svg">
+        <g fill="#000">
+          <circle class="icon-dots icon-dots--one" cx="3" cy="3" r="3" />
+          <circle class="icon-dots icon-dots--two" cx="18" cy="3" r="3" />
+          <circle class="icon-dots icon-dots--three" cx="33" cy="3" r="3" />
+        </g>
+      </svg>
+    </div>
+    <div class="cta-signup-footer__icon">
+      <img src="style/images/footerWin.jpg" style="width: 40px; height: 40px; margin-bottom: 11px" class="iconic iconic-md iconic-two" />
+      <span>见一下你的会计师</span>
+    </div>
+    <div class="cta-signup-footer__dots cta-signup-footer__dots--two">
+      <svg width="36" height="6" viewbox="0 0 36 6" version="1.1" xmlns="http://www.w3.org/2000/svg">
+        <g fill="#000">
+          <circle class="icon-dots icon-dots--one" cx="3" cy="3" r="3" />
+          <circle class="icon-dots icon-dots--two" cx="18" cy="3" r="3" />
+          <circle class="icon-dots icon-dots--three" cx="33" cy="3" r="3" />
+        </g>
+      </svg>
+    </div>
+    <div class="cta-signup-footer__icon">
+      <img src="style/images/footerDia.jpg" style="width: 58px; height: 58px; margin-top: -10px; margin-bottom: 3px" class="iconic iconic-md iconic-three" />
+      <span>一份免费的账目</span>
+    </div>
+  </div>
+  <form id="modular__signup_form" class="cta-signup-footer__form signup-form js-form-show-mobile" data-validate="parsley">
+    <div class="cta-signup-footer__form__field cta-signup-footer__form--email">
+      <label class="js-account-form-email"> <img data-state="closed" src="style/images/envelope.svg" class="iconic iconic-sm  email-icon" /> <input id="modular__signup_email" class="js-signup-email" name="email" type="text" placeholder="邮箱" data-trigger="change" data-required="true" data-type="email" data-remote="/api/v1/signup.json/account_available
+			" data-remote-message="此电子邮件存在于我们的服务器中" style="border-bottom:1px solid #FFF"/> </label>
+    </div>
+    <div class="cta-signup-footer__form__field cta-signup-footer__form__form__field--password">
+      <div class="cta-signup-footer__form__field__show js-toggle-password" style="border-bottom:1px solid #FFF">
+        <img src="style/images/eye.svg" class="iconic iconic-sm " />
+        <span>显示</span>
+      </div>
+      <label class="js-account-form-password"> <img data-state="locked" src="style/images/lock.svg" class="iconic iconic-sm " /> <input class="password_visible" name="show-password" type="text" placeholder="密码" style="display: none;border-bottom:1px solid #FFF"/> <input id="modular__signup_password" class="js-signup-password password_masked" name="password" type="password" placeholder="密码" data-required="true" data-trigger="keyup" data-error-message="请输入密码。" style="border-bottom:1px solid #FFF"/> </label>
+    </div>
+    <div class="cta-signup-footer__form__submit">
+      <button type="submit" class="js-signup-submit-new js-account-button" id="btn--login"> <span>注册</span> </button>
+    </div>
+    <div class="clear" style="clear: both;"></div>
+  </form>
+</div>
+
+<div class="new-home__logos__border">
+  <div class="new-home__logos">
+    <span>Featured In</span>
+    <div class="new-home__logos__container">
+      <img class="new-home__logos__logo" src="style/images/new-york-times.svg" />
+      <img class="new-home__logos__logo" src="style/images/forbes.svg" />
+      <img class="new-home__logos__logo" src="style/images/techcrunch.svg" />
+      <img class="new-home__logos__logo" src="style/images/next-web.svg" style="height: 30px" />
+      <img class="new-home__logos__logo" src="style/images/globe-and-mail.svg" />
+    </div>
+  </div>
+</div>
+<footer class="footer-new">
+  <div class="footer-new__main">
+    <div class="row">
+      <div class="columns large-8">
+        <ul class="small-block-grid-4 large-block-grid-4">
+          <li>
+            <div class="footer-new__chunk">
+              <h6 class="footer-new__heading">Company</h6>
+              <ul>
+                <li><a href="javascript:;">About</a></li>
+                <li><a href="javascript:;">Careers</a></li>
+                <li><a href="javascript:;">Developers</a></li>
+                <li><a href="javascript:;">Press</a></li>
+              </ul>
+            </div> </li>
+          <li>
+            <div class="footer-new__chunk">
+              <h6 class="footer-new__heading">Service</h6>
+              <ul>
+                <li><a href="javascript:;">Features</a></li>
+                <li><a href="javascript:;">Pricing</a></li>
+                <li><a href="javascript:;">Security</a></li>
+                <li><a href="javascript:;">Testimonials</a></li>
+                <!--<li><a href="/accountants">For Accountants</a></li>-->
+              </ul>
+            </div> </li>
+          <li>
+            <div class="footer-new__chunk">
+              <h6 class="footer-new__heading">Community</h6>
+              <ul>
+                <li><a href="javascript:;">Blog</a></li>
+                <li><a href="javascript:;">Syllabus</a></li>
+                <li><a href="javascript:;">Support</a></li>
+                <li><a href="javascript:;">Live Chat</a></li>
+              </ul>
+            </div> </li>
+          <li>
+            <div class="footer-new__chunk footer-new__social">
+              <h6 class="footer-new__heading">Social</h6>
+              <ul>
+                <li class="facebook"><a href="javascript:;"><img src="style/images/facebook-colour.svg" />Facebook</a></li>
+                <li><a href="javascript:;"><img src="style/images/bird-colour.svg" /> Twitter</a></li>
+                <li><a href="javascript:;"><img src="style/images/linkdin-colour.svg" /> LinkedIn</a></li>
+                <li><a href="javascript:;"><img src="style/images/diandian.jpg" /><span class="valign-text-bottom">Refer a Friend</span></a></li>
+              </ul>
+            </div> </li>
+        </ul>
+      </div>
+      <div class="columns large-4 footer-new__contact">
+        <div class="row group">
+          <a href="javascript:;">
+            <div class="columns large-6 newPhone">
+              <div class="footer-new__contact__icon">
+                <img src="style/images/shuxin.jpg" class="iconic-sm" />
+              </div>
+              <h6>info@bangbangzhang.com</h6>
+            </div> </a>
+          <div class="columns large-6">
+            <div class="footer-new__contact__icon">
+              <img src="style/images/phone.jpg" class="iconic-sm" />
+            </div>
+            <h6>4000-866-018 </h6>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-new__under">
+    <div class="row">
+      <div class="large-12 columns">
+        <div class="footer-new__copyright">
+          <p>沪ICP备15012848号 | COPYRIGHT © 2014-2015, BANGBANGZHANG, ALL RIGHTS RESERVED </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+<script type="text/javascript">var mainapp_offline=false;</script>
+<script src="style/js/uglify.js"></script>
+<script>
+  var movieC = document.getElementById("movieclick");
+  var movieShow = document.getElementById("movieshow");
+  var movieDet = document.getElementById("movieDet");
+  var movieV =document.getElementById("movieV");
+  movieC.onclick=function(){
+    movieShow.style.display="block";
+    movieV.play();
+  }
+  movieDet.onclick = function(){
+    movieShow.style.display="none";
+    movieV.pause();
+  }
+  
+  $("#sign-up-btn").click(function(){
+	  alert('clicked');
+	  window.location.href = "http://www.baidu.com";
+	  
+  });
+</script>
+</body>
 </html>
