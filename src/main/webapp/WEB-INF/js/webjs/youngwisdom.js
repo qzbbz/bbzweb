@@ -944,6 +944,7 @@ function AnimScene(attrs){
 		if(typeof(this.triggerElement) === 'string'){
 			this.triggerElement = $(this.triggerElement);
 		}
+		console.log(this.triggerElement);
 		this.offset = this.triggerElement.offset().top - $( window ).height();
 		
 		if(!this.duration)

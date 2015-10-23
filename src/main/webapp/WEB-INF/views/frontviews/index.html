@@ -6,9 +6,22 @@
   <link href="style/css/screen.css" rel="stylesheet" type="text/css" media="screen, projection" />
   <link rel="shortcut icon" href="style/favicon.ico">
   <title>帮帮账</title>
-  <script type="text/javascript" src="../../js/webjs/jquery-1.8.1.min.js"></script>
-  <script type="text/javascript" src="../../js/webjs/angularjs/angular.min.js"></script>
-  <script type="text/javascript" src="../../js/webjs/youngwisdom.js"></script>
+               <script type="text/javascript" src="../../js/webjs/main.page.utils.js"></script>
+               <!-- <script type="text/javascript" src="../../js/webjs/jquery-1.11.1.js"></script> -->
+               <script type="text/javascript" src="../../js/webjs/jquery-1.8.1.min.js"></script>
+               <script type="text/javascript" src="../../js/webjs/modernizr.custom.87166.js"></script>
+               <script type="text/javascript" src="../../js/webjs/angularjs/angular.min.js"></script>
+               <script type="text/javascript" src="../../js/webjs/angularjs/angular-route.min.js"></script>
+               <script type="text/javascript" src="../../js/webjs/angularjs/angular-animate.min.js"></script>
+               <script type="text/javascript" src="../../js/webjs/i18n/text-zh-CN.js"></script>
+               <script type="text/javascript" src="../../js/webjs/lodash.min.js"></script>
+               <script type="text/javascript" src="../../js/webjs/TweenMax.min.js"></script>
+               <script type="text/javascript" src="../../js/webjs/greensock/ScrollToPlugin.min.js"></script>
+               <script type="text/javascript" src="../../js/webjs/youngwisdom.js"></script>
+               <script src="/js/webjs/jquery.easing-1.3.pack.js"></script>
+               <script src="/js/webjs/jquery.fancybox-1.3.4.js"></script>
+               <script src="/js/webjs/jquery.fancybox-1.3.4.pack.js"></script>
+               <script src="/js/webjs/jquery.mousewheel-3.0.4.pack.js"></script>
   
   <style>
   #sign-up-btn {
@@ -86,9 +99,27 @@
     <img src="style/images/delete.png" class="movieDet" height="20" width="20" id="movieDet">
   </div>
   <div class="new-home__hero__overlay">
-    <div id="linechart">
-      <div class="linechart__image"></div>
-    </div>
+<div class="linechart" yw-chart-anim>
+	<svg id="SvgjsSvg1000" xmlns="http://www.w3.org/2000/svg" version="1.1" width="1340" height="250" xmlns:xlink="http://www.w3.org/1999/xlink">
+		<polygon id="chart-polygon" points="-150,213 150,209 450,130 750,129 1050,65 1350,43 1650,15 1950,250 -150,250" fill="url(#SvgjsLinearGradient1006)" stroke="none">
+		</polygon>
+		<polyline id="SvgjsPolyline1010" points="-150,213 150,209 450,130 750,129 1050,65 1350,43 1650,15" fill="none" stroke="#e57958" stroke-width="2">
+		</polyline>
+		<ellipse class="ellipse" rx="8" ry="8" cx="-150" cy="213" fill="#f6f6f6" stroke="#e57958" stroke-width="2"></ellipse>
+		<ellipse class="ellipse" rx="8" ry="8" cx="150" cy="209" fill="#f6f6f6" stroke="#e57958" stroke-width="2"></ellipse>
+		<ellipse class="ellipse" rx="8" ry="8" cx="450" cy="130" fill="#f6f6f6" stroke="#e57958" stroke-width="2"></ellipse>
+		<ellipse class="ellipse" rx="8" ry="8" cx="750" cy="129" fill="#f6f6f6" stroke="#e57958" stroke-width="2"></ellipse>
+		<ellipse class="ellipse" rx="8" ry="8" cx="1050" cy="65" fill="#f6f6f6" stroke="#e57958" stroke-width="2"></ellipse>
+		<ellipse class="ellipse" rx="8" ry="8" cx="1350" cy="43" fill="#f6f6f6" stroke="#e57958" stroke-width="2"></ellipse>
+		<ellipse class="ellipse" rx="8" ry="8" cx="1650" cy="15" fill="#f6f6f6" stroke="#e57958" stroke-width="2"></ellipse>
+		<defs id="SvgjsDefs1001">
+			<linearGradient id="SvgjsLinearGradient1006" x1="0" y1="0" x2="0" y2="1">
+				<stop id="SvgjsStop1007" stop-opacity="0.5" stop-color="#f6f6f6" offset="0"></stop>
+				<stop id="SvgjsStop1008" stop-opacity="1" stop-color="#f6f6f6" offset="1"></stop>
+			</linearGradient>
+		</defs>
+	</svg>
+</div>
   </div>
   <div class="new-home__hero__content signup-new hero-cta-new" style="/*background: url(style/images/phone-background-luke.png)*/ background-color: transparent;">
     <div id="account-form_container" class="home-video-form hide-for-small signup-form_container ">
@@ -188,138 +219,43 @@
   <h2>通过帮帮账</h2>
   <p>您可以获得专业的线上会计和税务人员为您准备财务和税务报表，您可以通过简洁易用的软件直接审阅报表。 </p>
   <div class="new-home__section__background"></div>
-  <div class="new-home__section__timeline">
-    <div class="new-home__section__timeline__line">
-      <div class="new-home__section__timeline__line__red js-animate-timeline"></div>
-      <div class="new-home__section__timeline__dot dot-one js-animate-timeline" style="left: 0"></div>
-      <div class="new-home__section__timeline__dot dot-two js-animate-timeline" style="left: 33%"></div>
-      <div class="new-home__section__timeline__dot dot-three js-animate-timeline" style="left: 66%"></div>
-      <div class="new-home__section__timeline__dot dot-four js-animate-timeline" style="right: 0"></div>
-    </div>
-  </div>
-  <div class="row new-home__section__steps" style="margin-top: 50px">
-    <div class="columns large-3 text-one js-animate-timeline">
-      <div class="center">
-        <img src="style/images/calendar.svg" class="iconic iconic-sm icon-blue" />
-      </div>
-      <p><strong>免费试用</strong></p>
-      <p>免费试用一个月，您无需承担任何风险。我们的服务将向您证明帮帮账是您的最优选择。</p>
-    </div>
-    <div class="columns large-3 text-two js-animate-timeline">
-      <div class="center">
-        <img src="style/images/person.svg" class="iconic iconic-sm icon-blue" />
-      </div>
-      <p><strong>专属人员</strong></p>
-      <p>将有您的专属财税人员深入了解您的业务、及时解决您的疑问，为您记账和报税。</p>
-    </div>
-    <div class="columns large-3 text-three js-animate-timeline">
-      <div class="center">
-        <img src="style/images/loop-circular.svg" class="iconic iconic-sm icon-blue" />
-      </div>
-      <p><strong>操作简便</strong></p>
-      <p>员工通过微信平台手机拍照上传发票报销，企业主通过我们的网站微信端审批，搞定财税就是那么简单。</p>
-    </div>
-    <div class="columns large-3 text-four js-animate-timeline">
-      <div class="center">
-        <img src="style/images/check.svg" class="iconic iconic-sm icon-blue" />
-      </div>
-      <p><strong>为您解忧</strong></p>
-      <p>不用再为财税烦恼，我们将保证您获得及时准确的财务报表，做好纳税申报。</p>
-    </div>
-  </div>
-</div>
-<div class="new-home__section" style="background-color: #FFF; padding-bottom: 0">
-  <h2>我们为您提供的服务</h2>
-</div>
-<div class="new-home__section new-home__what-we-do js-background-replace" data-background-src="style/images/desk_background.jpg" style="background-color: #FFF">
-  <div class="row">
-    <div class="columns large-4 padding-start">
-      <p><img src="style/images/briefcase.svg" class="iconic iconic-sm icon-blue" /><strong>专业记账</strong></p>
-      <p>记账不仅仅是依靠软件即可完成的，帮帮账为您提供专业会计人员的记账服务。</p>
-    </div>
-    <div class="columns large-4 padding-middle">
-      <p><img src="style/images/list.svg" class="iconic iconic-sm icon-brown" /><strong>即时财务数据</strong></p>
-      <p>通过帮帮账客户端的报告，您可及时分析您的费用明细。您可以随时查看从银行对账单到原始发票凭证。</p>
-    </div>
-    <div class="columns large-4 padding-end">
-      <p><img src="style/images/lock.svg" class="iconic iconic-sm icon-green" /><strong>银行级数据安全</strong></p>
-      <p>帮帮账采用高级别的加密文件来保护您的财务数据，确保您的数据安全不受侵害。</p>
-    </div>
-  </div>
-  <div class="row padding-top">
-    <div class="columns large-4 padding-start">
-      <p><img src="style/images/laptop.svg" class="iconic iconic-sm icon-red" /><strong>无纸化记账</strong></p>
-      <p>通过邮件照片或者快递的形式将您的凭证寄给帮帮账，我们将为您扫描并上传到你的账户。</p>
-    </div>
-    <div class="columns large-4 padding-middle">
-      <p><img src="style/images/person.svg" class="iconic iconic-sm icon-blue" /><strong>财务专家</strong></p>
-      <p>无论你是对报税、最新的会计准则，或是对投资者的尽职调查与审计有疑问于困惑，帮帮账有最专业的人士为您提供帮助与辅导。</p>
-    </div>
-    <div class="columns large-4 padding-end">
-      <p><img src="style/images/timer.svg" class="iconic iconic-sm icon-brown" /><strong>税务专家</strong></p>
-      <p>帮帮账的专业人士将会与你们一起合作，高效率、高质量地完成你们的纳税申报。</p>
-    </div>
-  </div>
-</div>
-<div class="new-home__section new-home__clients testimonials" style="background-color: #FFF; padding-top: 20px">
-  <h2>我们的客户都这样说</h2>
-  <div class="new-home__clients__container">
-    <div class="new-home__clients__container__half new-home__clients__container__half--left">
-      <div class="new-home__clients__client">
-        <div class="new-home__clients__client__bubble">
-          <span>没有帮帮账的帮助，不像在运营我自己的公司。</span>
-        </div>
-        <img class="new-home__clients__client__head" src="style/images/glenn.jpg" />
-        <div class="new-home__clients__client__info">
-          <span class="new-home__clients__client__info__name">Glenn Rogers</span>
-          <span class="new-home__clients__client__info__company">Float Schedule</span>
-        </div>
-      </div>
-      <div class="new-home__clients__client">
-        <div class="new-home__clients__client__bubble">
-          <span>我从来没有遇到一个团队对记账报税服务如此热情，帮帮账轻松为我们解决了大问题。</span>
-        </div>
-        <img class="new-home__clients__client__head" src="style/images/jess.png" />
-        <div class="new-home__clients__client__info">
-          <span class="new-home__clients__client__info__name">Jess Eddy</span>
-          <span class="new-home__clients__client__info__company">User Experience Designer</span>
-        </div>
-      </div>
-      <div class="new-home__clients__client">
-        <div class="new-home__clients__client__bubble">
-          <span>没有帮帮账的帮助，不像在运营我自己的公司。</span>
-        </div>
-        <img class="new-home__clients__client__head" src="style/images/jeff.png" />
-        <div class="new-home__clients__client__info">
-          <span class="new-home__clients__client__info__name">Jeff Saliture</span>
-          <span class="new-home__clients__client__info__company">MyWorkster</span>
-        </div>
-      </div>
-    </div>
-    <div class="new-home__clients__container__half new-home__clients__container__half--right">
-      <div class="new-home__clients__client">
-        <div class="new-home__clients__client__bubble">
-          <span>作为公司的创业者，我业务十分繁忙，帮帮账在财税方面提供给了我十分到位的帮助和支持。</span>
-        </div>
-        <img class="new-home__clients__client__head" src="style/images/don.jpg" />
-        <div class="new-home__clients__client__info">
-          <span class="new-home__clients__client__info__name">Don Crow</span>
-          <span class="new-home__clients__client__info__company">Verge Pipe Media</span>
-        </div>
-      </div>
-      <div class="new-home__clients__client">
-        <div class="new-home__clients__client__bubble">
-          <span>我爱上了帮帮账，也推荐给了我身边创业的朋友。 我感到我的账本交给帮帮账十分放心。</span>
-        </div>
-        <img class="new-home__clients__client__head" src="style/images/nick.png" />
-        <div class="new-home__clients__client__info">
-          <span class="new-home__clients__client__info__name">Nick Gray</span>
-          <span class="new-home__clients__client__info__company">Museum Hack</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+  
+  
+  	<div class="timeline-section" style='margin-top:70px;'>
+		<div class="timeline">
+			<div class="anim-timeline"></div>
+			<div class="line-dot" style="left:0"></div>
+			<div class="line-dot" style="left:33%"></div>
+			<div class="line-dot" style="left:67%"></div>
+			<div class="line-dot" style="left:100%"></div>
+		</div>
+		
+	</div>
+	<div class="steps">
+		<div class="step">
+			<h4><i class="glyphicon glyphicon-heart-empty"></i>免费试用</h4>
+			<br/>
+			<p style="font-size:14px;margin-top:-10px;">免费试用一个月，您无需承担任何风险。我们的服务将向您证明帮帮账是您的最优选择。</p>
+		</div><div class="step">
+			<h4><i class="glyphicon glyphicon-user"></i>专属人员</h4>
+			<br/>
+			<p style="font-size:14px;margin-top:-10px;">将有您的专属财税人员深入了解您的业务、及时解决您的疑问，为您记账和报税。</p>
+		</div><div class="step">
+			<h4><i  class="glyphicon glyphicon-refresh"></i>操作简便</h4>
+			<br/>
+			<p style="font-size:14px;margin-top:-10px;">员工通过微信平台手机拍照上传发票报销，企业主通过我们的网站微信端审批，搞定财税就是那么简单。</p>
+		</div><div class="step">
+			<h4><i  class="glyphicon glyphicon-saved"></i>为您解忧</h4>
+			<br/>
+			<p style="font-size:14px;margin-top:-10px;">不用再为财税烦恼，我们将保证您获得及时准确的财务报表，做好纳税申报。</p>
+		</div>
+	</div>
+
+
+
+
+
+
 <section class="fixed-overlay table hide">
   <div class="cell-center">
     <div class="confirmation-overlay">
@@ -610,6 +546,93 @@
 			}
 		});
 	}
+	
+	
+	
+	
+	// --- chart animation ---
+	var chartPolygon = $('#chart-polygon');
+	var line = $('#SvgjsPolyline1010');
+	var ellipse = $('ellipse');
+	
+	
+	var chartTimeline = new TimelineLite({paused: true});
+	chartTimeline.to(chartPolygon, 0.8, {callback: function(ratio){
+			var v = 129 - 60 * ratio;
+			var v2 = 130 + 30 * ratio;
+			var v4 = 65 + 70 * ratio;
+			var points = '-150,213 150,209 450,'+v2+' 750,'+ v +' 1050,'+v4+' 1350,43 1650,15';
+			line.attr('points', points);
+			chartPolygon.attr('points', points+ ' 1950,250 -150,250');
+			ellipse[3].setAttribute('cy', v);
+			ellipse[2].setAttribute('cy', v2);
+			ellipse[4].setAttribute('cy', v4);
+		}, ease: Power2.EaseInOut
+	});
+	chartTimeline.to(chartPolygon, 0.8, {callback: function(ratio){
+		var v4 = 135 - 30 * ratio;
+		var v5 = 43 + 50 * ratio;
+		var points = '-150,213 150,209 450,'+ '160' +' 750,'+ '69' +' 1050,'+v4+' 1350,'+v5+' 1650,15';
+		line.attr('points', points);
+		chartPolygon.attr('points', points+ ' 1950,250 -150,250');
+		ellipse[4].setAttribute('cy', v4);
+		ellipse[5].setAttribute('cy', v5);
+		}, ease: Power2.EaseInOut
+	}, '+=3');
+	
+	chartTimeline.play();
+	setInterval(function(){
+		if(chartTimeline.reversed())
+			chartTimeline.restart();
+		else
+			chartTimeline.reverse();
+	}, 6500, 0, false);
+	
+	var scrollable = new ScrollableAnim($(window));
+	// --- step animation ---
+	var stepTimeline = new TimelineLite({paused: true});
+	var animLine = $('.anim-timeline');
+	var dots = $('.line-dot');
+	var steps = $('.step');
+	var icons = $('.glyphicon');
+	
+	//stepTimeline.to(dots[0], .2, {className: '+=lightened'});
+	//stepTimeline.to(steps[0], .2, {color: '#323232'}, 0);
+	stepTimeline.to(animLine, 2.1, {width: '100%', ease: Linear.easeNone});
+	stepTimeline.staggerTo(dots, .2, {className: '+=lightened'}, 0.7, 0);
+	stepTimeline.staggerTo(steps, .2, {color: '#323232'}, 0.7, 0);
+	stepTimeline.staggerFromTo(icons, .7, {scaleX:0, scaleY: 0},
+		{scaleX: 1, scaleY: 1, ease: Elastic.easeOut}, 0.7,0);
+	
+	scrollable.scene({
+			triggerElement: '#screen-intro .steps',
+			delayPercent: 0,
+			startup: function(rev){
+				if(!rev){
+					stepTimeline.restart();
+				}
+			}
+	});
+	
+	var signupIconsTl = new TimelineLite({paused: true});
+	signupIconsTl.staggerFromTo($('#screen-signup2 .yw-icon'), 1, {scaleX:0, scaleY:0}, {scaleX: 1, scaleY: 1, ease: Elastic.easeOut, repeat:-1, delay: 0.5, repeatDelay: 5}, 0.3);
+	scrollable.scene({
+			triggerElement: '#screen-signup2',
+			startup: function(rev){
+				if(!rev)
+					signupIconsTl.restart();
+			}
+	});
+	
+	scrollable.scene({
+			triggerElement: '#screen-comments',
+			startup: function(rev){
+				if(!rev){
+					scope.commentAnimStart = 'true';
+					scope.$apply();
+				}
+			}
+	});
 
 </script>
 </body>
