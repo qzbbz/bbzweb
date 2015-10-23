@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh_cn" lang="zh">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <link href="style/css/screen.css" rel="stylesheet" type="text/css" media="screen, projection" />
+      <script type="text/javascript" src="../../js/webjs/jquery-1.8.1.min.js"></script>
+	<link rel="shortcut icon" href="style/favicon.ico">
+	<style>
+	#login-btn:hover{
+	  background-color: #ca4e2c;
+	  border-color: #924935;
+	}
+	
+	#login-btn{
+display: inline-block !important;
+    outline: 0 !important;
+    padding: 1em 1em 15px !important;
+    text-shadow: 0 1px 1px rgba(0,0,0,.2) !important;
+    border-bottom: 2px solid #a4523c !important;
+    font-weight: 600 !important;
+    background-color: #f16549 !important;
+    background-image: linear-gradient(to bottom,rgba(255,255,255,.075) 0,rgba(0,0,0,.075) 100%) !important;
+    color: #FFF !important;
+    width: 100% !important;
+    border-radius: 4px !important;
+    background-clip: padding-box !important;
+    transition: .2s all ease !important;
+    font-family: LLCircularWeb,"Helvetica Neue",Helvetica,Arial,sans-serif !important;
+    border: 0 !important;
+    font-size: 16px !important;
+    cursor: pointer !important;
+    align-items: flex-start !important;
+    text-align: center !important;
+    margin: 0em !important;
+	}
+	</style>
+    <title>帮帮账</title>
+</head>
+  <body >
+    <body class="login-new">
+  <div class="login-new__main">
+    <div class="login-new__main__forgot js-login-forgot hide">
+  <h2>忘记密码?</h2>
+  <p>不要担心。输入您的电子邮件下面，我们将发送您的指示如何重置您的密码。</p>
+  <div class="login-new__main__form__forgot--error">
+    <img src="style/images/warning.svg" class="iconic iconic-sm" />
+    <span>Sorry, this email does not exist in our system. 邮箱 <a href="javascript:;">info@bangbangzhang.com</a> 或加入<a href="javascript:;">实时聊天</a> 协助。邮箱 <a href="javascript:;">info@bangbangzhang.com</a> 或加入 <a href="javascript:;">实时聊天</a> 协助。</span>
+  </div>
+  <div class="login-new__main__form__forgot--success">
+    <img src="style/images/check.svg" class="iconic iconic-sm" />
+    <span>一个密码重置链接将发送给你。</span>
+  </div>
+<div id="account-form_container" class="  signup-form_container ">
+	<div id="home-introduction">
+	</div><h2></h2>
+  	<form id="account-form_form" class="account-form signup-form js-form-show-mobile" data-validate="parsley" >
+	<div class="account-form__field account-form--email">
+			<label class="js-account-form-email">
+			<img data-state="closed" src="style/images/envelope.svg" class="iconic iconic-sm  email-icon" />
+			<input class="js-signup-email" name="j_username" type="text" placeholder="邮箱"    />
+			</label>
+		</div>
+<div class="account-form__buttons">
+    		<div class="account-form__buttons__button account-form__buttons__button--left">
+    			<button type="submit" class="js-login-form js-account-button">
+                    发送
+    			</button>
+    		</div>
+    		<div class="account-form__buttons__button account-form__buttons__button--right">
+    			<div class="account-form__buttons__button__questions js-questions-button">
+    				<span>Questions</span>
+    				<span class="account-form__buttons__button__questions__circle">
+    					<img src="style/images/question-mark.svg" class="iconic iconic-sm" />
+    				</span>
+    			</div>
+    			<div class="account-form__buttons__button__forgot js-forgot-button">
+    				<span>忘记密码?</span>
+    			</div>
+    			<div class="account-form__buttons__button__forgot js-forgot-back-button">
+    				<span>返回登录</span>
+    			</div>
+    		</div>
+    	</div>
+    	<div class="clear" style="clear: both;"></div>
+    </form>
+</div>
+</div>
+    <div class="login-new__main__form js-login-container ">
+  <h2>元升专业服务</h2>
+  <p>欢迎您登录 我们将为您提供专业的服务</p>
+<div id="account-form_container" class="  signup-form_container ">
+	<div id="home-introduction">
+	</div>
+		<h2></h2>
+  	<form id="account-form_form" class="account-form signup-form js-form-show-mobile" data-validate="parsley" >
+		<div class="account-form__field account-form--email">
+			<label class="js-account-form-email">
+			<img data-state="closed" src="style/images/envelope.svg" class="iconic iconic-sm  email-icon" />
+			<input id="account-form_email" class="js-signup-email" name="j_username" type="text" placeholder="邮箱" data-trigger="change" data-required="true" data-type="email"  data-error-message="请输入一个电子邮件地址。"   />
+			</label>
+		</div>
+		<div class="account-form__field account-form__form__field--password">
+			<div class="account-form__field__show js-toggle-password">
+				<img src="style/images/eye.svg" class="iconic iconic-sm " />
+				<span>显示</span>
+			</div>
+
+			<label class="js-account-form-password">
+				<img data-state="locked" src="style/images/lock.svg" class="iconic iconic-sm " />
+				<input class="password_visible" name="show-password" type="text" placeholder="密码" style="display: none" />
+				<input id="account-form_password" class="js-signup-password password_masked" name="j_password" type="password" placeholder="密码" data-required="true" data-trigger="keyup" data-error-message="请输入密码。" />
+			</label>
+		</div>
+<div class="account-form__buttons">
+    		<div class="account-form__buttons__button account-form__buttons__button--left">
+    			<input type="button" id="login-btn" class="js-login-form js-account-button" value="登录"/>
+    		</div>
+    		<div class="account-form__buttons__button account-form__buttons__button--right">
+    			<div class="account-form__buttons__button__questions js-questions-button">
+    				<span>问题</span>
+    				<span class="account-form__buttons__button__questions__circle">
+    					<img src="style/images/question-mark.svg" class="iconic iconic-sm" />
+    				</span>
+    			</div>
+    			<div class="account-form__buttons__button__forgot js-forgot-button">
+    				<span>忘记密码?</span>
+    			</div>
+    			<div class="account-form__buttons__button__forgot js-forgot-back-button">
+    				<span>返回登录</span>
+    			</div>
+    		</div>
+    	</div>
+    	<div class="clear" style="clear: both;"></div>
+    </form>
+    <div id="user-login-error-msg"></div>
+</div>
+</div>
+    <div class="login-new__main__overlay"></div>
+  </div>
+  <div class="login-new__footer">
+    <p>沪ICP备15012848号 | COPYRIGHT © 2014-2015, BANGBANGZHANG, ALL RIGHTS RESERVED</p>
+  </div>
+</body>
+    <script type="text/javascript">var mainapp_offline=false;</script>
+    <script type="text/javascript">
+
+    $("#login-btn").click(function(){
+    	console.log('clicked');
+    var userEmail = $('#account-form_email').val();
+	var userPwd = $('#account-form_password').val();
+	console.log(userEmail);
+	console.log(userPwd);
+	var loginErrorMsg = $('#user-login-error-msg');
+	if(userEmail == null || !isEmail(userEmail)) {
+		$("#userLoginEmailError").show();
+		return;
+	} else {
+		$("#userLoginEmailError").hide();
+	}
+	if(userPwd == null || userPwd == '') {
+		$("#userLoginPwdError").show();
+		return;
+	} else {
+		$("#userLoginPwdError").hide();
+	}
+	loginErrorMsg.html("<p style='color: white;'>正在向服务器提交您的信息，请稍后......</p>");
+	loginErrorMsg.show();
+	$.ajax({
+		url : '../../checkUserLogin',
+		type : "POST",
+		data : {
+			userId : userEmail,
+			userPwd : userPwd
+		},
+		cache : false,
+		success : function(data) {
+			if(data.error_code == '-1') {
+				loginErrorMsg.html("<p style='color: #FD7A50;'>用户名或密码不能为空！</p>");
+			} else if(data.error_code == '0') {
+				var userType = parseInt(data.user_type);
+				var path = '';
+				switch(userType) {
+				case 1:
+					path = "/accounter/companyExpenseRecords";
+					break;
+				case 2:
+					path = "/company/expenseAccountUpload";
+					break;
+				case 3:
+					path = "/admin/admin";
+					break;
+				case 5:
+					path = "/companyUser/expenseAccountUpload";
+					break;
+				default:
+					path = "/error";
+					break;
+				}
+				loginErrorMsg.html("<p style='color: #419088;'>登陆成功！3秒后系统将自动转向后台页面......</p>");
+				setTimeout(function(){loginErrorMsg.hide();window.location=path;}, 3000);
+			} else if(data.error_code == '4') {
+				//$scope.companyUserEmail = userEmail;
+				//$scope.companyUserPwd = userPwd;
+				loginErrorMsg.html("<p style='color: #419088;'>登陆成功，您还没有完成信息录入，5秒后系统将自动转向信息录入页面......</p>");
+				setTimeout(function(){window.location.href = '/views/frontviews/signup-steps.html';loginErrorMsg.hide();}, 3000);
+			} else if(data.error_code == '100') {
+				loginErrorMsg.html("<p style='color: #FD7A50;'>您注册的帐号正在审核中,请稍候重试!</p>");
+			} else if(data.error_code == '102') {
+				loginErrorMsg.html("<p style='color: #FD7A50;'>您注册的帐号没有通过审核,请联系管理员!</p>");
+			} else if(data.error_code == '1' || data.error_code == '2') {
+				loginErrorMsg.html("<p style='color: #FD7A50;'>" + data.error_message + "</p>");
+			}
+		},
+		error : function() {
+			loginErrorMsg.html("<p style='color: #FD7A50;'>服务器暂时不可用，请稍后重试！</p>");
+		}
+	});
+    });
+    
+    function isEmail(email) {
+        var result = email
+                        .match(/^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/);
+        if (result == null)
+                return false;
+        return true;
+  }
+    
+  	function checkInput() {
+  		$("#account-form_email").on('input',function(e){
+  			$("#signup-error-msg").hide();
+  			var email = $("#account-form_email").val();
+  			if(email == null || !isEmail(email)) {
+  				$("#sign-up-screen-email-error").show();
+  			} else {
+  				$("#sign-up-screen-email-error").hide();
+  			}
+  		});
+  		$("#account-form_password").on('input',function(e){
+  			$("#signup-error-msg").hide();
+  			var pwd = $("#account-form_password").val();
+  			if(pwd == null || pwd == '') {
+  				$("#sign-up-screen-pwd-error").show();
+  			} else {
+  				$("#sign-up-screen-pwd-error").hide();
+  			}
+  		});
+  	}
+  	checkInput();
+    </script>
+  </body>
+</html>

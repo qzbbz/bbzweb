@@ -261,8 +261,8 @@ public class CompanyController {
 	public Map<String, String> companyFinishRegister(HttpServletRequest request) {
 		logger.debug("enter companyFinishRegister");
 		Map<String, String> params = new HashMap<>();
-		params.put("userEmail", request.getParameter("userEmail"));
-		params.put("userPwd", request.getParameter("userPwd"));
+		//params.put("userEmail", request.getParameter("userEmail"));
+		//params.put("userPwd", request.getParameter("userPwd"));
 		params.put("userName", request.getParameter("userName"));
 		params.put("userCompanyName", request.getParameter("userCompanyName"));
 		params.put("userCompanyIncomes", request.getParameter("userCompanyIncomes"));
