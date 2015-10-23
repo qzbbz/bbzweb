@@ -405,7 +405,7 @@
   </div>
   <form id="modular__signup_form" class="cta-signup-footer__form signup-form js-form-show-mobile" data-validate="parsley">
     <div class="cta-signup-footer__form__field cta-signup-footer__form--email">
-      <label class="js-account-form-email"> <img data-state="closed" src="style/images/envelope.svg" class="iconic iconic-sm  email-icon" /> <input id="modular__signup_email" class="js-signup-email" name="email" type="text" placeholder="邮箱" data-trigger="change" data-required="true" data-type="email"  style="border-bottom:1px solid #FFF"/> </label>
+      <label class="js-account-form-email"> <img data-state="closed" src="style/images/envelope.svg" class="iconic iconic-sm  email-icon" /> <input id="modular__signup_email_btn" class="js-signup-email" name="email" type="text" placeholder="邮箱" data-trigger="change" data-required="true" data-type="email"  style="border-bottom:1px solid #FFF"/> </label>
     </div>
     <div class="cta-signup-footer__form__field cta-signup-footer__form__form__field--password">
       <div class="cta-signup-footer__form__field__show js-toggle-password" style="border-bottom:1px solid #FFF">
@@ -415,10 +415,11 @@
       <label class="js-account-form-password"> <img data-state="locked" src="style/images/lock.svg" class="iconic iconic-sm " /> <input class="password_visible" name="show-password" type="text" placeholder="密码" style="display: none;border-bottom:1px solid #FFF"/> <input id="modular__signup_password" class="js-signup-password password_masked" name="password" type="password" placeholder="密码" data-required="true" data-trigger="keyup" data-error-message="请输入密码。" style="border-bottom:1px solid #FFF"/> </label>
     </div>
     <div class="cta-signup-footer__form__submit">
-      <button type="submit" class="js-signup-submit-new js-account-button" id="btn--login"> <span>注册</span> </button>
+      <input id="sign-up-bottom-btn" type="button" class="js-signup-submit-new js-account-button" id="btn--login" value="注册" />
     </div>
     <div class="clear" style="clear: both;"></div>
   </form>
+  <div id="signup-error-msg-bottom"></div>
 </div>
 
 <div class="new-home__logos__border">
@@ -524,14 +525,10 @@
     movieShow.style.display="none";
     movieV.pause();
   }
-  
-  $("#sign-up-btn").click(function(){
-	  var email = $("#account-form_email").val();
-	  var pwd = $("#account-form_password").val();
-	  console.log(email);
-	  console.log(pwd);
-	  var type = 2;
-	  var errorMsgObj = $('#signup-error-msg');
+ function signUp(email, pwd, errorMsgObj){
+	 
+	 var type = 2;
+
 		$.ajax({
 			url : '/checkUserRegister',
 			type : "POST",
@@ -562,6 +559,26 @@
 				errorMsgObj.html("<p style='color: #FD7A50;'>服务器暂时不可用，请稍后重试！</p>");
 			}
 		});
+	 
+ } 
+  $("#sign-up-btn").click(function(){
+
+	  var email = $("#account-form_email").val();
+	  var pwd = $("#account-form_password").val();
+	  var errorMsgObj = $('#signup-error-msg');
+	  checkInput($("#account-form_email"), $("#account-form_password"));
+	  signUp(email, pwd, errorMsgObj);
+	  
+  });
+  
+  $("#sign-up-bottom-btn").click(function(){
+	  var email = $("#modular__signup_email_btn").val();
+	  var pwd = $("#modular__signup_password").val();
+	  console.log(email);
+	  console.log(pwd);
+	  var errorMsgObj = $("#signup-error-msg-bottom");
+	  checkInput($("#modular__signup_email"), $("#modular__signup_password"));
+	  signUp(email, pwd, errorMsgObj);
   });
   
 
@@ -573,19 +590,19 @@
       return true;
 }
   
-	function checkInput() {
-		$("#account-form_email").on('input',function(e){
+	function checkInput(emailObj, pwdObj) {
+		emailObj.on('input',function(e){
 			$("#signup-error-msg").hide();
-			var email = $("#account-form_email").val();
+			var email = emailObj.val();
 			if(email == null || !isEmail(email)) {
 				$("#sign-up-screen-email-error").show();
 			} else {
 				$("#sign-up-screen-email-error").hide();
 			}
 		});
-		$("#account-form_password").on('input',function(e){
+		pwdObj.on('input',function(e){
 			$("#signup-error-msg").hide();
-			var pwd = $("#account-form_password").val();
+			var pwd = pwdObj.val();
 			if(pwd == null || pwd == '') {
 				$("#sign-up-screen-pwd-error").show();
 			} else {
@@ -593,7 +610,7 @@
 			}
 		});
 	}
-	checkInput();
+
 </script>
 </body>
 </html>
