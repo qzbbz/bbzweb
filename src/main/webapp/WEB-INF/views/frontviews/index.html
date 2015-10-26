@@ -47,17 +47,47 @@
     text-align: center !important;
     margin: 0em !important;
   }
-  
+  #sign-up-bottom-btn {
+	margin-top:16px !important;
+    display: inline-block !important;
+    outline: 0 !important;
+    padding: 1em 1em 15px !important;
+    text-shadow: 0 1px 1px rgba(0,0,0,.2) !important;
+    border-bottom: 2px solid #a4523c !important;
+    font-weight: 600 !important;
+    background-color: #f16549 !important;
+    background-image: linear-gradient(to bottom,rgba(255,255,255,.075) 0,rgba(0,0,0,.075) 100%) !important;
+    color: #FFF !important;
+    width: 100% !important;
+    border-radius: 4px !important;
+    background-clip: padding-box !important;
+    transition: .2s all ease !important;
+    font-family: LLCircularWeb,"Helvetica Neue",Helvetica,Arial,sans-serif !important;
+    border: 0 !important;
+    font-size: 16px !important;
+    cursor: pointer !important;
+    align-items: flex-start !important;
+    text-align: center !important;
+
+  }
   #SvgjsSvg1000 {
   	width: 100% !important;
   }
-  </style>
+  .header-new__links a{ color:#CCCCCC;}
+  .step h4{ font-weight:900;}
+  #modular__signup_name{ padding:14px 14px 10px 28px;}
+  #modular__signup_phone{ padding:14px 14px 10px 28px;}
+  #modular__signup_email{ padding:14px 14px 10px 28px;}
+  #modular__signup_email_btn{ padding:14px 14px 10px 28px;}
+  #modular__signup_password{ padding:14px 14px 10px 28px;}
+  .cta-signup-footer__icons span{ color:#FFFFFF;}
+    </style>
 </head>
 <body class="new-home video-bg">
 <header class="header-new js-header-new">
   <nav>
   <a href="index.html" class="header-new__links" style="float: left;">
-    <img src="style/images/logo.png" title="帮帮账">
+    <img src="style/image/logo2.png" title="帮帮账">
   </a>
 
     <ul class="header-new__links">
@@ -70,7 +100,7 @@
 </header>
 <header class="header-mobile-new">
   <a href="index.html" class="header-new__links" style="float: left;">
-    <img src="style/images/logo.png" title="帮帮账">
+    <img src="style/image/logo2.png" title="帮帮账">
   </a>
   <div class="header-mobile-new__menu">
     <span class="header-mobile-new__menu__button js-mobile-navigation">
@@ -92,13 +122,13 @@
   </nav>
 </header>
 <div class="new-home__hero hero-video hero-cta-new">
-  <video preload="auto" loop="loop" autoplay="autoplay" id="broll-video" class="hero-video-broll hide-for-small">
+  <video preload="auto" loop autoplay id="broll-video" class="hero-video-broll hide-for-small">
     <source src="style/B-Roll_Cropped.mp4" type="video/mp4">
     <source src="style/B-Roll_Cropped.webm" type="video/webm">
     <source src="style/B-Roll_Cropped.ogg" type="video/ogg">
   </video>
   <div class="movieindex" id="movieshow">
-    <video controls="controls" loop="loop" height="540" width="960" id="movieV">
+    <video controls loop height="540" width="960" id="movieV">
       <source src="style/movie.mp4">
     </video>
     <img src="style/images/delete.png" class="movieDet" height="20" width="20" id="movieDet">
@@ -141,14 +171,14 @@
       </div>
       <form id="account-form_form" class="account-form signup-form js-form-show-mobile" data-validate="parsley">
         <div class="account-form__field account-form--email">
-          <label class="js-account-form-email"> <img data-state="closed" src="style/images/envelope.svg" class="iconic iconic-sm  email-icon" /> <input id="account-form_email" class="js-signup-email" name="email" type="text" placeholder="邮箱" data-trigger="change" data-required="true" data-type="email"/> </label>
+          <label class="js-account-form-email"> <img data-state="closed" src="style/image/shuxin.png"  style="height:20px; width:20px;" class="iconic iconic-sm  email-icon" /> <input id="account-form_email" class="js-signup-email" name="email" type="text" placeholder="邮箱" data-trigger="change" data-required="true" data-type="email"/> </label>
         </div>
         <div class="account-form__field account-form__form__field--password">
           <div class="account-form__field__show js-toggle-password">
-            <img src="style/images/eye.svg" class="iconic iconic-sm " />
+            <img src="style/image/eye1.png"  style="height:18px; width:18px;" class="iconic iconic-sm " />
             <span id='password-status'>显示</span>
           </div>
-          <label class="js-account-form-password"> <img data-state="locked" src="style/images/lock.svg" class="iconic iconic-sm " /> <input class="password_visible" name="show-password" type="text" placeholder="密码" style="display: none" /> <input id="account-form_password" class="js-signup-password password_masked" name="password" type="password" placeholder="密码" data-required="true" data-trigger="keyup" data-error-message="请输入密码。" /> </label>
+          <label class="js-account-form-password"> <img data-state="locked" src="style/image/as (5).png" style="height:20px; width:20px;" class="iconic iconic-sm " /> <input class="password_visible" name="show-password" type="text" placeholder="密码" style="display: none" /> <input id="account-form_password" class="js-signup-password password_masked" name="password" type="password" placeholder="密码" data-required="true" data-trigger="keyup" data-error-message="请输入密码。" /> </label>
         </div>
         <div class="account-form__buttons">
           <div class="account-form__buttons__button account-form__buttons__button--left">
@@ -179,13 +209,13 @@
       </div>
       <form id="account-form_form" class="account-form signup-form js-form-show-mobile" data-validate="parsley">
         <div class="account-form__field account-form--name">
-          <label class="js-account-form-name"> <img data-state="closed" src="style/images/person.svg" class="iconic iconic-sm  name-icon" /> <input id="account-form_name" class="js-signup-name" name="name" type="text" placeholder="全名" data-required="true" data-trigger="change" data-error-message="请输入您的全名。" /> </label>
+          <label class="js-account-form-name"> <img data-state="closed" src="style/image/person-genderless-red-(1).png"  style="height:20px; width:20px;" class="iconic iconic-sm  name-icon" /> <input id="account-form_name" class="js-signup-name" name="name" type="text" placeholder="全名" data-required="true" data-trigger="change" data-error-message="请输入您的全名。" /> </label>
         </div>
         <div class="account-form__field account-form--email">
-          <label class="js-account-form-email"> <img data-state="closed" src="style/images/envelope.svg" class="iconic iconic-sm  email-icon" /> <input id="account-form_email" class="js-signup-email" name="email" type="text" placeholder="邮箱" data-trigger="change" data-required="true" data-type="email" /> </label>
+          <label class="js-account-form-email"> <img data-state="closed" src="style/image/shuxin.png"  style="height:20px; width:20px;" class="iconic iconic-sm  email-icon" /> <input id="account-form_email" class="js-signup-email" name="email" type="text" placeholder="邮箱" data-trigger="change" data-required="true" data-type="email" /> </label>
         </div>
         <div class="account-form__field account-form--phone">
-          <label class="js-account-form-phone"> <img data-state="closed" src="style/images/iphone.svg" class="iconic iconic-sm  phone-icon" /> <input id="account-form_phone" class="js-signup-phone" name="phone" type="text" placeholder="电话号码" data-type="phone" data-required="true" data-error-message="请输入您的电话号码。" maxlength="10" pattern=".{10,}" data-trigger="change" /> </label>
+          <label class="js-account-form-phone"> <img data-state="closed" src="style/image/iphone-red.png"  style="height:20px; width:20px;" class="iconic iconic-sm  phone-icon" /> <input id="account-form_phone" class="js-signup-phone" name="phone" type="text" placeholder="电话号码" data-type="phone" data-required="true" data-error-message="请输入您的电话号码。" maxlength="10" pattern=".{10,}" data-trigger="change" /> </label>
         </div>
         <div class="account-form__buttons">
           <div class="account-form__buttons__button account-form__buttons__button--left">
@@ -242,19 +272,19 @@
 		<div class="step">
 			<h4><i class="glyphicon glyphicon-heart-empty"></i>免费试用</h4>
 			<br/>
-			<p style="font-size:14px;margin-top:-10px;">免费试用一个月，您无需承担任何风险。我们的服务将向您证明帮帮账是您的最优选择。</p>
+			<p style="font-size:14px;margin-top:-10px; margin-left:80px;">免费试用一个月，您无需承担任何风险。我们的服务将向您证明帮帮账是您的最优选择。</p>
 		</div><div class="step">
 			<h4><i class="glyphicon glyphicon-user"></i>专属人员</h4>
 			<br/>
-			<p style="font-size:14px;margin-top:-10px;">将有您的专属财税人员深入了解您的业务、及时解决您的疑问，为您记账和报税。</p>
+			<p style="font-size:14px;margin-top:-10px;  margin-left:80px;">将有您的专属财税人员深入了解您的业务、及时解决您的疑问，为您记账和报税。</p>
 		</div><div class="step">
 			<h4><i  class="glyphicon glyphicon-refresh"></i>操作简便</h4>
 			<br/>
-			<p style="font-size:14px;margin-top:-10px;">员工通过微信平台手机拍照上传发票报销，企业主通过我们的网站微信端审批，搞定财税就是那么简单。</p>
+			<p style="font-size:14px;margin-top:-10px;  margin-left:80px;">员工通过微信平台手机拍照上传发票报销，企业主通过我们的网站微信端审批，搞定财税就是那么简单。</p>
 		</div><div class="step">
 			<h4><i  class="glyphicon glyphicon-saved"></i>为您解忧</h4>
 			<br/>
-			<p style="font-size:14px;margin-top:-10px;">不用再为财税烦恼，我们将保证您获得及时准确的财务报表，做好纳税申报。</p>
+			<p style="font-size:14px;margin-top:-10px;  margin-left:80px;">不用再为财税烦恼，我们将保证您获得及时准确的财务报表，做好纳税申报。</p>
 		</div>
 	</div>
 </div>
@@ -267,29 +297,29 @@
 <div class="new-home__section new-home__what-we-do js-background-replace" data-background-src="style/images/desk_background.jpg" style="background-color: #FFF">
   <div class="row">
     <div class="columns large-4 padding-start">
-      <p><img src="style/images/briefcase.svg" class="iconic iconic-sm icon-blue" /><strong>专业记账</strong></p>
+      <p><img src="style/image/briefcase.png" style="height:16px; width:16px;"  class="iconic iconic-sm icon-blue" /><strong>专业记账</strong></p>
       <p>记账不仅仅是依靠软件即可完成的，帮帮账为您提供专业会计人员的记账服务。</p>
     </div>
     <div class="columns large-4 padding-middle">
-      <p><img src="style/images/list.svg" class="iconic iconic-sm icon-brown" /><strong>即时财务数据</strong></p>
+      <p><img src="style/image/list.png" style="height:16px; width:16px;"  class="iconic iconic-sm icon-brown" /><strong>即时财务数据</strong></p>
       <p>通过帮帮账客户端的报告，您可及时分析您的费用明细。您可以随时查看从银行对账单到原始发票凭证。</p>
     </div>
     <div class="columns large-4 padding-end">
-      <p><img src="style/images/lock.svg" class="iconic iconic-sm icon-green" /><strong>银行级数据安全</strong></p>
+      <p><img src="style/image/lock-locked-red.png" style="height:16px; width:16px;" class="iconic iconic-sm icon-green" /><strong>银行级数据安全</strong></p>
       <p>帮帮账采用高级别的加密文件来保护您的财务数据，确保您的数据安全不受侵害。</p>
     </div>
   </div>
   <div class="row padding-top">
     <div class="columns large-4 padding-start">
-      <p><img src="style/images/laptop.svg" class="iconic iconic-sm icon-red" /><strong>无纸化记账</strong></p>
+      <p><img src="style/image/laptop1.png"  style="height:16px; width:16px;" class="iconic iconic-sm icon-red" /><strong>无纸化记账</strong></p>
       <p>通过邮件照片或者快递的形式将您的凭证寄给帮帮账，我们将为您扫描并上传到你的账户。</p>
     </div>
     <div class="columns large-4 padding-middle">
-      <p><img src="style/images/person.svg" class="iconic iconic-sm icon-blue" /><strong>财务专家</strong></p>
+      <p><img src="style/image/person-genderless-red-(1).png" style="height:16px; width:16px;"  class="iconic iconic-sm icon-blue" /><strong>财务专家</strong></p>
       <p>无论你是对报税、最新的会计准则，或是对投资者的尽职调查与审计有疑问于困惑，帮帮账有最专业的人士为您提供帮助与辅导。</p>
     </div>
     <div class="columns large-4 padding-end">
-      <p><img src="style/images/timer.svg" class="iconic iconic-sm icon-brown" /><strong>税务专家</strong></p>
+      <p><img src="style/image/timer.png" style="height:16px; width:16px;"  class="iconic iconic-sm icon-brown" /><strong>税务专家</strong></p>
       <p>帮帮账的专业人士将会与你们一起合作，高效率、高质量地完成你们的纳税申报。</p>
     </div>
   </div>
@@ -390,13 +420,13 @@
   <h2>准备开始?</h2>
   <form id="modular__signup_form" class="cta-signup-footer__form signup-form js-form-show-mobile" data-validate="parsley">
     <div class="cta-signup-footer__form__field cta-signup-footer__form--name">
-      <label class="js-account-form-name"> <img data-state="closed" src="style/images/person.svg" class="iconic iconic-sm  name-icon" /> <input id="modular__signup_name" class="js-signup-name" name="name" type="text" placeholder="全名" data-required="true" data-trigger="change" data-error-message="请输入您的全名。" /> </label>
+      <label class="js-account-form-name"> <img data-state="closed" src="style/image/person01.png" style="height:16px; width:16px;"  class="iconic iconic-sm  name-icon" /> <input id="modular__signup_name" class="js-signup-name" name="name" type="text" placeholder="全名" data-required="true" data-trigger="change" data-error-message="请输入您的全名。" /> </label>
     </div>
     <div class="cta-signup-footer__form__field cta-signup-footer__form--email">
-      <label class="js-account-form-email"> <img data-state="closed" src="style/images/envelope.svg" class="iconic iconic-sm  email-icon" /> <input id="modular__signup_email" class="js-signup-email" name="email" type="text" placeholder="邮箱" data-trigger="change" data-required="true" data-type="email" /> </label>
+      <label class="js-account-form-email"> <img data-state="closed" src="style/image/envelope.png" style="height:16px; width:16px;" class="iconic iconic-sm  email-icon" /> <input id="modular__signup_email" class="js-signup-email" name="email" type="text" placeholder="邮箱" data-trigger="change" data-required="true" data-type="email" /> </label>
     </div>
     <div class="cta-signup-footer__form__field cta-signup-footer__form--phone">
-      <label class="js-account-form-phone"> <img data-state="closed" src="style/images/iphone.svg" class="iconic iconic-sm  phone-icon" /> <input id="modular__signup_phone" class="js-signup-phone" name="phone" type="text" placeholder="电话号码" data-type="phone" data-required="true" data-error-message="请输入您的电话号码。" maxlength="10" pattern=".{10,}" data-trigger="change" /> </label>
+      <label class="js-account-form-phone"> <img data-state="closed" src="style/image/iphone-write.png" style="height:16px; width:16px;" class="iconic iconic-sm  phone-icon" /> <input id="modular__signup_phone" class="js-signup-phone" name="phone" type="text" placeholder="电话号码" data-type="phone" data-required="true" data-error-message="请输入您的电话号码。" maxlength="10" pattern=".{10,}" data-trigger="change" /> </label>
     </div>
     <div class="cta-signup-footer__form__submit">
       <button type="submit" class="js-signup-submit-phone js-account-button" id="btn--login"> <span>开始</span> </button>
@@ -442,14 +472,14 @@
   </div>
   <form id="modular__signup_form" class="cta-signup-footer__form signup-form js-form-show-mobile" data-validate="parsley">
     <div class="cta-signup-footer__form__field cta-signup-footer__form--email">
-      <label class="js-account-form-email"> <img data-state="closed" src="style/images/envelope.svg" class="iconic iconic-sm  email-icon" /> <input id="modular__signup_email_btn" class="js-signup-email" name="email" type="text" placeholder="邮箱" data-trigger="change" data-required="true" data-type="email"  style="border-bottom:1px solid #FFF"/> </label>
+      <label class="js-account-form-email register-form-bottom"> <img data-state="closed" src="style/image/envelope.png" style="height:20px; width:20px;" class="iconic iconic-sm  email-icon" /> <input id="modular__signup_email_btn" class="js-signup-email" name="email" type="text" placeholder="邮箱" data-trigger="change" data-required="true" data-type="email"  style="border-bottom:1px solid #FFF"/> </label>
     </div>
     <div class="cta-signup-footer__form__field cta-signup-footer__form__form__field--password">
-      <div class="cta-signup-footer__form__field__show js-toggle-password" style="border-bottom:1px solid #FFF">
-        <img src="style/images/eye.svg" class="iconic iconic-sm " />
+      <div class="cta-signup-footer__form__field__show js-toggle-password register-form-bottom" style="border-bottom:1px solid #FFF">
+        <img src="style/image/eye.png" style="height:20px; width:20px;" class="iconic iconic-sm " />
         <span>显示</span>
       </div>
-      <label class="js-account-form-password"> <img data-state="locked" src="style/images/lock.svg" class="iconic iconic-sm " /> <input class="password_visible" name="show-password" type="text" placeholder="密码" style="display: none;border-bottom:1px solid #FFF"/> <input id="modular__signup_password" class="js-signup-password password_masked" name="password" type="password" placeholder="密码" data-required="true" data-trigger="keyup" data-error-message="请输入密码。" style="border-bottom:1px solid #FFF"/> </label>
+      <label class="js-account-form-password register-form-bottom"> <img data-state="locked" src="style/image/lock.png" style="height:20px; width:20px;" class="iconic iconic-sm " /> <input class="password_visible" name="show-password" type="text" placeholder="密码" style="display: none;border-bottom:1px solid #FFF"/> <input id="modular__signup_password" class="js-signup-password password_masked" name="password" type="password" placeholder="密码" data-required="true" data-trigger="keyup" data-error-message="请输入密码。" style="border-bottom:1px solid #FFF"/> </label>
     </div>
     <div class="cta-signup-footer__form__submit">
       <input id="sign-up-bottom-btn" type="button" class="js-signup-submit-new js-account-button" id="btn--login" value="注册" />
