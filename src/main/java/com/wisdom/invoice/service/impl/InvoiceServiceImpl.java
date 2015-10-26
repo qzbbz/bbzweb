@@ -405,16 +405,18 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		Map<String, List<Map<String, Object>>> retMap = new HashMap<String, List<Map<String, Object>>>();
 		retMap.put("finishedList",null);
 		retMap.put("processingList",null);
-		
+		logger.debug("getNeededAuditBillList approvalId : {}", approvalId);
 		List<InvoiceApproval> invoiceApprovalList = invoiceApprovalService.getInvoiceApprovalListByUserId(approvalId);
 		if(null == invoiceApprovalList){
 			log.error("null invoiceApprovalList error:" + approvalId);
 			return retMap;
 		}
+		logger.debug("invoiceApprovalList length : {}", invoiceApprovalList.size());
 		
 		List<Map<String,Object>> finishedList = new ArrayList<Map<String,Object>>();
 		List<Map<String,Object>> processingList = new ArrayList<Map<String,Object>>();
 		for(InvoiceApproval invoiceApproval : invoiceApprovalList){
+			logger.debug("invoiceApproval, invoice_id :{}", invoiceApproval.getInvoiceId());
 			Map map = new HashMap<String,Object>();
 			map.put("processStatus", invoiceApproval.getStatus());
 			map.put("invoice_id", invoiceApproval.getInvoiceId());
@@ -438,8 +440,9 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			map.put("approval_id", approvalId);
 			Invoice invoice =  singleInvoiceService.getSingleInvoiceInfo(invoiceApproval.getInvoiceId());
 			if(null == invoice){
-				log.debug("invoice not exsisted");
-				return map;
+				logger.debug("invoice not exsisted, invoice_id : {}", invoiceApproval.getInvoiceId());
+				//return map;
+				continue;
 			}
 			map.put("bill_title", invoice.getTitle());
 			map.put("bill_amount", invoice.getAmount());

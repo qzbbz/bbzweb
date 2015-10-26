@@ -1017,9 +1017,9 @@ $(function(){
 		        url  : "/getNeedAuditBills?openId=" + userOpenId,  
 		        cache : false,
 		        async: isAsync,
-		        success : getNeedAuditBills 
+		        success : getNeedAuditBillsSuccess 
 		    });
-			function getNeedAuditBills(data){
+			function getNeedAuditBillsSuccess(data){
 				if(data.processingList != null) {
 					needAuditBillList = data.processingList;
 					needAuditBillList.sort(function(a,b){return a.bill_date<b.bill_date?1:-1});
@@ -1037,9 +1037,9 @@ $(function(){
 		        url  : "/getInboxBills?openId=" + userOpenId,  
 		        cache : false,
 		        async: isAsync,
-		        success : getInboxBills 
+		        success : getInboxBillsSuccess 
 		    });
-			function getInboxBills(data) {
+			function getInboxBillsSuccess(data) {
 				if(data.uploadedList != null) {
 					draftBillList = data.uploadedList;
 					draftBillList.sort(function(a,b){return a.bill_date<b.bill_date?1:-1});
