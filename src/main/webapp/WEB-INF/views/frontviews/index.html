@@ -133,7 +133,7 @@
     </video>
     <img src="style/images/delete.png" class="movieDet" height="20" width="20" id="movieDet">
   </div>
-  <div class="new-home__hero__overlay">
+  <div id="chart" class="new-home__hero__overlay">
 <div class="linechart" yw-chart-anim>
 	<svg id="SvgjsSvg1000" xmlns="http://www.w3.org/2000/svg" version="1.1" width="1340" height="250" xmlns:xlink="http://www.w3.org/1999/xlink">
 		<polygon id="SvgjsPolygon1009" points="-150,222 150,203 450,179 750,177 1050,75 1350,187 1650,133 1950,40 2250,15 2550,250 -150,250" fill="url(#SvgjsLinearGradient1006)" stroke="none">
@@ -489,7 +489,7 @@
   <div id="signup-error-msg-bottom"></div>
 </div>
 
-<div class="new-home__logos__border">
+<div  class="new-home__logos__border">
   <div class="new-home__logos">
     <span>Featured In</span>
     <div class="new-home__logos__container">
@@ -803,6 +803,27 @@
             }, (e - 1) * (t / 2), o, a, s);
         }), $(".new-home__clients__container__half").height(n);
     
+	if ($(window).width() <= 960) {
+		console.log("hide");
+		$("#chart").css("display", "none");
+	}
+	else {
+		console.log("display");
+		$("#chart").css("display", "block");
+	}
+	
+	$(window).on("resize",function(){
+		console.log("chanege");
+		if ($(window).width() <= 960) {
+			console.log("hide");
+			$("#chart").css("display", "none");
+		}
+		else {
+			console.log("display");
+			$("#chart").css("display", "block");
+		}
+		
+	});
 </script>
 </body>
 </html>
