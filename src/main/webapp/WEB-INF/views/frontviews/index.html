@@ -4,6 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <link href="style/css/screen.css" rel="stylesheet" type="text/css" media="screen, projection" />
+  <link rel="stylesheet" type="text/css" href="../../css/webcss/youngwisdom.css">
   <link rel="shortcut icon" href="style/favicon.ico">
   <title>帮帮账</title>
                <script type="text/javascript" src="../../js/webjs/main.page.utils.js"></script>
@@ -220,7 +221,7 @@
   <p>您可以获得专业的线上会计和税务人员为您准备财务和税务报表，您可以通过简洁易用的软件直接审阅报表。 </p>
   <div class="new-home__section__background"></div>
   
-  
+  <div id="screen-intro">
   	<div class="timeline-section" style='margin-top:70px;'>
 		<div class="timeline">
 			<div class="anim-timeline"></div>
@@ -250,7 +251,7 @@
 			<p style="font-size:14px;margin-top:-10px;">不用再为财税烦恼，我们将保证您获得及时准确的财务报表，做好纳税申报。</p>
 		</div>
 	</div>
-
+</div>
 
 
 
@@ -605,7 +606,7 @@
 		{scaleX: 1, scaleY: 1, ease: Elastic.easeOut}, 0.7,0);
 	
 	scrollable.scene({
-			triggerElement: '#screen-intro .steps',
+			triggerElement: '.steps',
 			delayPercent: 0,
 			startup: function(rev){
 				if(!rev){
@@ -614,25 +615,6 @@
 			}
 	});
 	
-	var signupIconsTl = new TimelineLite({paused: true});
-	signupIconsTl.staggerFromTo($('#screen-signup2 .yw-icon'), 1, {scaleX:0, scaleY:0}, {scaleX: 1, scaleY: 1, ease: Elastic.easeOut, repeat:-1, delay: 0.5, repeatDelay: 5}, 0.3);
-	scrollable.scene({
-			triggerElement: '#screen-signup2',
-			startup: function(rev){
-				if(!rev)
-					signupIconsTl.restart();
-			}
-	});
-	
-	scrollable.scene({
-			triggerElement: '#screen-comments',
-			startup: function(rev){
-				if(!rev){
-					scope.commentAnimStart = 'true';
-					scope.$apply();
-				}
-			}
-	});
 
 </script>
 </body>
