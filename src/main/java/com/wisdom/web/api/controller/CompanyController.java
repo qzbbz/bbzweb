@@ -15,6 +15,7 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,6 +51,7 @@ import com.wisdom.web.api.ICompanyApi;
 import com.wisdom.web.utils.CompanyOrgStructure;
 import com.wisdom.web.utils.ErrorCode;
 import com.wisdom.web.utils.PdfProcess;
+import com.wisdom.web.utils.SessionConstant;
 
 @Controller
 public class CompanyController {
@@ -258,11 +260,11 @@ public class CompanyController {
 	
 	@RequestMapping("/comDetailRegister")
 	@ResponseBody
-	public Map<String, String> companyFinishRegister(HttpServletRequest request) {
+	public Map<String, String> companyFinishRegister(HttpSession httpSession, HttpServletRequest request) {
 		logger.debug("enter companyFinishRegister");
 		Map<String, String> params = new HashMap<>();
-		//params.put("userEmail", request.getParameter("userEmail"));
-		//params.put("userPwd", request.getParameter("userPwd"));
+		params.put("userEmail", (String) httpSession.getAttribute(SessionConstant.SESSION_USER_EMAIL));
+		params.put("userPwd", (String) httpSession.getAttribute(SessionConstant.SESSION_USER_PASSWORD));
 		params.put("userName", request.getParameter("userName"));
 		params.put("userCompanyName", request.getParameter("userCompanyName"));
 		params.put("userCompanyIncomes", request.getParameter("userCompanyIncomes"));

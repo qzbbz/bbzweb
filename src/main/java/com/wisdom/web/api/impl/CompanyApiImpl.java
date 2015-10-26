@@ -88,7 +88,7 @@ public class CompanyApiImpl implements ICompanyApi {
 	@Override
 	public Map<String, String> companyDetailRegister(Map<String, String> params) {
 		Map<String, String> retMap = new HashMap<>();
-/* TODO add user's email and password into session
+/* TODO add user's email and password into session*/
 		String userPwd = params.get("userPwd");
 		String userId = params.get("userEmail");
 		logger.debug("params : {}", params.toString());
@@ -131,7 +131,7 @@ public class CompanyApiImpl implements ICompanyApi {
 		long companyId = companyService.addCompany(company);
 		logger.debug("add company id : {}", companyId);
 		userModifyService.modifyUserCompanyIdByUserId(userId, companyId);
-		userService.addUserPhone(userId, userPhone, 1);*/
+		userService.addUserPhone(userId, userPhone, 1);
 		retMap.put("error_code", "0");
 		return retMap;
 	}
