@@ -95,7 +95,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		invoice.setExpenseTypeId(expenseTypeId);
 		invoice.setAmount(amount);
 		invoice.setCostCenter(costCenterCode);
-		invoice.setStatus(InvoiceStatus.DRAFT); //微信上传默认为草稿
+		invoice.setStatus(InvoiceStatus.SUBMITTED); //微信上传默认为草稿
 		log.debug("double amount : " + amount);
 		log.debug("params amount : " + params.get("amount"));
 		
