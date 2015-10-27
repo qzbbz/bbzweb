@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <link href="style/css/screen.css" rel="stylesheet" type="text/css" media="screen, projection" />
+    <link rel="shortcut icon" href="style/favicon.ico">
+    <title>帮帮账</title>
+    <style type="text/css">
+        body{
+            font-family: Microsoft YaHei,Helvitica,Verdana,Tohoma,Arial,san-serif;
+            letter-spacing: 1px;
+        }
+        body,.angular,.container{
+            height: 100%;
+        }
+    </style>
+</head>
+<body style="background-color: #f1f1f1;">
+<div ui-view class="angular ng-scope">
+    <div class="container ng-scope">
+        <div class="middle ng-scope" ui-view>
+            <div class="window meet ng-scope">
+                <div class="column one-of-three sales animate-fade-in" style="display: inline-block;opacity: 1;background-image: url(style/images/brad-svrluga.jpg)">
+                    <div class="overlay animate-frames-circle-out"></div>
+                    <div class="name animate-name-bottom ng-binding">
+                        <img src="style/images/chat-green.svg" class="iconic">
+                        Kyle
+                        <div class="tooltip ng-binding">Senior Onboarding Specialist</div>
+                    </div>
+                    <div ng-repeat="info in team.firstPerson.info" class="info animate-fade-out ng-scope">
+                        <h3 class="ng-binding">University</h3>
+                        <span class="ng-binding">McGill University</span>
+                    </div>
+                    <div ng-repeat="info in team.firstPerson.info" class="info animate-fade-out ng-scope">
+                        <h3 class="ng-binding">Hometown</h3>
+                        <span class="ng-binding">Calgary,AB</span>
+                    </div>
+                    <div ng-repeat="info in team.firstPerson.info" class="info animate-fade-out ng-scope">
+                        <h3 class="ng-binding">Favorite Food</h3>
+                        <span class="ng-binding">Pizza</span>
+                    </div>
+                </div>
+                <div class="column one-of-three bookkeeper animate-fade-in" style="display: inline-block;opacity: 1;background-image: url(style/images/jess.png)">
+                    <div class="overlay animate-frames-circle-out"></div>
+                    <div class="name animate-name-bottom ng-binding">
+                        <img src="style/images/chat-green.svg" class="iconic">
+                        Kyle
+                        <div class="tooltip ng-binding">Senior Onboarding Specialist</div>
+                    </div>
+                    <div ng-repeat="info in team.firstPerson.info" class="info animate-fade-out ng-scope">
+                        <h3 class="ng-binding">University</h3>
+                        <span class="ng-binding">McGill University</span>
+                    </div>
+                    <div ng-repeat="info in team.firstPerson.info" class="info animate-fade-out ng-scope">
+                        <h3 class="ng-binding">Hometown</h3>
+                        <span class="ng-binding">Calgary,AB</span>
+                    </div>
+                    <div ng-repeat="info in team.firstPerson.info" class="info animate-fade-out ng-scope">
+                        <h3 class="ng-binding">Favorite Food</h3>
+                        <span class="ng-binding">Pizza</span>
+                    </div>
+                </div>
+                <div class="column one-of-three profiles animate-fade-out animate-fade-in" style="display: inline-block;opacity: 1;">
+                    <span class="title">
+                        Meet your Bench team, <strong class="ng-binding">Kyle & Brittany</strong>
+                    </span>
+                    <p class="ng-binding">
+                        Kyle is a sports fanatic and spends the majority of his free time enjoying the outdoors. An avid traveller, Kyle has visited a total of 17 countries.
+                    </p>
+                    <p class="ng-binding">
+                        Brittany grew up in a small farm town, did her Bachelor's Degree in Roman Archaeology and Latin, and totally dreams of being the next Indiana Jones.
+                    </p>
+                    <p>
+                        <em>We look forward to working with you —</em>
+                    </p>
+                    <p style="margin: -20px 0 0 0;">
+                        <img class="signature" alt="Kyle" src="style/images/kyle.svg">
+                        <img class="signature" alt="&" src="style/images/ampersand.svg">
+                        <img class="signature" alt="Brittany" src="style/images/brittany.svg">
+                    </p>
+                </div>
+                <img src="style/images/shape1.svg" class="shape1">
+                <img src="style/images/shape2.svg" class="shape2">
+                <img src="style/images/shape3.svg" class="shape3">
+            </div>
+            <div class="navigation ng-scope">
+                <div class="left">
+                    <a href="javascript:;" class="chat">
+                        <img src="style/images/chat-blue.svg" class="iconic">
+                        Live Chat
+                    </a>
+                    <div class="timeline">
+                        <div class="line">
+                            <div class="fill" style="width: 0%"></div>
+                        </div>
+                        <div class="step" style="left: 0;"></div>
+                        <div class="step todo" style="left: 33%;"></div>
+                        <div class="step todo" style="left: 66%;"></div>
+                        <div class="step todo" style="left: 100%;"></div>
+                    </div>
+                </div>
+                <div class="right">
+                    <a class="button" href="booking.html">Next Step →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

@@ -88,6 +88,7 @@ public class CompanyApiImpl implements ICompanyApi {
 	@Override
 	public Map<String, String> companyDetailRegister(Map<String, String> params) {
 		Map<String, String> retMap = new HashMap<>();
+/* TODO add user's email and password into session*/
 		String userPwd = params.get("userPwd");
 		String userId = params.get("userEmail");
 		logger.debug("params : {}", params.toString());

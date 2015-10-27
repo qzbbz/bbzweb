@@ -71,7 +71,7 @@ public class UserValidateController {
 
 	@RequestMapping("/checkUserRegister")
 	@ResponseBody
-	public Map<String, String> checkUserRegister(HttpServletRequest request) {
+	public Map<String, String> checkUserRegister(HttpSession httpSession, HttpServletRequest request) {
 		String userId = request.getParameter("userId");
 		String userPwd = request.getParameter("userPwd");
 		String userTypeId = request.getParameter("userTypeId");
@@ -86,6 +86,8 @@ public class UserValidateController {
 		} else {
 			retMap.put("error_code", "-1");
 		}
+		httpSession.setAttribute(SessionConstant.SESSION_USER_EMAIL, userId);
+		httpSession.setAttribute(SessionConstant.SESSION_USER_PASSWORD, userPwd);
 		logger.debug("finish checkUserRegister");
 		return retMap;
 	}

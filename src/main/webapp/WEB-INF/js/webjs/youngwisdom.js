@@ -459,7 +459,7 @@ return {
 					{scaleX: 1, scaleY: 1, ease: Elastic.easeOut}, 0.7,0);
 				
 				scrollable.scene({
-						triggerElement: '#screen-intro .steps',
+						triggerElement: '.steps',
 						delayPercent: 0,
 						startup: function(rev){
 							if(!rev){
@@ -944,6 +944,7 @@ function AnimScene(attrs){
 		if(typeof(this.triggerElement) === 'string'){
 			this.triggerElement = $(this.triggerElement);
 		}
+
 		this.offset = this.triggerElement.offset().top - $( window ).height();
 		
 		if(!this.duration)
