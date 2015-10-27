@@ -2671,7 +2671,7 @@ body, button, input, select, textarea, h1, h2, h3, h4, h5, h6 {
 .middle {
 	display: inline-block;
 	vertical-align: middle;
-	width: 80%;
+	width: 60%;
 }
 
 .window {
@@ -2681,6 +2681,10 @@ body, button, input, select, textarea, h1, h2, h3, h4, h5, h6 {
 	position: relative;
 }
 
+.yw-step-button-div {
+	margin: 0 20% 0 0 ;
+	
+}
 .meet span.title {
 	font-size: 24px;
 }
