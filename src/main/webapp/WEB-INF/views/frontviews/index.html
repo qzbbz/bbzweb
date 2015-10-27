@@ -147,8 +147,10 @@
 		<ellipse class="ellipse" rx="8" ry="8" cx="1050" cy="75" fill="#f6f6f6" stroke="#e57958" stroke-width="2"></ellipse>
 		<ellipse class="ellipse" rx="8" ry="8" cx="1350" cy="187" fill="#f6f6f6" stroke="#e57958" stroke-width="2"></ellipse>
 		<ellipse class="ellipse" rx="8" ry="8" cx="1650" cy="133" fill="#f6f6f6" stroke="#e57958" stroke-width="2"></ellipse>
-		<ellipse class="ellipse" rx="8" ry="8" cx="1950" cy="40" fill="#f6f6f6" stroke="#e57958" stroke-width="2"></ellipse>
-		<ellipse class="ellipse" rx="8" ry="8" cx="2250" cy="15" fill="#f6f6f6" stroke="#e57958" stroke-width="2"></ellipse>
+		<ellipse class="ellipse" rx="8" ry="8" cx="1950" cy="110" fill="#f6f6f6" stroke="#e57958" stroke-width="2"></ellipse>
+		<ellipse class="ellipse" rx="8" ry="8" cx="2250" cy="75" fill="#f6f6f6" stroke="#e57958" stroke-width="2"></ellipse>
+		<ellipse class="ellipse" rx="8" ry="8" cx="2550" cy="55" fill="#f6f6f6" stroke="#e57958" stroke-width="2"></ellipse>
+		<ellipse class="ellipse" rx="8" ry="8" cx="2850" cy="15" fill="#f6f6f6" stroke="#e57958" stroke-width="2"></ellipse>
 		<defs id="SvgjsDefs1001">
 			<linearGradient id="SvgjsLinearGradient1006" x1="0" y1="0" x2="0" y2="1">
 				<stop id="SvgjsStop1007" stop-opacity="0.5" stop-color="#f6f6f6" offset="0"></stop>
@@ -475,9 +477,9 @@
       <label class="js-account-form-email register-form-bottom"> <img data-state="closed" src="style/image/envelope.png" style="height:20px; width:20px;" class="iconic iconic-sm  email-icon" /> <input id="modular__signup_email_btn" class="js-signup-email" name="email" type="text" placeholder="邮箱" data-trigger="change" data-required="true" data-type="email"  style="border-bottom:1px solid #FFF"/> </label>
     </div>
     <div class="cta-signup-footer__form__field cta-signup-footer__form__form__field--password">
-      <div class="cta-signup-footer__form__field__show js-toggle-password register-form-bottom" style="border-bottom:1px solid #FFF">
+      <div id="show-password-bottom" class="cta-signup-footer__form__field__show js-toggle-password register-form-bottom" style="border-bottom:1px solid #FFF">
         <img src="style/image/eye.png" style="height:20px; width:20px;" class="iconic iconic-sm " />
-        <span>显示</span>
+        <span id="password-status-bottom">显示</span>
       </div>
       <label class="js-account-form-password register-form-bottom"> <img data-state="locked" src="style/image/lock.png" style="height:20px; width:20px;" class="iconic iconic-sm " /> <input class="password_visible" name="show-password" type="text" placeholder="密码" style="display: none;border-bottom:1px solid #FFF"/> <input id="modular__signup_password" class="js-signup-password password_masked" name="password" type="password" placeholder="密码" data-required="true" data-trigger="keyup" data-error-message="请输入密码。" style="border-bottom:1px solid #FFF"/> </label>
     </div>
@@ -692,9 +694,9 @@
 			var v = 129 - 60 * ratio;
 			var v2 = 130 + 30 * ratio;
 			var v4 = 65 + 70 * ratio;
-			var points = '-150,222 150,203 450,'+v2+' 750,'+ v +' 1050,'+v4+' 1350,187 1650,133 1950,40 2250,15';
+			var points = '-150,222 150,203 450,'+v2+' 750,'+ v +' 1050,'+v4+' 1350,187 1650,133 1950,110 2250,75 2550,55 2850,15';
 			line.attr('points', points);
-			chartPolygon.attr('points', points+ ' 2250,250 -150,250');
+			chartPolygon.attr('points', points+ ' 2850,250 -150,250');
 			ellipse[3].setAttribute('cy', v);
 			ellipse[2].setAttribute('cy', v2);
 			ellipse[4].setAttribute('cy', v4);
@@ -703,9 +705,9 @@
 	chartTimeline.to(chartPolygon, 1.0, {callback: function(ratio){
 		var v4 = 135 - 30 * ratio;
 		var v5 = 187 + 50 * ratio;
-		var points = '-150,222 150,203 450,'+ '160' +' 750,'+ '69' +' 1050,'+v4+' 1350,'+v5+' 1650,133 1950,40 2250,15';
+		var points = '-150,222 150,203 450,'+ '160' +' 750,'+ '69' +' 1050,'+v4+' 1350,'+v5+' 1650,133 1950,110 2250,75 2550,55 2850,15';
 		line.attr('points', points);
-		chartPolygon.attr('points', points+ ' 2250,250 -150,250');
+		chartPolygon.attr('points', points+ ' 2850,250 -150,250');
 		ellipse[4].setAttribute('cy', v4);
 		ellipse[5].setAttribute('cy', v5);
 		}, ease: Power2.EaseInOut
@@ -822,6 +824,29 @@
 			console.log("display");
 			$("#chart").css("display", "block");
 		}
+		
+	});
+	
+	$("#show-password-bottom").click(function(){
+		var pwdObj = $("#modular__signup_password");
+		var pwd = pwdObj.val();
+		if(pwdObj.attr("type") == 'text') {
+			console.log("show password");
+			$("#password-status-bottom").html("显示");
+			pwdObj = $("#modular__signup_password");
+			
+		    $('<input id="modular__signup_password" class="js-signup-password password_masked" name="password" type="password" placeholder="密码" data-required="true" data-trigger="keyup" data-error-message="请输入密码。" style="border-bottom:1px solid #FFF;" />').val(pwd).insertBefore(pwdObj);
+		    pwdObj.remove();
+
+		}
+		else {
+		    $('<input id="modular__signup_password" class="js-signup-password password_masked" name="password" type="text" placeholder="密码" data-required="true" data-trigger="keyup" data-error-message="请输入密码。" style="border-bottom:1px solid #FFF;" />').val(pwd).insertBefore(pwdObj);
+		    pwdObj.remove();
+		    $("#password-status-bottom").html("隐藏");
+			
+		}
+
+		
 		
 	});
 </script>
