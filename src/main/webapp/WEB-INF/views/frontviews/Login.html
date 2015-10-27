@@ -96,18 +96,18 @@ display: inline-block !important;
   	<form id="account-form_form" class="account-form signup-form js-form-show-mobile" data-validate="parsley" >
 		<div class="account-form__field account-form--email">
 			<label class="js-account-form-email">
-			<img data-state="closed" src="style/images/envelope.svg" class="iconic iconic-sm  email-icon" />
+			<img data-state="closed" src="style/image/shuxin.png" style="height:20px; width:20px;" class="iconic iconic-sm  email-icon" />
 			<input id="account-form_email" class="js-signup-email" name="j_username" type="text" placeholder="邮箱" data-trigger="change" data-required="true" data-type="email"  data-error-message="请输入一个电子邮件地址。"   />
 			</label>
 		</div>
 		<div class="account-form__field account-form__form__field--password">
-			<div class="account-form__field__show js-toggle-password">
-				<img src="style/images/eye.svg" class="iconic iconic-sm " />
-				<span>显示</span>
+			<div id="js-toggle-password" class="account-form__field__show js-toggle-password">
+				<img src="style/image/eye.png" style="height:20px; width:20px;" class="iconic iconic-sm " />
+				<span id="password-status">显示</span>
 			</div>
 
 			<label class="js-account-form-password">
-				<img data-state="locked" src="style/images/lock.svg" class="iconic iconic-sm " />
+				<img data-state="locked" src="style/image/as (5).png" style="height:20px; width:20px;" class="iconic iconic-sm " />
 				<input class="password_visible" name="show-password" type="text" placeholder="密码" style="display: none" />
 				<input id="account-form_password" class="js-signup-password password_masked" name="j_password" type="password" placeholder="密码" data-required="true" data-trigger="keyup" data-error-message="请输入密码。" />
 			</label>
@@ -146,11 +146,10 @@ display: inline-block !important;
     <script type="text/javascript">
 
     $("#login-btn").click(function(){
-    	console.log('clicked');
+
     var userEmail = $('#account-form_email').val();
 	var userPwd = $('#account-form_password').val();
-	console.log(userEmail);
-	console.log(userPwd);
+
 	var loginErrorMsg = $('#user-login-error-msg');
 	if(userEmail == null || !isEmail(userEmail)) {
 		$("#userLoginEmailError").show();
@@ -247,6 +246,27 @@ display: inline-block !important;
   		});
   	}
   	checkInput();
-    </script>
+
+  	$("#js-toggle-password").click(function(){
+  		
+  		var pwdObj = $("#account-form_password");
+		
+		var pwd = pwdObj.val();
+		if(pwdObj.attr("type") == 'text') {
+
+			$("#password-status").html("显示");
+			pwdObj = $("#account-form_password");
+		    $('<input id="account-form_password" class="js-signup-password password_masked" name="password" type="password" placeholder="密码" data-required="true" data-trigger="keyup" data-error-message="请输入密码。" />').val(pwd).insertBefore(pwdObj);
+		    pwdObj.remove();
+
+		}
+		else {
+		    $('<input id="account-form_password" class="js-signup-password password_masked" name="password" type="text" placeholder="密码" data-required="true" data-trigger="keyup" data-error-message="请输入密码。" />').val(pwd).insertBefore(pwdObj);
+		    pwdObj.remove();
+		    $("#password-status").html("隐藏");
+			
+		}
+  	});
+  	</script>
   </body>
 </html>

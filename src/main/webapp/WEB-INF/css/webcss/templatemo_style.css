@@ -2503,7 +2503,8 @@ body, button, input, select, textarea, h1, h2, h3, h4, h5, h6 {
 }
 
 .column.one-of-three {
-	width: 33.33333%;
+	width: 25%;
+	min-width: 350px;
 }
 
 .info {
@@ -2571,6 +2572,7 @@ body, button, input, select, textarea, h1, h2, h3, h4, h5, h6 {
 	font-size: 14px;
 	margin: 2em 0;
 	line-height: 1.6;
+	margin-bottom: 3em;
 }
 
 .name .iconic {
@@ -2669,15 +2671,20 @@ body, button, input, select, textarea, h1, h2, h3, h4, h5, h6 {
 .middle {
 	display: inline-block;
 	vertical-align: middle;
+	width: 60%;
 }
 
 .window {
 	background: #FFF;
-	width: 960px;
+	width: 80%;
 	text-align: left;
 	position: relative;
 }
 
+.yw-step-button-div {
+	margin: 0 20% 0 0 ;
+	
+}
 .meet span.title {
 	font-size: 24px;
 }
