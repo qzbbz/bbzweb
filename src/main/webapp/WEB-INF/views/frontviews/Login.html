@@ -153,15 +153,19 @@ display: inline-block !important;
 	var loginErrorMsg = $('#user-login-error-msg');
 	if(userEmail == null || !isEmail(userEmail)) {
 		$("#userLoginEmailError").show();
+		loginErrorMsg.html("<p style='color: #FD7A50;'>用户名或密码不能为空！</p>");
 		return;
 	} else {
 		$("#userLoginEmailError").hide();
+		loginErrorMsg.html("");
 	}
 	if(userPwd == null || userPwd == '') {
 		$("#userLoginPwdError").show();
+		loginErrorMsg.html("<p style='color: #FD7A50;'>用户名或密码不能为空！</p>");
 		return;
 	} else {
 		$("#userLoginPwdError").hide();
+		loginErrorMsg.html("");
 	}
 	loginErrorMsg.html("<p style='color: white;'>正在向服务器提交您的信息，请稍后......</p>");
 	loginErrorMsg.show();
