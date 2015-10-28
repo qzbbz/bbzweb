@@ -3174,7 +3174,6 @@ background:#bf8f1d
 }
 .header-new .logo {
 	float: left;
-	margin: 1.6em 1.6em 1.6em 2.6em;
 	transition: .5s all ease
 }
 .header-new .logo--full *, .header-new .logo--glyph * {
@@ -3185,7 +3184,6 @@ background:#bf8f1d
 }
 .header-new__links {
 	float: right;
-	padding: 1em 2.5em 1em 1em;
 	text-shadow: 0 2px 3px rgba(0,0,0,.15);
 	transition: .5s all ease;
 	list-style: none

@@ -113,13 +113,33 @@
   #modular__signup_email_btn{ padding:14px 14px 10px 28px;}
   #modular__signup_password{ padding:14px 14px 10px 28px;}
   .cta-signup-footer__icons span{ color:#FFFFFF;}
+  
+  .header-white {
+    position: fixed;
+  height: 66px;
+  #line-height: 66px;
+  background-color: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+  
+  
+  #index-header > nav > ul > li > a {
+  color: white;
+  }
+
+nav a {
+transition: height 0.5s ease, padding-left 0.5s ease, color 0.8s ease, background-color 0.5s ease, right 0.5s ease;
+color: black;
+}
+  
     </style>
 </head>
 <body class="new-home video-bg">
-<header class="header-new js-header-new">
+<header id = "index-header" class="header-new js-header-new" >
+ 
   <nav>
   <a href="index.html" class="header-new__links" style="float: left;">
-    <img src="style/image/logo2.png" title="帮帮账">
+    <img class="logo" src="style/image/logo-white1.png" title="帮帮账">
   </a>
 
     <ul class="header-new__links">
@@ -132,7 +152,7 @@
 </header>
 <header class="header-mobile-new">
   <a href="index.html" class="header-new__links" style="float: left;">
-    <img src="style/image/logo2.png" title="帮帮账">
+    <img class="logo" src="style/image/logo-white1.png" title="帮帮账">
   </a>
   <div class="header-mobile-new__menu">
     <span class="header-mobile-new__menu__button js-mobile-navigation">
@@ -908,8 +928,35 @@ $("#mobile-signup-btn-bottom").click(function(){
 		    $("#password-status-bottom").html("隐藏");
 			
 		}
-
 		
+	});
+	
+	$(window).scroll(function(){
+		if ($(window).scrollTop() > 0) {
+			$("#index-header").addClass("header-white");
+			$(".logo").each(function(){
+				$(this).attr("src", "style/image/logo-black1.png");
+				
+			});
+			$("#index-header > nav > ul > li > a").each(function(){
+				$(this).css("color", "black");
+			});
+			
+		}
+		else{
+			$("#index-header").removeClass("header-white");
+			$(".logo").each(function(){
+				$(this).attr("src", "style/image/logo-white1.png");
+			});
+			$("#index-header > nav > ul > li > a").each(function(){
+				$(this).css("color", "white");
+			});
+		}
+		
+	});
+	
+	$("nav a").hover(function(){
+		console.log("hover");
 		
 	});
 </script>
