@@ -127,9 +127,27 @@
   color: white;
   }
 
+
 nav a {
-transition: height 0.5s ease, padding-left 0.5s ease, color 0.8s ease, background-color 0.5s ease, right 0.5s ease;
-color: black;
+  position: relative;
+  color: #ff3296;
+}
+nav a:after {
+  display: block;
+  position: absolute;
+  left: 0;
+  bottom: -10px;
+  width: 0;
+  height: 2px;
+  background-color: #ccc;
+  content: "";
+  transition: width 0.2s;
+}
+nav a:hover {
+  color: #ccc;
+}
+nav a:hover:after {
+  width: 100%;
 }
   
     </style>
