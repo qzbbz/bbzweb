@@ -80,7 +80,7 @@ display: inline-block !important;
   	<form id="account-form_form" class="account-form signup-form js-form-show-mobile" data-validate="parsley" >
 	<div class="account-form__field account-form--email">
 			<label class="js-account-form-email">
-			<img data-state="closed" src="style/image/envelope.svg" class="iconic iconic-sm  email-icon" style="width:24px;" />
+			<img data-state="closed" src="style/image/envelope.png" class="iconic iconic-sm  email-icon" style="width:24px;" />
 			<input id="signup-email" class="js-signup-email" name="j_username" type="text" placeholder="邮箱"    />
 			</label>
 		</div>
@@ -299,7 +299,7 @@ display: inline-block !important;
   	});
   	
   	$(".js-forgot-button").click(function() {
-  		//console.log("click");
+
   		$(".js-login-container").css("display", "none");
   		$(".js-login-forgot").css("display", "block");
   	});
@@ -311,36 +311,27 @@ display: inline-block !important;
   		
   	$("#send-password").click(function(){
   		var email = $("#signup-email").val();
-  		alert(email);
-  		/*$.ajax({
-			url : '/checkUserRegister',
+
+  		$.ajax({
+			url : '/forgetPwd',
 			type : "POST",
 			data : {
 				userId : email,
-				userPwd : pwd,
-				userTypeId : type
 			},
 			cache : false,
 			success : function(data) {
-				if(data.error_code == '-1') {
-					errorMsgObj.html("<p style='color: #FD7A50;'>用户名或密码不能为空！</p>");
-				} else if(data.error_code == '0') {
-					if(type == 2) {
-						errorMsgObj.hide();
-						window.location.href = "/views/frontviews/signup-steps.html";
-					} else if(type == 1) {
-						errorMsgObj.html("<p style='color: #419088;'>注册成功！3秒后系统将自动转向登陆界面......</p>");
-						setTimeout(function(){$location.path('/signin');$scope.$apply();errorMsgObj.hide();}, 3000);
-					}
-				} else {
-					errorMsgObj.html("<p style='color: #FD7A50;'>" + data.error_message + "</p>");
-					errorMsgObj.show();
+				if(data.error_code == 0){
+					alert("初始密码已发送至您的邮箱，请查收！");
 				}
+				else{
+					alert("服务器繁忙，请稍后重试！");
+				}
+
 			},
 			error : function() {
 				errorMsgObj.html("<p style='color: #FD7A50;'>服务器暂时不可用，请稍后重试！</p>");
 			}
-		});*/
+		});
   		
   	}
   			);
