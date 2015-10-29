@@ -10,7 +10,30 @@
 	#account-register{
 		display: inline-block !important;
     	outline: 0 !important;
-    	padding: 1em 1em 15px !important;
+    	padding: 1em 2.5em !important;
+    	text-shadow: 0 1px 1px rgba(0,0,0,.2) !important;
+    	border-bottom: 2px solid #a4523c !important;
+    	font-weight: 600 !important;
+    	background-color: #f16549 !important;
+    	background-image: linear-gradient(to bottom,rgba(255,255,255,.075) 0,rgba(0,0,0,.075) 100%) !important;
+    	color: #FFF !important;
+    	width: 100% !important;
+    	border-radius: 4px !important;
+    	background-clip: padding-box !important;
+    	transition: .2s all ease !important;
+    	font-family: LLCircularWeb,"Helvetica Neue",Helvetica,Arial,sans-serif !important;
+    	border: 0 !important;
+    	font-size: 16px !important;
+    	cursor: pointer !important;
+    	align-items: flex-start !important;
+    	text-align: center !important;
+    	margin: 0em !important;
+	}
+	
+	#mobile-signup-btn {
+			display: inline-block !important;
+    	outline: 0 !important;
+    	padding: 1em 2.5em !important;
     	text-shadow: 0 1px 1px rgba(0,0,0,.2) !important;
     	border-bottom: 2px solid #a4523c !important;
     	font-weight: 600 !important;
@@ -40,7 +63,7 @@
       <p>还没有准备好签约吗？我们有一个伟大的团队的记账顾问准备回答任何有关工作的问题，在一般的工作台或记帐。</p>
       <p><strong>我们的时间是早上6点到晚上6点</strong></p>
       <div>
-        <a href="javascript:;" class="signup-new__main__questions__chat">实时聊天<img src="style/images/chat.svg" class="iconic iconic-sm" /></a>
+        <a href="javascript:;" class="signup-new__main__questions__chat">实时聊天</a>
         <div class="signup-new__main__questions__call">
           <span class="signup-new__main__questions__call__small">或打电话</span>
           <span class="signup-new__main__questions__call__number">4000-866-018</span>
@@ -103,30 +126,22 @@
 	<div id="home-introduction">
 	</div>
   	<form id="account-form_form" class="account-form signup-form js-form-show-mobile" data-validate="parsley" >
-		<div class="account-form__field account-form--name">
-			<label class="js-account-form-name">
-			<img data-state="closed" src="style/image/person01.png" style="height:20px; width:20px;" class="iconic iconic-sm  name-icon" />
-			<input id="account-form_name" class="js-signup-name" name="name" type="text" placeholder="全名" data-required="true" data-trigger="change" data-error-message="请输入您的全名。"/>
-			</label>
-		</div>
+
 		<div class="account-form__field account-form--email">
 			<label class="js-account-form-email">
 			<img data-state="closed" src="style/image/envelope.png" style="height:20px; width:20px;" class="iconic iconic-sm  email-icon" />
-			<input id="account-form_email" class="js-signup-email" name="email" type="text" placeholder="邮箱" data-trigger="change" data-required="true" data-type="email"   data-remote="/api/v1/signup.json/account_available
-			" data-remote-message="此电子邮件存在于我们的服务器中"  />
+			<input id="mobile-account-form_email" class="js-signup-email" name="email" type="text" placeholder="邮箱" data-trigger="change" data-required="true" data-type="email" />
 			</label>
 		</div>
-		<div class="account-form__field account-form--phone">
-			<label class="js-account-form-phone">
-			<img data-state="closed" src="style/image/iphone-write.png" style="height:20px; width:20px;" class="iconic iconic-sm  phone-icon" />
-			<input id="account-form_phone" class="js-signup-phone" name="phone" type="text" placeholder="电话号码" data-type="phone" data-required="true" data-error-message="请输入您的电话号码。" maxlength="10" pattern=".{10,}" data-trigger="change"/>
+		<div class="account-form__field account-form--password">
+			<label class="js-account-form-password">
+			<img data-state="closed" src="style/image/lock.png" style="height:20px; width:20px;" class="iconic iconic-sm  password-icon" />
+			<input id="mobile-account-form_password" class="js-signup-password" name="password" type="password" placeholder="密码" data-type="password" data-required="true" data-error-message="请输入您的密码。" data-trigger="change"/>
 			</label>
 		</div>
     	<div class="account-form__buttons">
     		<div class="account-form__buttons__button account-form__buttons__button--left">
-    			<button type="submit" class="js-signup-submit-phone js-account-button">
-    				登录
-    			</button>
+    			<input id="mobile-signup-btn" type="button" class="js-signup-submit-phone js-account-button" value="注册"/>
     		</div>
     		<div class="account-form__buttons__button account-form__buttons__button--right">
     			<div class="account-form__buttons__button__questions js-questions-button">
@@ -145,6 +160,7 @@
     	</div>
     	<div class="clear" style="clear: both;"></div>
     </form>
+    <div id="mobile-error-message"></div>
 </div>
     </div>
     <div class="signup-new__main__overlay"></div>
@@ -171,27 +187,35 @@
 	var userEmail = $('#account-form_email').val();
 	var userPwd = $('#account-form_password').val();
 	var errorMsgObj = $("#account-reg-error-msg");
-	var type = 1;
-	if(userEmail == null || !isEmail(userEmail)) {
-		$("#account-reg-error-email-msg").show();
-		errorMsgObj.html("<p style='color: #FD7A50;'>用户名或密码不能为空！</p>");
-		return;
-	} else {
-		$("#account-reg-error-email-msg").hide();
-		errorMsgObj.html("");
-	}
-	if(userPwd == null || userPwd == '') {
-		$("#account-reg-error-pwd-msg").show();
-		errorMsgObj.html("<p style='color: #FD7A50;'>用户名或密码不能为空！</p>");
-		return;
-	} else {
-		$("#account-reg-error-pwd-msg").hide();
-		errorMsgObj.html("");
+	var valid = false;
+	valid = checkInput($('#account-form_email'),$('#account-form_password'), errorMsgObj);
+	if (valid){
+		signUp(userEmail, userPwd, errorMsgObj);
+	
+		errorMsgObj.html("<p style='color: white;'>正在向服务器提交您的信息，请稍后......</p>");
+		errorMsgObj.show();
 	}
 	
-	errorMsgObj.html("<p style='color: white;'>正在向服务器提交您的信息，请稍后......</p>");
-	errorMsgObj.show();
-
+	});
+	
+	$("#mobile-signup-btn").click(function(){
+		var userEmail = $('#mobile-account-form_email').val();
+		var userPwd = $('#mobile-account-form_password').val();
+		var errorMsgObj = $("#mobile-error-message");
+		var valid = false;
+		valid = checkInput($('#mobile-account-form_email'),$('#mobile-account-form_password'), errorMsgObj);
+		if(valid){	
+			signUp(userEmail, userPwd, errorMsgObj);
+		
+			errorMsgObj.html("<p style='color: white;'>正在向服务器提交您的信息，请稍后......</p>");
+			errorMsgObj.show();		
+		}
+	});
+	
+	
+	 function signUp(userEmail, userPwd, errorMsgObj){
+	type = 1
+	 
 	$.ajax({
 		url : '/checkUserRegister',
 		type : "POST",
@@ -222,7 +246,7 @@
 			errorMsgObj.html("<p style='color: #FD7A50;'>服务器暂时不可用，请稍后重试！</p>");
 		}
 	});
-	});
+	}
 	
 	function isEmail(email) {
 	      var result = email
@@ -232,28 +256,33 @@
 	      return true;
 	}
 	  
-		function checkInput() {
-			$("#account-form_email").on('input',function(e){
-				$("#signup-error-msg").hide();
-				var email = $("#account-form_email").val();
-				if(email == null || !isEmail(email)) {
-					$("#sign-up-screen-email-error").show();
-				} else {
-					$("#sign-up-screen-email-error").hide();
-				}
-			});
-			$("#account-form_password").on('input',function(e){
-				$("#signup-error-msg").hide();
-				var pwd = $("#account-form_password").val();
-				if(pwd == null || pwd == '') {
-					$("#sign-up-screen-pwd-error").show();
-				} else {
-					$("#sign-up-screen-pwd-error").hide();
-				}
-			});
+	function checkInput(emailObj, pwdObj, errorMsgObj) {
+		var userEmail = emailObj.val();
+		var userPwd = pwdObj.val(); 
+
+		if(userEmail == null||userEmail == "" ) {
+
+			errorMsgObj.html("<p style='color: #FD7A50;'>用户名或密码不能为空！</p>");
+			return false;
+		}else if (!isEmail(userEmail)){
+			
+			errorMsgObj.html("<p style='color: #FD7A50;'>邮箱格式错误！</p>");
+			return false;
 		}
-		checkInput();
-		console.log("hello");
+		else {
+			errorMsgObj.html("");
+		}
+
+		if(userPwd == null || userPwd == '') {
+			errorMsgObj.html("<p style='color: #FD7A50;'>用户名或密码不能为空！</p>");
+			return false;
+		} else {
+			errorMsgObj.html("");
+		}
+		return true
+	}
+		//checkInput();
+
 		$("#js-toggle-password").click(function(){
 
 			var pwdObj = $("#account-form_password");
@@ -275,6 +304,21 @@
 			}
 			
 		});
+	    var t = !1;
+	    
+	    $(".js-questions-button").click(function(){
+	    	$(".js-signup-container").animate({opacity: 0},1500);
+	    	$(".js-signup-questions").animate({opacity: 1},1500);
+	    	$(".js-signup-container").css("display", "none");
+	    	$(".js-signup-questions").css("display", "block");
+	    });
+
+	    $(".js-questions-back-button").click(function(){
+	    	$(".js-signup-questions").animate({opacity: 0},1500);
+	    	$(".js-signup-container").animate({opacity: 1},1500);
+	    	$(".js-signup-questions").css("display", "none");
+	    	$(".js-signup-container").css("display", "block");
+	    });
 		</script>
   </body>
 </html>
