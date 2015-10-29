@@ -15,7 +15,7 @@
 	#login-btn{
 display: inline-block !important;
     outline: 0 !important;
-    padding: 1em 1em 15px !important;
+    padding: 1em 2.5em !important;
     text-shadow: 0 1px 1px rgba(0,0,0,.2) !important;
     border-bottom: 2px solid #a4523c !important;
     font-weight: 600 !important;
@@ -34,13 +34,36 @@ display: inline-block !important;
     text-align: center !important;
     margin: 0em !important;
 	}
+	
+	#send-password{
+display: inline-block !important;
+    outline: 0 !important;
+    padding: 1em 2.5em !important;
+    text-shadow: 0 1px 1px rgba(0,0,0,.2) !important;
+    border-bottom: 2px solid #a4523c !important;
+    font-weight: 600 !important;
+    background-color: #f16549 !important;
+    background-image: linear-gradient(to bottom,rgba(255,255,255,.075) 0,rgba(0,0,0,.075) 100%) !important;
+    color: #FFF !important;
+    width: 100% !important;
+    border-radius: 4px !important;
+    background-clip: padding-box !important;
+    transition: .2s all ease !important;
+    font-family: LLCircularWeb,"Helvetica Neue",Helvetica,Arial,sans-serif !important;
+    border: 0 !important;
+    font-size: 16px !important;
+    cursor: pointer !important;
+    align-items: flex-start !important;
+    text-align: center !important;
+    margin: 0em !important;	
+	}
 	</style>
     <title>帮帮账</title>
 </head>
   <body >
     <body class="login-new">
   <div class="login-new__main">
-    <div class="login-new__main__forgot js-login-forgot hide">
+    <div class="login-new__main__forgot js-login-forgot" style="display:none">
   <h2>忘记密码?</h2>
   <p>不要担心。输入您的电子邮件下面，我们将发送您的指示如何重置您的密码。</p>
   <div class="login-new__main__form__forgot--error">
@@ -57,15 +80,13 @@ display: inline-block !important;
   	<form id="account-form_form" class="account-form signup-form js-form-show-mobile" data-validate="parsley" >
 	<div class="account-form__field account-form--email">
 			<label class="js-account-form-email">
-			<img data-state="closed" src="style/images/envelope.svg" class="iconic iconic-sm  email-icon" />
-			<input class="js-signup-email" name="j_username" type="text" placeholder="邮箱"    />
+			<img data-state="closed" src="style/image/envelope.png" class="iconic iconic-sm  email-icon" style="width:24px;" />
+			<input id="signup-email" class="js-signup-email" name="j_username" type="text" placeholder="邮箱"    />
 			</label>
 		</div>
 <div class="account-form__buttons">
     		<div class="account-form__buttons__button account-form__buttons__button--left">
-    			<button type="submit" class="js-login-form js-account-button">
-                    发送
-    			</button>
+    			<input id="send-password" type="button" class="js-login-form js-account-button" value="发送"/>
     		</div>
     		<div class="account-form__buttons__button account-form__buttons__button--right">
     			<div class="account-form__buttons__button__questions js-questions-button">
@@ -151,17 +172,26 @@ display: inline-block !important;
 	var userPwd = $('#account-form_password').val();
 
 	var loginErrorMsg = $('#user-login-error-msg');
-	if(userEmail == null || !isEmail(userEmail)) {
+	if(userEmail == null||userEmail == "") {
 		$("#userLoginEmailError").show();
+		loginErrorMsg.html("<p style='color: #FD7A50;'>用户名或密码不能为空！</p>");
 		return;
-	} else {
+	}else if(!isEmail(userEmail)){
+		loginErrorMsg.html("<p style='color: #FD7A50;'>邮箱格式错误！</p>");
+		return;
+		
+	} 
+	else {
 		$("#userLoginEmailError").hide();
+		loginErrorMsg.html("");
 	}
 	if(userPwd == null || userPwd == '') {
 		$("#userLoginPwdError").show();
+		loginErrorMsg.html("<p style='color: #FD7A50;'>用户名或密码不能为空！</p>");
 		return;
 	} else {
 		$("#userLoginPwdError").hide();
+		loginErrorMsg.html("");
 	}
 	loginErrorMsg.html("<p style='color: white;'>正在向服务器提交您的信息，请稍后......</p>");
 	loginErrorMsg.show();
@@ -267,6 +297,45 @@ display: inline-block !important;
 			
 		}
   	});
+  	
+  	$(".js-forgot-button").click(function() {
+
+  		$(".js-login-container").css("display", "none");
+  		$(".js-login-forgot").css("display", "block");
+  	});
+  		
+  	$(".js-forgot-back-button").click(function(){
+  		$(".js-login-forgot").css("display", "none");  		
+  		$(".js-login-container").css("display", "block");
+  	});
+  		
+  	$("#send-password").click(function(){
+  		var email = $("#signup-email").val();
+
+  		$.ajax({
+			url : '/forgetPwd',
+			type : "POST",
+			data : {
+				userId : email,
+			},
+			cache : false,
+			success : function(data) {
+				if(data.error_code == 0){
+					alert("初始密码已发送至您的邮箱，请查收！");
+				}
+				else{
+					alert("服务器繁忙，请稍后重试！");
+				}
+
+			},
+			error : function() {
+				errorMsgObj.html("<p style='color: #FD7A50;'>服务器暂时不可用，请稍后重试！</p>");
+			}
+		});
+  		
+  	}
+  			);
+
   	</script>
   </body>
 </html>

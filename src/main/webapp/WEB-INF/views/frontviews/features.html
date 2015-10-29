@@ -6,13 +6,96 @@
   <link href="style/css/screen.css" rel="stylesheet" type="text/css" media="screen, projection" />
   <link rel="shortcut icon" href="style/favicon.ico">
   <title>帮帮账</title>
+  <style>
+  
+nav a {
+  position: relative;
+  color: #ff3296;
+}
+nav a:after {
+  display: block;
+  position: absolute;
+  left: 0;
+  bottom: -10px;
+  width: 0;
+  height: 2px;
+  background-color: #ccc;
+  content: "";
+  transition: width 0.2s;
+}
+nav a:hover {
+  color: #ccc;
+}
+nav a:hover:after {
+  width: 100%;
+}
+
+  .header-white {
+    position: fixed;
+  height: 66px;
+  #line-height: 66px;
+  background-color: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.iconic {
+  width: 22px;
+  height: 22px;
+}
+
+#mobile-signup-btn{
+ 	margin-top:16px !important;
+    display: inline-block !important;
+    outline: 0 !important;
+    padding: 1em 1em 15px !important;
+    text-shadow: 0 1px 1px rgba(0,0,0,.2) !important;
+    border-bottom: 2px solid #a4523c !important;
+    font-weight: 600 !important;
+    background-color: #f16549 !important;
+    background-image: linear-gradient(to bottom,rgba(255,255,255,.075) 0,rgba(0,0,0,.075) 100%) !important;
+    color: #FFF !important;
+    width: 100% !important;
+    border-radius: 4px !important;
+    background-clip: padding-box !important;
+    transition: .2s all ease !important;
+    font-family: LLCircularWeb,"Helvetica Neue",Helvetica,Arial,sans-serif !important;
+    border: 0 !important;
+    font-size: 16px !important;
+    cursor: pointer !important;
+    align-items: flex-start !important;
+    text-align: center !important;
+}
+
+#signup-btn-bottom{
+ 	margin-top:16px !important;
+    display: inline-block !important;
+    outline: 0 !important;
+    padding: 1em 1em 15px !important;
+    text-shadow: 0 1px 1px rgba(0,0,0,.2) !important;
+    border-bottom: 2px solid #a4523c !important;
+    font-weight: 600 !important;
+    background-color: #f16549 !important;
+    background-image: linear-gradient(to bottom,rgba(255,255,255,.075) 0,rgba(0,0,0,.075) 100%) !important;
+    color: #FFF !important;
+    width: 100% !important;
+    border-radius: 4px !important;
+    background-clip: padding-box !important;
+    transition: .2s all ease !important;
+    font-family: LLCircularWeb,"Helvetica Neue",Helvetica,Arial,sans-serif !important;
+    border: 0 !important;
+    font-size: 16px !important;
+    cursor: pointer !important;
+    align-items: flex-start !important;
+    text-align: center !important;
+}
+  </style>
 </head>
   <body >
     <body class="features-new">
-  <header class="header-new js-header-new">
+  <header id="index-header" class="header-new js-header-new">
     <nav>
     <a href="index.html" class="header-new__links" style="float: left;">
-      <img src="style/images/logo.png" title="帮帮账">
+      <img class="logo" src="style/image/logo-white1.png" title="帮帮账">
     </a>
 
       <ul class="header-new__links">
@@ -26,7 +109,7 @@
 </header>
   <header class="header-mobile-new">
     <a href="index.html" class="header-new__links" style="float: left;">
-      <img src="style/images/logo.png" title="帮帮账">
+      <img src="style/image/logo-black1.png" title="帮帮账">
     </a>
     <div class="header-mobile-new__menu">
     <span class="header-mobile-new__menu__button js-mobile-navigation">
@@ -459,34 +542,26 @@
 <div id="modular__signup_container" class="modular__signup hide-for-small-and-up signup-form_container  cta-signup-footer cta-signup-footer--dark-image ">
 	<div id="home-introduction">
 	</div>
-		<h2>Ready to Get Started?</h2>
+		<h2>准备开始?</h2>
   	<form id="modular__signup_form" class="cta-signup-footer__form signup-form js-form-show-mobile" data-validate="parsley" >
-		<div class="cta-signup-footer__form__field cta-signup-footer__form--name">
-			<label class="js-account-form-name">
-			<img data-state="closed" src="style/images/person.svg" class="iconic iconic-sm  name-icon" />
-			<input id="modular__signup_name" class="js-signup-name" name="name" type="text" placeholder="Full Name" data-required="true" data-trigger="change" data-error-message="Please enter your full name."/>
-			</label>
-		</div>
 		<div class="cta-signup-footer__form__field cta-signup-footer__form--email">
 			<label class="js-account-form-email">
-			<img data-state="closed" src="style/images/envelope.svg" class="iconic iconic-sm  email-icon" />
-			<input id="modular__signup_email" class="js-signup-email" name="email" type="text" placeholder="Email" data-trigger="change" data-required="true" data-type="email"   data-remote="/api/v1/signup.json/account_available
-			" data-remote-message="此电子邮件存在于我们的服务器中"  />
+			<img data-state="closed" src="style/image/shuxin.png" class="iconic iconic-sm  email-icon" />
+			<input id="mobile-modular__signup_email" class="js-signup-email" name="email" type="text" placeholder="邮箱" data-trigger="change" data-required="true" data-type="email"  />
 			</label>
 		</div>
-		<div class="cta-signup-footer__form__field cta-signup-footer__form--phone">
-			<label class="js-account-form-phone">
-			<img data-state="closed" src="style/images/iphone.svg" class="iconic iconic-sm  phone-icon" />
-			<input id="modular__signup_phone" class="js-signup-phone" name="phone" type="text" placeholder="Phone Number" data-type="phone" data-required="true" data-error-message="Please enter your phone number." maxlength="10" pattern=".{10,}" data-trigger="change"/>
+		<div class="cta-signup-footer__form__field cta-signup-footer__form--password">
+			<label class="js-account-form-password">
+			<img data-state="closed" src="style/image/as (5).png" class="iconic iconic-sm  password-icon" />
+			<input id="mobile-modular__signup_password" class="js-signup-password" name="password" type="password" placeholder="密码" data-type="phone" data-required="true" data-error-message="Please enter your phone number." maxlength="10" pattern=".{10,}" data-trigger="change"/>
 			</label>
 		</div>
 		<div class="cta-signup-footer__form__submit">
-      		<button type="submit" class="js-signup-submit-phone js-account-button" id="btn--login">
-        		<span>Get Started</span>
-      		</button>
+      		<input type="button" class="" id="mobile-signup-btn" value="注册"/>
     	</div>
     	<div class="clear" style="clear: both;"></div>
     </form>
+    <div id="mobile-signup-error-msg-btn"></div>
 </div>
 <div class="signup-error">
   <div class="signup-error__window">
@@ -537,21 +612,23 @@
 	</div>
   <form id="modular__signup_form" class="cta-signup-footer__form signup-form js-form-show-mobile" data-validate="parsley">
     <div class="cta-signup-footer__form__field cta-signup-footer__form--email">
-      <label class="js-account-form-email"> <img data-state="closed" src="style/images/envelope.svg" class="iconic iconic-sm  email-icon" /> <input id="modular__signup_email" class="js-signup-email" name="email" type="text" placeholder="邮箱" data-trigger="change" data-required="true" data-type="email" data-remote="/api/v1/signup.json/account_available
-			" data-remote-message="此电子邮件存在于我们的服务器中" style="border-bottom:1px solid #FFF"/> </label>
+      <label class="js-account-form-email"> <img data-state="closed" src="style/images/envelope.svg" class="iconic iconic-sm  email-icon" />
+       <input id="modular__signup_email" class="js-signup-email" name="email" type="text" placeholder="邮箱" data-trigger="change" data-required="true" data-type="email"style="border-bottom:1px solid #FFF"/> </label>
     </div>
     <div class="cta-signup-footer__form__field cta-signup-footer__form__form__field--password">
-      <div class="cta-signup-footer__form__field__show js-toggle-password" style="border-bottom:1px solid #FFF">
+      <div id="show-password" class="cta-signup-footer__form__field__show js-toggle-password" style="border-bottom:1px solid #FFF">
         <img src="style/images/eye.svg" class="iconic iconic-sm " />
-        <span>显示</span>
+        <span id="password-status"=>显示</span>
       </div>
-      <label class="js-account-form-password"> <img data-state="locked" src="style/images/lock.svg" class="iconic iconic-sm " /> <input class="password_visible" name="show-password" type="text" placeholder="密码" style="display: none;border-bottom:1px solid #FFF"/> <input id="modular__signup_password" class="js-signup-password password_masked" name="password" type="password" placeholder="密码" data-required="true" data-trigger="keyup" data-error-message="请输入密码。" style="border-bottom:1px solid #FFF"/> </label>
+      <label class="js-account-form-password"> <img data-state="locked" src="style/images/lock.svg" class="iconic iconic-sm " />
+      <input id="modular__signup_password" class="js-signup-password password_masked" name="password" type="password" placeholder="密码" data-required="true" data-trigger="keyup" data-error-message="请输入密码。" style="border-bottom:1px solid #FFF"/> </label>
     </div>
     <div class="cta-signup-footer__form__submit">
-      <button type="submit" class="js-signup-submit-new js-account-button" id="btn--login"> <span>注册</span> </button>
+      <input type="button" class="js-signup-submit-new js-account-button" id="signup-btn-bottom" value="注册"/>
     </div>
     <div class="clear" style="clear: both;"></div>
   </form>
+<div id="signup-error-msg-btn" style="text-align:center;"></div>  
 </div>
 <div class="signup-error">
   <div class="signup-error__window">
@@ -651,9 +728,153 @@
 </footer>
 
 </body>
-
+	<script type="text/javascript" src="../../js/webjs/jquery-1.8.1.min.js"></script>
     <script type="text/javascript">var mainapp_offline=false;</script>
-    <script src="style/js/uglify.js"></script>
+    <script>
+    
+    function signUp(email, pwd, errorMsgObj){
+   	 
+   	 var type = 2;
+
+   		$.ajax({
+   			url : '/checkUserRegister',
+   			type : "POST",
+   			data : {
+   				userId : email,
+   				userPwd : pwd,
+   				userTypeId : type
+   			},
+   			cache : false,
+   			success : function(data) {
+   				if(data.error_code == '-1') {
+   					errorMsgObj.html("<p style='color: #FD7A50;'>用户名或密码不能为空！</p>");
+   				} else if(data.error_code == '0') {
+   					if(type == 2) {
+   						errorMsgObj.hide();
+   						window.location.href = "/views/frontviews/signup-steps.html";
+   					} else if(type == 1) {
+   						errorMsgObj.html("<p style='color: #419088;'>注册成功！3秒后系统将自动转向登陆界面......</p>");
+   						setTimeout(function(){$location.path('/signin');$scope.$apply();errorMsgObj.hide();}, 3000);
+   					}
+   				} else {
+   					errorMsgObj.html("<p style='color: #FD7A50;'>" + data.error_message + "</p>");
+   					errorMsgObj.show();
+   				}
+   			},
+   			error : function() {
+   				errorMsgObj.html("<p style='color: #FD7A50;'>服务器暂时不可用，请稍后重试！</p>");
+   			}
+   		});
+   	 
+    } 
+    $(".js-mobile-navigation").click(function() {
+        var t = $(".header-mobile-new");
+        t.toggleClass("menu-open");
+    });
+
+    $(window).scroll(function(){
+    	if ($(window).scrollTop() > 0) {
+    		$("#index-header").addClass("header-white");
+    		$(".logo").each(function(){
+    			$(this).attr("src", "style/image/logo-black1.png");
+    			
+    		});
+    		$("#index-header > nav > ul > li > a").each(function(){
+    			$(this).css("color", "black");
+    		});
+    		
+    	}
+    	else{
+    		$("#index-header").removeClass("header-white");
+    		$(".logo").each(function(){
+    			$(this).attr("src", "style/image/logo-white1.png");
+    		});
+    		$("#index-header > nav > ul > li > a").each(function(){
+    			$(this).css("color", "white");
+    		});
+    	}
+    	
+    });
+    
+    $("#mobile-signup-btn").click(function(){
+    	var email = $("#mobile-modular__signup_email").val();
+  	  var pwd = $("#mobile-modular__signup_password").val();
+  	  var errorMsgObj = $("#mobile-signup-error-msg-btn");
+  	  var valid = false;
+  	  valid = checkInput($("#mobile-modular__signup_email"), $("#mobile-modular__signup_email"), errorMsgObj);
+  	  if(valid){
+  		  signUp(email, pwd, errorMsgObj);
+  	  }
+    });
+    
+    $("#signup-btn-bottom").click(function(){
+
+    	var email = $("#modular__signup_email").val();
+    	  var pwd = $("#modular__signup_password").val();
+    	  var errorMsgObj = $("#signup-error-msg-btn");
+    	  var valid = false;
+    	  valid = checkInput($("#modular__signup_email"), $("#modular__signup_email"), errorMsgObj);
+    	  if(valid){
+    		  signUp(email, pwd, errorMsgObj);    
+    	  }
+    	
+    });
+    function isEmail(email) {
+        var result = email
+                        .match(/^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/);
+        if (result == null)
+                return false;
+        return true;
+  }
+    
+    
+	function checkInput(emailObj, pwdObj, errorMsgObj) {
+		var userEmail = emailObj.val();
+		var userPwd = pwdObj.val(); 
+
+		if(userEmail == null||userEmail == "" ) {
+
+			errorMsgObj.html("<p style='color: #FD7A50;'>用户名或密码不能为空！</p>");
+			return false;
+		}else if (!isEmail(userEmail)){
+			
+			errorMsgObj.html("<p style='color: #FD7A50;'>邮箱格式错误！</p>");
+			return false;
+		}
+		else {
+			errorMsgObj.html("");
+		}
+
+		if(userPwd == null || userPwd == '') {
+			errorMsgObj.html("<p style='color: #FD7A50;'>用户名或密码不能为空！</p>");
+			return false;
+		} else {
+			errorMsgObj.html("");
+		}
+		return true
+	}
+	
+	$("#show-password").click(function(){
+		var pwdObj = $("#modular__signup_password");
+		var pwd = pwdObj.val();
+
+		if(pwdObj.attr("type") == 'text') {
+			$("#password-status").html("显示");
+			pwdObj = $("#modular__signup_password");
+			
+		    $('<input id="modular__signup_password" class="js-signup-password password_masked" name="password" type="password" placeholder="密码" data-required="true" data-trigger="keyup" data-error-message="请输入密码。" style="border-bottom:1px solid #FFF;" />').val(pwd).insertBefore(pwdObj);
+		    pwdObj.remove();
+
+		}
+		else {
+		    $('<input id="modular__signup_password" class="js-signup-password password_masked" name="password" type="text" placeholder="密码" data-required="true" data-trigger="keyup" data-error-message="请输入密码。" style="border-bottom:1px solid #FFF;" />').val(pwd).insertBefore(pwdObj);
+		    pwdObj.remove();
+		    $("#password-status").html("隐藏");
+			
+		}
+		
+	});
+    </script>
 
   </body>
 </html>

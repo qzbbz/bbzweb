@@ -3174,7 +3174,6 @@ background:#bf8f1d
 }
 .header-new .logo {
 	float: left;
-	margin: 1.6em 1.6em 1.6em 2.6em;
 	transition: .5s all ease
 }
 .header-new .logo--full *, .header-new .logo--glyph * {
@@ -3185,9 +3184,8 @@ background:#bf8f1d
 }
 .header-new__links {
 	float: right;
-	padding: 1em 2.5em 1em 1em;
 	text-shadow: 0 2px 3px rgba(0,0,0,.15);
-	transition: .5s all ease;
+	#transition: .5s all ease;
 	list-style: none
 }
 .header-new__links li {
@@ -3209,15 +3207,15 @@ background:#bf8f1d
 	position: relative
 }
 .header-new__links a span:before {
-	content: '';
-	position: absolute;
-	bottom: -10px;
-	display: block;
-	width: 100%;
-	height: 2px;
-	background-color: #FFF;
-	opacity: 0;
-	transition: .2s all ease
+	#content: '';
+	#position: absolute;
+	#bottom: -10px;
+	#display: block;
+	#width: 100%;
+	#height: 2px;
+	#background-color: #FFF;
+	#opacity: 0;
+	#transition: .2s all ease
 }
 .header-new__links a:hover span:before {
 	opacity: .2;
@@ -5875,12 +5873,12 @@ body.features-new .subtle-hr {
 	padding-left: 10px
 }
 .features-new__navigation a:after {
-	visibility: hidden;
-	display: block;
-	font-size: 0;
-	content: " ";
-	clear: both;
-	height: 0
+	#visibility: hidden;
+	#display: block;
+	#font-size: 0;
+	#content: " ";
+	#clear: both;
+	#height: 0
 }
 .features-new__navigation .iconic {
 	float: left;
@@ -7861,7 +7859,6 @@ box-shadow:0 0 0 100px #fff4e9 inset;
 	right: 0;
 	background-image: url(img/emily-darkSign.png);
 	background-size: 100%;
-	background-position: center bottom;
 	background-repeat: no-repeat;
 	z-index: 1
 }
@@ -8182,7 +8179,6 @@ box-shadow:0 0 0 20px #4e4e4e inset;
 	right: 0;
 	background-image: url(img/emily-dark.png);
 	background-size: 100%;
-	background-position: center bottom;
 	background-repeat: no-repeat;
 	z-index: 1
 }

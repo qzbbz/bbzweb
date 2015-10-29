@@ -7,22 +7,7 @@
   <link rel="stylesheet" type="text/css" href="../../css/webcss/youngwisdom.css">
   <link rel="shortcut icon" href="style/favicon.ico">
   <title>帮帮账</title>
-               <script type="text/javascript" src="../../js/webjs/main.page.utils.js"></script>
-               <!-- <script type="text/javascript" src="../../js/webjs/jquery-1.11.1.js"></script> -->
-               <script type="text/javascript" src="../../js/webjs/jquery-1.8.1.min.js"></script>
-               <script type="text/javascript" src="../../js/webjs/modernizr.custom.87166.js"></script>
-               <script type="text/javascript" src="../../js/webjs/angularjs/angular.min.js"></script>
-               <script type="text/javascript" src="../../js/webjs/angularjs/angular-route.min.js"></script>
-               <script type="text/javascript" src="../../js/webjs/angularjs/angular-animate.min.js"></script>
-               <script type="text/javascript" src="../../js/webjs/i18n/text-zh-CN.js"></script>
-               <script type="text/javascript" src="../../js/webjs/lodash.min.js"></script>
-               <script type="text/javascript" src="../../js/webjs/TweenMax.min.js"></script>
-               <script type="text/javascript" src="../../js/webjs/greensock/ScrollToPlugin.min.js"></script>
-               <script type="text/javascript" src="../../js/webjs/youngwisdom.js"></script>
-               <script src="/js/webjs/jquery.easing-1.3.pack.js"></script>
-               <script src="/js/webjs/jquery.fancybox-1.3.4.js"></script>
-               <script src="/js/webjs/jquery.fancybox-1.3.4.pack.js"></script>
-               <script src="/js/webjs/jquery.mousewheel-3.0.4.pack.js"></script>
+
   
   <style>
   #sign-up-btn {
@@ -70,6 +55,53 @@
     text-align: center !important;
 
   }
+  
+  #mobile-signup-btn {
+  	margin-top:16px !important;
+    display: inline-block !important;
+    outline: 0 !important;
+    padding: 1em 1em 15px !important;
+    text-shadow: 0 1px 1px rgba(0,0,0,.2) !important;
+    border-bottom: 2px solid #a4523c !important;
+    font-weight: 600 !important;
+    background-color: #f16549 !important;
+    background-image: linear-gradient(to bottom,rgba(255,255,255,.075) 0,rgba(0,0,0,.075) 100%) !important;
+    color: #FFF !important;
+    width: 100% !important;
+    border-radius: 4px !important;
+    background-clip: padding-box !important;
+    transition: .2s all ease !important;
+    font-family: LLCircularWeb,"Helvetica Neue",Helvetica,Arial,sans-serif !important;
+    border: 0 !important;
+    font-size: 16px !important;
+    cursor: pointer !important;
+    align-items: flex-start !important;
+    text-align: center !important;
+  }
+  
+  #mobile-signup-btn-bottom{
+  margin-top:16px !important;
+    display: inline-block !important;
+    outline: 0 !important;
+    padding: 1em 1em 15px !important;
+    text-shadow: 0 1px 1px rgba(0,0,0,.2) !important;
+    border-bottom: 2px solid #a4523c !important;
+    font-weight: 600 !important;
+    background-color: #f16549 !important;
+    background-image: linear-gradient(to bottom,rgba(255,255,255,.075) 0,rgba(0,0,0,.075) 100%) !important;
+    color: #FFF !important;
+    width: 100% !important;
+    border-radius: 4px !important;
+    background-clip: padding-box !important;
+    transition: .2s all ease !important;
+    font-family: LLCircularWeb,"Helvetica Neue",Helvetica,Arial,sans-serif !important;
+    border: 0 !important;
+    font-size: 16px !important;
+    cursor: pointer !important;
+    align-items: flex-start !important;
+    text-align: center !important;
+  }
+  
   #SvgjsSvg1000 {
   	width: 100% !important;
   }
@@ -80,14 +112,59 @@
   #modular__signup_email{ padding:14px 14px 10px 28px;}
   #modular__signup_email_btn{ padding:14px 14px 10px 28px;}
   #modular__signup_password{ padding:14px 14px 10px 28px;}
+ 
+ 
+  #mobile-modular__signup_name{ padding:14px 14px 10px 28px;}
+  #mobile-modular__signup_phone{ padding:14px 14px 10px 28px;}
+  #mobile-modular__signup_email{ padding:14px 14px 10px 28px;}
+  #mobile-modular__signup_email_btn{ padding:14px 14px 10px 28px;}
+  #mobile-modular__signup_password{ padding:14px 14px 10px 28px;} 
   .cta-signup-footer__icons span{ color:#FFFFFF;}
+  
+  .header-white {
+    position: fixed;
+  height: 66px;
+  #line-height: 66px;
+  background-color: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+  
+  
+  #index-header > nav > ul > li > a {
+  color: white;
+  }
+
+
+nav a {
+  position: relative;
+  color: #ff3296;
+}
+nav a:after {
+  display: block;
+  position: absolute;
+  left: 0;
+  bottom: -10px;
+  width: 0;
+  height: 2px;
+  background-color: #ccc;
+  content: "";
+  transition: width 0.2s;
+}
+nav a:hover {
+  color: #ccc;
+}
+nav a:hover:after {
+  width: 100%;
+}
+  
     </style>
 </head>
 <body class="new-home video-bg">
-<header class="header-new js-header-new">
+<header id = "index-header" class="header-new js-header-new" >
+ 
   <nav>
   <a href="index.html" class="header-new__links" style="float: left;">
-    <img src="style/image/logo2.png" title="帮帮账">
+    <img class="logo" src="style/image/logo-white1.png" title="帮帮账">
   </a>
 
     <ul class="header-new__links">
@@ -100,7 +177,7 @@
 </header>
 <header class="header-mobile-new">
   <a href="index.html" class="header-new__links" style="float: left;">
-    <img src="style/image/logo2.png" title="帮帮账">
+    <img src="style/image/logo-black1.png" title="帮帮账">
   </a>
   <div class="header-mobile-new__menu">
     <span class="header-mobile-new__menu__button js-mobile-navigation">
@@ -210,18 +287,18 @@
           旗下的帮帮账产品为您提供线上专业会计记账和报税服务，现在注册即可免费试用一个月</p>
       </div>
       <form id="account-form_form" class="account-form signup-form js-form-show-mobile" data-validate="parsley">
-        <div class="account-form__field account-form--name">
-          <label class="js-account-form-name"> <img data-state="closed" src="style/image/person-genderless-red-(1).png"  style="height:20px; width:20px;" class="iconic iconic-sm  name-icon" /> <input id="account-form_name" class="js-signup-name" name="name" type="text" placeholder="全名" data-required="true" data-trigger="change" data-error-message="请输入您的全名。" /> </label>
-        </div>
+
         <div class="account-form__field account-form--email">
-          <label class="js-account-form-email"> <img data-state="closed" src="style/image/shuxin.png"  style="height:20px; width:20px;" class="iconic iconic-sm  email-icon" /> <input id="account-form_email" class="js-signup-email" name="email" type="text" placeholder="邮箱" data-trigger="change" data-required="true" data-type="email" /> </label>
+          <label class="js-account-form-email"> <img data-state="closed" src="style/image/shuxin.png"  style="height:20px; width:20px;" class="iconic iconic-sm  email-icon" />
+           <input id="mobile-account-form_email" class="js-signup-email" name="email" type="text" placeholder="邮箱" data-trigger="change" data-required="true" data-type="email" /> </label>
         </div>
         <div class="account-form__field account-form--phone">
-          <label class="js-account-form-phone"> <img data-state="closed" src="style/image/iphone-red.png"  style="height:20px; width:20px;" class="iconic iconic-sm  phone-icon" /> <input id="account-form_phone" class="js-signup-phone" name="phone" type="text" placeholder="电话号码" data-type="phone" data-required="true" data-error-message="请输入您的电话号码。" maxlength="10" pattern=".{10,}" data-trigger="change" /> </label>
+          <label class="js-account-form-phone"> <img data-state="closed" src="style/image/as (5).png"  style="height:20px; width:20px;" class="iconic iconic-sm  phone-icon" /> 
+          <input id="mobile-account-form_password" class="js-signup-password" name="password" type="password" placeholder="密码" data-type="password" data-required="true" data-error-message="请输入您的密码"  /> </label>
         </div>
         <div class="account-form__buttons">
           <div class="account-form__buttons__button account-form__buttons__button--left">
-            <button type="submit" class="js-signup-submit-phone js-account-button">注册 </button>
+            <input id="mobile-signup-btn" type="button" class="js-signup-submit-phone js-account-button" value="注册"/>
           </div>
           <div class="account-form__buttons__button account-form__buttons__button--right">
             <div class="account-form__buttons__button__questions js-questions-button">
@@ -238,12 +315,12 @@
               <div class="overlay-video-btn__icon hide-for-small">
                 <img src="style/images/media.svg" class="iconic iconic-md icon-white" />
               </div>
-              <span>观看我们的视频</span>
             </div>
           </div>
         </div>
         <div class="clear" style="clear: both;"></div>
       </form>
+      <div id="mobile-signup-error-msg"></div>
       <div class="call-cta">
         <div class="play-btn hide">
           <div class="play-btn-arrow"></div>
@@ -421,20 +498,20 @@
   </div>
   <h2>准备开始?</h2>
   <form id="modular__signup_form" class="cta-signup-footer__form signup-form js-form-show-mobile" data-validate="parsley">
-    <div class="cta-signup-footer__form__field cta-signup-footer__form--name">
-      <label class="js-account-form-name"> <img data-state="closed" src="style/image/person01.png" style="height:16px; width:16px;"  class="iconic iconic-sm  name-icon" /> <input id="modular__signup_name" class="js-signup-name" name="name" type="text" placeholder="全名" data-required="true" data-trigger="change" data-error-message="请输入您的全名。" /> </label>
-    </div>
     <div class="cta-signup-footer__form__field cta-signup-footer__form--email">
-      <label class="js-account-form-email"> <img data-state="closed" src="style/image/envelope.png" style="height:16px; width:16px;" class="iconic iconic-sm  email-icon" /> <input id="modular__signup_email" class="js-signup-email" name="email" type="text" placeholder="邮箱" data-trigger="change" data-required="true" data-type="email" /> </label>
+      <label class="js-account-form-email"> <img data-state="closed" src="style/image/envelope.png" style="height:16px; width:16px;" class="iconic iconic-sm  email-icon" />
+       <input id="mobile-modular__signup_email" class="js-signup-email" name="email" type="text" placeholder="邮箱" data-trigger="change" data-required="true" data-type="email" /> </label>
     </div>
     <div class="cta-signup-footer__form__field cta-signup-footer__form--phone">
-      <label class="js-account-form-phone"> <img data-state="closed" src="style/image/iphone-write.png" style="height:16px; width:16px;" class="iconic iconic-sm  phone-icon" /> <input id="modular__signup_phone" class="js-signup-phone" name="phone" type="text" placeholder="电话号码" data-type="phone" data-required="true" data-error-message="请输入您的电话号码。" maxlength="10" pattern=".{10,}" data-trigger="change" /> </label>
+      <label class="js-account-form-phone"> <img data-state="closed" src="style/image/lock.png" style="height:16px; width:16px;" class="iconic iconic-sm  password-icon" />
+       <input id="mobile-modular__signup_password" class="js-signup-password" name="password" type="password" placeholder="密码" data-type="password" data-required="true" data-error-message="请输入您的密码。" data-trigger="change" /> </label>
     </div>
     <div class="cta-signup-footer__form__submit">
-      <button type="submit" class="js-signup-submit-phone js-account-button" id="btn--login"> <span>开始</span> </button>
+      <input id="mobile-signup-btn-bottom" type="button" class="js-signup-submit-phone js-account-button" id="btn--login" value="注册" />
     </div>
     <div class="clear" style="clear: both;"></div>
   </form>
+  <div id="mobile-signup-error-msg-btn"></div>
 </div>
 <div id="modular__signup_container" class="modular__signup hide-for-small signup-form_container  cta-signup-footer cta-signup-footer--dark-image ">
   <div id="home-introduction">
@@ -474,14 +551,17 @@
   </div>
   <form id="modular__signup_form" class="cta-signup-footer__form signup-form js-form-show-mobile" data-validate="parsley">
     <div class="cta-signup-footer__form__field cta-signup-footer__form--email">
-      <label class="js-account-form-email register-form-bottom"> <img data-state="closed" src="style/image/envelope.png" style="height:20px; width:20px;" class="iconic iconic-sm  email-icon" /> <input id="modular__signup_email_btn" class="js-signup-email" name="email" type="text" placeholder="邮箱" data-trigger="change" data-required="true" data-type="email"  style="border-bottom:1px solid #FFF"/> </label>
+      <label class="js-account-form-email register-form-bottom"> <img data-state="closed" src="style/image/envelope.png" style="height:20px; width:20px;" class="iconic iconic-sm  email-icon" />
+       <input id="modular__signup_email_btn" class="js-signup-email" name="email" type="text" placeholder="邮箱" data-trigger="change" data-required="true" data-type="email"  style="border-bottom:1px solid #FFF"/> </label>
     </div>
     <div class="cta-signup-footer__form__field cta-signup-footer__form__form__field--password">
       <div id="show-password-bottom" class="cta-signup-footer__form__field__show js-toggle-password register-form-bottom" style="border-bottom:1px solid #FFF">
         <img src="style/image/eye.png" style="height:20px; width:20px;" class="iconic iconic-sm " />
         <span id="password-status-bottom">显示</span>
       </div>
-      <label class="js-account-form-password register-form-bottom"> <img data-state="locked" src="style/image/lock.png" style="height:20px; width:20px;" class="iconic iconic-sm " /> <input class="password_visible" name="show-password" type="text" placeholder="密码" style="display: none;border-bottom:1px solid #FFF"/> <input id="modular__signup_password" class="js-signup-password password_masked" name="password" type="password" placeholder="密码" data-required="true" data-trigger="keyup" data-error-message="请输入密码。" style="border-bottom:1px solid #FFF"/> </label>
+      <label class="js-account-form-password register-form-bottom"> <img data-state="locked" src="style/image/lock.png" style="height:20px; width:20px;" class="iconic iconic-sm " />
+       <input class="password_visible" name="show-password" type="text" placeholder="密码" style="display: none;border-bottom:1px solid #FFF"/>
+        <input id="modular__signup_password" class="js-signup-password password_masked" name="password" type="password" placeholder="密码" data-required="true" data-trigger="keyup" data-error-message="请输入密码。" style="border-bottom:1px solid #FFF"/> </label>
     </div>
     <div class="cta-signup-footer__form__submit">
       <input id="sign-up-bottom-btn" type="button" class="js-signup-submit-new js-account-button" id="btn--login" value="注册" />
@@ -580,6 +660,22 @@
     </div>
   </div>
 </footer>
+               <script type="text/javascript" src="../../js/webjs/main.page.utils.js"></script>
+               <!-- <script type="text/javascript" src="../../js/webjs/jquery-1.11.1.js"></script> -->
+               <script type="text/javascript" src="../../js/webjs/jquery-1.8.1.min.js"></script>
+               <script type="text/javascript" src="../../js/webjs/modernizr.custom.87166.js"></script>
+               <script type="text/javascript" src="../../js/webjs/angularjs/angular.min.js"></script>
+               <script type="text/javascript" src="../../js/webjs/angularjs/angular-route.min.js"></script>
+               <script type="text/javascript" src="../../js/webjs/angularjs/angular-animate.min.js"></script>
+               <script type="text/javascript" src="../../js/webjs/i18n/text-zh-CN.js"></script>
+               <script type="text/javascript" src="../../js/webjs/lodash.min.js"></script>
+               <script type="text/javascript" src="../../js/webjs/TweenMax.min.js"></script>
+               <script type="text/javascript" src="../../js/webjs/greensock/ScrollToPlugin.min.js"></script>
+               <script type="text/javascript" src="../../js/webjs/youngwisdom.js"></script>
+               <script src="/js/webjs/jquery.easing-1.3.pack.js"></script>
+               <script src="/js/webjs/jquery.fancybox-1.3.4.js"></script>
+               <script src="/js/webjs/jquery.fancybox-1.3.4.pack.js"></script>
+               <script src="/js/webjs/jquery.mousewheel-3.0.4.pack.js"></script>
 <script type="text/javascript">var mainapp_offline=false;</script>
 <script>
   var movieC = document.getElementById("movieclick");
@@ -608,7 +704,6 @@
 			},
 			cache : false,
 			success : function(data) {
-				console.log(data.error_message);
 				if(data.error_code == '-1') {
 					errorMsgObj.html("<p style='color: #FD7A50;'>用户名或密码不能为空！</p>");
 				} else if(data.error_code == '0') {
@@ -635,22 +730,47 @@
 	  var email = $("#account-form_email").val();
 	  var pwd = $("#account-form_password").val();
 	  var errorMsgObj = $('#signup-error-msg');
-	  checkInput($("#account-form_email"), $("#account-form_password"));
-	  signUp(email, pwd, errorMsgObj);
+	  var valid = false;
+	  valid = checkInput($("#account-form_email"), $("#account-form_password"),errorMsgObj);
+	  if (valid){
+		signUp(email, pwd, errorMsgObj);
+	  }
 	  
   });
   
   $("#sign-up-bottom-btn").click(function(){
 	  var email = $("#modular__signup_email_btn").val();
 	  var pwd = $("#modular__signup_password").val();
-	  console.log(email);
-	  console.log(pwd);
 	  var errorMsgObj = $("#signup-error-msg-bottom");
-	  checkInput($("#modular__signup_email"), $("#modular__signup_password"));
-	  signUp(email, pwd, errorMsgObj);
+	  var valid = false;
+	  valid = checkInput($("#modular__signup_email_btn"), $("#modular__signup_password"),errorMsgObj);
+	  if (valid) {
+		  signUp(email, pwd, errorMsgObj);
+	  }
   });
   
+$("#mobile-signup-btn").click(function(){
+	var email = $("#mobile-account-form_email").val();
+	  var pwd = $("#mobile-account-form_password").val();
+	  var errorMsgObj = $("#mobile-signup-error-msg");
+	  var valid = false;
+	  valid = checkInput($("#mobile-account-form_email"), $("#mobile-account-form_password"),errorMsgObj);
+	  if(valid){
+	  	signUp(email, pwd, errorMsgObj);
+	  }
+});
 
+$("#mobile-signup-btn-bottom").click(function(){
+	var email = $("#mobile-modular__signup_email").val();
+	  var pwd = $("#mobile-modular__signup_password").val();
+	  var errorMsgObj = $("#mobile-signup-error-msg-btn");
+	  var valid = false;
+	  valid = checkInput($("#mobile-modular__signup_email"), $("#mobile-modular__signup_email"), errorMsgObj);
+	  if (valid){
+	 	 signUp(email, pwd, errorMsgObj);
+	  }
+	
+});
   function isEmail(email) {
       var result = email
                       .match(/^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/);
@@ -659,25 +779,30 @@
       return true;
 }
   
-	function checkInput(emailObj, pwdObj) {
-		emailObj.on('input',function(e){
-			$("#signup-error-msg").hide();
-			var email = emailObj.val();
-			if(email == null || !isEmail(email)) {
-				$("#sign-up-screen-email-error").show();
-			} else {
-				$("#sign-up-screen-email-error").hide();
-			}
-		});
-		pwdObj.on('input',function(e){
-			$("#signup-error-msg").hide();
-			var pwd = pwdObj.val();
-			if(pwd == null || pwd == '') {
-				$("#sign-up-screen-pwd-error").show();
-			} else {
-				$("#sign-up-screen-pwd-error").hide();
-			}
-		});
+	function checkInput(emailObj, pwdObj, errorMsgObj) {
+		var userEmail = emailObj.val();
+		var userPwd = pwdObj.val(); 
+
+		if(userEmail == null||userEmail == "" ) {
+
+			errorMsgObj.html("<p style='color: #FD7A50;'>用户名或密码不能为空！</p>");
+			return false;
+		}else if (!isEmail(userEmail)){
+			
+			errorMsgObj.html("<p style='color: #FD7A50;'>邮箱格式错误！</p>");
+			return false;
+		}
+		else {
+			errorMsgObj.html("");
+		}
+
+		if(userPwd == null || userPwd == '') {
+			errorMsgObj.html("<p style='color: #FD7A50;'>用户名或密码不能为空！</p>");
+			return false;
+		} else {
+			errorMsgObj.html("");
+		}
+		return true
 	}
 	
 	
@@ -753,7 +878,6 @@
 		var pwdObj = $("#account-form_password");
 		var pwd = pwdObj.val();
 		if(pwdObj.attr("type") == 'text') {
-			console.log("show password");
 			$("#password-status").html("显示");
 			pwdObj = $("#account-form_password");
 		    $('<input id="account-form_password" class="js-signup-password password_masked" name="password" type="password" placeholder="密码" data-required="true" data-trigger="keyup" data-error-message="请输入密码。" />').val(pwd).insertBefore(pwdObj);
@@ -806,22 +930,17 @@
         }), $(".new-home__clients__container__half").height(n);
     
 	if ($(window).width() <= 960) {
-		console.log("hide");
 		$("#chart").css("display", "none");
 	}
 	else {
-		console.log("display");
 		$("#chart").css("display", "block");
 	}
 	
 	$(window).on("resize",function(){
-		console.log("chanege");
 		if ($(window).width() <= 960) {
-			console.log("hide");
 			$("#chart").css("display", "none");
 		}
 		else {
-			console.log("display");
 			$("#chart").css("display", "block");
 		}
 		
@@ -830,8 +949,8 @@
 	$("#show-password-bottom").click(function(){
 		var pwdObj = $("#modular__signup_password");
 		var pwd = pwdObj.val();
+
 		if(pwdObj.attr("type") == 'text') {
-			console.log("show password");
 			$("#password-status-bottom").html("显示");
 			pwdObj = $("#modular__signup_password");
 			
@@ -845,10 +964,38 @@
 		    $("#password-status-bottom").html("隐藏");
 			
 		}
-
-		
 		
 	});
+	
+	$(window).scroll(function(){
+		if ($(window).scrollTop() > 0) {
+			$("#index-header").addClass("header-white");
+			$(".logo").each(function(){
+				$(this).attr("src", "style/image/logo-black1.png");
+				
+			});
+			$("#index-header > nav > ul > li > a").each(function(){
+				$(this).css("color", "black");
+			});
+			
+		}
+		else{
+			$("#index-header").removeClass("header-white");
+			$(".logo").each(function(){
+				$(this).attr("src", "style/image/logo-white1.png");
+			});
+			$("#index-header > nav > ul > li > a").each(function(){
+				$(this).css("color", "white");
+			});
+		}
+		
+	});
+	
+	$(".js-mobile-navigation").click(function() {
+        var t = $(".header-mobile-new");
+        t.toggleClass("menu-open");
+    });
+	
 </script>
 </body>
 </html>
