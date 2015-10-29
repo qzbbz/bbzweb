@@ -7859,7 +7859,6 @@ box-shadow:0 0 0 100px #fff4e9 inset;
 	right: 0;
 	background-image: url(img/emily-darkSign.png);
 	background-size: 100%;
-	background-position: center bottom;
 	background-repeat: no-repeat;
 	z-index: 1
 }
@@ -8180,7 +8179,6 @@ box-shadow:0 0 0 20px #4e4e4e inset;
 	right: 0;
 	background-image: url(img/emily-dark.png);
 	background-size: 100%;
-	background-position: center bottom;
 	background-repeat: no-repeat;
 	z-index: 1
 }
