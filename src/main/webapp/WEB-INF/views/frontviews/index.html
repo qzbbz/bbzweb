@@ -170,7 +170,7 @@ nav a:hover:after {
 </header>
 <header class="header-mobile-new">
   <a href="index.html" class="header-new__links" style="float: left;">
-    <img class="logo" src="style/image/logo-black1.png" title="帮帮账">
+    <img src="style/image/logo-black1.png" title="帮帮账">
   </a>
   <div class="header-mobile-new__menu">
     <span class="header-mobile-new__menu__button js-mobile-navigation">
@@ -690,7 +690,6 @@ nav a:hover:after {
 			},
 			cache : false,
 			success : function(data) {
-				console.log(data.error_message);
 				if(data.error_code == '-1') {
 					errorMsgObj.html("<p style='color: #FD7A50;'>用户名或密码不能为空！</p>");
 				} else if(data.error_code == '0') {
@@ -725,8 +724,6 @@ nav a:hover:after {
   $("#sign-up-bottom-btn").click(function(){
 	  var email = $("#modular__signup_email_btn").val();
 	  var pwd = $("#modular__signup_password").val();
-	  console.log(email);
-	  console.log(pwd);
 	  var errorMsgObj = $("#signup-error-msg-bottom");
 	  checkInput($("#modular__signup_email"), $("#modular__signup_password"));
 	  signUp(email, pwd, errorMsgObj);
@@ -735,8 +732,6 @@ nav a:hover:after {
 $("#mobile-signup-btn").click(function(){
 	var email = $("#account-form_email").val();
 	  var pwd = $("#account-form_password").val();
-	  console.log(email);
-	  console.log(pwd);
 	  var errorMsgObj = $("#mobile-signup-error-msg");
 	  checkInput($("#account-form_email"), $("#account-form_password"));
 	  signUp(email, pwd, errorMsgObj);
@@ -745,8 +740,6 @@ $("#mobile-signup-btn").click(function(){
 $("#mobile-signup-btn-bottom").click(function(){
 	var email = $("#modular__signup_email").val();
 	  var pwd = $("#modular__signup_password").val();
-	  console.log(email);
-	  console.log(pwd);
 	  var errorMsgObj = $("#mobile-signup-error-msg-btn");
 	  checkInput($("#modular__signup_email"), $("#modular__signup_email"));
 	  signUp(email, pwd, errorMsgObj);
@@ -854,7 +847,6 @@ $("#mobile-signup-btn-bottom").click(function(){
 		var pwdObj = $("#account-form_password");
 		var pwd = pwdObj.val();
 		if(pwdObj.attr("type") == 'text') {
-			console.log("show password");
 			$("#password-status").html("显示");
 			pwdObj = $("#account-form_password");
 		    $('<input id="account-form_password" class="js-signup-password password_masked" name="password" type="password" placeholder="密码" data-required="true" data-trigger="keyup" data-error-message="请输入密码。" />').val(pwd).insertBefore(pwdObj);
@@ -907,22 +899,17 @@ $("#mobile-signup-btn-bottom").click(function(){
         }), $(".new-home__clients__container__half").height(n);
     
 	if ($(window).width() <= 960) {
-		console.log("hide");
 		$("#chart").css("display", "none");
 	}
 	else {
-		console.log("display");
 		$("#chart").css("display", "block");
 	}
 	
 	$(window).on("resize",function(){
-		console.log("chanege");
 		if ($(window).width() <= 960) {
-			console.log("hide");
 			$("#chart").css("display", "none");
 		}
 		else {
-			console.log("display");
 			$("#chart").css("display", "block");
 		}
 		
@@ -932,7 +919,6 @@ $("#mobile-signup-btn-bottom").click(function(){
 		var pwdObj = $("#modular__signup_password");
 		var pwd = pwdObj.val();
 		if(pwdObj.attr("type") == 'text') {
-			console.log("show password");
 			$("#password-status-bottom").html("显示");
 			pwdObj = $("#modular__signup_password");
 			
@@ -973,10 +959,11 @@ $("#mobile-signup-btn-bottom").click(function(){
 		
 	});
 	
-	$("nav a").hover(function(){
-		console.log("hover");
-		
-	});
+	$(".js-mobile-navigation").click(function() {
+        var t = $(".header-mobile-new");
+        t.toggleClass("menu-open");
+    });
+	
 </script>
 </body>
 </html>
