@@ -4,6 +4,7 @@ import java.net.Socket;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,12 +103,13 @@ public class UserValidateApiImpl implements IUserValidateApi {
 	@Override
 	public Map<String, String> UserForgetPwd(String userId) {
 		Map<String, String> retMap = new HashMap<>();
-		String newPwd = UserPwdMD5Encrypt.getPasswordByMD5Encrypt("123456");
+		String code = String.valueOf(new Random().nextInt(999999)%(1000000));
+		String newPwd = UserPwdMD5Encrypt.getPasswordByMD5Encrypt(code);
 		if(userService.modifyUserPwdByUserId(newPwd, userId)) {
 			retMap.put("error_code", "0");
 			retMap.put("error_message", "");
 			String mailSubject = "帮帮账-忘记密码";
-			String mailBody = "尊敬的用户您好！<br>您当前注册的用户名是："+ userId +"，密码是：123456。<br>请您妥善保管账号信息！<br>本邮件是系统自动发送的邮件，请勿回复！<br><br>上海元升财务咨询有限公司<br>上海市杨浦区国定东路200号1号楼514室<br>联系电话:4000-866-018";
+			String mailBody = "尊敬的用户您好！<br>您当前注册的用户名是："+ userId +"，密码是："+code+"。<br>请您妥善保管账号信息！<br>本邮件是系统自动发送的邮件，请勿回复！<br><br>上海元升财务咨询有限公司<br>上海市杨浦区国定东路200号1号楼514室<br>联系电话:4000-866-018";
 			javaMailService.sendMailOut(userId, mailSubject, mailBody, "");
 		} else {
 			retMap.put("error_code", "1");
