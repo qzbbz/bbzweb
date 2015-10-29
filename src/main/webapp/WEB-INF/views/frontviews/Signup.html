@@ -10,7 +10,7 @@
 	#account-register{
 		display: inline-block !important;
     	outline: 0 !important;
-    	padding: 1em 1em 15px !important;
+    	padding: 1em 2.5em !important;
     	text-shadow: 0 1px 1px rgba(0,0,0,.2) !important;
     	border-bottom: 2px solid #a4523c !important;
     	font-weight: 600 !important;
@@ -33,7 +33,7 @@
 	#mobile-signup-btn {
 			display: inline-block !important;
     	outline: 0 !important;
-    	padding: 1em 1em 15px !important;
+    	padding: 1em 2.5em !important;
     	text-shadow: 0 1px 1px rgba(0,0,0,.2) !important;
     	border-bottom: 2px solid #a4523c !important;
     	font-weight: 600 !important;
@@ -63,7 +63,7 @@
       <p>还没有准备好签约吗？我们有一个伟大的团队的记账顾问准备回答任何有关工作的问题，在一般的工作台或记帐。</p>
       <p><strong>我们的时间是早上6点到晚上6点</strong></p>
       <div>
-        <a href="javascript:;" class="signup-new__main__questions__chat">实时聊天<img src="style/images/chat.svg" class="iconic iconic-sm" /></a>
+        <a href="javascript:;" class="signup-new__main__questions__chat">实时聊天</a>
         <div class="signup-new__main__questions__call">
           <span class="signup-new__main__questions__call__small">或打电话</span>
           <span class="signup-new__main__questions__call__number">4000-866-018</span>
@@ -187,10 +187,14 @@
 	var userEmail = $('#account-form_email').val();
 	var userPwd = $('#account-form_password').val();
 	var errorMsgObj = $("#account-reg-error-msg");
-	signUp(userEmail, userPwd, errorMsgObj);
+	var valid = false;
+	valid = checkInput($('#account-form_email'),$('#account-form_password'), errorMsgObj);
+	if (valid){
+		signUp(userEmail, userPwd, errorMsgObj);
 	
-	errorMsgObj.html("<p style='color: white;'>正在向服务器提交您的信息，请稍后......</p>");
-	errorMsgObj.show();
+		errorMsgObj.html("<p style='color: white;'>正在向服务器提交您的信息，请稍后......</p>");
+		errorMsgObj.show();
+	}
 	
 	});
 	
@@ -198,10 +202,14 @@
 		var userEmail = $('#mobile-account-form_email').val();
 		var userPwd = $('#mobile-account-form_password').val();
 		var errorMsgObj = $("#mobile-error-message");
-		signUp(userEmail, userPwd, errorMsgObj);
+		var valid = false;
+		valid = checkInput($('#mobile-account-form_email'),$('#mobile-account-form_password'), errorMsgObj);
+		if(valid){	
+			signUp(userEmail, userPwd, errorMsgObj);
 		
-		errorMsgObj.html("<p style='color: white;'>正在向服务器提交您的信息，请稍后......</p>");
-		errorMsgObj.show();		
+			errorMsgObj.html("<p style='color: white;'>正在向服务器提交您的信息，请稍后......</p>");
+			errorMsgObj.show();		
+		}
 	});
 	
 	
@@ -248,28 +256,33 @@
 	      return true;
 	}
 	  
-		function checkInput() {
-			$("#account-form_email").on('input',function(e){
-				$("#signup-error-msg").hide();
-				var email = $("#account-form_email").val();
-				if(email == null || !isEmail(email)) {
-					$("#sign-up-screen-email-error").show();
-				} else {
-					$("#sign-up-screen-email-error").hide();
-				}
-			});
-			$("#account-form_password").on('input',function(e){
-				$("#signup-error-msg").hide();
-				var pwd = $("#account-form_password").val();
-				if(pwd == null || pwd == '') {
-					$("#sign-up-screen-pwd-error").show();
-				} else {
-					$("#sign-up-screen-pwd-error").hide();
-				}
-			});
+	function checkInput(emailObj, pwdObj, errorMsgObj) {
+		var userEmail = emailObj.val();
+		var userPwd = pwdObj.val(); 
+
+		if(userEmail == null||userEmail == "" ) {
+
+			errorMsgObj.html("<p style='color: #FD7A50;'>用户名或密码不能为空！</p>");
+			return false;
+		}else if (!isEmail(userEmail)){
+			
+			errorMsgObj.html("<p style='color: #FD7A50;'>邮箱格式错误！</p>");
+			return false;
 		}
-		checkInput();
-		console.log("hello");
+		else {
+			errorMsgObj.html("");
+		}
+		console.log(userPwd);
+		if(userPwd == null || userPwd == '') {
+			errorMsgObj.html("<p style='color: #FD7A50;'>用户名或密码不能为空！</p>");
+			return false;
+		} else {
+			errorMsgObj.html("");
+		}
+		return true
+	}
+		//checkInput();
+
 		$("#js-toggle-password").click(function(){
 
 			var pwdObj = $("#account-form_password");
@@ -291,6 +304,21 @@
 			}
 			
 		});
+	    var t = !1;
+	    
+	    $(".js-questions-button").click(function(){
+	    	$(".js-signup-container").animate({opacity: 0},1500);
+	    	$(".js-signup-questions").animate({opacity: 1},1500);
+	    	$(".js-signup-container").css("display", "none");
+	    	$(".js-signup-questions").css("display", "block");
+	    });
+
+	    $(".js-questions-back-button").click(function(){
+	    	$(".js-signup-questions").animate({opacity: 0},1500);
+	    	$(".js-signup-container").animate({opacity: 1},1500);
+	    	$(".js-signup-questions").css("display", "none");
+	    	$(".js-signup-container").css("display", "block");
+	    });
 		</script>
   </body>
 </html>

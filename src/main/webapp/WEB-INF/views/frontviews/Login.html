@@ -15,7 +15,7 @@
 	#login-btn{
 display: inline-block !important;
     outline: 0 !important;
-    padding: 1em 1em 15px !important;
+    padding: 1em 2.5em !important;
     text-shadow: 0 1px 1px rgba(0,0,0,.2) !important;
     border-bottom: 2px solid #a4523c !important;
     font-weight: 600 !important;
@@ -151,11 +151,16 @@ display: inline-block !important;
 	var userPwd = $('#account-form_password').val();
 
 	var loginErrorMsg = $('#user-login-error-msg');
-	if(userEmail == null || !isEmail(userEmail)) {
+	if(userEmail == null||userEmail == "") {
 		$("#userLoginEmailError").show();
 		loginErrorMsg.html("<p style='color: #FD7A50;'>用户名或密码不能为空！</p>");
 		return;
-	} else {
+	}else if(!isEmail(userEmail)){
+		loginErrorMsg.html("<p style='color: #FD7A50;'>邮箱格式错误！</p>");
+		return;
+		
+	} 
+	else {
 		$("#userLoginEmailError").hide();
 		loginErrorMsg.html("");
 	}
