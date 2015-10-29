@@ -16,12 +16,44 @@
 .about-page .team{
 	margin: 0 auto;
 }
+
+
+nav a {
+  position: relative;
+  color: #ff3296;
+}
+nav a:after {
+  display: block;
+  position: absolute;
+  left: 0;
+  bottom: -10px;
+  width: 0;
+  height: 2px;
+  background-color: #ccc;
+  content: "";
+  transition: width 0.2s;
+}
+nav a:hover {
+  color: #ccc;
+}
+nav a:hover:after {
+  width: 100%;
+}
+
+  .header-white {
+    position: fixed;
+  height: 66px;
+  #line-height: 66px;
+  background-color: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+  
 </style>
 <body class="about-page ">
-<header class="header-new js-header-new">
+<header id = "index-header" class="header-new js-header-new">
  <nav>
    <a href="index.html" class="header-new__links" style="float: left;">
-    <img src="style/images/logo.png" title="帮帮账">
+    <img class="logo" src="style/image/logo-white1.png" title="帮帮账">
    </a>
 
 		<ul class="header-new__links">
@@ -34,7 +66,7 @@
 </header>
 <header class="header-mobile-new">
  <a href="index.html" class="header-new__links" style="float: left;">
-  <img src="style/images/logo.png" title="帮帮账">
+  <img src="style/image/logo-black1.png" title="帮帮账">
  </a>
  <div class="header-mobile-new__menu">
     <span class="header-mobile-new__menu__button js-mobile-navigation">
@@ -1169,6 +1201,30 @@ $('#snap2').click(function() {
 $(".js-mobile-navigation").click(function() {
     var t = $(".header-mobile-new");
     t.toggleClass("menu-open");
+});
+
+$(window).scroll(function(){
+	if ($(window).scrollTop() > 0) {
+		$("#index-header").addClass("header-white");
+		$(".logo").each(function(){
+			$(this).attr("src", "style/image/logo-black1.png");
+			
+		});
+		$("#index-header > nav > ul > li > a").each(function(){
+			$(this).css("color", "black");
+		});
+		
+	}
+	else{
+		$("#index-header").removeClass("header-white");
+		$(".logo").each(function(){
+			$(this).attr("src", "style/image/logo-white1.png");
+		});
+		$("#index-header > nav > ul > li > a").each(function(){
+			$(this).css("color", "white");
+		});
+	}
+	
 });
 </script>
 </body>
