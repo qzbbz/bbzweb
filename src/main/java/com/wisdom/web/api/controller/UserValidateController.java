@@ -92,6 +92,22 @@ public class UserValidateController {
 		return retMap;
 	}
 	
+	@RequestMapping("/forgetPwd")
+	@ResponseBody
+	public Map<String, String> forgetPwd(HttpServletRequest request) {
+		String userId = request.getParameter("userId");
+		Map<String, String> retMap = new HashMap<>();
+		logger.debug("forgetPwd");
+		if (userId != null && !userId.isEmpty()) {
+			retMap = userValidateApi
+					.UserForgetPwd(userId);
+		} else {
+			retMap.put("error_code", "-1");
+		}
+		logger.debug("finish forgetPwd");
+		return retMap;
+	}
+	
 	@RequestMapping("/modifyPassword")
 	@ResponseBody
 	public Map<String, String> modifyPassword(HttpServletRequest request) {
