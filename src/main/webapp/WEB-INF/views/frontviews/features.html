@@ -808,7 +808,7 @@ nav a:hover:after {
     });
     
     $("#signup-btn-bottom").click(function(){
-    	console.log("click");
+
     	var email = $("#modular__signup_email").val();
     	  var pwd = $("#modular__signup_password").val();
     	  var errorMsgObj = $("#signup-error-msg-btn");
@@ -844,7 +844,7 @@ nav a:hover:after {
 		else {
 			errorMsgObj.html("");
 		}
-		console.log(userPwd);
+
 		if(userPwd == null || userPwd == '') {
 			errorMsgObj.html("<p style='color: #FD7A50;'>用户名或密码不能为空！</p>");
 			return false;
@@ -857,7 +857,7 @@ nav a:hover:after {
 	$("#show-password").click(function(){
 		var pwdObj = $("#modular__signup_password");
 		var pwd = pwdObj.val();
-		console.log("click");
+
 		if(pwdObj.attr("type") == 'text') {
 			$("#password-status").html("显示");
 			pwdObj = $("#modular__signup_password");

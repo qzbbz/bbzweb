@@ -795,7 +795,7 @@ $("#mobile-signup-btn-bottom").click(function(){
 		else {
 			errorMsgObj.html("");
 		}
-		console.log(userPwd);
+
 		if(userPwd == null || userPwd == '') {
 			errorMsgObj.html("<p style='color: #FD7A50;'>用户名或密码不能为空！</p>");
 			return false;
@@ -949,7 +949,7 @@ $("#mobile-signup-btn-bottom").click(function(){
 	$("#show-password-bottom").click(function(){
 		var pwdObj = $("#modular__signup_password");
 		var pwd = pwdObj.val();
-		console.log("click");
+
 		if(pwdObj.attr("type") == 'text') {
 			$("#password-status-bottom").html("显示");
 			pwdObj = $("#modular__signup_password");
