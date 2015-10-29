@@ -10,6 +10,11 @@
 
   
   <style>
+  
+  .new-home__clients__container{
+  margin-bottom: 4em;
+  }
+  
   #sign-up-btn {
     display: inline-block !important;
     outline: 0 !important;
@@ -321,13 +326,6 @@ nav a:hover:after {
         <div class="clear" style="clear: both;"></div>
       </form>
       <div id="mobile-signup-error-msg"></div>
-      <div class="call-cta">
-        <div class="play-btn hide">
-          <div class="play-btn-arrow"></div>
-        </div>
-        <a href="javascript:;">现在对我们说话</a>
-        <a href="javascript:;" class="hide charcoal-button book-cta-btn">打电话</a>
-      </div>
     </div>
   </div>
 </div>
@@ -906,7 +904,7 @@ $("#mobile-signup-btn-bottom").click(function(){
             var a = function(e, n) {
                 setTimeout(function() {
                     e.show(), e.css({
-                        y: "-40px",
+                        y: "-60px",
                         opacity: 0
                     }), e.animate({
                         //y: "0px",
