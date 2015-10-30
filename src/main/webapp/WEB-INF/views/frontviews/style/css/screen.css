@@ -1,9 +1,8 @@
 .movieindex {
-	width: 960px;
-	height: 540px;
+	background-color: black;
 	position: absolute;
-	top: 50px;
 	left: 50%;
+	top: 10%;
 	margin-left: -480px;
 	z-index: 99;
 	display: none;
@@ -8179,6 +8178,7 @@ box-shadow:0 0 0 20px #4e4e4e inset;
 	right: 0;
 	background-image: url(img/emily-dark.png);
 	background-size: 100%;
+	    background-position: center bottom;
 	background-repeat: no-repeat;
 	z-index: 1
 }
