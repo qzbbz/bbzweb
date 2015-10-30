@@ -243,7 +243,7 @@ nav a:hover:after {
   </nav>
 </header>
 <div class="new-home__hero hero-video hero-cta-new">
-  <video preload="auto" autoplay id="broll-video" class="hero-video-broll hide-for-small">
+  <video preload="auto" autoplay loop id="broll-video" class="hero-video-broll hide-for-small">
     <source src="style/background.mp4" type="video/mp4">
   <!--   <source src="style/B-Roll_Cropped.webm" type="video/webm">
     <source src="style/B-Roll_Cropped.ogg" type="video/ogg">-->
@@ -986,11 +986,7 @@ $("#mobile-signup-btn-bottom").click(function(){
         var t = $(".header-mobile-new");
         t.toggleClass("menu-open");
     });
-	
-	$('#broll-video').on('ended', function () {
-		this.load();
-		  this.play();
-		});
+
 </script>
 </body>
 </html>
