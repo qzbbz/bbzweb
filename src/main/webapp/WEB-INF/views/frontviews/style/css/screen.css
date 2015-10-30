@@ -1,8 +1,6 @@
 .movieindex {
-	width: 960px;
-	height: 540px;
+	background-color: black;
 	position: absolute;
-	top: 50px;
 	left: 50%;
 	margin-left: -480px;
 	z-index: 99;
