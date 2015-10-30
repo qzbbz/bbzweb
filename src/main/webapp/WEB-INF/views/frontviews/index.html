@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <link href="style/css/screen.css" rel="stylesheet" type="text/css" media="screen, projection" />
   <link rel="stylesheet" type="text/css" href="../../css/webcss/youngwisdom.css">
+  <link rel="stylesheet" type="text/css" href="../../css/webcss/bootstrap.css">
   <link rel="shortcut icon" href="style/favicon.ico">
   <title>帮帮账</title>
 
@@ -14,6 +15,19 @@
   .new-home__clients__container{
   margin-bottom: 4em;
   }
+  
+  .glyphicon {
+  	transform: none !important;
+  }
+  
+  .logo {
+  	margin-top: 0.7em;
+  	margin-left: 0.7em;
+  }
+  
+  .footer-new__copyright p {
+    max-width: none;
+}
   
   #sign-up-btn {
     display: inline-block !important;
@@ -204,14 +218,14 @@ nav a:hover:after {
   </nav>
 </header>
 <div class="new-home__hero hero-video hero-cta-new">
-  <video preload="auto" loop autoplay id="broll-video" class="hero-video-broll hide-for-small">
+  <video preload="auto" autoplay id="broll-video" class="hero-video-broll hide-for-small">
     <source src="style/B-Roll_Cropped.mp4" type="video/mp4">
-    <source src="style/B-Roll_Cropped.webm" type="video/webm">
-    <source src="style/B-Roll_Cropped.ogg" type="video/ogg">
+  <!--   <source src="style/B-Roll_Cropped.webm" type="video/webm">
+    <source src="style/B-Roll_Cropped.ogg" type="video/ogg">-->
   </video>
   <div class="movieindex" id="movieshow">
     <video controls loop height="540" width="960" id="movieV">
-      <source src="style/movie.mp4">
+      <source src="style/movie.mp4" >
     </video>
     <img src="style/images/delete.png" class="movieDet" height="20" width="20" id="movieDet">
   </div>
@@ -581,85 +595,39 @@ nav a:hover:after {
     </div>
   </div>
 </div>
-<footer class="footer-new">
-  <div class="footer-new__main">
-    <div class="row">
-      <div class="columns large-8">
-        <ul class="small-block-grid-4 large-block-grid-4">
-          <li>
-            <div class="footer-new__chunk">
-              <h6 class="footer-new__heading">Company</h6>
-              <ul>
-                <li><a href="javascript:;">About</a></li>
-                <li><a href="javascript:;">Careers</a></li>
-                <li><a href="javascript:;">Developers</a></li>
-                <li><a href="javascript:;">Press</a></li>
-              </ul>
-            </div> </li>
-          <li>
-            <div class="footer-new__chunk">
-              <h6 class="footer-new__heading">Service</h6>
-              <ul>
-                <li><a href="javascript:;">Features</a></li>
-                <li><a href="javascript:;">Pricing</a></li>
-                <li><a href="javascript:;">Security</a></li>
-                <li><a href="javascript:;">Testimonials</a></li>
-                <!--<li><a href="/accountants">For Accountants</a></li>-->
-              </ul>
-            </div> </li>
-          <li>
-            <div class="footer-new__chunk">
-              <h6 class="footer-new__heading">Community</h6>
-              <ul>
-                <li><a href="javascript:;">Blog</a></li>
-                <li><a href="javascript:;">Syllabus</a></li>
-                <li><a href="javascript:;">Support</a></li>
-                <li><a href="javascript:;">Live Chat</a></li>
-              </ul>
-            </div> </li>
-          <li>
-            <div class="footer-new__chunk footer-new__social">
-              <h6 class="footer-new__heading">Social</h6>
-              <ul>
-                <li class="facebook"><a href="javascript:;"><img src="style/images/facebook-colour.svg" />Facebook</a></li>
-                <li><a href="javascript:;"><img src="style/images/bird-colour.svg" /> Twitter</a></li>
-                <li><a href="javascript:;"><img src="style/images/linkdin-colour.svg" /> LinkedIn</a></li>
-                <li><a href="javascript:;"><img src="style/images/diandian.jpg" /><span class="valign-text-bottom">Refer a Friend</span></a></li>
-              </ul>
-            </div> </li>
-        </ul>
-      </div>
-      <div class="columns large-4 footer-new__contact">
-        <div class="row group">
-          <a href="javascript:;">
-            <div class="columns large-6 newPhone">
-              <div class="footer-new__contact__icon">
-                <img src="style/images/shuxin.jpg" class="iconic-sm" />
-              </div>
-              <h6>info@bangbangzhang.com</h6>
-            </div> </a>
-          <div class="columns large-6">
-            <div class="footer-new__contact__icon">
-              <img src="style/images/phone.jpg" class="iconic-sm" />
-            </div>
-            <h6>4000-866-018 </h6>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="footer-new__under">
-    <div class="row">
-      <div class="large-12 columns">
-        <div class="footer-new__copyright">
-          <p>沪ICP备15012848号 | COPYRIGHT © 2014-2015, BANGBANGZHANG, ALL RIGHTS RESERVED </p>
-        </div>
-      </div>
-    </div>
-  </div>
-</footer>
-               <script type="text/javascript" src="../../js/webjs/main.page.utils.js"></script>
-               <!-- <script type="text/javascript" src="../../js/webjs/jquery-1.11.1.js"></script> -->
+
+  
+    <div id="screen-contact" class="screen" ng-hide="hideContactScreen">
+			<span class="left">
+				<h3>上海元升财务咨询有限公司</h3>
+			</span><span class="right">
+				<span class="col"><i class="glyphicon glyphicon-home"></i>
+					<div class="feature-info">
+							中国上海市杨浦区
+					</div>
+				</span><span class="col"><i class="glyphicon glyphicon-phone"></i>
+					<div class="feature-info">
+							4000-866-018
+					</div>
+				</span><span class="col"><i class="glyphicon glyphicon-envelope"></i>
+					<div class="feature-info">
+							info@bangbangzhang.com
+					</div>
+				</span>
+			</span>
+		</div>
+		
+		<div class="footer-new__under">
+		<div class="row">
+			<div class="large-12 columns">
+				<div class="footer-new__copyright">
+                  <p>沪ICP备15012848号 | COPYRIGHT © 2014-2015, BANGBANGZHANG, ALL RIGHTS RESERVED </p>
+				</div>
+			</div>
+		</div>
+	</div>
+          <!--      <script type="text/javascript" src="../../js/webjs/main.page.utils.js"></script>
+                <script type="text/javascript" src="../../js/webjs/jquery-1.11.1.js"></script> -->
                <script type="text/javascript" src="../../js/webjs/jquery-1.8.1.min.js"></script>
                <script type="text/javascript" src="../../js/webjs/modernizr.custom.87166.js"></script>
                <script type="text/javascript" src="../../js/webjs/angularjs/angular.min.js"></script>
@@ -994,6 +962,10 @@ $("#mobile-signup-btn-bottom").click(function(){
         t.toggleClass("menu-open");
     });
 	
+	$('#broll-video').on('ended', function () {
+		this.load();
+		  this.play();
+		});
 </script>
 </body>
 </html>
