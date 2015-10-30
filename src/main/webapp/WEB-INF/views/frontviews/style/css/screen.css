@@ -6197,8 +6197,8 @@ filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#00ffffff', end
 	position: relative;
 	padding: 14px 0;
 	max-width: 380px;
-	opacity: 0;
-	transition: .2s opacity ease-out
+	#opacity: 0;
+	#transition: .2s opacity ease-out
 }
 
 @media(max-width:61.125em) {
@@ -6230,7 +6230,7 @@ filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#00ffffff', end
 	font-size: 16px;
 	z-index: 1;
 	font-weight: 700;
-	opacity: 0
+	#opacity: 0
 }
 .features-new__section__steps__circle.animate {
 	opacity: 1
@@ -6281,7 +6281,7 @@ filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#00ffffff', end
 .features-new__section__steps__descriptions__description {
 	max-width: 140px;
 	float: left;
-	margin-right: 30px;
+	#margin-right: 30px;
 	position: relative
 }
 
