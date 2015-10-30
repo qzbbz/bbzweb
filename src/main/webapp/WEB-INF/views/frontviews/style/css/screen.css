@@ -809,8 +809,8 @@ color:rgba(41,43,51,.2)
 .cta-signup-footer__form__field__show {
 	display: block;
 	position: absolute;
-	right: 0;
-	top: 1px;
+	right: 11px;
+	top: 3px;
 	cursor: pointer;
 	width: 60px;
 	height: 44px
@@ -834,7 +834,7 @@ color:rgba(41,43,51,.2)
 	color: #FFF
 }
 .cta-signup-footer__form__field input[type=password] {
-	width: calc(100% - 60px)
+	#width: calc(100% - 60px)
 }
 .cta-signup-footer__form__field input.parsley-error {
 	border: 0
@@ -1184,9 +1184,9 @@ color:rgba(0,0,0,.75)!important
 	margin: 0 auto
 }
 .row {
-	width: 100%;
+	width: 80%;
 	max-width: 68em;
-	margin: 0 auto
+	margin: 0 auto !important;
 }
 .row.collapse .column, .row.collapse .columns {
 	position: relative;
@@ -2265,7 +2265,7 @@ blockquote.dark {
 	font-family: "MetaSerif OT Book Ita", Georgia, serif
 }
 i {
-	padding: 0 .5em 0 0
+	#padding: 0 .5em 0 0
 }
 @font-face {
 	font-family: NeuzeitSLT;
