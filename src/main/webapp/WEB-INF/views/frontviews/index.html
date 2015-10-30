@@ -11,9 +11,31 @@
 
   
   <style>
+  .customer{
+  color:rgb(50,50,50);
+  text-decoration:none;
+  }
+  .customer:visited, .customer:link{
+  color:rgb(50,50,50);
+  text-decoration:none;
+  }
+.new-home__clients__container__half{
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
+
   .bottom-company-name {
 	white-space: nowrap;
 }  
+
+.js-account-form-email{
+	width: 100%;
+}
+
+.js-account-form-password{
+	width: 100%;
+}
+
   .new-home__clients__container{
   margin-bottom: 4em;
   }
@@ -189,6 +211,7 @@ nav a:hover:after {
   </a>
 
     <ul class="header-new__links">
+      <li><a href="index.html"><span>主页</span></a></li>
       <li><a href="features.html"><span>特点</span></a></li>
       <li><a href="about.html"><span>团队</span></a></li>
       <li><a href="Login.html"><span>登录</span></a></li>
@@ -314,11 +337,11 @@ nav a:hover:after {
            <input id="mobile-account-form_email" class="js-signup-email" name="email" type="text" placeholder="邮箱" data-trigger="change" data-required="true" data-type="email" /> </label>
         </div>
         <div class="account-form__field account-form--phone">
-          <label class="js-account-form-phone"> <img data-state="closed" src="style/image/as (5).png"  style="height:20px; width:20px;" class="iconic iconic-sm  phone-icon" /> 
+          <label class="js-account-form-password"> <img data-state="closed" src="style/image/as (5).png"  style="height:20px; width:20px;" class="iconic iconic-sm  phone-icon" /> 
           <input id="mobile-account-form_password" class="js-signup-password" name="password" type="password" placeholder="密码" data-type="password" data-required="true" data-error-message="请输入您的密码"  /> </label>
         </div>
         <div class="account-form__buttons">
-          <div class="account-form__buttons__button account-form__buttons__button--left">
+          <div class="account-form__buttons__button account-form__buttons__button--left" style="width:100%;">
             <input id="mobile-signup-btn" type="button" class="js-signup-submit-phone js-account-button" value="注册"/>
           </div>
           <div class="account-form__buttons__button account-form__buttons__button--right">
@@ -425,30 +448,31 @@ nav a:hover:after {
         <div class="new-home__clients__client__bubble">
           <span>没有帮帮账的帮助，不像在运营我自己的公司。</span>
         </div>
-        <img class="new-home__clients__client__head" src="style/images/glenn.jpg" />
+        <img class="new-home__clients__client__head" src="style/images/customer1.jpg" />
         <div class="new-home__clients__client__info">
-          <span class="new-home__clients__client__info__name">Glenn Rogers</span>
-          <span class="new-home__clients__client__info__company">Float Schedule</span>
+          <span class="new-home__clients__client__info__name"><a class="customer">赖跃如</a></span>
+          <span class="new-home__clients__client__info__company">闪蝶科技</span>
+          
         </div>
       </div>
       <div class="new-home__clients__client">
         <div class="new-home__clients__client__bubble">
           <span>我从来没有遇到一个团队对记账报税服务如此热情，帮帮账轻松为我们解决了大问题。</span>
         </div>
-        <img class="new-home__clients__client__head" src="style/images/jess.png" />
+        <img class="new-home__clients__client__head" src="style/images/customer3.jpg" />
         <div class="new-home__clients__client__info">
-          <span class="new-home__clients__client__info__name">Jess Eddy</span>
-          <span class="new-home__clients__client__info__company">User Experience Designer</span>
+          <span class="new-home__clients__client__info__name"><a target="_blank" class="customer" href="http://woyoli.com">Piano Chen</a></span>
+          <span class="new-home__clients__client__info__company">我有礼</span>
         </div>
       </div>
       <div class="new-home__clients__client">
         <div class="new-home__clients__client__bubble">
           <span>没有帮帮账的帮助，不像在运营我自己的公司。</span>
         </div>
-        <img class="new-home__clients__client__head" src="style/images/jeff.png" />
+        <img class="new-home__clients__client__head" src="style/images/customer3.jpg" />
         <div class="new-home__clients__client__info">
-          <span class="new-home__clients__client__info__name">Jeff Saliture</span>
-          <span class="new-home__clients__client__info__company">MyWorkster</span>
+          <span class="new-home__clients__client__info__name"><a target="_blank" class="customer" href="http://woyoli.com">Piano Chen</a></span>
+          <span class="new-home__clients__client__info__company">我有礼</span>
         </div>
       </div>
     </div>
@@ -457,20 +481,20 @@ nav a:hover:after {
         <div class="new-home__clients__client__bubble">
           <span>作为公司的创业者，我业务十分繁忙，帮帮账在财税方面提供给了我十分到位的帮助和支持。</span>
         </div>
-        <img class="new-home__clients__client__head" src="style/images/don.jpg" />
+        <img class="new-home__clients__client__head" src="style/images/customer2.jpg" />
         <div class="new-home__clients__client__info">
-          <span class="new-home__clients__client__info__name">Don Crow</span>
-          <span class="new-home__clients__client__info__company">Verge Pipe Media</span>
+          <span class="new-home__clients__client__info__name"><a target="_blank" class="customer" href="http://www.shiquanshemei.cn">Minhao Chen</a></span>
+          <span class="new-home__clients__client__info__company">食全舌美</span>
         </div>
       </div>
       <div class="new-home__clients__client">
         <div class="new-home__clients__client__bubble">
           <span>我爱上了帮帮账，也推荐给了我身边创业的朋友。 我感到我的账本交给帮帮账十分放心。</span>
         </div>
-        <img class="new-home__clients__client__head" src="style/images/nick.png" />
+        <img class="new-home__clients__client__head" src="style/images/customer1.jpg" />
         <div class="new-home__clients__client__info">
-          <span class="new-home__clients__client__info__name">Nick Gray</span>
-          <span class="new-home__clients__client__info__company">Museum Hack</span>
+          <span class="new-home__clients__client__info__name"><a class="customer">赖跃如</a></span>
+          <span class="new-home__clients__client__info__company">闪蝶科技</span>
         </div>
       </div>
     </div>
@@ -513,7 +537,7 @@ nav a:hover:after {
   <h2>准备开始?</h2>
   <form id="modular__signup_form" class="cta-signup-footer__form signup-form js-form-show-mobile" data-validate="parsley">
     <div class="cta-signup-footer__form__field cta-signup-footer__form--email">
-      <label class="js-account-form-email"> <img data-state="closed" src="style/image/envelope.png" style="height:16px; width:16px;" class="iconic iconic-sm  email-icon" />
+      <label class="js-account-form-email" > <img data-state="closed" src="style/image/envelope.png" style="height:16px; width:16px;" class="iconic iconic-sm  email-icon" />
        <input id="mobile-modular__signup_email" class="js-signup-email" name="email" type="text" placeholder="邮箱" data-trigger="change" data-required="true" data-type="email" /> </label>
     </div>
     <div class="cta-signup-footer__form__field cta-signup-footer__form--phone">
@@ -880,7 +904,7 @@ $("#mobile-signup-btn-bottom").click(function(){
                         opacity: 1
                     }), setTimeout(function() {
                         e.animate({
-                            bottom: "5%",
+                            bottom: "0%",
                             opacity: 0
                         }, function() {
                             e.hide();
