@@ -243,7 +243,7 @@ nav a:hover:after {
   </nav>
 </header>
 <div class="new-home__hero hero-video hero-cta-new">
-  <video preload="auto" autoplay id="broll-video" class="hero-video-broll hide-for-small">
+  <video preload="auto" autoplay loop id="broll-video" class="hero-video-broll hide-for-small">
     <source src="style/background.mp4" type="video/mp4">
   <!--   <source src="style/B-Roll_Cropped.webm" type="video/webm">
     <source src="style/B-Roll_Cropped.ogg" type="video/ogg">-->
@@ -541,7 +541,7 @@ nav a:hover:after {
        <input id="mobile-modular__signup_email" class="js-signup-email" name="email" type="text" placeholder="邮箱" data-trigger="change" data-required="true" data-type="email" /> </label>
     </div>
     <div class="cta-signup-footer__form__field cta-signup-footer__form--phone">
-      <label class="js-account-form-phone"> <img data-state="closed" src="style/image/lock.png" style="height:16px; width:16px;" class="iconic iconic-sm  password-icon" />
+      <label class="js-account-form-password"> <img data-state="closed" src="style/image/lock.png" style="height:16px; width:16px;" class="iconic iconic-sm  password-icon" />
        <input id="mobile-modular__signup_password" class="js-signup-password" name="password" type="password" placeholder="密码" data-type="password" data-required="true" data-error-message="请输入您的密码。" data-trigger="change" /> </label>
     </div>
     <div class="cta-signup-footer__form__submit">
@@ -986,11 +986,7 @@ $("#mobile-signup-btn-bottom").click(function(){
         var t = $(".header-mobile-new");
         t.toggleClass("menu-open");
     });
-	
-	$('#broll-video').on('ended', function () {
-		this.load();
-		  this.play();
-		});
+
 </script>
 </body>
 </html>
