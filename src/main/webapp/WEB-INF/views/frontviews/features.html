@@ -4,9 +4,16 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <link href="style/css/screen.css" rel="stylesheet" type="text/css" media="screen, projection" />
+  <link rel="stylesheet" type="text/css" href="../../css/webcss/youngwisdom.css">
+  <link rel="stylesheet" type="text/css" href="../../css/webcss/bootstrap.css">
   <link rel="shortcut icon" href="style/favicon.ico">
   <title>帮帮账</title>
   <style>
+  
+  .logo {
+  margin-top: 0.7em;
+  margin-left: 0.7em;
+  }
   
 nav a {
   position: relative;
@@ -42,6 +49,23 @@ nav a:hover:after {
   width: 22px;
   height: 22px;
 }
+
+#modular__signup_email{
+    padding: 14px 14px 10px 28px;
+}
+
+#modular__signup_password {
+    padding: 14px 14px 10px 28px;
+}
+
+#mobile-modular__signup_email{
+    padding: 14px 14px 10px 28px;
+}
+
+#mobile-modular__signup_password {
+    padding: 14px 14px 10px 28px;
+}
+
 
 #mobile-signup-btn{
  	margin-top:16px !important;
@@ -546,13 +570,13 @@ nav a:hover:after {
   	<form id="modular__signup_form" class="cta-signup-footer__form signup-form js-form-show-mobile" data-validate="parsley" >
 		<div class="cta-signup-footer__form__field cta-signup-footer__form--email">
 			<label class="js-account-form-email">
-			<img data-state="closed" src="style/image/shuxin.png" class="iconic iconic-sm  email-icon" />
+			<img data-state="closed" src="style/image/envelope.png" class="iconic iconic-sm  email-icon" />
 			<input id="mobile-modular__signup_email" class="js-signup-email" name="email" type="text" placeholder="邮箱" data-trigger="change" data-required="true" data-type="email"  />
 			</label>
 		</div>
 		<div class="cta-signup-footer__form__field cta-signup-footer__form--password">
 			<label class="js-account-form-password">
-			<img data-state="closed" src="style/image/as (5).png" class="iconic iconic-sm  password-icon" />
+			<img data-state="closed" src="style/image/lock.png" class="iconic iconic-sm  password-icon" />
 			<input id="mobile-modular__signup_password" class="js-signup-password" name="password" type="password" placeholder="密码" data-type="phone" data-required="true" data-error-message="Please enter your phone number." maxlength="10" pattern=".{10,}" data-trigger="change"/>
 			</label>
 		</div>
@@ -612,15 +636,15 @@ nav a:hover:after {
 	</div>
   <form id="modular__signup_form" class="cta-signup-footer__form signup-form js-form-show-mobile" data-validate="parsley">
     <div class="cta-signup-footer__form__field cta-signup-footer__form--email">
-      <label class="js-account-form-email"> <img data-state="closed" src="style/images/envelope.svg" class="iconic iconic-sm  email-icon" />
+      <label class="js-account-form-email"> <img data-state="closed" src="style/image/envelope.png" class="iconic iconic-sm  email-icon" />
        <input id="modular__signup_email" class="js-signup-email" name="email" type="text" placeholder="邮箱" data-trigger="change" data-required="true" data-type="email"style="border-bottom:1px solid #FFF"/> </label>
     </div>
     <div class="cta-signup-footer__form__field cta-signup-footer__form__form__field--password">
       <div id="show-password" class="cta-signup-footer__form__field__show js-toggle-password" style="border-bottom:1px solid #FFF">
-        <img src="style/images/eye.svg" class="iconic iconic-sm " />
+        <img src="style/image/eye.png" class="iconic iconic-sm " />
         <span id="password-status"=>显示</span>
       </div>
-      <label class="js-account-form-password"> <img data-state="locked" src="style/images/lock.svg" class="iconic iconic-sm " />
+      <label class="js-account-form-password"> <img data-state="locked" src="style/image/lock.png" class="iconic iconic-sm " />
       <input id="modular__signup_password" class="js-signup-password password_masked" name="password" type="password" placeholder="密码" data-required="true" data-trigger="keyup" data-error-message="请输入密码。" style="border-bottom:1px solid #FFF"/> </label>
     </div>
     <div class="cta-signup-footer__form__submit">
@@ -643,78 +667,25 @@ nav a:hover:after {
 </div>
 <footer class="footer-new">
 
-	<div class="footer-new__main">
-		<div class="row">
-			<div class="columns large-8">
-				<ul class="small-block-grid-4 large-block-grid-4">
-					<li>
-						<div class="footer-new__chunk">
-							<h6 class="footer-new__heading">Company</h6>
-							<ul>
-								<li><a href="javascript:;">About</a></li>
-								<li><a href="javascript:;">Careers</a></li>
-								<li><a href="javascript:;">Developers</a></li>
-								<li><a href="javascript:;">Press</a></li>
-							</ul>
-						</div>
-					</li>
-					<li>
-						<div class="footer-new__chunk">
-						<h6 class="footer-new__heading">Service</h6>
-						<ul>
-							<li><a href="javascript:;">Features</a></li>
-							<li><a href="javascript:;">Pricing</a></li>
-							<li><a href="javascript:;">Security</a></li>
-                            <li><a href="javascript:;">Testimonials</a></li>
-						</ul>
-						</div>
-					</li>
-					<li>
-						<div class="footer-new__chunk">
-							<h6 class="footer-new__heading">Community</h6>
-							<ul>
-								<li><a href="javascript:;">Blog</a></li>
-								<li><a href="javascript:;">Syllabus</a></li>
-								<li><a href="javascript:;">Support</a></li>
-								<li><a href="javascript:;">Live Chat</a></li>
-							</ul>
-						</div>
-					</li>
-					<li>
-						<div class="footer-new__chunk footer-new__social">
-							<h6 class="footer-new__heading">Social</h6>
-                          <ul>
-                            <li class="facebook"><a href="javascript:;"><img src="style/images/facebook-colour.svg" />Facebook</a></li>
-                            <li><a href="javascript:;"><img src="style/images/bird-colour.svg" /> Twitter</a></li>
-                            <li><a href="javascript:;"><img src="style/images/linkdin-colour.svg" /> LinkedIn</a></li>
-                            <li><a href="javascript:;"><img src="style/images/diandian.jpg" /><span class="valign-text-bottom">Refer a Friend</span></a></li>
-                          </ul>
-						</div>
-					</li>
-				</ul>
-			</div>
-			<div class="columns large-4 footer-new__contact">
-				<div class="row group">
-				  <a href="javascript:;">
-				    <div class="columns large-6 newPhone">
-				      <div class="footer-new__contact__icon">
-                        <img src="style/images/shuxin.jpg" class="iconic-sm" />
-				      </div>
-				      <h6>info@bangbangzhang.com</h6>
-				    </div>
-				  </a>
-
-					<div class="columns large-6">
-					  <div class="footer-new__contact__icon">
-                        <img src="style/images/phone.jpg" class="iconic-sm" />
-					  </div>
-					  <h6>4000-866-018</h6>
+	<div id="screen-contact" class="screen" ng-hide="hideContactScreen">
+			<span class="left">
+				<h3>上海元升财务咨询有限公司</h3>
+			</span><span class="right">
+				<span class="col"><i class="glyphicon glyphicon-home"></i>
+					<div class="feature-info">
+							中国上海市杨浦区
 					</div>
-				</div>
-
-			</div>
+				</span><span class="col"><i class="glyphicon glyphicon-phone"></i>
+					<div class="feature-info">
+							4000-866-018
+					</div>
+				</span><span class="col"><i class="glyphicon glyphicon-envelope"></i>
+					<div class="feature-info">
+							info@bangbangzhang.com
+					</div>
+				</span>
+			</span>
 		</div>
-	</div>
 
 	<div class="footer-new__under">
 		<div class="row">
