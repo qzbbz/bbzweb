@@ -7859,7 +7859,8 @@ box-shadow:0 0 0 100px #fff4e9 inset;
 	background-image: url(img/emily-darkSign.png);
 	background-size: 100%;
 	background-repeat: no-repeat;
-	z-index: 1
+	z-index: 1;
+	background-position: center bottom;
 }
 
 @media(max-width:61.125em) {
