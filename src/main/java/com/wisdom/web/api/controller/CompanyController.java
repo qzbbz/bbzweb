@@ -211,7 +211,7 @@ public class CompanyController {
 				    String date = f.format(c.getTime());
 				    String realPath = request.getSession().getServletContext()
 							.getRealPath("/WEB-INF").substring(0);
-				    String webRoot = realPath.substring(0, realPath.indexOf("/", 1));
+				    String webRoot = realPath;
 					realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company/";
 					CompanyDetail companyDetail = companyDetailService.getCompanyDetailByCompanyId(companyPay.getCompanyId());
 					
