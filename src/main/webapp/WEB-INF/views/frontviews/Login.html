@@ -229,12 +229,10 @@ display: inline-block !important;
 					path = "/error";
 					break;
 				}
-				loginErrorMsg.html("<p style='color: #419088;'>登陆成功！3秒后系统将自动转向后台页面......</p>");
-				setTimeout(function(){loginErrorMsg.hide();window.location=path;}, 3000);
+				window.location = path;
 			} else if(data.error_code == '4') {
-				//$scope.companyUserEmail = userEmail;
-				//$scope.companyUserPwd = userPwd;
-				loginErrorMsg.html("<p style='color: #419088;'>登陆成功，您还没有完成信息录入，5秒后系统将自动转向信息录入页面......</p>");
+
+				loginErrorMsg.html("<p style='color: #419088;'>登陆成功，您还没有完成信息录入，3秒后系统将自动转向信息录入页面......</p>");
 				setTimeout(function(){window.location.href = '/views/frontviews/signup-steps.html';loginErrorMsg.hide();}, 3000);
 			} else if(data.error_code == '100') {
 				loginErrorMsg.html("<p style='color: #FD7A50;'>您注册的帐号正在审核中,请稍候重试!</p>");

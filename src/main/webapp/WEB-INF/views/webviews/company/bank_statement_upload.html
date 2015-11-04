@@ -49,6 +49,7 @@
 			</div>
 		</div>
 	</div>
+ <div id="mask" style="width:100vw;height:100vh; position: absolute; top:0px; left: 0px;z-index:-1;"></div>
 	<div id="modifyPwd" style="display:none;">
 		<div id="form" class="form-horizontal">
 			<div class="control-group">
@@ -261,27 +262,78 @@
               autoRender : true
             });
           });
-        BUI.use('bui/uploader', function (Uploader) {
-            /**
-            * 返回数据的格式
-            *
-            *  默认是 {url : 'url'},否则认为上传失败
-            *  可以通过isSuccess 更改判定成功失败的结构
-            */
-            var uploader = new Uploader.Uploader({
-            render: '#J_Uploader',
-            url: '/company/uploadBankSta',
-            autoUpload:false
-            }).render();
-            $('#uplaodFiles').click(function(){
-            	if($('#date').val() == null || $('#date').val() == '') {
-            		BUI.Message.Alert('会计期间不能为空，请检查！','warning');
-            	} else {
-            		uploader.set('data', {date:$('#date').val()});
-            		uploader.upload();
-            	}
-            })
-        });
+		BUI.use('bui/uploader', function(Uploader) {
+			/**
+			 * 返回数据的格式
+			 *
+			 *  默认是 {url : 'url'},否则认为上传失败
+			 *  可以通过isSuccess 更改判定成功失败的结构
+			 */
+
+
+			var uploader = new Uploader.Uploader({
+				render : '#J_Uploader',
+				url : '/company/uploadBankSta',
+				autoUpload : false,
+				success : function(result) {
+
+				},
+				error : function(result) {
+					BUI.use([ 'bui/mask' ], function(Mask) {
+						var loadMask = new Mask.LoadMask({
+							el : '#mask',
+							msg : 'loading ....'
+						});
+						$("#mask").css("z-index", -1);
+						loadMask.hide();
+						var items = uploader.get("queue").getItems();
+						uploader.get("queue").removeItems(items);
+						BUI.Message.Alert('上传失败！', 'warning');
+					});
+				}
+			}).render();
+			uploader.on('success', function(ev) {
+
+				BUI.use([ 'bui/mask' ], function(Mask) {
+					var loadMask = new Mask.LoadMask({
+						el : '#mask',
+						msg : 'loading ....'
+					});
+					$("#mask").css("z-index", -1);
+					loadMask.hide();
+					var items = uploader.get("queue").getItems();
+					uploader.get("queue").removeItems(items);
+					uploader.get("queue").addItems(items);
+					BUI.Message.Alert('上传成功！', 'info');
+				});
+			});
+
+			$('#uplaodFiles').click(
+					function() {
+
+						if ($('#date').val() == null
+								|| $('#date').val() == '') {
+							BUI.Message.Alert('会计期间不能为空，请检查！', 'warning');
+						}else if(uploader.get("queue").getItems().length == 0){
+							BUI.Message.Alert('上传照片不能为空，请检查！', 'warning');
+						} 
+						else {
+							BUI.use([ 'bui/mask' ], function(Mask) {
+
+								var loadMask = new Mask.LoadMask({
+									el : '#mask',
+									msg : 'loading ....'
+								});
+								$("#mask").css("z-index", 99);
+								loadMask.show();
+							});
+							uploader.set('data', {
+								date : $('#date').val()
+							});
+							uploader.upload();
+						}
+					});
+		});
 	</script>
 </body>
 </html>

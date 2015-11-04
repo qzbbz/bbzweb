@@ -28,7 +28,7 @@
 					<div class="hd">
 						<i class="iconfont">&#xe60b;</i>
 					</div>
-					<form id="salaryUpload" action="/company/uploadSalary" method="POST"	enctype="multipart/form-data">
+					<div id="salaryUpload" >
 					<div class="bd">
 						<h2>工资单上传</h2>
 						<p>
@@ -46,15 +46,16 @@
                     </div>
 							<div id="fileInfo" style="height: 50px;" class="text-primary"></div>
 							<a href="javascript:;" class="file button button-success file-green">选择工资单文件
-								<input type="file" id="salaryFile" name="files">
+								<input type="file" id="salaryFile" name="salaryFile">
 							</a> 
-							<a href="javascript:submitUpload();" class="button button-success">上传工资单文件</a>
-						</form>
+							<input type="button" id="submit-upload" class="button button-success" value="上传工资单文件"/>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+			    <div id="mask" style="width:100vw;height:100vh; position: absolute; top:0px; left: 0px;z-index:-1;"></div>
 	<div id="modifyPwd" style="display:none;">
 		<div id="form" class="form-horizontal">
 			<div class="control-group">
@@ -94,6 +95,7 @@
 	<script src="/js/webjs/menuTree.js"></script>
 	<script src="/js/webjs/layout.js"></script>
 	<script src="/js/webjs/bui.js"></script>
+	<script src="/js/webjs/ajaxfileupload.js"></script>
 	<script type="text/javascript">
 	$('#salary_date').click(function(){
 		var currentDate = new Date();
@@ -172,7 +174,9 @@
 			});
 		})
 	});
-		function submitUpload() {
+		//var fileInput = $("#salaryFile").html();
+		
+			$("#submit-upload").click(function(){
 			if($('#salaryFile').val() == null || $('#salaryFile').val() == '') {
 				BUI.use(['bui/overlay'], function(Overlay){
 					BUI.Message.Alert('请先选择文件，再上传！','warning');
@@ -183,11 +187,73 @@
 				});
 			} else {
 				$('#salaryUpload').submit();
+				var files = $("#salaryFile");
+				var date = $("#salary_date").val();
+				BUI.use([ 'bui/mask' ], function(Mask) {
+
+					var loadMask = new Mask.LoadMask({
+						el : '#mask',
+						msg : 'loading ....'
+					});
+					$("#mask").css("z-index", 99);
+					loadMask.show();
+				});
+				$.ajaxFileUpload({  
+			        url : '/company/uploadSalary',   
+			        fileElementId:'salaryFile',//id   
+			        dataType : 'HTML',  
+					data:{'salary_date':date},
+			        error : function(data,status,e) {  
+		                BUI.Message.Alert("文件上传失败","info");
+		                $("#salaryFile").val("");
+		                $("#fileInfo").html("");
+		        		$("#salaryFile").attr('onChange', $.browser.msie ? "$(this).data('onChange').apply(this)" : "")
+		        		.change( function(){if(!$.browser.msie)$(this).data('onChange').apply(this)} )
+		        		.data('onChange',function(){
+		        			$("#fileInfo").html($("#salaryFile").val());
+		        		});
+		        		BUI.use([ 'bui/mask' ], function(Mask) {
+
+							var loadMask = new Mask.LoadMask({
+								el : '#mask',
+								msg : 'loading ....'
+							});
+							$("#mask").css("z-index", -1);
+							loadMask.hide();
+						});
+
+			        },  
+			        success : function(json) {  
+			            if (json.resultFlag==false){  
+			                alert(json.resultMessage);  
+			            }else{  
+  
+			                BUI.Message.Alert("文件上传成功","info");
+			                var next = $("#fileUpLoad").html();  
+			                $("#fileUpLoad").html("<div id='"+guid+"'>"+"文件:"+fileName+"   <a href='#' onclick='com.company.project.services.newCase.filedelete("+"\""+guid+"\""+","+"\""+fileName+"\""+")'>删除</a>"+"<br/></div>");  
+			                $("#fileUpLoad").append(next);  
+			            }  
+			            BUI.use([ 'bui/mask' ], function(Mask) {
+
+							var loadMask = new Mask.LoadMask({
+								el : '#mask',
+								msg : 'loading ....'
+							});
+							$("#mask").css("z-index", -1);
+							loadMask.hide();
+						});
+			        }  
+			    });  
+
+
 			}
-		}
+			});
+		
 		$("#salaryFile").attr('onChange', $.browser.msie ? "$(this).data('onChange').apply(this)" : "")
 		.change( function(){if(!$.browser.msie)$(this).data('onChange').apply(this)} )
-		.data('onChange',function(){$("#fileInfo").html($("#salaryFile").val());});
+		.data('onChange',function(){
+			$("#fileInfo").html($("#salaryFile").val());
+		});
 		//侧栏高度
         (function(){
             var H=$(window).height();
