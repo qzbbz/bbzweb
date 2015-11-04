@@ -32,6 +32,7 @@ import com.alipay.utils.AlipayNotify;
 import com.alipay.utils.AlipayService;
 import com.wisdom.area.service.IAreaService;
 import com.wisdom.common.model.Company;
+import com.wisdom.common.model.CompanyDetail;
 import com.wisdom.common.model.CompanyPay;
 import com.wisdom.common.model.SheetBalance;
 import com.wisdom.common.model.SheetCash;
@@ -42,6 +43,7 @@ import com.wisdom.company.dao.ISheetBalanceDao;
 import com.wisdom.company.dao.ISheetCashDao;
 import com.wisdom.company.dao.ISheetIncomeDao;
 import com.wisdom.company.dao.ISheetSalaryTaxDao;
+import com.wisdom.company.service.ICompanyDetailService;
 import com.wisdom.company.service.ICompanyPayService;
 import com.wisdom.company.service.ICompanyService;
 import com.wisdom.user.dao.IUserOpenIdDao;
@@ -61,6 +63,9 @@ public class CompanyController {
 
 	@Autowired
 	private ICompanyService companyService;
+	
+	@Autowired
+	private ICompanyDetailService companyDetailService;
 	
 	@Autowired
 	private ICompanyPayService companyPayService;
@@ -153,7 +158,8 @@ public class CompanyController {
 		}
 		companyService.updateCompanyAccounter(companyId, accounterUserId);
 		AlipayService alipayService = new AlipayService();
-		String resHtml = alipayService.buildAlipayRequest(Double.valueOf(alipayAmount), orderNo);
+       // String resHtml = alipayService.buildAlipayRequest(Double.valueOf(alipayAmount), orderNo);
+		String resHtml = alipayService.buildAlipayRequest(Double.valueOf("0.01"), orderNo);
 		logger.info("leave selectOneAccounter");
 		return resHtml;
 	}
@@ -205,8 +211,15 @@ public class CompanyController {
 				    String date = f.format(c.getTime());
 				    String realPath = request.getSession().getServletContext()
 							.getRealPath("/WEB-INF").substring(0);
+				    String webRoot = realPath.substring(0, realPath.indexOf("/", 1));
 					realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company/";
-					PdfProcess.generateContractPdf(realPath + contractFileName, company.getName(), String.valueOf(companyPay.getPayAmount()), date);
+					CompanyDetail companyDetail = companyDetailService.getCompanyDetailByCompanyId(companyPay.getCompanyId());
+					
+					String code = companyDetail.getOrgCode();
+					String address = companyDetail.getProvince() + companyDetail.getCity() + companyDetail.getArea() + companyDetail.getExtra();
+					String owner = companyDetail.getCorporation();
+					PdfProcess.generateContractPdf(realPath + contractFileName, company.getName(), code, address, owner, String.valueOf(companyPay.getPayAmount()), date, webRoot);
+					
 				} catch(Exception e) {
 					logger.error(e.toString());
 				} finally {
@@ -217,6 +230,7 @@ public class CompanyController {
 			//该页面可做页面美工编辑
 			//out.println("验证成功<br />");
 			//——请根据您的业务逻辑来编写程序（以上代码仅作参考）——
+			
 			
 		}else{
 			//该页面可做页面美工编辑
