@@ -30,7 +30,6 @@ public class PdfProcess {
 		
 		
         PdfReader reader = new PdfReader(webRoot + "/img/webimg/contract.pdf"); // input PDF
-        fileName = "/Users/veronica/Documents/test2.pdf";
         PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(fileName)); // output PDF
 
         BaseFont bf = BaseFont.createFont("STSong-Light", "UniGB-UCS2-H", BaseFont.NOT_EMBEDDED);
