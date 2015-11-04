@@ -356,7 +356,8 @@ public class CompanyController {
 	}
 	
 	@RequestMapping("/company/uploadSalary")
-	public String uploadSalary(@RequestParam("files") MultipartFile file, HttpServletRequest request) throws ParseException {
+	public String uploadSalary(@RequestParam("salaryFile") MultipartFile file, HttpServletRequest request) throws ParseException {
+		logger.debug("get upload request");
 		String date=request.getParameter("salary_date");
 		
 		String userId = (String) request.getSession().getAttribute("userId");
