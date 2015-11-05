@@ -50,7 +50,7 @@ public class PdfProcess {
 		//BaseFont bf = BaseFont.createFont("/Users/veronica/Downloads/hxb-meixinti.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
         //String file = "/Users/veronica/Downloads/contract2";
         //fileName = "/Users/veronica/Documents/new.pdf";
-        String file = "/root/contract2";
+       String file = "/root/contract2";
 
        // String 
         Properties properties = new OrderedProperties();
@@ -98,14 +98,17 @@ public class PdfProcess {
                 doc.open();
                 Font titleFont = new Font(bfChinese, 20, Font.BOLD);
                 Font bodyFont = new Font(bfChinese, 12, Font.NORMAL);
+                Font bodyBoldFont = new Font(bfChinese, 12, Font.BOLD);
                 Paragraph title = new Paragraph(properties.getProperty("title"), titleFont);
                 title.setAlignment(Element.ALIGN_CENTER);
                 doc.add(title);
-                doc.add(new Paragraph("\r\n"));
-                Paragraph body = new Paragraph("", bodyFont);
+                doc.add(new Paragraph("\r\n\n"));
+
                 for(Object key:keys) {
+                    Paragraph body = new Paragraph("", bodyFont);
+                    Paragraph bodyB = new Paragraph("", bodyBoldFont);
                 	String keyStr = key.toString();
-                	if(keyStr.equals("title")){
+                	if(keyStr.equals("title") || keyStr.equals("paragraph4_sub2")){
                 		
                 		continue;
                 	}
@@ -114,35 +117,46 @@ public class PdfProcess {
                 		String information = (String) infoMap.get(keyStr);
 
                 		paragraph = properties.getProperty(keyStr) + information;
+                		if(keyStr.equals("paragraph4_sub1")) {
+                			paragraph += properties.getProperty("paragraph4_sub2");
+                			
+                		}
                 	}
                 	else {
                 		if (keyStr.equals("footer1")){
-                			paragraph = StringUtils.repeat(" ", 25) + properties.getProperty(keyStr) + StringUtils.repeat(" ", 70);
+                			paragraph = StringUtils.repeat(" ", 25) + properties.getProperty(keyStr) ;
                 			
                 		}
-                		else if (keyStr.equals("footer3")) {
-                			paragraph = "\r\n\n\n" + StringUtils.repeat(" ", 25) + properties.getProperty(keyStr) + date + StringUtils.repeat(" ", (70-(date.length()*2))) + properties.getProperty(keyStr) + date;
+                		else if (keyStr.equals("footer2")) {
+                			paragraph = "\r\n\n\n" + StringUtils.repeat(" ", 25) + properties.getProperty(keyStr) + date + StringUtils.repeat(" ", (60-(date.length()*2))) + properties.getProperty(keyStr) + date;
                 		}
                 		else{
                 			paragraph = properties.getProperty(keyStr);
                 		}
                 	}
-                	if (keyStr.equals("paragraph4_sub1") || keyStr.equals("footer1")) {
-                		body.add(paragraph);
+                	
+                	if (keyStr.contains("_main")){
+                		bodyB.add("\r\n" + paragraph + "\r\n");
+                		doc.add(bodyB);
                 	}else{
-                		if (editList.contains(keyStr)|| keyStr.contains("footer")||keyStr.equals("paragraph4_sub2")){
-                			body.add(paragraph+"\r\n");
-                		}
-                		else{
-                			body.add("\r\n" + paragraph + "\r\n");
-                		}
-                			
+	                	if (keyStr.equals("paragraph4_sub1")) {
+	                		body.add(paragraph);
+	                	}else{
+	                		if (editList.contains(keyStr)||keyStr.equals("paragraph4_sub2") || keyStr.equals("legalAddress2")){
+	                			body.add(paragraph+"\r\n");
+	                		}
+	                		else{
+	                			body.add("\r\n" + paragraph + "\r\n");
+	                		}
+	                			
+	                	}
+	                	doc.add(body);
                 	}
                 	
                 }
                
-                doc.add(body);
-                doc.add(new Paragraph("\r\n"));
+                //doc.add(body);
+                doc.add(new Paragraph());
                 doc.close();
         } catch (FileNotFoundException e) {
                 System.out.println(e.toString());
