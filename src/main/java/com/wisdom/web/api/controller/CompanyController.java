@@ -218,6 +218,12 @@ public class CompanyController {
 					String code = companyDetail.getOrgCode();
 					String address = companyDetail.getProvince() + companyDetail.getCity() + companyDetail.getArea() + companyDetail.getExtra();
 					String owner = companyDetail.getCorporation();
+					logger.info(company.getName());
+					logger.info(code);
+					logger.info(address);
+					logger.info(owner);
+					logger.info(String.valueOf(companyPay.getPayAmount()));
+					logger.info(date);
 					PdfProcess.generateContractPdf(realPath + contractFileName, company.getName(), code, address, owner, String.valueOf(companyPay.getPayAmount()), date, webRoot);
 					
 				} catch(Exception e) {
