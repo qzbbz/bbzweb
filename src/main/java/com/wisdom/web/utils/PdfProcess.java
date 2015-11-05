@@ -33,7 +33,8 @@ public class PdfProcess {
         
         PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(fileName)); // output PDF
 
-        BaseFont bf = BaseFont.createFont("STSong-Light", "UniGB-UCS2-H", BaseFont.NOT_EMBEDDED);
+        //BaseFont bf = BaseFont.createFont("STSong-Light", "UniGB-UCS2-H", BaseFont.NOT_EMBEDDED);
+        BaseFont bf = BaseFont.createFont("/root/hxb-meixinti.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
 
         
         PdfContentByte content = stamper.getOverContent(1);
