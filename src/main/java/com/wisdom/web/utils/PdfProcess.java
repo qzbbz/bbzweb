@@ -30,6 +30,7 @@ public class PdfProcess {
 		
 		
         PdfReader reader = new PdfReader(webRoot + "/img/webimg/contract.pdf"); // input PDF
+        
         PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(fileName)); // output PDF
 
         BaseFont bf = BaseFont.createFont("STSong-Light", "UniGB-UCS2-H", BaseFont.NOT_EMBEDDED);
@@ -61,14 +62,14 @@ public class PdfProcess {
         content.setTextMatrix(350, 525);
         content.showText(date);
         content.endText();
-        
+       
 
 
         stamper.close();
 	}
 
 	public static void main(String[] args) throws DocumentException, IOException {
-		PdfProcess.generateContractPdf(null, "company name", "company code", "company address", "company owner","12000", "2015-11-04", null);
+		PdfProcess.generateContractPdf(null, "上海元升财务咨询有限公司", "xxxxx", "上海市国定东路200号", "蒋中植","12000", "2015-11-04", null);
 		System.out.println("");
 	}
 
