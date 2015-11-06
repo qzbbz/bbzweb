@@ -14,4 +14,14 @@ public interface IRecommendService {
 	public Boolean addRecommendRecord(RecommendRecord recommendRecord );
 	
 	public Map<String, List<String>> getAllRecommendRecord();
+	
+	public Boolean isRecommenderExisted(String name);
+	
+	public Boolean isRecommendRecordExisted(String email);
+	
+	public Boolean isCustomerPaid(String email);
+	
+	public Boolean setCustomerPaid(String email);
+	
+	public String getCustomerEmailByCompanyId(long id);
 }

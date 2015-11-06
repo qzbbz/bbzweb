@@ -1,0 +1,99 @@
+<html>
+	<head>
+			<link rel="style" href="/css/webcss/jquery-ui.css">
+			<link rel="style" href="/css/webcss/style.css">
+		<link rel="stylesheet" href="/css/webcss/bootstrap.css">
+		<link rel="stylesheet" href="/css/webcss/jquery-ui-1.11.4.css">
+		<script src="/js/webjs/jquery-1.10.2.js"></script>
+		<script src="/js/webjs/jquery-ui-1.11.4.js"></script>
+		<script src="/js/webjs/jquery.qrcode.min.js"></script>
+		<style>
+			span:hover {
+			color: #23527c;
+			cursor: pointer;
+			}
+			
+			.panel {
+			    width: 70%;
+			    margin: 0 auto;
+			    margin-top: 5%;
+			    padding: 5em;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="panel panel-default">
+		<input type="textfield" id="name" placeholder="输入名字"/>
+		<button id="add-btn" type="button" class="btn btn-primary">添加</button>
+		
+		  <!-- Table -->
+		  <table class="table">
+		    	<th>
+		    		<tr>
+		    			<td>姓名</td>
+		    			<td>链接</td>
+		    		</tr>
+		    	</th>
+		    	<tbody id="table">
+
+				</tbody>    		
+		  </table>
+		</div>
+		<div id="dialog"><div id="qrcode"></div></div>
+		<script>
+			$.get("/recommend/getAllRecommenders", function(data){
+
+				var table = $("#table");
+				var link = window.location.href;
+				var a = link.split("/");
+				a.pop();
+				var base = a.join("/") + "/index.html?";
+				table.html("");
+				for (var id in data) {
+					//console.log(row);
+					var linkAddr = base + id;
+					table.append("<tr><td><span class='r-name'>" + data[id] + "</span></td><td><a target='_blank' href='" + linkAddr + "'>" + linkAddr + "</a></td></tr>");
+				}
+				
+				$(".r-name").on("click", function(){
+					console.log("hello");
+					$("#qrcode").html("");
+					$("#qrcode").qrcode($(this).parent().parent().children()[1].innerHTML);
+					$("#dialog").dialog();
+				});
+			});
+			
+			
+			
+			$("#add-btn").on("click", function(){
+				var name = $("#name").val();
+				$.post("/recommend/addRecommender", {"name": name}, function(data){
+					$.get("/recommend/getAllRecommenders", function(data){
+
+						var table = $("#table");
+						var link = window.location.href;
+						var a = link.split("/");
+						a.pop();
+						var base = a.join("/") + "/index.html?";
+						table.html("");
+						for (var id in data) {
+							//console.log(row);
+							var linkAddr = base + id;
+							table.append("<tr><td><span class='r-name'>" + data[id] + "</span></td><td><a target='_blank' href='" + linkAddr + "'>" + linkAddr + "</a></td></tr>");
+						}
+						
+						$(".r-name").on("click", function(){
+							console.log("hello");
+							$("#qrcode").html("");
+							$("#qrcode").qrcode($(this).parent().parent().children()[1].innerHTML);
+							$("#dialog").dialog();
+						});
+					});
+					
+				});
+				
+			});
+
+		</script>
+	</body>
+</html>

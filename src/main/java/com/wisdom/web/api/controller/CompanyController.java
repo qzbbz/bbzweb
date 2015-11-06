@@ -54,6 +54,8 @@ import com.wisdom.web.utils.CompanyOrgStructure;
 import com.wisdom.web.utils.ErrorCode;
 import com.wisdom.web.utils.PdfProcess;
 import com.wisdom.web.utils.SessionConstant;
+import com.wisdom.recommender.service.IRecommendService;
+
 
 @Controller
 public class CompanyController {
@@ -96,6 +98,9 @@ public class CompanyController {
 	
 	@Autowired
 	private IUserOpenIdDao userOpenIdDao;
+	
+	@Autowired
+	private IRecommendService recommendService;
 	
 	@RequestMapping("/company/selectAccounter")
 	@ResponseBody
@@ -223,6 +228,8 @@ public class CompanyController {
 					logger.info(owner);
 					logger.info(String.valueOf(companyPay.getPayAmount()));
 					logger.info(date);
+					String email = recommendService.getCustomerEmailByCompanyId(companyPay.getCompanyId());
+					recommendService.setCustomerPaid(email);
 					PdfProcess.generateContractPdf(realPath + contractFileName, company.getName(), code, address, owner, String.valueOf(companyPay.getPayAmount()), date, webRoot);
 					
 				} catch(Exception e) {
