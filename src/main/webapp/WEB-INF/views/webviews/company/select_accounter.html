@@ -170,10 +170,35 @@
             buttons : []
         });
 		globalAlipayForm = alipayForm;
+		$.get('/recommend/isRecommended', function(data){
+			alert("hello");
+			if(data['message'] == "yes"){
+				var time = $('#alipay_time option:selected').val();
+				if(time == '6') $('#alipay_sum').html('669');
+				if(time == '12') $('#alipay_sum').html('1089');
+				
+			}
+			else {
+				if(time == '6') $('#alipay_sum').html('768');
+				if(time == '12') $('#alipay_sum').html('1188');
+			}
+		});
 		$('#alipay_time').change(function(){
 			var time = $('#alipay_time option:selected').val();
-			if(time == '6') $('#alipay_sum').html('768');
-			if(time == '12') $('#alipay_sum').html('1188');
+			console.log("hello");
+			$.get('/recommend/isRecommended', function(data){
+				console.log(data);
+				if(data['message'] == "yes"){
+					if(time == '6') $('#alipay_sum').html('669');
+					if(time == '12') $('#alipay_sum').html('1089');
+					
+				}
+				else {
+					if(time == '6') $('#alipay_sum').html('768');
+					if(time == '12') $('#alipay_sum').html('1188');
+				}
+			});
+
 		});
 		$('#alipay_button').click(function(){
 			$.ajax({

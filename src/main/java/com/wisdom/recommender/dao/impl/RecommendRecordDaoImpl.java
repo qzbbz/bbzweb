@@ -49,7 +49,7 @@ public class RecommendRecordDaoImpl implements IRecommendRecordDao {
 
 	@Override
 	public boolean addRecommendRecord(RecommendRecord recommendRecord) {
-		String sql = "insert into recommend_record (recommender_id, customer_email, created_time)"
+		String sql = "insert into recommend_record (recommender_id, customer_email, created_time, is_paid)"
 				+ " values (?, ?, ?)";
 		int affectedRows = jdbcTemplate.update(sql, recommendRecord.getRecommenderId(),
 				recommendRecord.getCustomerEmail(), recommendRecord.getCreatedTime());
@@ -67,11 +67,20 @@ public class RecommendRecordDaoImpl implements IRecommendRecordDao {
 
 	@Override
 	public boolean updateRecommendRecord(RecommendRecord recommendRecord) {
-		String sql = "update recommend_record set customer_email=?, created_time=? where id=?";
+		String sql = "update recommend_record set customer_email=?, created_time=?, is_paid=? where id=?";
 		int affectedRows = jdbcTemplate.update(sql, recommendRecord.getCustomerEmail(), recommendRecord.getCreatedTime(),
 				recommendRecord.getRecommenderId());
 		logger.debug("updateRecommendRecord result : {}", affectedRows);
 		return affectedRows != 0;
 	}
+
+	@Override
+	public RecommendRecord getRecommendRecordByEmail(String customer_email) {
+		String sql = "select * from recommend_record where customer_email = ?";
+		RecommendRecord recommendRecord = jdbcTemplate.queryForObject(sql, new Object[] { customer_email },
+				new RecommendRecordMapper());
+		return recommendRecord;
+	}
+
 
 }

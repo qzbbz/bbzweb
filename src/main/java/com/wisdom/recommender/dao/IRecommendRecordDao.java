@@ -16,4 +16,7 @@ public interface IRecommendRecordDao {
 	
 	public boolean updateRecommendRecord(RecommendRecord recommendRecord);
 	
+	public RecommendRecord getRecommendRecordByEmail(String customer_email);
+	
+	
 }

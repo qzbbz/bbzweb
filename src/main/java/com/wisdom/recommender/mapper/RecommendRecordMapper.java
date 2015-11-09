@@ -10,7 +10,7 @@ import com.wisdom.common.model.RecommendRecord;
 public class RecommendRecordMapper implements RowMapper<RecommendRecord> {
 	public RecommendRecord mapRow(ResultSet rs, int index) throws SQLException {
 		RecommendRecord u = new RecommendRecord(rs.getString("recommender_id"),
-				rs.getString("customer_email"), rs.getTimestamp("created_time"));
+				rs.getString("customer_email"), rs.getTimestamp("created_time"), rs.getInt("is_paid"));
 		return u;
 	}
 }
