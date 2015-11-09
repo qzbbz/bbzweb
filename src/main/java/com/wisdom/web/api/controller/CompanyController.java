@@ -174,8 +174,7 @@ public class CompanyController {
 		}
 		companyService.updateCompanyAccounter(companyId, accounterUserId);
 		AlipayService alipayService = new AlipayService();
-        //String resHtml = alipayService.buildAlipayRequest(Double.valueOf(alipayAmount), orderNo);
-		String resHtml = alipayService.buildAlipayRequest(Double.valueOf("0.01"), orderNo);
+        String resHtml = alipayService.buildAlipayRequest(Double.valueOf(alipayAmount), orderNo);
 		logger.info("leave selectOneAccounter");
 		return resHtml;
 	}
@@ -234,7 +233,6 @@ public class CompanyController {
 				    String webRoot = realPath;
 					realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company/";
 					CompanyDetail companyDetail = companyDetailService.getCompanyDetailByCompanyId(companyPay.getCompanyId());
-					logger.info("Line 223");
 					
 					String code = companyDetail.getOrgCode();
 					String address = companyDetail.getProvince() + companyDetail.getCity() + companyDetail.getArea() + companyDetail.getExtra();
