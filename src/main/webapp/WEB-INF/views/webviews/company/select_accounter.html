@@ -145,8 +145,11 @@
 				$('#searchAccounter').attr('disabled',"true");
 				$('#dispalyAllAccounter').attr('disabled',"true");
 			} else if(data.error == "companyinfo"){
-				$('#tipInfoSearch').html("请您先在组织架构菜单下面的基本信息设置中，完善您公司的基本信息！");
-				$('#tipInfoSearch').show();
+				$('#tipInfo').html("请您先在组织架构菜单下面的基本信息设置中，完善您公司的基本信息！");
+				$('#tipInfo').show();
+				$('#tipInfoSearch').hide();
+				$('#searchAccounter').attr('disabled',"true");
+				$('#dispalyAllAccounter').attr('disabled',"true");
 			} else {
 				$('#tipInfoSearch').show();
 			}
@@ -171,7 +174,6 @@
         });
 		globalAlipayForm = alipayForm;
 		$.get('/recommend/isRecommended', function(data){
-			alert("hello");
 			if(data['message'] == "yes"){
 				var time = $('#alipay_time option:selected').val();
 				if(time == '6') $('#alipay_sum').html('669');
@@ -206,7 +208,13 @@
 				type : "POST",
 				data : {accounterId:globalSelectedAccounterId, alipayMonth:$('#alipay_time option:selected').val(), alipayAmount:$('#alipay_sum').html()},
 				success : function(data) {
-					$('#payHtml').html(data);
+					if (data == ""){
+						BUI.Message.Alert('请先在左侧的组织架构内完善公司信息！',function(){
+						},'warning');
+						
+					}else {
+						$('#payHtml').html(data);
+					}
 				},
 				error : function() {
 					BUI.use('bui/overlay',function(overlay){

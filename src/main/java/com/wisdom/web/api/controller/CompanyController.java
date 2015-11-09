@@ -110,7 +110,13 @@ public class CompanyController {
 		Map<Integer, String> retMap = new HashMap<>();
 		String accounterUserId = request.getParameter("accounterId");
 		String userId = (String) request.getSession().getAttribute("userId");
+		
 		long companyId = userService.getCompanyIdByUserId(userId);
+		CompanyDetail companyDetail = companyDetailService.getCompanyDetailByCompanyId(companyId);
+		if(companyDetail == null) {
+			return retMap;
+			
+		}
 		int accounterAmount = companyService
 				.accounterAmountBelongToCompany(companyId);
 		if (companyId > -1 && accounterAmount < 2) {
@@ -147,6 +153,11 @@ public class CompanyController {
 		String alipayAmount = request.getParameter("alipayAmount");
 		String userId = (String) request.getSession().getAttribute("userId");
 		long companyId = userService.getCompanyIdByUserId(userId);
+		CompanyDetail companyDetail = companyDetailService.getCompanyDetailByCompanyId(companyId);
+		if(companyDetail == null) {
+			return "";
+			
+		}
 		CompanyPay companyPay = companyPayService.getCompanyPayByCompanyId(companyId);
 		UUID uuid = UUID.randomUUID();
 		String orderNo = uuid.toString();
@@ -235,6 +246,7 @@ public class CompanyController {
 					logger.info(String.valueOf(companyPay.getPayAmount()));
 					logger.info(date);
 					String email = recommendService.getCustomerEmailByCompanyId(companyPay.getCompanyId());
+					logger.info(email);
 					recommendService.setCustomerPaid(email);
 					PdfProcess.generateContractPdf(realPath + contractFileName, company.getName(), code, address, owner, String.valueOf(companyPay.getPayAmount()), date, webRoot);
 					
@@ -266,6 +278,10 @@ public class CompanyController {
 		String userId = (String) request.getSession().getAttribute("userId");
 		long companyId = userService.getCompanyIdByUserId(userId);
 		Company company = companyService.getCompanyByCompanyId(companyId);
+		CompanyDetail companyDetail = companyDetailService.getCompanyDetailByCompanyId(companyId);
+		if(companyDetail == null) {
+			retMap.put("error", "companyinfo");
+		}
 		if(company != null && company.getAccounterId() != null && !company.getAccounterId().isEmpty()) {
 			CompanyPay companyPay = companyPayService.getCompanyPayByCompanyIdAndPayStatus(companyId, 1);
 			if(companyPay != null) {

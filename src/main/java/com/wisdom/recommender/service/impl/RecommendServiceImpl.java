@@ -101,6 +101,7 @@ public class RecommendServiceImpl implements IRecommendService {
 	public Boolean setCustomerPaid(String email) {
 		RecommendRecord recommendRecord = recommendRecordDao.getRecommendRecordByEmail(email);
 		recommendRecord.setIsPaid(1);
+		recommendRecordDao.updateRecommendRecord(recommendRecord);
 		return true;
 	}
 	@Override

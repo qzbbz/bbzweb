@@ -67,6 +67,7 @@ public class RecommendRecordDaoImpl implements IRecommendRecordDao {
 
 	@Override
 	public boolean updateRecommendRecord(RecommendRecord recommendRecord) {
+		logger.info("update is paid");
 		String sql = "update recommend_record set customer_email=?, created_time=?, is_paid=? where id=?";
 		int affectedRows = jdbcTemplate.update(sql, recommendRecord.getCustomerEmail(), recommendRecord.getCreatedTime(), recommendRecord.getIsPaid(),
 				recommendRecord.getRecommenderId());
