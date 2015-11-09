@@ -56,9 +56,8 @@
 				}
 				
 				$(".r-name").on("click", function(){
-					console.log("hello");
 					$("#qrcode").html("");
-					$("#qrcode").qrcode($(this).parent().parent().children()[1].innerHTML);
+					$("#qrcode").qrcode($(this).parent().parent().find("a")[0].innerHTML);
 					$("#dialog").dialog();
 				});
 			});
@@ -85,7 +84,7 @@
 						$(".r-name").on("click", function(){
 							console.log("hello");
 							$("#qrcode").html("");
-							$("#qrcode").qrcode($(this).parent().parent().children()[1].innerHTML);
+							$("#qrcode").qrcode($(this).parent().parent().find("a")[0].innerHTML);
 							$("#dialog").dialog();
 						});
 					});
