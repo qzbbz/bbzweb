@@ -163,7 +163,8 @@ public class CompanyController {
 		}
 		companyService.updateCompanyAccounter(companyId, accounterUserId);
 		AlipayService alipayService = new AlipayService();
-        String resHtml = alipayService.buildAlipayRequest(Double.valueOf(alipayAmount), orderNo);
+        //String resHtml = alipayService.buildAlipayRequest(Double.valueOf(alipayAmount), orderNo);
+		String resHtml = alipayService.buildAlipayRequest(Double.valueOf("0.01"), orderNo);
 		logger.info("leave selectOneAccounter");
 		return resHtml;
 	}
