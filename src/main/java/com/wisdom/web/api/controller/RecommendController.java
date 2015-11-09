@@ -9,6 +9,7 @@ import java.util.Map;
 
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,7 @@ import com.wisdom.recommender.service.IRecommendService;
 import com.wisdom.common.model.Recommender;
 import com.wisdom.common.model.RecommendRecord;
 import com.wisdom.web.utils.GenerateMD5;
+import com.wisdom.web.utils.SessionConstant;
 
 @Controller
 public class RecommendController {
@@ -40,7 +42,7 @@ public class RecommendController {
 		return retMap;
 	}
 	
-	@RequestMapping("/addRecommender")
+	@RequestMapping("/recommend/addRecommender")
 	@ResponseBody
 	public Map<String, String> addRecommender(HttpServletRequest request) throws NoSuchAlgorithmException {
 		logger.debug("enter addRecommender");
@@ -60,7 +62,7 @@ public class RecommendController {
 		return retMap;
 	}
 	
-	@RequestMapping("/getRecommendRecords")
+	@RequestMapping("/recommend/getAllRecommendRecords")
 	@ResponseBody
 	public Map<String, List<String>> getRecommendRecord(HttpServletRequest request) {
 		logger.debug("enter getRecommendRecord");
@@ -69,27 +71,52 @@ public class RecommendController {
 		return retMap;
 	}
 	
-	@RequestMapping("/addRecommendRecord")
+	@RequestMapping("/recommend/addRecommendRecord")
 	@ResponseBody
 	public Map<String, String> addRecommendRecord(HttpServletRequest request) {
 		logger.debug("enter addRecommendRecord");
 		Map<String, String> retMap = new HashMap<>();
 		String customerEmail = request.getParameter("email");
 		Timestamp timestamp = new Timestamp(Calendar.getInstance().getTime().getTime());
-		String recommenderId = request.getParameter("hashvalue");
-		RecommendRecord recommendRecord = new RecommendRecord();
-		recommendRecord.setCreatedTime(timestamp);
-		recommendRecord.setCustomerEmail(customerEmail);
-		recommendRecord.setRecommenderId(recommenderId);
-		if(recommendService.addRecommendRecord(recommendRecord)){
-			retMap.put("message", "ok");
-		}
-		else{
-			
+		String recommenderId = request.getParameter("code");
+		if (!recommendService.isRecommenderExisted(recommenderId)) {
 			retMap.put("message", "fail");
+		}
+		else {
+			RecommendRecord recommendRecord = new RecommendRecord();
+			recommendRecord.setCreatedTime(timestamp);
+			recommendRecord.setCustomerEmail(customerEmail);
+			recommendRecord.setRecommenderId(recommenderId);
+			recommendRecord.setIsPaid(0);
+			if(recommendService.addRecommendRecord(recommendRecord)){
+				retMap.put("message", "ok");
+			}
+			else{
+			
+				retMap.put("message", "fail");
+			}
 		}
 		return retMap;
 	}
 	
+	@RequestMapping("/recommend/isRecommended")
+	@ResponseBody
+	public Map<String, String> isRecommended(HttpSession httpSession, HttpServletRequest request) {
+		String email = (String) httpSession.getAttribute(SessionConstant.SESSION_USER_ID);
+		logger.info(httpSession.getAttributeNames().toString());
+		logger.info("recommend controller email");
+		logger.info(email);
+		Map<String, String> retMap = new HashMap<>();
+		if(recommendService.isRecommendRecordExisted(email) && !recommendService.isCustomerPaid(email)){
+			retMap.put("message", "yes");
+		}
+		else{
+			retMap.put("message", "no");
+		}
+		
+		return retMap;
+		
+		
+	}
 	
 }

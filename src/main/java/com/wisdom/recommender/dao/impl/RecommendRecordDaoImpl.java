@@ -49,10 +49,10 @@ public class RecommendRecordDaoImpl implements IRecommendRecordDao {
 
 	@Override
 	public boolean addRecommendRecord(RecommendRecord recommendRecord) {
-		String sql = "insert into recommend_record (recommender_id, customer_email, created_time)"
-				+ " values (?, ?, ?)";
+		String sql = "insert into recommend_record (recommender_id, customer_email, created_time, is_paid)"
+				+ " values (?, ?, ?, ?)";
 		int affectedRows = jdbcTemplate.update(sql, recommendRecord.getRecommenderId(),
-				recommendRecord.getCustomerEmail(), recommendRecord.getCreatedTime());
+				recommendRecord.getCustomerEmail(), recommendRecord.getCreatedTime(), recommendRecord.getIsPaid());
 		logger.debug("addRecommendRecord result : {}", affectedRows);
 		return affectedRows != 0;
 	}
@@ -67,11 +67,31 @@ public class RecommendRecordDaoImpl implements IRecommendRecordDao {
 
 	@Override
 	public boolean updateRecommendRecord(RecommendRecord recommendRecord) {
-		String sql = "update recommend_record set customer_email=?, created_time=? where id=?";
-		int affectedRows = jdbcTemplate.update(sql, recommendRecord.getCustomerEmail(), recommendRecord.getCreatedTime(),
-				recommendRecord.getRecommenderId());
+		logger.info("update is paid");
+		String sql = "update recommend_record set recommender_id=?, created_time=?, is_paid=? where customer_email=?";
+		int affectedRows = jdbcTemplate.update(sql, recommendRecord.getRecommenderId(), recommendRecord.getCreatedTime(), recommendRecord.getIsPaid(),
+				recommendRecord.getCustomerEmail());
 		logger.debug("updateRecommendRecord result : {}", affectedRows);
 		return affectedRows != 0;
 	}
+
+	@Override
+	public RecommendRecord getRecommendRecordByEmail(String customer_email) {
+		String sql = "select * from recommend_record where customer_email = ?";
+		RecommendRecord recommendRecord;
+		logger.info("record email");
+		logger.info(customer_email);
+		try {
+		 recommendRecord = jdbcTemplate.queryForObject(sql, new Object[] { customer_email },
+				new RecommendRecordMapper());
+		}
+		catch (Exception e){
+			
+			recommendRecord = null;
+		}
+
+		return recommendRecord;
+	}
+
 
 }

@@ -54,6 +54,8 @@ import com.wisdom.web.utils.CompanyOrgStructure;
 import com.wisdom.web.utils.ErrorCode;
 import com.wisdom.web.utils.PdfProcess;
 import com.wisdom.web.utils.SessionConstant;
+import com.wisdom.recommender.service.IRecommendService;
+
 
 @Controller
 public class CompanyController {
@@ -97,6 +99,9 @@ public class CompanyController {
 	@Autowired
 	private IUserOpenIdDao userOpenIdDao;
 	
+	@Autowired
+	private IRecommendService recommendService;
+	
 	@RequestMapping("/company/selectAccounter")
 	@ResponseBody
 	public Map<Integer, String> selectAccounter(HttpServletRequest request) {
@@ -105,7 +110,13 @@ public class CompanyController {
 		Map<Integer, String> retMap = new HashMap<>();
 		String accounterUserId = request.getParameter("accounterId");
 		String userId = (String) request.getSession().getAttribute("userId");
+		
 		long companyId = userService.getCompanyIdByUserId(userId);
+		CompanyDetail companyDetail = companyDetailService.getCompanyDetailByCompanyId(companyId);
+		if(companyDetail == null) {
+			return retMap;
+			
+		}
 		int accounterAmount = companyService
 				.accounterAmountBelongToCompany(companyId);
 		if (companyId > -1 && accounterAmount < 2) {
@@ -142,6 +153,11 @@ public class CompanyController {
 		String alipayAmount = request.getParameter("alipayAmount");
 		String userId = (String) request.getSession().getAttribute("userId");
 		long companyId = userService.getCompanyIdByUserId(userId);
+		CompanyDetail companyDetail = companyDetailService.getCompanyDetailByCompanyId(companyId);
+		if(companyDetail == null) {
+			return "";
+			
+		}
 		CompanyPay companyPay = companyPayService.getCompanyPayByCompanyId(companyId);
 		UUID uuid = UUID.randomUUID();
 		String orderNo = uuid.toString();
@@ -200,9 +216,13 @@ public class CompanyController {
 				//如果有做过处理，不执行商户的业务程序
 				logger.info("alipayFinish : TRADE_FINISHED || TRADE_SUCCESS");
 				CompanyPay companyPay = companyPayService.getCompanyPayByOrderNo(out_trade_no);
+				logger.info(companyPay.toString());
 				String contractFileName = "";
 				try {
 					Company company = companyService.getCompanyByCompanyId(companyPay.getCompanyId());
+					logger.info("Line 212");
+
+					logger.info(company.toString());
 					UUID uuid = UUID.randomUUID();
 					contractFileName = uuid.toString() + "_contract_" + String.valueOf(company.getId()) + ".pdf";
 					Calendar c = Calendar.getInstance();    
@@ -223,6 +243,9 @@ public class CompanyController {
 					logger.info(owner);
 					logger.info(String.valueOf(companyPay.getPayAmount()));
 					logger.info(date);
+					String email = recommendService.getCustomerEmailByCompanyId(companyPay.getCompanyId());
+					logger.info(email);
+					recommendService.setCustomerPaid(email);
 					PdfProcess.generateContractPdf(realPath + contractFileName, company.getName(), code, address, owner, String.valueOf(companyPay.getPayAmount()), date, webRoot);
 					
 				} catch(Exception e) {
@@ -253,6 +276,10 @@ public class CompanyController {
 		String userId = (String) request.getSession().getAttribute("userId");
 		long companyId = userService.getCompanyIdByUserId(userId);
 		Company company = companyService.getCompanyByCompanyId(companyId);
+		CompanyDetail companyDetail = companyDetailService.getCompanyDetailByCompanyId(companyId);
+		if(companyDetail == null) {
+			retMap.put("error", "companyinfo");
+		}
 		if(company != null && company.getAccounterId() != null && !company.getAccounterId().isEmpty()) {
 			CompanyPay companyPay = companyPayService.getCompanyPayByCompanyIdAndPayStatus(companyId, 1);
 			if(companyPay != null) {

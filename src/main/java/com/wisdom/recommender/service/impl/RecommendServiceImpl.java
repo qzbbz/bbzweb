@@ -13,8 +13,10 @@ import com.wisdom.recommender.dao.IRecommenderDao;
 import com.wisdom.recommender.dao.IRecommendRecordDao;
 import com.wisdom.recommender.service.IRecommendService;
 import com.wisdom.common.model.Recommender;
+import com.wisdom.common.model.User;
 import com.wisdom.common.model.AccounterIndustry;
 import com.wisdom.common.model.RecommendRecord;
+import com.wisdom.user.dao.IUserQueryDao;
 
 @Service("recommendService")
 public class RecommendServiceImpl implements IRecommendService {
@@ -23,6 +25,9 @@ public class RecommendServiceImpl implements IRecommendService {
 	private IRecommenderDao recommenderDao;
 	@Autowired
 	private IRecommendRecordDao recommendRecordDao;
+	@Autowired
+	private IUserQueryDao userQueryDao;
+	
 	@Override
 	public Boolean addRecommender(Recommender recommender) {
 		return recommenderDao.addRecommender(recommender);
@@ -47,9 +52,10 @@ public class RecommendServiceImpl implements IRecommendService {
 		if (recommendRecordList != null && recommendRecordList.size() > 0) {
 			for (RecommendRecord recommendRecord : recommendRecordList) {
 				List<String> list = new ArrayList();
-				list.add(recommendRecord.getRecommenderId());
+				list.add(recommenderDao.getRecommenderById(recommendRecord.getRecommenderId()).getName());
 				String timestamp = recommendRecord.getCreatedTime().toString();
 				list.add(timestamp);
+				list.add(recommendRecord.getIsPaid().toString());
 				recommendRecordMap.put(recommendRecord.getCustomerEmail(), list);
 			}
 		}
@@ -60,6 +66,51 @@ public class RecommendServiceImpl implements IRecommendService {
 	public Boolean addRecommendRecord(RecommendRecord recommendRecord) {
 		return recommendRecordDao.addRecommendRecord(recommendRecord);
 	}
+	
+	@Override
+	public Boolean isRecommenderExisted(String id) {
+		if (recommenderDao.getRecommenderById(id) != null) {
+			return true;
+		}
+		else {
+			return false;
+			
+		}
+	}
+	@Override
+	public Boolean isRecommendRecordExisted(String email) {
+		RecommendRecord recommendRecord = recommendRecordDao.getRecommendRecordByEmail(email);
+		if(recommendRecord != null){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	@Override
+	public Boolean isCustomerPaid(String email) {
+		RecommendRecord recommendRecord = recommendRecordDao.getRecommendRecordByEmail(email);
+		if(recommendRecord.getIsPaid() != 0){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	@Override
+	public Boolean setCustomerPaid(String email) {
+		RecommendRecord recommendRecord = recommendRecordDao.getRecommendRecordByEmail(email);
+		recommendRecord.setIsPaid(1);
+		recommendRecordDao.updateRecommendRecord(recommendRecord);
+		return true;
+	}
+	@Override
+	public String getCustomerEmailByCompanyId(long id) {
+		User user= userQueryDao.getCompanyAdminUserByCompanyId(id);
+		return user.getUserId();
+		
+	}
+	
 	
 
 }

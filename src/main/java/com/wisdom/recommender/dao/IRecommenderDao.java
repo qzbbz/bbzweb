@@ -16,4 +16,6 @@ public interface IRecommenderDao {
 	
 	public boolean updateRecommender(Recommender recommender);
 	
+	
+	
 }

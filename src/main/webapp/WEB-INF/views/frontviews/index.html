@@ -723,6 +723,12 @@ nav a:hover:after {
 				} else if(data.error_code == '0') {
 					if(type == 2) {
 						errorMsgObj.hide();
+						//Add recommender information
+						var code = window.location.search.substring(1);
+						$.post("/recommend/addRecommendRecord", {"email":email, "code": code},function(data){
+							console.log(data);
+							
+						});
 						window.location.href = "/views/frontviews/signup-steps.html";
 					} else if(type == 1) {
 						errorMsgObj.html("<p style='color: #419088;'>注册成功！3秒后系统将自动转向登陆界面......</p>");
