@@ -206,9 +206,13 @@ public class CompanyController {
 				//如果有做过处理，不执行商户的业务程序
 				logger.info("alipayFinish : TRADE_FINISHED || TRADE_SUCCESS");
 				CompanyPay companyPay = companyPayService.getCompanyPayByOrderNo(out_trade_no);
+				logger.info(companyPay.toString());
 				String contractFileName = "";
 				try {
 					Company company = companyService.getCompanyByCompanyId(companyPay.getCompanyId());
+					logger.info("Line 212");
+
+					logger.info(company.toString());
 					UUID uuid = UUID.randomUUID();
 					contractFileName = uuid.toString() + "_contract_" + String.valueOf(company.getId()) + ".pdf";
 					Calendar c = Calendar.getInstance();    
@@ -219,6 +223,7 @@ public class CompanyController {
 				    String webRoot = realPath;
 					realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company/";
 					CompanyDetail companyDetail = companyDetailService.getCompanyDetailByCompanyId(companyPay.getCompanyId());
+					logger.info("Line 223");
 					
 					String code = companyDetail.getOrgCode();
 					String address = companyDetail.getProvince() + companyDetail.getCity() + companyDetail.getArea() + companyDetail.getExtra();

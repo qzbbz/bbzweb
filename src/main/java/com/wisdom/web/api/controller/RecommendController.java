@@ -102,9 +102,12 @@ public class RecommendController {
 	@RequestMapping("/recommend/isRecommended")
 	@ResponseBody
 	public Map<String, String> isRecommended(HttpSession httpSession, HttpServletRequest request) {
-		String email = (String) httpSession.getAttribute(SessionConstant.SESSION_USER_EMAIL);
+		String email = (String) httpSession.getAttribute(SessionConstant.SESSION_USER_ID);
+		logger.info(httpSession.getAttributeNames().toString());
+		logger.info("recommend controller email");
+		logger.info(email);
 		Map<String, String> retMap = new HashMap<>();
-		if(recommendService.isRecommendRecordExisted(email) && recommendService.isCustomerPaid(email)){
+		if(recommendService.isRecommendRecordExisted(email) && !recommendService.isCustomerPaid(email)){
 			retMap.put("message", "yes");
 		}
 		else{
