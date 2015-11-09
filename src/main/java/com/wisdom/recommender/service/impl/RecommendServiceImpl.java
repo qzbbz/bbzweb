@@ -1,4 +1,4 @@
-package com.wisdom.recommender.service.Impl;
+package com.wisdom.recommender.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
