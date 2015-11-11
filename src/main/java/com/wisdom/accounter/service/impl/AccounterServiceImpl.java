@@ -5,7 +5,10 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -299,24 +302,77 @@ public class AccounterServiceImpl implements IAccounterService {
 
 	@Override
 	public Map<String, List<Map<String, String>>> getAllCompanyExpenseByCondition(String userId,
-			String conditionType, String conditionValue) {
+			Map conditions) {
 		Map<String, List<Map<String, String>>> retMap = new HashMap<>();
 		retMap.put("companyExpense", new ArrayList<>());
 		retMap.put("companyInvoice", new ArrayList<>());
-		if(conditionType == null || conditionType.isEmpty() || conditionValue == null || conditionValue.isEmpty()) return retMap;
-		List<Company> companyList = companyService.getCompanyListByAccounterId(userId);
-		if(companyList != null) {
-			for(Company company : companyList) {
-				long companyId = company.getId();
-				String companyName = companyService.getCompanyName(companyId);
-				if(conditionType.equals("1")) {
-					if(companyName.indexOf(conditionValue) == -1) continue;
-				}
-				List<CompanyBill> companyBillList = companyBillDao.getAllCompanyBill(companyId);
-				if(companyBillList != null) {
-					if(conditionType.equals("3")) {
-						if(("公司发票").indexOf(conditionValue) != -1) {
+
+		Map<String, String>conditionMap = new HashMap<>();
+		
+		for (Iterator iter = conditions.keySet().iterator(); iter.hasNext();) {
+			String name = (String) iter.next();
+			
+			String[] values = (String[]) conditions.get(name);
+			String valueStr = "";
+			for (int i = 0; i < values.length; i++) {
+				valueStr = (i == values.length - 1) ? valueStr + values[i]
+						: valueStr + values[i] + ",";
+			}
+
+			 String conditionType = name;
+			 conditionType = conditionType.substring(11, 12);
+			 String conditionValue = valueStr;
+			 conditionMap.put(conditionType, conditionValue);
+		}
+		
+			//if(conditionType == null || conditionType.isEmpty() || conditionValue == null || conditionValue.isEmpty()) return retMap;
+			List<Company> companyList = companyService.getCompanyListByAccounterId(userId);
+			if(companyList != null) {
+				for(Company company : companyList) {
+					long companyId = company.getId();
+					String companyName = companyService.getCompanyName(companyId);
+					if(conditionMap.keySet().contains("1")) {
+						if(companyName.indexOf(conditionMap.get("1")) == -1) continue;
+					}
+					List<CompanyBill> companyBillList = companyBillDao.getAllCompanyBill(companyId);
+					if(companyBillList != null) {
+						if(conditionMap.keySet().contains("2") && conditionMap.keySet().contains("3")){
 							for(CompanyBill bill : companyBillList) {
+								if(bill.getCreateTime().toString().substring(0, 10).indexOf(conditionMap.get("2")) == -1 || ("公司发票").indexOf(conditionMap.get("3")) < 1 )
+								{
+									continue;
+								}
+								Map<String, String> map = new HashMap<>();
+								map.put("date", bill.getCreateTime().toString().substring(0, 10));
+								map.put("file", bill.getFileName());
+								DecimalFormat format = new DecimalFormat("#0.000");
+								map.put("amount", format.format(bill.getAmount() == null ? 0 : bill.getAmount()));
+								map.put("type", bill.getType() == null || bill.getType().isEmpty() ? "未设定" : bill.getType());
+								map.put("companyName", companyName);
+								map.put("item_type", "公司发票");
+								retMap.get("companyExpense").add(map);
+								
+							}
+						}
+						else if(conditionMap.keySet().contains("3")) {
+							if(("公司发票").indexOf(conditionMap.get("3")) > 1) {
+								for(CompanyBill bill : companyBillList) {
+									Map<String, String> map = new HashMap<>();
+									map.put("date", bill.getCreateTime().toString().substring(0, 10));
+									map.put("file", bill.getFileName());
+									DecimalFormat format = new DecimalFormat("#0.000");
+									map.put("amount", format.format(bill.getAmount() == null ? 0 : bill.getAmount()));
+									map.put("type", bill.getType() == null || bill.getType().isEmpty() ? "未设定" : bill.getType());
+									map.put("companyName", companyName);
+									map.put("item_type", "公司发票");
+									retMap.get("companyExpense").add(map);
+								}
+							}
+						} else {
+							for(CompanyBill bill : companyBillList) {
+								if(conditionMap.keySet().contains("2")) {
+									if(bill.getCreateTime().toString().substring(0, 10).indexOf(conditionMap.get("2")) == -1) continue;
+								}
 								Map<String, String> map = new HashMap<>();
 								map.put("date", bill.getCreateTime().toString().substring(0, 10));
 								map.put("file", bill.getFileName());
@@ -328,28 +384,48 @@ public class AccounterServiceImpl implements IAccounterService {
 								retMap.get("companyExpense").add(map);
 							}
 						}
-					} else {
-						for(CompanyBill bill : companyBillList) {
-							if(conditionType.equals("2")) {
-								if(bill.getCreateTime().toString().substring(0, 10).indexOf(conditionValue) == -1) continue;
-							}
-							Map<String, String> map = new HashMap<>();
-							map.put("date", bill.getCreateTime().toString().substring(0, 10));
-							map.put("file", bill.getFileName());
-							DecimalFormat format = new DecimalFormat("#0.000");
-							map.put("amount", format.format(bill.getAmount() == null ? 0 : bill.getAmount()));
-							map.put("type", bill.getType() == null || bill.getType().isEmpty() ? "未设定" : bill.getType());
-							map.put("companyName", companyName);
-							map.put("item_type", "公司发票");
-							retMap.get("companyExpense").add(map);
-						}
 					}
-				}
-				List<CompanyBankSta> companyBankStaList = companyBankStaDao.getAllCompanyBankSta(companyId);
-				if(companyBankStaList != null ) {
-					if(conditionType.equals("3")) {
-						if(("公司银行对账单").indexOf(conditionValue) != -1) {
+					
+				
+					List<CompanyBankSta> companyBankStaList = companyBankStaDao.getAllCompanyBankSta(companyId);
+					if(companyBankStaList != null ) {
+						if(conditionMap.keySet().contains("2") && conditionMap.keySet().contains("3")){
+							for(CompanyBill bill : companyBillList) {
+
+								if(bill.getCreateTime().toString().substring(0, 10).indexOf(conditionMap.get("2")) == -1 || ("公司银行对账单").indexOf(conditionMap.get("3")) < 1 )
+								{
+									continue;
+								}
+								Map<String, String> map = new HashMap<>();
+								map.put("date", bill.getCreateTime().toString().substring(0, 10));
+								map.put("file", bill.getFileName());
+								DecimalFormat format = new DecimalFormat("#0.000");
+								map.put("amount", format.format(bill.getAmount() == null ? 0 : bill.getAmount()));
+								map.put("type", bill.getType() == null || bill.getType().isEmpty() ? "未设定" : bill.getType());
+								map.put("companyName", companyName);
+								map.put("item_type", "公司银行对账单");
+								retMap.get("companyExpense").add(map);
+								
+							}
+						}
+						else if(conditionMap.containsKey("3")) {
+							if(("公司银行对账单").indexOf(conditionMap.get("3")) > 1) {
+								for(CompanyBankSta bankSta : companyBankStaList) {
+									Map<String, String> map = new HashMap<>();
+									map.put("date", bankSta.getCreateTime().toString().substring(0, 10));
+									map.put("file", bankSta.getFileName());
+									map.put("amount", "无");
+									map.put("type", "无");
+									map.put("companyName", companyName);
+									map.put("item_type", "公司银行对账单");
+									retMap.get("companyExpense").add(map);
+								}
+							}
+						} else {
 							for(CompanyBankSta bankSta : companyBankStaList) {
+								if(conditionMap.containsKey("2")) {
+									if(bankSta.getCreateTime().toString().substring(0, 10).indexOf(conditionMap.get("2")) == -1) continue;
+								}
 								Map<String, String> map = new HashMap<>();
 								map.put("date", bankSta.getCreateTime().toString().substring(0, 10));
 								map.put("file", bankSta.getFileName());
@@ -360,27 +436,47 @@ public class AccounterServiceImpl implements IAccounterService {
 								retMap.get("companyExpense").add(map);
 							}
 						}
-					} else {
-						for(CompanyBankSta bankSta : companyBankStaList) {
-							if(conditionType.equals("2")) {
-								if(bankSta.getCreateTime().toString().substring(0, 10).indexOf(conditionValue) == -1) continue;
-							}
-							Map<String, String> map = new HashMap<>();
-							map.put("date", bankSta.getCreateTime().toString().substring(0, 10));
-							map.put("file", bankSta.getFileName());
-							map.put("amount", "无");
-							map.put("type", "无");
-							map.put("companyName", companyName);
-							map.put("item_type", "公司银行对账单");
-							retMap.get("companyExpense").add(map);
-						}
 					}
-				}
-				List<CompanySales> companySalesList = companySalesService.getAllCompanySales(companyId);
-				if(companySalesList != null ) {
-					if(conditionType.equals("3")) {
-						if(("公司销售清单").indexOf(conditionValue) != -1) {
+					
+					
+					List<CompanySales> companySalesList = companySalesService.getAllCompanySales(companyId);
+					if(companySalesList != null ) {
+						if(conditionMap.keySet().contains("2") && conditionMap.keySet().contains("3")){
+							for(CompanyBill bill : companyBillList) {
+								if(bill.getCreateTime().toString().substring(0, 10).indexOf(conditionMap.get("2")) == -1 || ("公司销售清单").indexOf(conditionMap.get("3")) < 1 )
+								{
+									continue;
+								}
+								Map<String, String> map = new HashMap<>();
+								map.put("date", bill.getCreateTime().toString().substring(0, 10));
+								map.put("file", bill.getFileName());
+								DecimalFormat format = new DecimalFormat("#0.000");
+								map.put("amount", format.format(bill.getAmount() == null ? 0 : bill.getAmount()));
+								map.put("type", bill.getType() == null || bill.getType().isEmpty() ? "未设定" : bill.getType());
+								map.put("companyName", companyName);
+								map.put("item_type", "公司销售清单");
+								retMap.get("companyExpense").add(map);
+								
+							}
+						}
+						else if(conditionMap.containsKey("3")) {
+							if(("公司销售清单").indexOf(conditionMap.get("3")) > 1) {
+								for(CompanySales companySales : companySalesList) {
+									Map<String, String> map = new HashMap<>();
+									map.put("date", companySales.getCreateTime().toString().substring(0, 10));
+									map.put("file", companySales.getFileName());
+									map.put("amount", "无");
+									map.put("type", "无");
+									map.put("companyName", companyName);
+									map.put("item_type", "公司销售清单");
+									retMap.get("companyExpense").add(map);
+								}
+							}
+						} else {
 							for(CompanySales companySales : companySalesList) {
+								if(conditionMap.containsKey("2")) {
+									if(companySales.getCreateTime().toString().substring(0, 10).indexOf(conditionMap.get("2")) == -1) continue;
+								}
 								Map<String, String> map = new HashMap<>();
 								map.put("date", companySales.getCreateTime().toString().substring(0, 10));
 								map.put("file", companySales.getFileName());
@@ -391,27 +487,47 @@ public class AccounterServiceImpl implements IAccounterService {
 								retMap.get("companyExpense").add(map);
 							}
 						}
-					} else {
-						for(CompanySales companySales : companySalesList) {
-							if(conditionType.equals("2")) {
-								if(companySales.getCreateTime().toString().substring(0, 10).indexOf(conditionValue) == -1) continue;
-							}
-							Map<String, String> map = new HashMap<>();
-							map.put("date", companySales.getCreateTime().toString().substring(0, 10));
-							map.put("file", companySales.getFileName());
-							map.put("amount", "无");
-							map.put("type", "无");
-							map.put("companyName", companyName);
-							map.put("item_type", "公司销售清单");
-							retMap.get("companyExpense").add(map);
-						}
 					}
-				}
-				List<CompanySalary> companySalaryList = companySalaryService.getAllCompanySalary(companyId);
-				if(companySalaryList != null) {
-					if(conditionType.equals("3")) {
-						if(("公司工资单").indexOf(conditionValue) != -1) {
+					
+					
+					List<CompanySalary> companySalaryList = companySalaryService.getAllCompanySalary(companyId);
+					if(companySalaryList != null) {
+						if(conditionMap.keySet().contains("2") && conditionMap.keySet().contains("3")){
+							for(CompanyBill bill : companyBillList) {
+								if(bill.getCreateTime().toString().substring(0, 10).indexOf(conditionMap.get("2")) == -1 || ("公司工资单").indexOf(conditionMap.get("3")) < 1 )
+								{
+									continue;
+								}
+								Map<String, String> map = new HashMap<>();
+								map.put("date", bill.getCreateTime().toString().substring(0, 10));
+								map.put("file", bill.getFileName());
+								DecimalFormat format = new DecimalFormat("#0.000");
+								map.put("amount", format.format(bill.getAmount() == null ? 0 : bill.getAmount()));
+								map.put("type", bill.getType() == null || bill.getType().isEmpty() ? "未设定" : bill.getType());
+								map.put("companyName", companyName);
+								map.put("item_type", "公司工资单");
+								retMap.get("companyExpense").add(map);
+								
+							}
+						}
+						else if(conditionMap.containsKey("3")) {
+							if(("公司工资单").indexOf(conditionMap.get("3")) > 1) {
+								for(CompanySalary companySalary : companySalaryList) {
+									Map<String, String> map = new HashMap<>();
+									map.put("date", companySalary.getCreateTime().toString().substring(0, 10));
+									map.put("file", companySalary.getSalaryFile());
+									map.put("companyName", companyName);
+									map.put("amount", "无");
+									map.put("type", "无");
+									map.put("item_type", "公司工资单");
+									retMap.get("companyExpense").add(map);
+								}
+							}
+						} else {
 							for(CompanySalary companySalary : companySalaryList) {
+								if(conditionMap.containsKey("2")) {
+									if(companySalary.getCreateTime().toString().substring(0, 10).indexOf(conditionMap.get("2")) == -1) continue;
+								}
 								Map<String, String> map = new HashMap<>();
 								map.put("date", companySalary.getCreateTime().toString().substring(0, 10));
 								map.put("file", companySalary.getSalaryFile());
@@ -422,30 +538,67 @@ public class AccounterServiceImpl implements IAccounterService {
 								retMap.get("companyExpense").add(map);
 							}
 						}
-					} else {
-						for(CompanySalary companySalary : companySalaryList) {
-							if(conditionType.equals("2")) {
-								if(companySalary.getCreateTime().toString().substring(0, 10).indexOf(conditionValue) == -1) continue;
-							}
-							Map<String, String> map = new HashMap<>();
-							map.put("date", companySalary.getCreateTime().toString().substring(0, 10));
-							map.put("file", companySalary.getSalaryFile());
-							map.put("companyName", companyName);
-							map.put("amount", "无");
-							map.put("type", "无");
-							map.put("item_type", "公司工资单");
-							retMap.get("companyExpense").add(map);
-						}
 					}
-				}
-				List<User> userList = userService.getUserListByCompanyId(companyId);
-				if(userList != null) {
-					if(conditionType.equals("3")) {
-						if(("公司员工发票").indexOf(conditionValue) != -1) {
+					
+					
+					List<User> userList = userService.getUserListByCompanyId(companyId);
+					if(userList != null) {
+						if(conditionMap.keySet().contains("2") && conditionMap.keySet().contains("3")){
+							for(CompanyBill bill : companyBillList) {
+								if(bill.getCreateTime().toString().substring(0, 10).indexOf(conditionMap.get("2")) == -1 || ("公司员工发票").indexOf(conditionMap.get("3")) < 1 )
+								{
+									continue;
+								}
+								for(User companyUser : userList) {
+									List<UserInvoice> userInvoiceList = userInvoiceService.getUserInvoiceByUserIdAndStatusAndApprovalStatus(companyUser.getUserId(), 1, 0);
+									if(userInvoiceList != null) {
+										for(UserInvoice userInvoice : userInvoiceList) {
+											Map<String, String> map = new HashMap<>();
+											map.put("date", userInvoice.getUpdateTime().toString().substring(0, 10));
+											Invoice invoice = invoiceService.getInvoiceById(userInvoice.getInvoiceId());
+											DecimalFormat format = new DecimalFormat("#0.000");
+											map.put("amount", format.format(invoice.getAmount() == null ? 0 : invoice.getAmount()));
+											map.put("companyName", companyName);
+											int expenseTypeId = invoice.getExpenseTypeId();
+											String typeName = expenseTypeService.getExpenseTypeNameById(expenseTypeId);
+											map.put("type", typeName == null || typeName.isEmpty() ? "未设定" : typeName);
+											map.put("item_type", "公司员工发票");
+											retMap.get("companyInvoice").add(map);
+										}
+									}
+								}
+								
+							}
+						}
+						else if(conditionMap.containsKey("3")) {
+							if(("公司员工发票").indexOf(conditionMap.get("3")) > 1) {
+								for(User companyUser : userList) {
+									List<UserInvoice> userInvoiceList = userInvoiceService.getUserInvoiceByUserIdAndStatusAndApprovalStatus(companyUser.getUserId(), 1, 0);
+									if(userInvoiceList != null) {
+										for(UserInvoice userInvoice : userInvoiceList) {
+											Map<String, String> map = new HashMap<>();
+											map.put("date", userInvoice.getUpdateTime().toString().substring(0, 10));
+											Invoice invoice = invoiceService.getInvoiceById(userInvoice.getInvoiceId());
+											DecimalFormat format = new DecimalFormat("#0.000");
+											map.put("amount", format.format(invoice.getAmount() == null ? 0 : invoice.getAmount()));
+											map.put("companyName", companyName);
+											int expenseTypeId = invoice.getExpenseTypeId();
+											String typeName = expenseTypeService.getExpenseTypeNameById(expenseTypeId);
+											map.put("type", typeName == null || typeName.isEmpty() ? "未设定" : typeName);
+											map.put("item_type", "公司员工发票");
+											retMap.get("companyInvoice").add(map);
+										}
+									}
+								}
+							}
+						} else {
 							for(User companyUser : userList) {
 								List<UserInvoice> userInvoiceList = userInvoiceService.getUserInvoiceByUserIdAndStatusAndApprovalStatus(companyUser.getUserId(), 1, 0);
 								if(userInvoiceList != null) {
 									for(UserInvoice userInvoice : userInvoiceList) {
+										if(conditionMap.containsKey("2")) {
+											if(userInvoice.getUpdateTime().toString().substring(0, 10).indexOf(conditionMap.get("2")) == -1) continue;
+										}
 										Map<String, String> map = new HashMap<>();
 										map.put("date", userInvoice.getUpdateTime().toString().substring(0, 10));
 										Invoice invoice = invoiceService.getInvoiceById(userInvoice.getInvoiceId());
@@ -460,35 +613,19 @@ public class AccounterServiceImpl implements IAccounterService {
 									}
 								}
 							}
-						}
-					} else {
-						for(User companyUser : userList) {
-							List<UserInvoice> userInvoiceList = userInvoiceService.getUserInvoiceByUserIdAndStatusAndApprovalStatus(companyUser.getUserId(), 1, 0);
-							if(userInvoiceList != null) {
-								for(UserInvoice userInvoice : userInvoiceList) {
-									if(conditionType.equals("2")) {
-										if(userInvoice.getUpdateTime().toString().substring(0, 10).indexOf(conditionValue) == -1) continue;
-									}
-									Map<String, String> map = new HashMap<>();
-									map.put("date", userInvoice.getUpdateTime().toString().substring(0, 10));
-									Invoice invoice = invoiceService.getInvoiceById(userInvoice.getInvoiceId());
-									DecimalFormat format = new DecimalFormat("#0.000");
-									map.put("amount", format.format(invoice.getAmount() == null ? 0 : invoice.getAmount()));
-									map.put("companyName", companyName);
-									int expenseTypeId = invoice.getExpenseTypeId();
-									String typeName = expenseTypeService.getExpenseTypeNameById(expenseTypeId);
-									map.put("type", typeName == null || typeName.isEmpty() ? "未设定" : typeName);
-									map.put("item_type", "公司员工发票");
-									retMap.get("companyInvoice").add(map);
-								}
-							}
+							
 						}
 					}
 				}
 			}
-		}
+
+
+
 		return retMap;
 	}
+
+	
+
 
 	@Override
 	public Map<String, String> accounterBelongToCompany(String userId) {

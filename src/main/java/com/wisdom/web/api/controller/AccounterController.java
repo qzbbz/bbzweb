@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -244,9 +245,10 @@ public class AccounterController {
 	public Map<String, List<Map<String, String>>> getAllCompanyExpenseByCondition(HttpServletRequest request) {
 		String userId = (String) request.getSession().getAttribute(
 				SessionConstant.SESSION_USER_ID);
-		String conditionType = request.getParameter("conditionType");
-		String conditionValue = request.getParameter("conditionValue");
-		return accounterService.getAllCompanyExpenseByCondition(userId, conditionType, conditionValue);
+		Map conditions = request.getParameterMap();
+
+		
+		return accounterService.getAllCompanyExpenseByCondition(userId, conditions);
 	}
 	
 	@RequestMapping("/accounter/getTakeBillWay")
