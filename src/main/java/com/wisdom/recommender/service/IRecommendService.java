@@ -9,7 +9,7 @@ public interface IRecommendService {
 	
 	public Boolean addRecommender(Recommender recommender);
 	
-	public Map<String, String> getAllRecommender();
+	public Map<String, List<String>> getAllRecommender();
 	
 	public Boolean addRecommendRecord(RecommendRecord recommendRecord );
 	
@@ -24,4 +24,6 @@ public interface IRecommendService {
 	public Boolean setCustomerPaid(String email);
 	
 	public String getCustomerEmailByCompanyId(long id);
+	
+	public Boolean addRecommendInfo(String code, String ip);
 }

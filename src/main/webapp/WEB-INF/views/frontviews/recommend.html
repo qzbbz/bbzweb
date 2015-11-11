@@ -31,6 +31,7 @@
 		    	<th>
 		    		<tr>
 		    			<td>姓名</td>
+		    			<td>点击次数</td>
 		    			<td>链接</td>
 		    		</tr>
 		    	</th>
@@ -50,9 +51,8 @@
 				var base = a.join("/") + "/index.html?";
 				table.html("");
 				for (var id in data) {
-					//console.log(row);
 					var linkAddr = base + id;
-					table.append("<tr><td><span class='r-name'>" + data[id] + "</span></td><td><a target='_blank' href='" + linkAddr + "'>" + linkAddr + "</a></td></tr>");
+					table.append("<tr><td><span class='r-name'>" + data[id][0] + "</span></td><td>" + data[id][1] +"</td><td><a target='_blank' href='" + linkAddr + "'>" + linkAddr + "</a></td></tr>");
 				}
 				
 				$(".r-name").on("click", function(){
@@ -76,13 +76,11 @@
 						var base = a.join("/") + "/index.html?";
 						table.html("");
 						for (var id in data) {
-							//console.log(row);
 							var linkAddr = base + id;
-							table.append("<tr><td><span class='r-name'>" + data[id] + "</span></td><td><a target='_blank' href='" + linkAddr + "'>" + linkAddr + "</a></td></tr>");
+							table.append("<tr><td><span class='r-name'>" + data[id][0] + "</span></td><td>" + data[id][1] + "</td><td><a target='_blank' href='" + linkAddr + "'>" + linkAddr + "</a></td></tr>");
 						}
 						
 						$(".r-name").on("click", function(){
-							console.log("hello");
 							$("#qrcode").html("");
 							$("#qrcode").qrcode($(this).parent().parent().find("a")[0].innerHTML);
 							$("#dialog").dialog();

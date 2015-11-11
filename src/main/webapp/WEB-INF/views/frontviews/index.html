@@ -714,6 +714,12 @@ var _hmt = _hmt || [];
  $("#movieshow").dialog("close");
   //  movieV.pause();
   }*/
+  var code = window.location.search.substring(1);
+  if(code){
+  	$.post("/recommend/addRecomendInfo", {"code": code}, function(data){
+		  console.log(code);
+  	});
+  }
  function signUp(email, pwd, errorMsgObj){
 	 
 	 var type = 2;
