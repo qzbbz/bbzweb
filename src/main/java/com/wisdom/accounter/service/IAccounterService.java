@@ -34,7 +34,7 @@ public interface IAccounterService {
 	
 	public List<Map<String, String>> getAllAccounterCompanyWithoutCondition(String userId);
 		
-	public Map<String, List<Map<String, String>>> getAllCompanyExpenseByCondition(String userId, String conditionType, String conditionValue);
+	public Map<String, List<Map<String, String>>> getAllCompanyExpenseByCondition(String userId, Map conditions);
 	
 	public Map<String, String> accounterBelongToCompany(String userId);
 	
