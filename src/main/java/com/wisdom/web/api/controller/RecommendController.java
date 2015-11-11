@@ -119,4 +119,19 @@ public class RecommendController {
 		
 	}
 	
+	@RequestMapping("/recommend/addRecomendInfo")
+	@ResponseBody
+	public Map<String, String> addRecommendInfo(HttpServletRequest request) {
+		String ip = request.getLocalAddr();
+		String code = request.getParameter("code");
+		Map<String, String> retMap = new HashMap<>();
+		if(recommendService.addRecommendInfo(code, ip)){
+			retMap.put("message", "ok");
+		}
+		else{
+			retMap.put("message", "fail");
+		}
+		return retMap;
+	}
+	
 }

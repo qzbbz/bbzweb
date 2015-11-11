@@ -24,4 +24,6 @@ public interface IRecommendService {
 	public Boolean setCustomerPaid(String email);
 	
 	public String getCustomerEmailByCompanyId(long id);
+	
+	public Boolean addRecommendInfo(String code, String ip);
 }

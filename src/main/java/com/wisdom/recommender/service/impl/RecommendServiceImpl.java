@@ -11,11 +11,13 @@ import org.springframework.stereotype.Service;
 
 import com.wisdom.recommender.dao.IRecommenderDao;
 import com.wisdom.recommender.dao.IRecommendRecordDao;
+import com.wisdom.recommender.dao.IRecommendInfoDao;
 import com.wisdom.recommender.service.IRecommendService;
 import com.wisdom.common.model.Recommender;
 import com.wisdom.common.model.User;
 import com.wisdom.common.model.AccounterIndustry;
 import com.wisdom.common.model.RecommendRecord;
+import com.wisdom.common.model.RecommendInfo;
 import com.wisdom.user.dao.IUserQueryDao;
 
 @Service("recommendService")
@@ -27,6 +29,8 @@ public class RecommendServiceImpl implements IRecommendService {
 	private IRecommendRecordDao recommendRecordDao;
 	@Autowired
 	private IUserQueryDao userQueryDao;
+	@Autowired
+	private IRecommendInfoDao recommendInfoDao;
 	
 	@Override
 	public Boolean addRecommender(Recommender recommender) {
@@ -109,6 +113,13 @@ public class RecommendServiceImpl implements IRecommendService {
 		User user= userQueryDao.getCompanyAdminUserByCompanyId(id);
 		return user.getUserId();
 		
+	}
+	@Override
+	public Boolean addRecommendInfo(String code, String ip) {
+		RecommendInfo recommendInfo = new RecommendInfo();
+		recommendInfo.setId(code);
+		recommendInfo.setIP(ip);
+		return recommendInfoDao.addRecommendInfo(recommendInfo);
 	}
 	
 	
