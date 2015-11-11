@@ -37,7 +37,7 @@ public class RecommendInfoDaoImpl implements IRecommendInfoDao {
 		List<RecommendInfo> existed = getRecommendInfoByIP(recommendInfo.getIP());
 		if (existed != null){
 			for(RecommendInfo single: existed){
-				if(single.getIP() == recommendInfo.getIP() && single.getRecommenderId() == recommendInfo.getRecommenderId()){
+				if(single.getIP().equals(recommendInfo.getIP()) && single.getRecommenderId().equals(recommendInfo.getRecommenderId())){
 					return false;
 				}
 			}
