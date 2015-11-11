@@ -9,7 +9,7 @@ public interface IRecommendService {
 	
 	public Boolean addRecommender(Recommender recommender);
 	
-	public Map<String, String> getAllRecommender();
+	public Map<String, List<String>> getAllRecommender();
 	
 	public Boolean addRecommendRecord(RecommendRecord recommendRecord );
 	

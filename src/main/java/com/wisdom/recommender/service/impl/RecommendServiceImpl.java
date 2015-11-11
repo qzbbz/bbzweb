@@ -3,6 +3,7 @@ package com.wisdom.recommender.service.impl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -38,12 +39,23 @@ public class RecommendServiceImpl implements IRecommendService {
 
 	}
 	@Override
-	public Map<String, String> getAllRecommender() {
-		Map<String, String> recommenderMap = new HashMap<>();
+	public Map<String, List<String>> getAllRecommender() {
+		Map<String, List<String>> recommenderMap = new HashMap<>();
 		List<Recommender> recommenderList = recommenderDao.getAllRecommender();
+		//List<Recommender> recommenderList = recommenderDao.getAllRecommender();
 		if (recommenderList != null && recommenderList.size() > 0) {
 			for (Recommender recommender : recommenderList) {
-				recommenderMap.put(recommender.getId(), recommender.getName());
+			    String recommenderId = recommender.getId();
+			    List<RecommendInfo> recommenderInfoList = recommendInfoDao.getRecommendInfoByRecommenderId(recommenderId);
+			    List<String> info = new ArrayList<>();
+			    info.add(recommender.getName());
+			    if(recommenderInfoList == null){
+			    	info.add("0");
+			    }
+			    else{
+			    	info.add(String.valueOf(recommenderInfoList.size()));
+			    }
+			    recommenderMap.put(recommenderId, info);
 			}
 		}
 		return recommenderMap;

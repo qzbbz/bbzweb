@@ -35,9 +35,9 @@ public class RecommendController {
 	
 	@RequestMapping("/recommend/getAllRecommenders")
 	@ResponseBody
-	public Map<String, String> getAllRecommender() {
+	public Map<String, List<String>> getAllRecommender() {
 		logger.debug("enter getAllRecommender");
-		Map<String, String> retMap = recommendService.getAllRecommender();
+		Map<String, List<String>> retMap = recommendService.getAllRecommender();
 		logger.debug("finish getAllRecommender");
 		return retMap;
 	}
@@ -122,7 +122,7 @@ public class RecommendController {
 	@RequestMapping("/recommend/addRecomendInfo")
 	@ResponseBody
 	public Map<String, String> addRecommendInfo(HttpServletRequest request) {
-		String ip = request.getLocalAddr();
+		String ip = request.getRemoteAddr();
 		String code = request.getParameter("code");
 		Map<String, String> retMap = new HashMap<>();
 		if(recommendService.addRecommendInfo(code, ip)){
