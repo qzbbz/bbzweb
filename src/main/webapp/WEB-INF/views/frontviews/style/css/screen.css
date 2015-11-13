@@ -7181,7 +7181,6 @@ a.new-home__hero__get-started:active {
 .new-home__section p {
 	color: #323232;
 	margin: auto;
-	max-width: 550px;
 	text-align: center;
 	line-height: 1.6
 }
@@ -9884,8 +9883,8 @@ width:calc((100% - 26px * 3)/ 4);
 	height: 55%
 }
 .about-page .events__sub-block__contents p {
-	max-width: 18em;
-	margin: 0 1.5em;
+	max-width: 24em;
+	margin: auto;
 	line-height: 1.4
 }
 .about-page .events__sub-block:before {
