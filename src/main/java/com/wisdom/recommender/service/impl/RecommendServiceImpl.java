@@ -1,5 +1,6 @@
 package com.wisdom.recommender.service.impl;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -127,10 +128,12 @@ public class RecommendServiceImpl implements IRecommendService {
 		
 	}
 	@Override
-	public Boolean addRecommendInfo(String code, String ip) {
+	public Boolean addRecommendInfo(String code, String ip, Timestamp createdTime) {
 		RecommendInfo recommendInfo = new RecommendInfo();
 		recommendInfo.setId(code);
 		recommendInfo.setIP(ip);
+		recommendInfo.setCreatedTime(createdTime);
+		
 		return recommendInfoDao.addRecommendInfo(recommendInfo);
 	}
 	

@@ -125,7 +125,8 @@ public class RecommendController {
 		String ip = request.getRemoteAddr();
 		String code = request.getParameter("code");
 		Map<String, String> retMap = new HashMap<>();
-		if(recommendService.addRecommendInfo(code, ip)){
+		Timestamp timestamp = new Timestamp(Calendar.getInstance().getTime().getTime());
+		if(recommendService.addRecommendInfo(code, ip, timestamp)){
 			retMap.put("message", "ok");
 		}
 		else{
