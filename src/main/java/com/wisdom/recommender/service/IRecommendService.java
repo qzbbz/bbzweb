@@ -1,4 +1,5 @@
 package com.wisdom.recommender.service;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
@@ -25,5 +26,5 @@ public interface IRecommendService {
 	
 	public String getCustomerEmailByCompanyId(long id);
 	
-	public Boolean addRecommendInfo(String code, String ip);
+	public Boolean addRecommendInfo(String code, String ip, Timestamp createdTime);
 }

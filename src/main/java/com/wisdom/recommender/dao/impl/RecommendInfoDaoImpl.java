@@ -43,10 +43,10 @@ public class RecommendInfoDaoImpl implements IRecommendInfoDao {
 			}
 		}
 		
-		String sql = "insert into recommend_info (recommender_id, ip)"
-				+ " values (?, ?)";
+		String sql = "insert into recommend_info (recommender_id, ip, created_time)"
+				+ " values (?, ?, ?)";
 		int affectedRows = jdbcTemplate.update(sql, recommendInfo.getRecommenderId(),
-				recommendInfo.getIP());
+				recommendInfo.getIP(), recommendInfo.getCreatedTime());
 		logger.debug("addRecommendInfo result : {}", affectedRows);
 		return affectedRows != 0;
 	}

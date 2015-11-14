@@ -1,5 +1,6 @@
 package com.wisdom.common.model;
 
+import java.sql.Timestamp;
 
 public class RecommendInfo implements java.io.Serializable {
 
@@ -11,6 +12,7 @@ public class RecommendInfo implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 	private String recommender_id;
 	private String ip;
+	private Timestamp createdTime;
 
 
 	// Constructors
@@ -20,9 +22,10 @@ public class RecommendInfo implements java.io.Serializable {
 	}
 
 	/** constructor */
-	public RecommendInfo(String recommender_id, String ip) {
+	public RecommendInfo(String recommender_id, String ip, Timestamp createdTime) {
 		this.recommender_id = recommender_id;
 		this.ip = ip;
+		this.createdTime = createdTime;
 	}
 
 
@@ -43,6 +46,15 @@ public class RecommendInfo implements java.io.Serializable {
 
 	public void setIP(String ip) {
 		this.ip = ip;
+	}
+	
+	public Timestamp getCreatedTime(){
+		return this.createdTime;
+	}
+	
+	public void setCreatedTime(Timestamp createdTime){
+		this.createdTime = createdTime;
+		
 	}
 
 
