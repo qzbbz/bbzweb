@@ -8,5 +8,6 @@ target/
 .tern-project
 .project
 .classpath
+*.DS_Store
 bbzweb.iml
 /build
