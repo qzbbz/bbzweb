@@ -195,12 +195,18 @@ public class UserServiceImpl implements IUserService {
 
 	@Override
 	public boolean addUserPhone(String userId, String userPhone, int phoneTypeId) {
-		UserPhone up = new UserPhone();
+		UserPhone up = userQueryDao.getUserPhoneByUserId(userId);
+		boolean hasExisted = false;
+		if(up != null) {
+			hasExisted = true;
+		} else {
+			up = new UserPhone();
+		}
 		up.setPhone(userPhone);
 		up.setUserId(userId);
 		up.setType(phoneTypeId);
 		up.setCreateTime(new Timestamp(System.currentTimeMillis()));
-		return userOperationDao.addUserPhone(up);
+		return hasExisted ? userOperationDao.updateUserPhone(up) : userOperationDao.addUserPhone(up);
 	}
 
 	@Override
