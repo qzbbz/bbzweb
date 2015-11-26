@@ -21,6 +21,7 @@ public class CompanyPay implements java.io.Serializable {
 	private String mailAddress;
 	private String contractFile;
 	private Timestamp createTime;
+	private Integer trial;
 
 	// Constructors
 
@@ -34,7 +35,7 @@ public class CompanyPay implements java.io.Serializable {
 	}
 
 	public CompanyPay(Long id, Long companyId, Integer payStatus, Double payAmount, Integer serviceTime,
-			String orderNo, int applyInvoice, String mailAddress, String contractFile, Timestamp createTime) {
+			String orderNo, int applyInvoice, String mailAddress, String contractFile, Timestamp createTime, Integer trial) {
 		super();
 		this.id = id;
 		this.companyId = companyId;
@@ -46,6 +47,7 @@ public class CompanyPay implements java.io.Serializable {
 		this.mailAddress = mailAddress;
 		this.contractFile = contractFile;
 		this.createTime = createTime;
+		this.trial = trial;
 	}
 
 	public Long getId() {
@@ -130,5 +132,13 @@ public class CompanyPay implements java.io.Serializable {
 
 	public void setOrderNo(String orderNo) {
 		this.orderNo = orderNo;
+	}
+	
+	public Integer getTrial(){
+		return trial;
+	}
+	
+	public void setTrial(Integer trial){
+		this.trial = trial;
 	}
 }

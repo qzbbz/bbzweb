@@ -13,7 +13,7 @@ public class CompanyPayMapper implements RowMapper<CompanyPay> {
 		CompanyPay u = new CompanyPay(rs.getLong("id"), rs.getLong("company_id"),
 				rs.getInt("pay_status"), rs.getDouble("pay_amount"), rs.getInt("service_time"), 
 				rs.getString("order_no"), rs.getInt("apply_invoice"), 
-				rs.getString("mail_address"), rs.getString("contract_file"), rs.getTimestamp("create_time"));
+				rs.getString("mail_address"), rs.getString("contract_file"), rs.getTimestamp("create_time"), rs.getInt("trial"));
 		return u;
 	}
 }

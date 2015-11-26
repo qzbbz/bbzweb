@@ -122,6 +122,21 @@
 			$('#taxCodeFile').val(data.taxCodeFile);
 		}
 	});
+	$.ajax({
+		url : '/checkCompanyPayTrialExpired',
+		type : 'POST',
+		async : false,
+		data : {},
+		success : function(data){
+			console.log(data);
+			if(data.data != ''){
+				BUI.use(['bui/overlay'], function(Overlay){
+					BUI.Message.Alert(data.data,'warning');
+				});
+				
+			}
+		}
+	});
 	BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 		var modifyPwdForm = new Overlay.Dialog({
             title:'密码修改',

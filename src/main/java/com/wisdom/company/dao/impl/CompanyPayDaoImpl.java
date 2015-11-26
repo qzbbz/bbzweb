@@ -107,9 +107,9 @@ public class CompanyPayDaoImpl implements ICompanyPayDao {
 	}
 
 	@Override
-	public boolean updateCompanyPayByCompanyId(Long companyId, Double amount, String orderNo, int serviceTime) {
-		String sql = "update company_pay set pay_amount=?, service_time=?, order_no=? where company_id=?";
-		int affectedRows = jdbcTemplate.update(sql, amount, serviceTime, orderNo, companyId);
+	public boolean updateCompanyPayByCompanyId(Long companyId, Integer payStatus, Double amount, String orderNo, int serviceTime) {
+		String sql = "update company_pay set pay_status=?, pay_amount=?, service_time=?, order_no=? where company_id=?";
+		int affectedRows = jdbcTemplate.update(sql, payStatus, amount, serviceTime, orderNo, companyId);
 		logger.debug("updateCompanyPay result : {}", affectedRows);
 		return affectedRows != 0;
 	}
@@ -133,5 +133,17 @@ public class CompanyPayDaoImpl implements ICompanyPayDao {
 			logger.debug("result is 0. exception : {}", e.toString());
 		}
 		return companyPay;
+	}
+
+	@Override
+	public boolean updateCompanyPayStatusToTrial(Long companyId) {
+		String sql = "update company_pay set trial = 1 where company_id =?";
+		try{
+			int affectedRows = jdbcTemplate.update(sql, companyId);
+			logger.debug("updateCompanyPay result : {}", affectedRows);
+			return affectedRows != 0;
+		}catch(Exception e){
+			return false;
+		}
 	}
 }
