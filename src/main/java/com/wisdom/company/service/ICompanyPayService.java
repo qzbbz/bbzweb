@@ -24,8 +24,11 @@ public interface ICompanyPayService {
 	
 	public boolean updateCompanyPayStatusAndTimeByOrderNo(String orderNo, int status, Timestamp time, String contractFile);
 	
-	public boolean updateCompanyPayByCompanyId(Long companyId, Double amount, String orderNo, int serviceTime);
+	public boolean updateCompanyPayByCompanyId(Long companyId, Integer payStatus, Double amount, String orderNo, int serviceTime);
 	
 	public boolean updateApplyInvoiceByCompanyId(Long companyId, int applyInvoice, String address);
 	
+	public boolean updateCompanyPayStatusToTrial(Long companyId);
+	
+	public List<CompanyPay> getExpiredCompanyPay();
 }

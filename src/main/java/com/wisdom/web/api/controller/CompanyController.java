@@ -152,13 +152,30 @@ public class CompanyController {
 		String alipayMonth = request.getParameter("alipayMonth");
 		String alipayAmount = request.getParameter("alipayAmount");
 		String userId = (String) request.getSession().getAttribute("userId");
+		String type = request.getParameter("type");
 		long companyId = userService.getCompanyIdByUserId(userId);
+		CompanyPay companyPay = companyPayService.getCompanyPayByCompanyId(companyId);
+		String resHtml = "";
+		if(companyPay.getTrial() == 1 && type.equals("trial")){
+			resHtml = "您已试用过本公司产品";
+			return resHtml;
+		}
+		companyService.updateCompanyAccounter(companyId, accounterUserId);
+		if (type.equals("trial") && companyPay.getTrial() == 0){
+			companyPayService.updateCompanyPayStatusToTrial(companyId);
+			Integer status = 2;
+			alipayMonth = "1";
+			alipayAmount = "99";
+			companyPayService.updateCompanyPayByCompanyId(companyId, 2, Double.valueOf(alipayAmount), "", Integer.valueOf(alipayMonth));
+			resHtml = "欢迎试用帮帮账，您将能够免费试用本产品一个月！";
+			return resHtml;
+		}
+		
 		CompanyDetail companyDetail = companyDetailService.getCompanyDetailByCompanyId(companyId);
 		if(companyDetail == null) {
 			return "";
 			
 		}
-		CompanyPay companyPay = companyPayService.getCompanyPayByCompanyId(companyId);
 		UUID uuid = UUID.randomUUID();
 		String orderNo = uuid.toString();
 		if(companyPay == null) {
@@ -170,11 +187,12 @@ public class CompanyController {
 			newPay.setCreateTime(new Timestamp(System.currentTimeMillis()));
 			companyPayService.addCompanyPay(newPay);
 		} else {
-			companyPayService.updateCompanyPayByCompanyId(companyId, Double.valueOf(alipayAmount), orderNo, Integer.valueOf(alipayMonth));
+			
+			companyPayService.updateCompanyPayByCompanyId(companyId, 0, Double.valueOf(alipayAmount), orderNo, Integer.valueOf(alipayMonth));
 		}
-		companyService.updateCompanyAccounter(companyId, accounterUserId);
+
 		AlipayService alipayService = new AlipayService();
-        String resHtml = alipayService.buildAlipayRequest(Double.valueOf(alipayAmount), orderNo);
+		resHtml = alipayService.buildAlipayRequest(Double.valueOf(alipayAmount), orderNo);
 		logger.info("leave selectOneAccounter");
 		return resHtml;
 	}
@@ -268,6 +286,7 @@ public class CompanyController {
 		return "redirect:/views/webviews/company/select_accounter.html";
 	}
 	
+	
 	@RequestMapping("/company/checkSelectAccounter")
 	@ResponseBody
 	public Map<String, String> checkSelectAccounter(HttpServletRequest request) {
@@ -291,9 +310,23 @@ public class CompanyController {
 				retMap.put("info", "您已选择了会计师："+accounterName+",您购买的服务时间为:"+String.valueOf(serviceTime)+"个月,您付款的时间为："+payTime+"。");
 				retMap.put("amount", String.valueOf(companyPay.getPayAmount()));
 				retMap.put("companyName", company.getName());
-			} else {
-				retMap.put("selected", "false");
+			}else{
+				//Check the trial
+				companyPay = companyPayService.getCompanyPayByCompanyIdAndPayStatus(companyId, 2);
+				if(companyPay != null) {
+					String accounterId = company.getAccounterId();
+					String accounterName = userService.getUserNameByUserId(accounterId);
+					int serviceTime = companyPay.getServiceTime();
+					String payTime = companyPay.getCreateTime().toString();
+					retMap.put("selected", "true");
+					retMap.put("info", "您已选择了会计师："+accounterName+",您的试用时间为1个月,您的试用开始时间为："+payTime+"。");
+					retMap.put("amount", String.valueOf(companyPay.getPayAmount()));
+					retMap.put("companyName", company.getName());
+				}else{
+					retMap.put("selected", "false");
+				}
 			}
+
 		} else {
 			retMap.put("selected", "false");
 			if(company == null) {
@@ -1360,6 +1393,27 @@ public class CompanyController {
 			retMap.put("income_tax_for_individuals_begin", format.format(sheetSalaryTax.getIncomeTaxForIndividualsBegin() == null ? 0 : sheetSalaryTax.getIncomeTaxForIndividualsBegin()));
 			retMap.put("tax_total_end", format.format(sheetSalaryTax.getTaxTotalEnd() == null ? 0 : sheetSalaryTax.getTaxTotalEnd()));
 			retMap.put("tax_total_begin", format.format(sheetSalaryTax.getTaxTotalBegin() == null ? 0 : sheetSalaryTax.getTaxTotalBegin()));
+		}
+		return retMap;
+	}
+	
+	@RequestMapping("/checkCompanyPayTrialExpired")
+	@ResponseBody
+	public Map<String, String> checkCompanyPayTrialExpired(HttpServletRequest request){
+		Map<String, String> retMap = new HashMap<>();
+		String userId = (String) request.getSession().getAttribute("userId");
+		long companyId = userService.getCompanyIdByUserId(userId);
+		CompanyPay companyPay = companyPayService.getCompanyPayByCompanyId(companyId);
+		if (companyPay.getTrial() == 1 && companyPay.getPayStatus() == 2){
+			Timestamp payTime = companyPay.getCreateTime();
+			Timestamp now = new Timestamp(System.currentTimeMillis());
+			if((now.getTime() - payTime.getTime()) >= (25 * 24 * 60 * 60)){
+				retMap.put("data", "您的试用期已少于五天！");
+			}else{
+				retMap.put("data", "");
+			}
+		}else{
+			retMap.put("data", "");
 		}
 		return retMap;
 	}
