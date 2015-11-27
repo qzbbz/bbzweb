@@ -1407,7 +1407,7 @@ public class CompanyController {
 		if (companyPay.getTrial() == 1 && companyPay.getPayStatus() == 2){
 			Timestamp payTime = companyPay.getCreateTime();
 			Timestamp now = new Timestamp(System.currentTimeMillis());
-			if((now.getTime() - payTime.getTime()) >= (1 * 24 * 60 * 60)){
+			if((now.getTime() - payTime.getTime()) >= (25 * 24 * 60 * 60)){
 				retMap.put("data", "您的试用期已少于五天！");
 			}else{
 				retMap.put("data", "");

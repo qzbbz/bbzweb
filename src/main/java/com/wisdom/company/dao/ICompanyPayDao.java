@@ -1,6 +1,7 @@
 package com.wisdom.company.dao;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import com.wisdom.common.model.CompanyPay;
 
@@ -27,5 +28,7 @@ public interface ICompanyPayDao {
 	public boolean updateApplyInvoiceByCompanyId(Long companyId, int applyInvoice, String address);
 	
 	public boolean updateCompanyPayStatusToTrial(Long companyId);
+	
+	public List<CompanyPay> getExpiredCompanyPay();
 	
 }

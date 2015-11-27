@@ -85,4 +85,10 @@ public class CompanyPayServiceImpl implements ICompanyPayService {
 		return companyPayDao.updateCompanyPayStatusToTrial(companyId);
 	}
 
+	@Override
+	public List<CompanyPay> getExpiredCompanyPay() {
+		// TODO Auto-generated method stub
+		return companyPayDao.getExpiredCompanyPay();
+	}
+
 }

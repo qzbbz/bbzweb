@@ -29,4 +29,6 @@ public interface ICompanyPayService {
 	public boolean updateApplyInvoiceByCompanyId(Long companyId, int applyInvoice, String address);
 	
 	public boolean updateCompanyPayStatusToTrial(Long companyId);
+	
+	public List<CompanyPay> getExpiredCompanyPay();
 }
