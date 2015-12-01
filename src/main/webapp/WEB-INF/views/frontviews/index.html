@@ -678,6 +678,7 @@ var _hmt = _hmt || [];
       <embed  height=480 width=640 src="../../img/webimg/qz.swf" style="margin-left: 5%;">
 
   </div>
+  <div id="bao" style="position:fixed; bottom:0px; right:0px; width:252px; height:252px; z-index:1000;"><a href="javascript:shut()" style="float:right; display:block; z-index:10000000;border:1px solid #40C5ED;" class="gb_all">关闭</a><a href="http://api.renrenbx.com/mobile/pcGeneraliInfo.html"><img src="style/image/donghua.gif"></a></div>
           <!--      <script type="text/javascript" src="../../js/webjs/main.page.utils.js"></script>
                 <script type="text/javascript" src="../../js/webjs/jquery-1.11.1.js"></script> 
                <script type="text/javascript" src="../../js/webjs/jquery-1.8.1.min.js"></script>-->
@@ -1043,7 +1044,9 @@ $("#mobile-signup-btn-bottom").click(function(){
         var t = $(".header-mobile-new");
         t.toggleClass("menu-open");
     });
-
+	$(".gb_all").click(function(event){
+		$("#bao").hide();
+	})
 </script>
 </body>
 </html>
