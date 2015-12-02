@@ -102,13 +102,14 @@
 				<label class="control-label">请选择时间：</label>
 				<div class="controls" style="margin-top:10px;">
 					<select id="alipay_time" name="alipay_time" style="width:200px;">
+						<option value="1">1个月</option>
 						<option value ="6">6个月</option>
 						<option value="12">12个月</option>
 					</select>
 				</div>
 		</div>
 		<div style="margin-top:10px;margin-bottom:10px;">
-			<h4>您总共需要支付人民币：<span id="alipay_sum" name="alipay_sum" style="color:red;">768</span>元，合同范文如下：</h4>
+			<h4>您总共需要支付人民币：<span id="alipay_sum" name="alipay_sum" style="color:red;">99</span>元，合同范文如下：</h4>
 		</div>
 		<div style="margin-top:10px;margin-bottom:10px;">
 			<a id="contract" class="media {width:800, height:200}" href="/img/webimg/contract.pdf" target="_blank"></a>
@@ -178,11 +179,13 @@
 		$.get('/recommend/isRecommended', function(data){
 			if(data['message'] == "yes"){
 				var time = $('#alipay_time option:selected').val();
+				if(time == '1') $('#alipay_sum').html('99');
 				if(time == '6') $('#alipay_sum').html('669');
 				if(time == '12') $('#alipay_sum').html('1089');
 				
 			}
 			else {
+				if(time == '1') $('#alipay_sum').html('99');
 				if(time == '6') $('#alipay_sum').html('768');
 				if(time == '12') $('#alipay_sum').html('1188');
 			}
@@ -193,11 +196,13 @@
 			$.get('/recommend/isRecommended', function(data){
 				console.log(data);
 				if(data['message'] == "yes"){
+					if(time == '1') $('#alipay_sum').html('99');
 					if(time == '6') $('#alipay_sum').html('669');
 					if(time == '12') $('#alipay_sum').html('1089');
 					
 				}
 				else {
+					if(time == '1') $('#alipay_sum').html('99');
 					if(time == '6') $('#alipay_sum').html('768');
 					if(time == '12') $('#alipay_sum').html('1188');
 				}
