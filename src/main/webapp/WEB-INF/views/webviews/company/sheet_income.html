@@ -106,7 +106,7 @@
 					</tr>
 					<tr class=xl74 height=26
 						style='mso-height-source: userset; height: 19.5pt'>
-						<td height=26 class=xl129 width=304
+						<td height=26 class=xl129 width=304  
 							style='height: 19.5pt; border-top: none; width: 228pt'><span
 							style='mso-spacerun: yes'>&nbsp;</span>一、营业收入<span
 							style='mso-spacerun: yes'>&nbsp;</span></td>
@@ -717,10 +717,13 @@
 	});
 	var form1;
 	var detailsInfoForm1; 
-	function getDetailData(project,type){
+	function getDetailData(project,type,title){
+		
 		var date = $("#table_date").val();
 		$('#fixedAssetsInfoData').html("");
+		detailsInfoForm1.set('title', title);
 		detailsInfoForm1.show();
+		
 		$.ajax({
 			url : '/company/getAllSheetIncomeDetail',
 			type : "POST",
@@ -754,6 +757,7 @@
 		})
 	}
 		BUI.use([ 'bui/imgview', 'bui/overlay', 'bui/form' ], function(Imgview, Overlay, Form) {
+			
 			$('#searchData').click(
 					function() {
 						var date = $('#table_date').val();
@@ -788,92 +792,92 @@
 				$('#company_controller').html(data.company_controller);
 				$('#finance_chief').html(data.finance_chief);
 				$('#tabulator').html(data.tabulator);
-				$('#operating_receipt_year').html("<a id='detailIncome_year' style='cursor:pointer' href='javascript:getDetailData(\"p1\",0) '> "+data.operating_receipt_year+"</a>");
-				$('#operating_receipt_month').html("<a id='detailIncome_month' style='cursor:pointer' href='javascript:getDetailData(\"p1\",1) '>"+data.operating_receipt_month+"</a>");
-				$('#cost_in_business_year').html("<a id='detailCost_year' style='cursor:pointer' href='javascript:getDetailData(\"p2\",0) '>"+data.cost_in_business_year+"</a>");
-				$('#cost_in_business_month').html("<a id='detailCost_month' style='cursor:pointer' href='javascript:getDetailData(\"p2\",1) '>"+data.cost_in_business_month+"</a>");
+				$('#operating_receipt_year').html("<a id='detailIncome_year' style='cursor:pointer' href='javascript:getDetailData(\"p1\",0,\"营业收入\") '> "+data.operating_receipt_year+"</a>");
+				$('#operating_receipt_month').html("<a id='detailIncome_month' style='cursor:pointer' href='javascript:getDetailData(\"p1\",1,\"营业收入\) '>"+data.operating_receipt_month+"</a>");
+				$('#cost_in_business_year').html("<a id='detailCost_year' style='cursor:pointer' href='javascript:getDetailData(\"p2\",0,\"营业成本\") '>"+data.cost_in_business_year+"</a>");
+				$('#cost_in_business_month').html("<a id='detailCost_month' style='cursor:pointer' href='javascript:getDetailData(\"p2\",1,\"营业成本\") '>"+data.cost_in_business_month+"</a>");
 				$('#business_tariff_and_annex_year').html(data.business_tariff_and_annex_year);
 				$('#business_tariff_and_annex_month').html(data.business_tariff_and_annex_month);
-				$('#excise_tax_year').html("<a id='detailsExciseTax_year' style='cursor:pointer' href='javascript:getDetailData(\"p4\",0) '>"+data.excise_tax_year+"</a>");
-				$('#excise_tax_month').html("<a id='detailsExciseTax_month' style='cursor:pointer' href='javascript:getDetailData(\"p4\",1) '>"+data.excise_tax_month+"</a>");
-				$('#sales_tax_year').html( "<a id='detailSalesTax_year' style='cursor:pointer' href='javascript:getDetailData(\"p4,p6,p7,p8,p9,p10 \",0) '>"+  data.sales_tax_year+"</a>");
-				$('#sales_tax_month').html("<a id='detailSalesTax_month' style='cursor:pointer' href='javascript:getDetailData(\"p4,p6,p7,p8,p9,p10 \",1) '>"+data.sales_tax_month+"</a>");
-				$('#urban_maintenance_and_construction_tax_year').html("<a id='detailsUrban_year' style='cursor:pointer' href='javascript:getDetailData(\"p6\",0) '>"+data.urban_maintenance_and_construction_tax_year+"</a>");
-				$('#urban_maintenance_and_construction_month').html("<a id='detailsUrban_month' style='cursor:pointer' href='javascript:getDetailData(\"p6\",1) '>"+data.urban_maintenance_and_construction_month+"</a>");
-				$('#resource_tax_year').html("<a id='detailsResourceTax_year' style='cursor:pointer' href='javascript:getDetailData(\"p7\",0) '>"+data.resource_tax_year+"</a>");
-				$('#resource_tax_month').html("<a id='detailsResourceTax_month' style='cursor:pointer' href='javascript:getDetailData(\"p7\",1) '>"+data.resource_tax_month+"</a>");
-				$('#land_value_increment_tax_year').html("<a id='detailsLandValueIncrementTax_year' style='cursor:pointer' href='javascript:getDetailData(\"p8\",0) '>"+data.land_value_increment_tax_year+"</a>");
-				$('#land_value_increment_tax_month').html("<a id='detailsLandValueIncrementTax_month' style='cursor:pointer' href='javascript:getDetailData(\"p8\",1) '>"+data.land_value_increment_tax_month+"</a>");
-				$('#land_house_tax_year').html("<a id='detailsLandHouseTax_year' style='cursor:pointer' href='javascript:getDetailData(\"p9\",0) '>"+data.land_house_tax_year+"</a>");
-				$('#land_house_tax_month').html("<a id='detailsLandHouseTax_month' style='cursor:pointer' href='javascript:getDetailData(\"p9\",1) '>"+data.land_house_tax_month+"</a>");
-				$('#education_year').html("<a id='detailsEducation_year' style='cursor:pointer' href='javascript:getDetailData(\"p10\",0) '>"+data.education_year+"</a>");
-				$('#education_month').html("<a id='detailsEducation_month' style='cursor:pointer' href='javascript:getDetailData(\"p10\",1) '>"+data.education_month+"</a>");
-				$('#sales_year').html("<a id='detailsSales_year' style='cursor:pointer' href='javascript:getDetailData(\"p12,p13\",0) '>"+data.sales_year+"</a>");
-				$('#sales_month').html("<a id='detailsSales_month' style='cursor:pointer'href='javascript:getDetailData(\"p12,p13\",1) '>"+data.sales_month+"</a>");
-				$('#maintenance_year').html("<a id='detailsMaintenance_year' style='cursor:pointer' href='javascript:getDetailData(\"p12\",0) '"+data.maintenance_year+"</a>");
-				$('#maintenance_month').html("<a id='detailsMaintenance_month' style='cursor:pointer' href='javascript:getDetailData(\"p12\",1) '>"+data.maintenance_month+"</a>");
-				$('#advertise_year').html("<a id='detailsAdvertise_year' style='cursor:pointer' href='javascript:getDetailData(\"p13\",0) '"+data.advertise_year+"</a>");
-				$('#advertise_month').html("<a id='detailsAdvertise_month' style='cursor:pointer' href='javascript:getDetailData(\"p13\",1) '>"+data.advertise_month+"</a>");
-				$('#manage_year').html("<a id='detailsManage_year' style='cursor:pointer' href='javascript:getDetailData(\"p15,p16,p17\",0) '>"+data.manage_year+"</a>");
-				$('#manage_month').html("<a id='detailsManage_month' style='cursor:pointer' href='javascript:getDetailData(\"p15,p16,p17\",1) '>"+data.manage_month+"</a>");
-				$('#establishment_charges_year').html("<a id='detailsEstablishment_year' style='cursor:pointer' href='javascript:getDetailData(\"p15\",0) '>"+data.establishment_charges_year+"</a>");
-				$('#establishment_charges_month').html("<a id='detailsEstablishment_month' style='cursor:pointer' href='javascript:getDetailData(\"p15\",1) '>"+data.establishment_charges_month+"</a>");
-				$('#business_entertainment_year').html("<a id='detailsInfoBusinessEntertainment_year' style='cursor:pointer'  href='javascript:getDetailData(\"p16\",0) '>"+data.business_entertainment_year+"</a>");
-				$('#business_entertainment_month').html("<a id='detailsInfoBusinessEntertainment_month' style='cursor:pointer'  href='javascript:getDetailData(\"p16\",1) '>"+data.business_entertainment_month+"</a>");
-				$('#research_year').html("<a id='detailsResearch_year' style='cursor:pointer'  href='javascript:getDetailData(\"p17\",0) '>"+data.research_year+"</a>");
-				$('#research_month').html("<a id='detailsResearch_month' style='cursor:pointer'  href='javascript:getDetailData(\"p17\",1) '>"+data.research_month+"</a>");
-				$('#finance_year').html("<a id='detailsFinance_year' style='cursor:pointer'  href='javascript:getDetailData(\"p19\",0) '>"+data.finance_year+"</a>");
-				$('#finance_month').html("<a id='detailsFinance_month' style='cursor:pointer'  href='javascript:getDetailData(\"p19\",1) '>"+data.finance_month+"</a>");
+				$('#excise_tax_year').html("<a id='detailsExciseTax_year' style='cursor:pointer' href='javascript:getDetailData(\"p4\",0,\"消费税\") '>"+data.excise_tax_year+"</a>");
+				$('#excise_tax_month').html("<a id='detailsExciseTax_month' style='cursor:pointer' href='javascript:getDetailData(\"p4\",1,\"消费税\") '>"+data.excise_tax_month+"</a>");
+				$('#sales_tax_year').html( "<a id='detailSalesTax_year' style='cursor:pointer' href='javascript:getDetailData(\"p4,p6,p7,p8,p9,p10 \",0,\"营业税金及附加\") '>"+  data.sales_tax_year+"</a>");
+				$('#sales_tax_month').html("<a id='detailSalesTax_month' style='cursor:pointer' href='javascript:getDetailData(\"p4,p6,p7,p8,p9,p10 \",1,\"营业税金及附加\") '>"+data.sales_tax_month+"</a>");
+				$('#urban_maintenance_and_construction_tax_year').html("<a id='detailsUrban_year' style='cursor:pointer' href='javascript:getDetailData(\"p6\",0,\"城市维护建设税\") '>"+data.urban_maintenance_and_construction_tax_year+"</a>");
+				$('#urban_maintenance_and_construction_month').html("<a id='detailsUrban_month' style='cursor:pointer' href='javascript:getDetailData(\"p6\",1,\"城市维护建设税\") '>"+data.urban_maintenance_and_construction_month+"</a>");
+				$('#resource_tax_year').html("<a id='detailsResourceTax_year' style='cursor:pointer' href='javascript:getDetailData(\"p7\",0,\"资源税\") '>"+data.resource_tax_year+"</a>");
+				$('#resource_tax_month').html("<a id='detailsResourceTax_month' style='cursor:pointer' href='javascript:getDetailData(\"p7\",1,\"资源税\") '>"+data.resource_tax_month+"</a>");
+				$('#land_value_increment_tax_year').html("<a id='detailsLandValueIncrementTax_year' style='cursor:pointer' href='javascript:getDetailData(\"p8\",0,\"土地增值税\") '>"+data.land_value_increment_tax_year+"</a>");
+				$('#land_value_increment_tax_month').html("<a id='detailsLandValueIncrementTax_month' style='cursor:pointer' href='javascript:getDetailData(\"p8\",1,\"土地增值税\") '>"+data.land_value_increment_tax_month+"</a>");
+				$('#land_house_tax_year').html("<a id='detailsLandHouseTax_year' style='cursor:pointer' href='javascript:getDetailData(\"p9\",0,\"城镇土地使用税、房产税、车船税、印花税\") '>"+data.land_house_tax_year+"</a>");
+				$('#land_house_tax_month').html("<a id='detailsLandHouseTax_month' style='cursor:pointer' href='javascript:getDetailData(\"p9\",1,\"城镇土地使用税、房产税、车船税、印花税\") '>"+data.land_house_tax_month+"</a>");
+				$('#education_year').html("<a id='detailsEducation_year' style='cursor:pointer' href='javascript:getDetailData(\"p10\",0,\"教育费附加、矿产资源补偿费、排污费\") '>"+data.education_year+"</a>");
+				$('#education_month').html("<a id='detailsEducation_month' style='cursor:pointer' href='javascript:getDetailData(\"p10\",1,\"教育费附加、矿产资源补偿费、排污费\") '>"+data.education_month+"</a>");
+				$('#sales_year').html("<a id='detailsSales_year' style='cursor:pointer' href='javascript:getDetailData(\"p12,p13\",0,\"销售费用\") '>"+data.sales_year+"</a>");
+				$('#sales_month').html("<a id='detailsSales_month' style='cursor:pointer'href='javascript:getDetailData(\"p12,p13\",1,\"销售费用\") '>"+data.sales_month+"</a>");
+				$('#maintenance_year').html("<a id='detailsMaintenance_year' style='cursor:pointer' href='javascript:getDetailData(\"p12\",0,\"商品维修费\") '"+data.maintenance_year+"</a>");
+				$('#maintenance_month').html("<a id='detailsMaintenance_month' style='cursor:pointer' href='javascript:getDetailData(\"p12\",1,\"商品维修费\") '>"+data.maintenance_month+"</a>");
+				$('#advertise_year').html("<a id='detailsAdvertise_year' style='cursor:pointer' href='javascript:getDetailData(\"p13\",0,\"广告费和业务宣传费\") '"+data.advertise_year+"</a>");
+				$('#advertise_month').html("<a id='detailsAdvertise_month' style='cursor:pointer' href='javascript:getDetailData(\"p13\",1,\"广告费和业务宣传费\") '>"+data.advertise_month+"</a>");
+				$('#manage_year').html("<a id='detailsManage_year' style='cursor:pointer' href='javascript:getDetailData(\"p15,p16,p17\",0,\"管理费用\") '>"+data.manage_year+"</a>");
+				$('#manage_month').html("<a id='detailsManage_month' style='cursor:pointer' href='javascript:getDetailData(\"p15,p16,p17\",1,\"管理费用\") '>"+data.manage_month+"</a>");
+				$('#establishment_charges_year').html("<a id='detailsEstablishment_year' style='cursor:pointer' href='javascript:getDetailData(\"p15\",0,\"开办费\") '>"+data.establishment_charges_year+"</a>");
+				$('#establishment_charges_month').html("<a id='detailsEstablishment_month' style='cursor:pointer' href='javascript:getDetailData(\"p15\",1,\"开办费\") '>"+data.establishment_charges_month+"</a>");
+				$('#business_entertainment_year').html("<a id='detailsInfoBusinessEntertainment_year' style='cursor:pointer'  href='javascript:getDetailData(\"p16\",0,\"业务招待费\") '>"+data.business_entertainment_year+"</a>");
+				$('#business_entertainment_month').html("<a id='detailsInfoBusinessEntertainment_month' style='cursor:pointer'  href='javascript:getDetailData(\"p16\",1,\"业务招待费\") '>"+data.business_entertainment_month+"</a>");
+				$('#research_year').html("<a id='detailsResearch_year' style='cursor:pointer'  href='javascript:getDetailData(\"p17\",0,\"研究费用\") '>"+data.research_year+"</a>");
+				$('#research_month').html("<a id='detailsResearch_month' style='cursor:pointer'  href='javascript:getDetailData(\"p17\",1,\"研究费用\") '>"+data.research_month+"</a>");
+				$('#finance_year').html("<a id='detailsFinance_year' style='cursor:pointer'  href='javascript:getDetailData(\"p19\",0,\"财务费用\") '>"+data.finance_year+"</a>");
+				$('#finance_month').html("<a id='detailsFinance_month' style='cursor:pointer'  href='javascript:getDetailData(\"p19\",1,\"财务费用\") '>"+data.finance_month+"</a>");
 				
-				$('#interest_year').html("<a id='detailsInterest_year' style='cursor:pointer'  href='javascript:getDetailData(\"p19\",0) '>"+data.interest_year+"</a>");
-				$('#interest_month').html("<a id='detailsInterest_month' style='cursor:pointer'  href='javascript:getDetailData(\"p19\",1) '>"+data.interest_month+"</a>");
+				$('#interest_year').html("<a id='detailsInterest_year' style='cursor:pointer'  href='javascript:getDetailData(\"p19\",0,\"利息费用\") '>"+data.interest_year+"</a>");
+				$('#interest_month').html("<a id='detailsInterest_month' style='cursor:pointer'  href='javascript:getDetailData(\"p19\",1,\"利息费用\") '>"+data.interest_month+"</a>");
 				
-				$('#equity_earnings_year').html("<a id='detailsEquityEarmimg_year' style='cursor:pointer'  href='javascript:getDetailData(\"p20\",0) '>"+data.equity_earnings_year+"</a>");
-				$('#equity_earnings_month').html("<a id='detailsEquityEarmimg_month' style='cursor:pointer'  href='javascript:getDetailData(\"p20\",1) '>"+data.equity_earnings_month+"</a>");
+				$('#equity_earnings_year').html("<a id='detailsEquityEarmimg_year' style='cursor:pointer'  href='javascript:getDetailData(\"p20\",0,\"投资收益\") '>"+data.equity_earnings_year+"</a>");
+				$('#equity_earnings_month').html("<a id='detailsEquityEarmimg_month' style='cursor:pointer'  href='javascript:getDetailData(\"p20\",1,\"投资收益\") '>"+data.equity_earnings_month+"</a>");
 				
-				$('#operating_profit_year').html("<a id='detailsOperatingProfit_year' style='cursor:pointer' href='javascript:getDetailData(\"p21\",0) '>"+data.operating_profit_year+"</a>");
-				$('#operating_profit_month').html("<a id='detailsOperatingProfit_month' style='cursor:pointer' href='javascript:getDetailData(\"p21\",1) '>"+data.operating_profit_month+"</a>");
+				$('#operating_profit_year').html("<a id='detailsOperatingProfit_year' style='cursor:pointer' href='javascript:getDetailData(\"p21\",0,\"营业利润\") '>"+data.operating_profit_year+"</a>");
+				$('#operating_profit_month').html("<a id='detailsOperatingProfit_month' style='cursor:pointer' href='javascript:getDetailData(\"p21\",1,\"营业利润\") '>"+data.operating_profit_month+"</a>");
 				
-				$('#nonbusiness_income_year').html("<a id='detailsNonbusinessIncome_year' style='cursor:pointer' href='javascript:getDetailData(\"p23\",0) '>"+data.nonbusiness_income_year+"</a>");
-				$('#nonbusiness_income_month').html("<a id='detailsNonbusinessIncome_month' style='cursor:pointer' href='javascript:getDetailData(\"p23\",1) '>"+data.nonbusiness_income_month+"</a>");
+				$('#nonbusiness_income_year').html("<a id='detailsNonbusinessIncome_year' style='cursor:pointer' href='javascript:getDetailData(\"p23\",0,\"营业外收入\") '>"+data.nonbusiness_income_year+"</a>");
+				$('#nonbusiness_income_month').html("<a id='detailsNonbusinessIncome_month' style='cursor:pointer' href='javascript:getDetailData(\"p23\",1,\"营业外收入\") '>"+data.nonbusiness_income_month+"</a>");
 				
-				$('#government_grants_year').html("<a id='detailsGovernment_year' style='cursor:pointer'  href='javascript:getDetailData(\"p23\",0) '>"+data.government_grants_year+"</a>");
-				$('#government_grants_month').html("<a id='detailsGovernment_month' style='cursor:pointer'  href='javascript:getDetailData(\"p23\",1) '>"+data.government_grants_month+"</a>");
+				$('#government_grants_year').html("<a id='detailsGovernment_year' style='cursor:pointer'  href='javascript:getDetailData(\"p23\",0,\"政府补助\") '>"+data.government_grants_year+"</a>");
+				$('#government_grants_month').html("<a id='detailsGovernment_month' style='cursor:pointer'  href='javascript:getDetailData(\"p23\",1,\"政府补助\") '>"+data.government_grants_month+"</a>");
 				
-				$('#non_business_expenditure_year').html("<a id='detailsNonBusinessExpenditure_year' style='cursor:pointer'  href='javascript:getDetailData(\"p25,p26,p27,p28,p29\",0) '>"+data.non_business_expenditure_year+"</a>");
-				$('#non_business_expenditure_month').html("<a id='detailsNonBusinessExpenditure_month' style='cursor:pointer'  href='javascript:getDetailData(\"p25,p26,p27,p28,p29\",1) '>"+data.non_business_expenditure_month+"</a>");
+				$('#non_business_expenditure_year').html("<a id='detailsNonBusinessExpenditure_year' style='cursor:pointer'  href='javascript:getDetailData(\"p25,p26,p27,p28,p29\",0,\"营业外支出\") '>"+data.non_business_expenditure_year+"</a>");
+				$('#non_business_expenditure_month').html("<a id='detailsNonBusinessExpenditure_month' style='cursor:pointer'  href='javascript:getDetailData(\"p25,p26,p27,p28,p29\",1,\"营业外支出\") '>"+data.non_business_expenditure_month+"</a>");
 				
-				$('#loss_on_bad_debt_year').html("<a id='detailsLossBad_year' style='cursor:pointer'  href='javascript:getDetailData(\"p25\",0) '>"+data.loss_on_bad_debt_year+"</a>");
-				$('#loss_on_bad_debt_month').html("<a id='detailsLossBad_month' style='cursor:pointer'  href='javascript:getDetailData(\"p25\",1) '>"+data.loss_on_bad_debt_month+"</a>");
+				$('#loss_on_bad_debt_year').html("<a id='detailsLossBad_year' style='cursor:pointer'  href='javascript:getDetailData(\"p25\",0,\"坏账损失\") '>"+data.loss_on_bad_debt_year+"</a>");
+				$('#loss_on_bad_debt_month').html("<a id='detailsLossBad_month' style='cursor:pointer'  href='javascript:getDetailData(\"p25\",1,\"坏账损失\") '>"+data.loss_on_bad_debt_month+"</a>");
 				
-				$('#loss_on_long_term_bonds_year').html("<a id='detailsLongTermBonds_year' style='cursor:pointer'  href='javascript:getDetailData(\"p26\",0) '>"+data.loss_on_long_term_bonds_year+"</a>");
-				$('#loss_on_long_term_bonds_month').html("<a id='detailsLongTermBonds_month' style='cursor:pointer'  href='javascript:getDetailData(\"p26\",1) '>"+data.loss_on_long_term_bonds_month+"</a>");
+				$('#loss_on_long_term_bonds_year').html("<a id='detailsLongTermBonds_year' style='cursor:pointer'  href='javascript:getDetailData(\"p26\",0,\"无法收回的长期债券投资损失\") '>"+data.loss_on_long_term_bonds_year+"</a>");
+				$('#loss_on_long_term_bonds_month').html("<a id='detailsLongTermBonds_month' style='cursor:pointer'  href='javascript:getDetailData(\"p26\",1,\"无法收回的长期债券投资损失\") '>"+data.loss_on_long_term_bonds_month+"</a>");
 			//------------------------------------------------
 			
 			
-				$('#loss_on_long_term_stock_year').html("<a id='detailsLongTermStock_year' style='cursor:pointer'  href='javascript:getDetailData(\"p27\",0) '>"+data.loss_on_long_term_stock_year+"</a>");
-				$('#loss_on_long_term_stock_month').html("<a id='detailsLongTermStock_month' style='cursor:pointer'  href='javascript:getDetailData(\"p27\",1) '>"+data.loss_on_long_term_stock_month+"</a>");
+				$('#loss_on_long_term_stock_year').html("<a id='detailsLongTermStock_year' style='cursor:pointer'  href='javascript:getDetailData(\"p27\",0,\"无法收回的长期股权投资损失\") '>"+data.loss_on_long_term_stock_year+"</a>");
+				$('#loss_on_long_term_stock_month').html("<a id='detailsLongTermStock_month' style='cursor:pointer'  href='javascript:getDetailData(\"p27\",1,\"无法收回的长期股权投资损失\") '>"+data.loss_on_long_term_stock_month+"</a>");
 				
-				$('#loss_on_long_term_natural_calamities_year').html("<a id='detailsNaturalCalamities_year' style='cursor:pointer'  href='javascript:getDetailData(\"p28\",0) '>"+data.loss_on_long_term_natural_calamities_year+"</a>");
-				$('#loss_on_long_term_natural_calamities_month').html("<a id='detailsNaturalCalamities_month' style='cursor:pointer'  href='javascript:getDetailData(\"p28\",1) '>"+data.loss_on_long_term_natural_calamities_month+"</a>");
+				$('#loss_on_long_term_natural_calamities_year').html("<a id='detailsNaturalCalamities_year' style='cursor:pointer'  href='javascript:getDetailData(\"p28\",0,\"自然灾害等不可抗力因素造成的损失\") '>"+data.loss_on_long_term_natural_calamities_year+"</a>");
+				$('#loss_on_long_term_natural_calamities_month').html("<a id='detailsNaturalCalamities_month' style='cursor:pointer'  href='javascript:getDetailData(\"p28\",1,\"自然灾害等不可抗力因素造成的损失\") '>"+data.loss_on_long_term_natural_calamities_month+"</a>");
 				
-				$('#tax_delay_charge_year').html("<a id='detailsTaxDelayCharge_year' style='cursor:pointer'  href='javascript:getDetailData(\"p29\",0) '>"+data.tax_delay_charge_year+"</a>");
-				$('#tax_delay_charge_month').html("<a id='detailsTaxDelayCharge_month' style='cursor:pointer'  href='javascript:getDetailData(\"p29\",1) '>"+data.tax_delay_charge_month+"</a>");
+				$('#tax_delay_charge_year').html("<a id='detailsTaxDelayCharge_year' style='cursor:pointer'  href='javascript:getDetailData(\"p29\",0,\"税收滞纳金\") '>"+data.tax_delay_charge_year+"</a>");
+				$('#tax_delay_charge_month').html("<a id='detailsTaxDelayCharge_month' style='cursor:pointer'  href='javascript:getDetailData(\"p29\",1,\"税收滞纳金\") '>"+data.tax_delay_charge_month+"</a>");
 				
-				$('#total_profit_year').html("<a id='detailsTotalProfit_year' style='cursor:pointer' href='javascript:getDetailData(\"p30\",0) '>"+data.total_profit_year+"</a>");
-				$('#total_profit_month').html("<a id='detailsTotalProfit_month' style='cursor:pointer' href='javascript:getDetailData(\"p30\",1) '>"+data.total_profit_month+"</a>");
+				$('#total_profit_year').html("<a id='detailsTotalProfit_year' style='cursor:pointer' href='javascript:getDetailData(\"p30\",0,\"利润总额\") '>"+data.total_profit_year+"</a>");
+				$('#total_profit_month').html("<a id='detailsTotalProfit_month' style='cursor:pointer' href='javascript:getDetailData(\"p30\",1,\"利润总额\") '>"+data.total_profit_month+"</a>");
 				
-				$('#income_tax_expense_year').html("<a id='detailsIncomeTaxExpense_year' style='cursor:pointer'  href='javascript:getDetailData(\"p31\",0) '>"+data.income_tax_expense_year);
-				$('#income_tax_expense_month').html("<a id='detailsIncomeTaxExpense_month' style='cursor:pointer'  href='javascript:getDetailData(\"p31\",1) '>"+data.income_tax_expense_month);
+				$('#income_tax_expense_year').html("<a id='detailsIncomeTaxExpense_year' style='cursor:pointer'  href='javascript:getDetailData(\"p31\",0,\"所得税费用\") '>"+data.income_tax_expense_year);
+				$('#income_tax_expense_month').html("<a id='detailsIncomeTaxExpense_month' style='cursor:pointer'  href='javascript:getDetailData(\"p31\",1,\"所得税费用\") '>"+data.income_tax_expense_month);
 				
-				$('#net_margin_year').html("<a id='detailsNetMargin_year' style='cursor:pointer' href='javascript:getDetailData(\"p32\",0)'>"+data.net_margin_year+"</a>");
-				$('#net_margin_month').html("<a   id='detailsNetMargin_month' style='cursor:pointer' href='javascript:getDetailData(\"p32\",1)'>"+data.net_margin_month+"</a>");
+				$('#net_margin_year').html("<a id='detailsNetMargin_year' style='cursor:pointer' href='javascript:getDetailData(\"p32\",0,\"净利润\")'>"+data.net_margin_year+"</a>");
+				$('#net_margin_month').html("<a   id='detailsNetMargin_month' style='cursor:pointer' href='javascript:getDetailData(\"p32\",1,\"净利润\")'>"+data.net_margin_month+"</a>");
 			}
 			form1 = new Form.HForm({
 		        srcNode : '#form1'
 		      }).render();
 		detailsInfoForm1 = new Overlay.Dialog({
-			title : '营业收入详情',
+			title : '收入详情页 ',
 			width : 1200,
 			height : 600,
 			contentId : 'detailsInfoFrom1',
