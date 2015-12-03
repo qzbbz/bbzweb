@@ -613,18 +613,18 @@
 	</div>
 	<div id="detailsInfoFrom1" style="display: none;" >
 	<form id='form1'>
-		<table class="table center">
+		<table class="table center" style="table-layout: fixed;">
 	    		<colgroup>
-	    			<col style="width:6%;">
+	    			<col style="width:12%;">
 	    			<col style="width:7%;">
 	    			<col style="width:10%;">
 	    			<col style="width:9%;">
-	    			<col style="width:18%;">
-	    			<col style="width:10%;">
-	    			<col style="width:10%;">
-	    			<col style="width:10%;">
+	    			<col style="width:16%;">
+	    			<col style="width:9%;">
+	    			<col style="width:9%;">
+	    			<col style="width:9%;">
 	    			<col style="width:8%;">
-	    			<col style="width:10%;">
+	    			<col style="width:9%;">
 	    			<col style="width:9%;">
 	    		</colgroup>
 	    		<thead class="thead-bg">
@@ -739,9 +739,9 @@
 				} else {
 					var dataList="";
 					for(var index in data){
-						dataList=dataList+"<tr><td>"	+data[index].dateTime+"</td><td>"	+data[index].voucherType+"</td><td>"	+data[index].voucherNo+"</td><td>"	+data[index].attachmentNums
-						+"</td><td>"	+data[index].abstracts+"</td><td>"+data[index].subject+"</td><td>"	+data[index].borrower+"</td><td>"	+data[index].lender
-						+"</td><td>"	+data[index].touching+"</td><td>"	+data[index].pchk+"</td><td>"	+data[index].customer
+						dataList=dataList+"<tr><td style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;' title='"+data[index].dateTime+"'>"	+data[index].dateTime+"</td><td style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;' title='"+data[index].voucherType+"'>"	+data[index].voucherType+"</td><td style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;' title='"+data[index].voucherNo+"'>"	+data[index].voucherNo+"</td><td style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;' title='"+data[index].attachmentNums+"'>"	+data[index].attachmentNums
+						+"</td><td style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;' title='"+data[index].abstracts+"'>"	+data[index].abstracts+"</td><td style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;' title='"+data[index].subject+"'>"+data[index].subject+"</td><td style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;' title='"+data[index].borrower+"'>"	+data[index].borrower+"</td><td style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;' title='"+data[index].lender+"'>"	+data[index].lender
+						+"</td><td style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;' title='"+data[index].touching+"'>"	+data[index].touching+"</td><td style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;' title='"+data[index].pchk+"'>"	+data[index].pchk+"</td><td style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;' title='"+data[index].customer+"'>"	+data[index].customer
 								+"</td></tr>"
 						
 					}
