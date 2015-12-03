@@ -156,12 +156,12 @@ public class CompanyController {
 		long companyId = userService.getCompanyIdByUserId(userId);
 		CompanyPay companyPay = companyPayService.getCompanyPayByCompanyId(companyId);
 		String resHtml = "";
-		if(companyPay.getTrial() == 1 && type.equals("trial")){
+		if(companyPay != null &&(companyPay.getTrial() == 1 && type.equals("trial"))){
 			resHtml = "您已试用过本公司产品";
 			return resHtml;
 		}
 		companyService.updateCompanyAccounter(companyId, accounterUserId);
-		if (type.equals("trial") && companyPay.getTrial() == 0){
+		if (companyPay != null && (type.equals("trial") && companyPay.getTrial() == 0)){
 			companyPayService.updateCompanyPayStatusToTrial(companyId);
 			Integer status = 2;
 			alipayMonth = "1";
