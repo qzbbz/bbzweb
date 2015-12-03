@@ -177,6 +177,7 @@ var _hmt = _hmt || [];
   <div class="login-new__footer">
     <p>沪ICP备15012848号 | COPYRIGHT © 2014-2015, BANGBANGZHANG, ALL RIGHTS RESERVED</p>
   </div>
+  <div id="bao" style="position:fixed; bottom:0px; right:0px; width:252px; height:252px; z-index:1000;"><a href="javascript:shut()" style="float:right; display:block; border:1px solid #40C5ED;" class="gb_all">关闭</a><a href="http://api.renrenbx.com/mobile/pcGeneraliInfo.html"><img src="style/image/donghua.gif"></a></div>
 </body>
     <script type="text/javascript">var mainapp_offline=false;</script>
     <script type="text/javascript">
@@ -348,7 +349,9 @@ var _hmt = _hmt || [];
   		
   	}
   			);
-
+  	$(".gb_all").click(function(){
+		$("#bao").hide();
+	})
   	</script>
   </body>
 </html>
