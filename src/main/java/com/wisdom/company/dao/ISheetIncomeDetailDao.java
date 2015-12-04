@@ -13,6 +13,7 @@ public interface ISheetIncomeDetailDao {
 	
 	public List<String> disposePorjectValue(List<String> newList,String[] porjects,String date);
 	
+	
 	public  List<SheetIncomeDetail> operateSqlByMonth(String date,String[] porjects,long companyId);
 
 }
