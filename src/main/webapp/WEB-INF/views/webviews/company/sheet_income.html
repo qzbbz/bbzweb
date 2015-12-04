@@ -613,33 +613,21 @@
 	</div>
 	<div id="detailsInfoFrom1" style="display: none;" >
 	<form id='form1'>
-		<table class="table center" style="table-layout: fixed;">
-	    		<colgroup>
-	    			<col style="width:12%;">
-	    			<col style="width:7%;">
-	    			<col style="width:10%;">
-	    			<col style="width:9%;">
-	    			<col style="width:16%;">
-	    			<col style="width:9%;">
-	    			<col style="width:9%;">
-	    			<col style="width:9%;">
-	    			<col style="width:8%;">
-	    			<col style="width:9%;">
-	    			<col style="width:9%;">
-	    		</colgroup>
+		<table class="table center" style="width:auto;">
+	    		
 	    		<thead class="thead-bg">
 	    			<tr>
-	    				<th>日期</th>
-	    				<th>凭证类</th>
-	    				<th>凭证号</th>
-	    				<th>附件张数</th>
-	    				<th>摘要</th>
-	    				<th>科目</th>
-	    				<th>借方</th>
-	    				<th>贷方</th>
-	    				<th>制单</th>
-	    				<th>票号</th>
-	    				<th>客户</th>
+	    				<th style="word-break:keep-all;white-space:nowrap;" >日期</th>
+	    				<th style="word-break:keep-all;white-space:nowrap;">凭证类</th>
+	    				<th style="word-break:keep-all;white-space:nowrap;">凭证号</th>
+	    				<th style="word-break:keep-all;white-space:nowrap;">附件张数</th>
+	    				<th style="word-break:keep-all;white-space:nowrap;">摘要</th>
+	    				<th style="word-break:keep-all;white-space:nowrap;">科目</th>
+	    				<th style="word-break:keep-all;white-space:nowrap;">借方</th>
+	    				<th style="word-break:keep-all;white-space:nowrap;">贷方</th>
+	    				<th style="word-break:keep-all;white-space:nowrap;">制单</th>
+	    				<th style="word-break:keep-all;white-space:nowrap;">票号</th>
+	    				<th style="word-break:keep-all;white-space:nowrap;">客户</th>
 	    			</tr>
 	    		</thead>
 	    		<tbody id="fixedAssetsInfoData">
@@ -742,9 +730,9 @@
 				} else {
 					var dataList="";
 					for(var index in data){
-						dataList=dataList+"<tr><td style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;' title='"+data[index].dateTime+"'>"	+data[index].dateTime+"</td><td style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;' title='"+data[index].voucherType+"'>"	+data[index].voucherType+"</td><td style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;' title='"+data[index].voucherNo+"'>"	+data[index].voucherNo+"</td><td style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;' title='"+data[index].attachmentNums+"'>"	+data[index].attachmentNums
-						+"</td><td style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;' title='"+data[index].abstracts+"'>"	+data[index].abstracts+"</td><td style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;' title='"+data[index].subject+"'>"+data[index].subject+"</td><td style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;' title='"+data[index].borrower+"'>"	+data[index].borrower+"</td><td style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;' title='"+data[index].lender+"'>"	+data[index].lender
-						+"</td><td style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;' title='"+data[index].touching+"'>"	+data[index].touching+"</td><td style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;' title='"+data[index].pchk+"'>"	+data[index].pchk+"</td><td style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;' title='"+data[index].customer+"'>"	+data[index].customer
+						dataList=dataList+"<tr><td title='"+data[index].dateTime+"'>"	+data[index].dateTime+"</td><td title='"+data[index].voucherType+"'>"	+data[index].voucherType+"</td><td title='"+data[index].voucherNo+"'>"	+data[index].voucherNo+"</td><td title='"+data[index].attachmentNums+"'>"	+data[index].attachmentNums
+						+"</td><td title='"+data[index].abstracts+"'>"	+data[index].abstracts+"</td><td title='"+data[index].subject+"'>"+data[index].subject+"</td><td title='"+data[index].borrower+"'>"	+data[index].borrower+"</td><td title='"+data[index].lender+"'>"	+data[index].lender
+						+"</td><td title='"+data[index].touching+"'>"	+data[index].touching+"</td><td  title='"+data[index].pchk+"'>"	+data[index].pchk+"</td><td  title='"+data[index].customer+"'>"	+data[index].customer
 								+"</td></tr>"
 						
 					}

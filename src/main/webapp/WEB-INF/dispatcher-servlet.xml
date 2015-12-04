@@ -91,7 +91,7 @@ class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer
 	<mvc:resources mapping="/views/webviews/companyUser/**" location="/WEB-INF/views/webviews/companyUser/" cache-period="3600" />
 	<mvc:resources mapping="/views/frontviews/**" location="/WEB-INF/views/frontviews/" cache-period="3600" />
 	<mvc:resources mapping="/views/webviews/error/**" location="/WEB-INF/views/webviews/error/" cache-period="3600" />
-	<mvc:resources mapping="/**" location="/WEB-INF/" cache-period="3600" />
+	
 	
 	<mvc:resources mapping="/files/company/**" location="file:/home/files/company/"/>
 	<mvc:resources mapping="/files/image/**" location="file:/home/files/image/"/>
@@ -196,5 +196,4 @@ class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer
 	
 	<!-- import resources -->
 	<import resource="classpath:spring-config-message.xml"/>
-
 </beans>
