@@ -26,7 +26,7 @@ public class SheetIncomeDetailDaoImpl implements ISheetIncomeDetailDao {
 		List<String> list=new ArrayList<String>();
 		List<SheetIncomeDetail> listSheetIncome=new ArrayList<SheetIncomeDetail>();
 		StringBuilder conditionString=disposePorjectCondition(porjects);
-		conditionString.append(" AND ?<=date_time<=?");
+		conditionString.append(" AND ?<=date_time and date_time<=?");
 		conditionString.append(" AND company_id="+companyId);
 		list=disposePorjectValue(list,porjects,date);
 		String sql = "select * from sheet_income_detail where "+conditionString;
@@ -70,8 +70,8 @@ public class SheetIncomeDetailDaoImpl implements ISheetIncomeDetailDao {
 	@Override
 	public List<String> disposePorjectValue(List<String> newList,String[] porjects,String date) {
 			int num=date.indexOf("-");
-			newList.add(date.substring(0,num)+"-"+"01");
-			newList.add(date);
+			newList.add(date.substring(0,num)+"-01-01");
+			newList.add(date + "-31");
 		return newList;
 	}
 	
