@@ -186,7 +186,7 @@
 					BUI.Message.Alert('工资单日期不能为空，请检查！','warning');
 				});
 			} else {
-				$('#salaryUpload').submit();
+				//$('#salaryUpload').submit();
 				var files = $("#salaryFile");
 				var date = $("#salary_date").val();
 				BUI.use([ 'bui/mask' ], function(Mask) {
@@ -223,16 +223,15 @@
 						});
 
 			        },  
-			        success : function(json) {  
-			            if (json.resultFlag==false){  
-			                alert(json.resultMessage);  
-			            }else{  
-  
-			                BUI.Message.Alert("文件上传成功","info");
-			                var next = $("#fileUpLoad").html();  
-			                $("#fileUpLoad").html("<div id='"+guid+"'>"+"文件:"+fileName+"   <a href='#' onclick='com.company.project.services.newCase.filedelete("+"\""+guid+"\""+","+"\""+fileName+"\""+")'>删除</a>"+"<br/></div>");  
-			                $("#fileUpLoad").append(next);  
-			            }  
+			        success : function(json) {
+			            BUI.Message.Alert("文件上传成功","info");
+			            $("#salaryFile").val("");
+		                $("#fileInfo").html("");
+		        		$("#salaryFile").attr('onChange', $.browser.msie ? "$(this).data('onChange').apply(this)" : "")
+		        		.change( function(){if(!$.browser.msie)$(this).data('onChange').apply(this)} )
+		        		.data('onChange',function(){
+		        			$("#fileInfo").html($("#salaryFile").val());
+		        		});
 			            BUI.use([ 'bui/mask' ], function(Mask) {
 
 							var loadMask = new Mask.LoadMask({

@@ -164,6 +164,7 @@ public class CompanyBillApiImpl implements ICompanyBillApi {
 			Map<String, String> extraParams = new HashMap<>();
 			extraParams.put("company_name", companyName);
 			List<CompanyBill> list = companyBillService.getAllCompanyBill(companyId);
+			if(list == null || list.size() == 0) continue;
 			resultList.addAll(createCompanyBillList(list, extraParams));
 		}
 		return resultList;
