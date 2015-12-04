@@ -109,13 +109,21 @@
 				</div>
 		</div>
 		<div style="margin-top:10px;margin-bottom:10px;">
-			<h4>您总共需要支付人民币：<span id="alipay_sum" name="alipay_sum" style="color:red;">99</span>元，合同范文如下：</h4>
+			<h4>您总共需要支付人民币：<span id="alipay_sum" name="alipay_sum" style="color:red;">99</span>元，合同范文如下：<span style="color:red;">(注意：默认您已经同意我们的合同范文)</span></h4>
 		</div>
 		<div style="margin-top:10px;margin-bottom:10px;">
 			<a id="contract" class="media {width:800, height:200}" href="/img/webimg/contract.pdf" target="_blank"></a>
 		</div>
 		<div>
-			<h4><span style="color:red;">默认您已经同意我们的合同范文</span></h4>		
+			<h4>您也可以选择给我们汇款，汇款信息如下：</h4>
+			<div style="height:20px;line-height:20px;">
+				<img src="/img/webimg/jiansheyinhang.gif" style="float:left;">
+				<div style="float:left;height:20px;">
+					<strong>银行账户：</strong>31001669701052514387
+					<strong>开户名：</strong>上海元升财务咨询有限公司
+					<strong>开户行：</strong>上海市建行国定路支行
+				</div>
+			</div>
 		</div>
 		<div class="control-group control-btn">
 				<div class="layer-wrap-footer1">
@@ -168,7 +176,7 @@
 		var alipayForm = new Overlay.Dialog({
             title:'支付页面',
             width:820,
-            height:500,
+            height:520,
             contentId:'alipayForm',
             success:function () {
               	this.close();
