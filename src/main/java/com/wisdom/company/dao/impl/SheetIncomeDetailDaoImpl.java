@@ -64,20 +64,14 @@ public class SheetIncomeDetailDaoImpl implements ISheetIncomeDetailDao {
 	@Override
 	public StringBuilder disposePorjectCondition(String[] porjects) {
 		StringBuilder projectString=new StringBuilder();
-		for(int i=0;i<porjects.length;i++){
-			if(i==0){
-				projectString.append("project = ?");
-			}else{
-				projectString.append(" or project = ?");
-			}
-		}
+		projectString.append("project LIKE \""+porjects[0]+"%\"");
 		return projectString;
 	}
 	@Override
 	public List<String> disposePorjectValue(List<String> newList,String[] porjects,String date) {
-		for(int i=0;i<porjects.length;i++){
-			newList.add(porjects[i]);
-		}
+//		for(int i=0;i<porjects.length;i++){
+//			newList.add(porjects[i]);
+//		}
 			int num=date.indexOf("-");
 			newList.add(date.substring(0,num)+"-"+"01");
 			newList.add(date);
