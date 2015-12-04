@@ -435,7 +435,8 @@ public class CompanyController {
 	}
 	
 	@RequestMapping("/company/uploadSalary")
-	public String uploadSalary(@RequestParam("salaryFile") MultipartFile file, HttpServletRequest request) throws ParseException {
+	@ResponseBody
+	public Map<String, String> uploadSalary(@RequestParam("salaryFile") MultipartFile file, HttpServletRequest request) throws ParseException {
 		logger.debug("get upload request");
 		String date=request.getParameter("salary_date");
 		
@@ -443,7 +444,9 @@ public class CompanyController {
 		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/files/company");
 		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
 		companyApi.uploadCompanySalary(userId, realPath, file,date);
-		return "redirect:/views/webviews/company/salary_welfare_upload.html";
+		Map<String, String> retMap = new HashMap<>();
+		retMap.put("url", "url");
+		return retMap;
 	}
 	
 	/*@RequestMapping("/company/uploadBankSta")
@@ -461,7 +464,7 @@ public class CompanyController {
 	
 	@RequestMapping("/company/uploadBankSta")
 	@ResponseBody
-	public String uploadBankSta(DefaultMultipartHttpServletRequest multipartRequest,
+	public Map<String, String> uploadBankSta(DefaultMultipartHttpServletRequest multipartRequest,
 			HttpServletRequest request) {
 		logger.debug("===>uploadBankSta");
 		String userId = (String) request.getSession().getAttribute("userId");
@@ -481,12 +484,14 @@ public class CompanyController {
 				companyApi.uploadCompanyBankSta(multifile, params);
 			}
 		}
-		return new HashMap<String, String>().put("url", "");
+		Map<String, String> retMap = new HashMap<String, String>();
+		retMap.put("url", "url");
+		return retMap;
 	}
 	
 	@RequestMapping("/company/uploadCompanySales")
 	@ResponseBody
-	public String uploadCompanySales(DefaultMultipartHttpServletRequest multipartRequest,
+	public Map<String, String> uploadCompanySales(DefaultMultipartHttpServletRequest multipartRequest,
 			HttpServletRequest request) {
 		logger.debug("===>uploadBankSta");
 		String userId = (String) request.getSession().getAttribute("userId");
@@ -505,7 +510,9 @@ public class CompanyController {
 				companyApi.uploadCompanySales(multifile, params);
 			}
 		}
-		return new HashMap<String, String>().put("url", "");
+		Map<String, String> retMap = new HashMap<String, String>();
+		retMap.put("url", "url");
+		return retMap;
 	}
 	
 	@RequestMapping("/company/deleteCompanyBankSta")
