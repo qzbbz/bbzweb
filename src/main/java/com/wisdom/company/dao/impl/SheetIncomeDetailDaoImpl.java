@@ -48,7 +48,7 @@ public class SheetIncomeDetailDaoImpl implements ISheetIncomeDetailDao {
 		StringBuilder conditionString=disposePorjectCondition(porjects);
 		conditionString.append(" AND date_time LIKE ?");
 		conditionString.append(" AND company_id="+companyId);
-		list=disposePorjectValue(list,porjects,date);
+		list=disposePorjectValueByMonth(list,porjects,date);
 		Object strings[]=new Object[list.size()];
 		for(int i=0,j=list.size();i<j;i++){
 		strings[i]=list.get(i);
@@ -72,6 +72,11 @@ public class SheetIncomeDetailDaoImpl implements ISheetIncomeDetailDao {
 			int num=date.indexOf("-");
 			newList.add(date.substring(0,num)+"-01-01");
 			newList.add(date + "-31");
+		return newList;
+	}
+	@Override
+	public List<String> disposePorjectValueByMonth(List<String> newList, String[] porjects, String date) {
+		newList.add(date+"%");
 		return newList;
 	}
 	
