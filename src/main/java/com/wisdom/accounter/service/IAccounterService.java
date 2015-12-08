@@ -11,6 +11,8 @@ import com.wisdom.common.model.Accounter;
 
 public interface IAccounterService {
 
+	public List<Accounter> getAllAccounterList();
+	
 	public Map<Long, String> getAllAccounterCareer();
 	
 	public Map<Long, String> getAllAccounterCertificate();

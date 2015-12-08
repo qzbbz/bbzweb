@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.wisdom.accounter.service.IAccounterService;
+import com.wisdom.common.model.Accounter;
 import com.wisdom.common.model.Company;
 import com.wisdom.common.model.CompanyDetail;
 import com.wisdom.common.model.SalarySocialSecurity;
@@ -298,4 +300,78 @@ public class AdminController {
 		}
 		return re;
 	}
+	// get company Info by company_id and user_type
+	@RequestMapping("/admin/getCompanyAndAccounter")
+	@ResponseBody
+	public List<Company> getCompanyAndAccounter(HttpServletRequest request) {
+			List <Company> companyList = new ArrayList<>();
+			try{
+				companyList = companyService.getCompanyAndAccounter();
+				for(int i = 0;i < companyList.size();i ++){
+					System.out.println(companyList.get(i).getAccounterId());
+					if(companyList.get(i).getAccounterId()==null){
+						companyList.get(i).setAccounterId("");;
+					}
+				}
+			}catch(Exception e){
+				logger.debug("getCompanyAndAccounter exception : {}", e.toString());
+			}
+		
+		return companyList;
+	}
+	// get company Info by company_id and user_type
+		@RequestMapping("/admin/getAccounterIdInfo")
+		@ResponseBody
+		public List<Accounter> getAccounterIdInfo(HttpServletRequest request) {
+			List<Accounter> accounterList = new ArrayList<>();
+			try{
+				accounterList =accounterService.getAllAccounterList();
+			}catch(Exception e){
+				logger.debug("getAccounterIdInfo exception : {}", e.toString());
+			}
+			
+			return accounterList;
+		}
+		
+		// update company with accounter_id by company_id and user_type 
+				@RequestMapping("/admin/updatCompanyAccounterIdInfo")
+				@ResponseBody
+				public Map<String, String> updatCompanyAccounterIdInfo(HttpServletRequest request) {
+					Map<String, String> retMap = new HashMap<>();
+					boolean updateBoolean = false;
+					try{
+						String companyId=request.getParameter("globalCompanyId");
+						String accounterId=request.getParameter("selectValue");
+						updateBoolean = companyService.updateAccounterForCompany(Long.parseLong(companyId), accounterId);
+					}catch(Exception e){
+						logger.debug("getAccounterIdInfo exception : {}", e.toString());
+					}
+					if(updateBoolean) {
+						retMap.put("error_code", "0");
+					} else {
+						retMap.put("error_code", "1");
+						retMap.put("error_message", "更新accounterId失败！");
+					}
+					return retMap;
+				}	
+				
+				// get company by name
+				@RequestMapping("/admin/getCompanyInfoByName")
+				@ResponseBody
+				public List<Company> getCompanyInfoByName(HttpServletRequest request) {
+					List<Company>companyList = new ArrayList<>();
+					try{
+						String companyName=request.getParameter("company_name");
+						companyList = companyService.getCompanyByName(companyName);
+						for(int i = 0;i < companyList.size();i ++){
+							System.out.println(companyList.get(i).getAccounterId());
+							if(companyList.get(i).getAccounterId()==null){
+								companyList.get(i).setAccounterId("");;
+							}
+						}
+					}catch(Exception e){
+						logger.debug("getAccounterIdInfo exception : {}", e.toString());
+					}
+					return companyList;
+				}	
 }
