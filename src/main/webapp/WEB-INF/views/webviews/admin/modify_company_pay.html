@@ -8,7 +8,7 @@
 	<link rel="stylesheet" type="text/css" href="/css/webcss/layout.css">
 </head>
 <body>
-	<div class="wrap">
+	<div class="wrap" id="mask">
 		<div class="side-bar">
 			<div class="side-bar-top">
 				<img src="/img/webimg/bss-logo.png" >
@@ -23,7 +23,7 @@
 			</div>
 		</div>
 		<div class="main">
-			<div class="menu"><a href="#" class="active">已注册公司详细信息</a></div>
+			<div class="menu"><a href="#" class="active">修改公司付款金额</a></div>
 			<div class="well mt20">
 				<div class="form-horizontal onlineTools">
 					<div class="row show-grid">
@@ -35,37 +35,26 @@
 			<div id="currentTips" class="tips tips-warning" style="display: none;"></div>
 			<table class="table center">
 	    		<colgroup>
-	    			<col style="width:15%;">
 	    			<col style="width:10%;">
+	    			<col style="width:50%;">
 	    			<col style="width:10%;">
-	    			<col style="width:10%;">
-	    			<col style="width:10%;">
-	    			<col style="width:15%;">
 	    			<col style="width:10%;">
 	    			<col style="width:10%;">
 	    			<col style="width:10%;">
 	    		</colgroup>
 	    		<thead id="records">
 	    			<tr>
+	    				<th>公司ID</th>
 	    				<th>公司名称</th>
-	    				<th>公司法人</th>
-	    				<th>组织代码证号</th>
-	    				<th>税务登记证号</th>
-	    				<th>开户行</th>
-	    				<th>注册地址</th>
-	    				<th>公司文件下载</th>
-	    				<th>组织代码下载</th>
-	    				<th>税务登记下载</th>
+	    				<th>服务时间</th>
+	    				<th>服务费用</th>
+	    				<th>购买时间</th>
+	    				<th>操作</th>
 	    			</tr>
 	    		</thead>
 	    		<tbody id='retData'>
 	    		</tbody>
 	    	</table>
-	    	<div class="pagination"></div>
-	    	<form id="downloadForm" method="POST">
-        		<input type="hidden" id="fileName" name="fileName">
-        		<input type="hidden" id="companyId" name="companyId">
-			</form>
 		</div>
 	</div>
 	<div id="modifyPwd" style="display:none;">
@@ -99,12 +88,34 @@
 			</div>
 		</div>
 	</div>
+	<div id="modifyCompanyPay" style="display:none;">
+		<div id="form" class="form-horizontal">
+			<div class="control-group">
+				<label class="control-label">输入服务期限（月）：</label>
+				<div class="controls">
+					<input id="service_time" type="text" class="input-large"
+						data-rules="{required : true}" style="width:250px;">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">输入服务费用（￥）：</label>
+				<div class="controls control-row-auto">
+					<input id="service_amount" type="text" class="input-large"
+						data-rules="{required : true}" style="width:250px;">
+				</div>
+			</div>
+			<div class="control-group control-btn">
+				<div class="layer-wrap-footer"><a href="javascript:void(0);" id="modify_company_pay" class="button button-success">确定修改</a></div>
+			</div>
+		</div>
+	</div>
 <!--该js需要修改js路径及修改seajs路径-->
 <script src="/js/webjs/jquery-1.11.1.js"></script>
 <script src="http://g.alicdn.com/bui/seajs/2.3.0/sea.js"></script>
 <script src="http://g.alicdn.com/bui/bui/1.1.17/config.js"></script>
 <script src="/js/webjs/menuTree.js"></script>
 <script type="text/javascript">
+var currentSelectedCompanyId;
 BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 	var modifyPwdForm = new Overlay.Dialog({
         title:'密码修改',
@@ -156,53 +167,79 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 		});
 	})
 });
-	BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
+	BUI.use(['bui/imgview', 'bui/overlay', 'bui/mask'], function(Imgview, Overlay, Mask) {
+		var loadMask = new Mask.LoadMask({
+			el : '#mask',
+			msg : 'loading ....'
+		});
+		$("#mask").css("z-index", 99);
+		var modifyCompanyPay = new Overlay.Dialog({
+	        title:'修改服务时间和费用',
+	        width:600,
+	        height:280,
+	        contentId:'modifyCompanyPay',
+	        success:function () {
+	          	this.close();
+	        },
+	        buttons : []
+	    });
+		
+			$('#modify_company_pay').click(function(){
+				var serviceTime = $('#service_time').val();
+				var serviceAmount = $('#service_amount').val();
+				if(serviceTime == null || serviceTime == "") {
+					BUI.Message.Alert('请输入服务期限！','warning');
+					return;
+				}
+				if(serviceAmount == null || serviceAmount == "") {
+					BUI.Message.Alert('请输入服务费用！','warning');
+					return;
+				}
+				$.ajax({
+					url : '/admin/modifyCompanyPayInfo',
+					type : "POST",
+					data : {serviceTime:serviceTime,serviceAmount:serviceAmount,companyId:currentSelectedCompanyId},
+					success : function(data) {
+						BUI.Message.Alert('修改成功！','success');
+						modifyCompanyPay.close();
+						loadMask.show();
+						$.ajax({
+							url : '/admin/getAllCompanyPayInfo',
+							type : "POST",
+							data : {},
+							success : function(data) {
+								createDataList(data);
+							}
+						});
+					},
+					error : function(data) {
+						BUI.Message.Alert('修改失败！','warning');
+						modifyCompanyPay.close();
+					}
+				});
+			})
 		function createDataList(data) {
 			$('#retData').html("");
 			if(data == null || data == "") return;
 			var container = $('#retData');
 			for(var i=0; i<data.length; i++) {
 				var trNode = $("<tr></tr>");
-				var tdNode = $("<td>"+data[i].companyName+"</td><td>"+data[i].coporation+"</td><td>"+data[i].zhuzhiCode+"</td><td>"+data[i].shuiwuCode+"</td><td>"+data[i].bank+"</td><td>"+data[i].address+"</td>");
-			    var companyFileNode = $("<td><a href='javascript:void(0);'>点击下载</a></td>");
-			    var shuiWuFileNode = $("<td><a href='javascript:void(0);'>点击下载</a></td>");
-			    var zhuZhiFileNode = $("<td><a href='javascript:void(0);'>点击下载</a></td>");
-			    var companyFileSrc = data[i].companyFile;
-			    var shuiWuFileSrc = data[i].shuiWuFile;
-			    var zhuZhiFileSrc = data[i].zhuZhiFile;
-			    companyFileNode.attr("file-src", companyFileSrc);
-			    companyFileNode.attr("company-id", data[i].companyId);
-			    companyFileNode.click(function(event) {
-			    	$('#fileName').val($(this).attr("file-src"));
-			    	$('#downloadForm').attr('action', '/admin/downloadCompanyFile');
-			    	$('#companyId').val($(this).attr("company-id"));
-			    	$('#downloadForm').submit();
-			    });
-			    shuiWuFileNode.attr("file-src", shuiWuFileSrc);
-			    shuiWuFileNode.attr("company-id", data[i].companyId);
-			    shuiWuFileNode.click(function(event) {
-			    	$('#fileName').val($(this).attr("file-src"));
-			    	$('#downloadForm').attr('action', '/admin/downloadShuiWuFile');
-			    	$('#companyId').val($(this).attr("company-id"));
-			    	$('#downloadForm').submit();
-			    });
-			    zhuZhiFileNode.attr("file-src", zhuZhiFileSrc);
-			    zhuZhiFileNode.attr("company-id", data[i].companyId);
-			    zhuZhiFileNode.click(function(event) {
-			    	$('#fileName').val($(this).attr("file-src"));
-			    	$('#downloadForm').attr('action', '/admin/downloadZhuZhiFile');
-			    	$('#companyId').val($(this).attr("company-id"));
-			    	$('#downloadForm').submit();
+				var tdNode = $("<td>"+data[i].company_id+"</td><td>"+data[i].company_name+"</td><td>"+data[i].company_service_time+"</td><td>"+data[i].company_service_amount+"</td><td>"+data[i].company_buy_time+"</td>");
+			    var operateNode = $("<td><a href='javascript:void(0);'>修改服务时间和费用</a></td>");
+			    operateNode.attr("company_id", data[i].company_id);
+			    operateNode.click(function(event) {
+			    	currentSelectedCompanyId = $(this).attr("company_id");
+			    	modifyCompanyPay.show();
 			    });
 			    tdNode.appendTo(trNode);
-			    companyFileNode.appendTo(trNode);
-			    zhuZhiFileNode.appendTo(trNode);
-			    shuiWuFileNode.appendTo(trNode);
+			    operateNode.appendTo(trNode);
 			    trNode.appendTo(container);
 			}
+			loadMask.hide();
 		};
+		loadMask.show();
 		$.ajax({
-			url : '/admin/getAllCompanyDetailInfo',
+			url : '/admin/getAllCompanyPayInfo',
 			type : "POST",
 			data : {},
 			success : function(data) {
@@ -254,15 +291,11 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 					{text : '已注册公司基本信息',id : '10',href:"/views/webviews/admin/admin.html", leaf:false, expanded : false,children: []},
 					{text : '已注册公司详细信息',id : '20',href:"/views/webviews/admin/company_detail_info.html", leaf:false, expanded : false,children: []},
 					{text : '已注册会计信息',id : '30',href:"/views/webviews/admin/accounter_detail_info.html", leaf:false, expanded : false,children: []},
-<<<<<<< HEAD
-					{text : '绑定会计',id : '40',href:"/views/webviews/admin/bind_accounter.html", leaf:false, expanded : false,children: []}
-=======
 					{text : '修改公司付款金额',id : '50',href:"/views/webviews/admin/modify_company_pay.html", leaf:false, expanded : false,children: []}
->>>>>>> a9987868ef160659eb75a2cdd6c7872f2c5ea6a7
 					]
             },"menuTree"
         );
-    defaultSelect("20");
+    defaultSelect("50");
     function defaultSelect(id){ 
         $("#"+id).parent().addClass("bui-menu-item-selected")
     }
