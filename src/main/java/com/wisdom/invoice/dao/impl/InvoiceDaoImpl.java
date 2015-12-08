@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.wisdom.common.model.Invoice;
+import com.wisdom.common.model.TestInvoice;
 import com.wisdom.common.model.UserInvoice;
 import com.wisdom.invoice.dao.IInvoiceDao;
 import com.wisdom.invoice.mapper.InvoiceMapper;
@@ -228,5 +230,82 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 			e.printStackTrace();
 		}
 		return false;
+	}
+	@Override
+	public boolean setIsFAOfInvoice(long invoiceId, boolean isFA) {
+		String sql = "update test_invoice set is_fixed_assets = ? and modified_time = NOW() where id = ?";
+		Integer fA = 0;
+		if(isFA){
+			fA = 1;
+		}
+		try {
+			int affectedRows = jdbcTemplate.update(sql, fA, invoiceId);
+			logger.debug("updateInvoice result : {}", affectedRows);
+			return affectedRows != 0;
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	@Override
+	public boolean addInvoiceArtifact(long invoiceId, double amount, String type, String supplierName) {
+		String sql = "insert into test_invoice_artifact (invoice_id, amount, type, supplier_name) values (?, ?, ?, ?)";
+		try {
+			int affectedRows = jdbcTemplate
+					.update(sql,
+							invoiceId,
+							amount,
+							type,
+							supplierName);
+			logger.debug("addInvoiceArtifact result : {}", affectedRows);
+			return affectedRows != 0;
+		} catch (Exception e) {
+			logger.error("addInvoiceArtifact error:" + e.getMessage());
+		}
+		return false;
+	}
+	@Override
+	public boolean deleteInvoiceArtifactByInvoiceId(long invoiceId) {
+		String sql = "delete from test_invoice_artifact where invoice_id = ?";
+		try {
+			int affectedRows = jdbcTemplate.update(sql, invoiceId);
+			logger.debug("deleteInvoiceArtifactByInvoiceId result : {}", affectedRows);
+			return affectedRows != 0;
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	@Override
+	public long addInvoice(TestInvoice invoice) {
+		logger.debug("Enter addInvoiceAndGetKey");
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		//String title = invoice.getTitle() == null ? "" : invoice.getTitle();
+		//String dateTime = invoice.getDate() == null ? 
+		//		new Timestamp(System.currentTimeMillis()).toString() : String.valueOf(invoice.getDate());
+		//logger.debug("DATE:" + dateTime);
+		//logger.debug("AMOUNT:" + invoice.getAmount());
+		try {
+			int id = jdbcTemplate.update(new PreparedStatementCreator() {
+				public PreparedStatement createPreparedStatement(
+						Connection connection) throws SQLException {
+					String sql = "insert into test_invoice (company_id, file_name, bill_date, is_fixed_assets, created_time, modified_time)"
+							+ " values (?, ?, ?, ?, NOW(), NOW())";
+					PreparedStatement ps = connection.prepareStatement(sql,
+							Statement.RETURN_GENERATED_KEYS);
+					ps.setLong(1, invoice.getCompanyId() == null? 0: invoice.getCompanyId());
+					ps.setString(2, invoice.getFileName() == null? "": invoice.getFileName());
+					ps.setString(3, invoice.getBillDate() == null? "": invoice.getBillDate());
+					ps.setInt(4, invoice.getIsFixedAssets() == 0? 0: 1);
+					return ps;
+				}
+			}, keyHolder);
+			logger.debug("addInvoiceAndGetKey result : {}", keyHolder.getKey().longValue());
+			return keyHolder.getKey().longValue();
+		} catch (DataAccessException e) {
+			logger.error("addInvoiceAndGetKey error." + e.getMessage());
+			e.printStackTrace();
+		}
+		return -1;
 	}
 }

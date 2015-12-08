@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,6 +19,7 @@ import com.wisdom.common.model.Attachment;
 import com.wisdom.common.model.Dispatcher;
 import com.wisdom.common.model.Invoice;
 import com.wisdom.common.model.InvoiceApproval;
+import com.wisdom.common.model.TestInvoice;
 import com.wisdom.common.model.UserInvoice;
 import com.wisdom.company.service.IExpenseTypeService;
 import com.wisdom.dispatch.service.IDispatcherService;
@@ -31,7 +34,15 @@ import com.wisdom.invoice.service.IInvoiceService;
 import com.wisdom.invoice.service.ISingleInvoiceService;
 import com.wisdom.invoice.service.IUserInvoiceService;
 import com.wisdom.user.service.IUserService;
+import com.wisdom.web.utils.RedisSetting;
+
+import net.sf.json.JSONArray;
+
 import com.wisdom.web.api.impl.CompanyUserApiImpl;
+
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
 
 import org.springframework.util.StringUtils;
 import org.apache.commons.logging.Log;
@@ -603,6 +614,83 @@ public class InvoiceServiceImpl implements IInvoiceService {
 	@Override
 	public Invoice getInvoiceById(long id) {
 		return invoiceDao.getInvoiceById(id);
+	}
+
+	@Override
+	public boolean setIsFAOfInvoice(long invoiceId, boolean isFA) {
+		return invoiceDao.setIsFAOfInvoice(invoiceId, isFA);
+	}
+
+	@Override
+	public boolean addInvoiceArtifact(long invoiceId, List<Map<String, String>> content) {
+		for(Map<String, String>row: content){
+			String type = row.get("description");
+			double amount = Double.parseDouble(row.get("amount"));
+			String supplierName = row.get("supplier");
+			invoiceDao.addInvoiceArtifact(invoiceId, amount, type, supplierName);
+		}
+		return true;
+	}
+
+	@Override
+	public boolean deleteInvoiceArtifactByInvoiceId(long invoiceId) {
+		return invoiceDao.deleteInvoiceArtifactByInvoiceId(invoiceId);
+	}
+
+	@Override
+	public long addInvoice(long companyId, String fileName, String billDate, Integer isFA) {
+		TestInvoice invoice = new TestInvoice();
+		invoice.setCompanyId(companyId);
+		invoice.setFileName(fileName);
+		invoice.setBillDate(billDate);
+		invoice.setIsFixedAssets(isFA);
+		long invoiceId = invoiceDao.addInvoice(invoice);
+		return invoiceId;
+	}
+
+	@Override
+	public void publishUnrecognizedInvoive(long invoiceId, long companyId, String fileName, String companyName) {
+		System.out.println("Start to publish");
+		Map<String, String> exportedData = new HashMap<>();
+		exportedData.put("invoice_id", Long.toString(invoiceId));
+		exportedData.put("company_id", Long.toString(companyId));
+		exportedData.put("path", fileName);
+		exportedData.put("company", companyName);
+		String exportDataStr = JSONArray.fromObject(exportedData).toString();
+		
+		JedisPoolConfig poolConfig = new JedisPoolConfig();
+		poolConfig.setMaxIdle(RedisSetting.MAX_IDLE);
+		poolConfig.setMinIdle(RedisSetting.MIN_IDLE);
+		poolConfig.setTestOnBorrow(RedisSetting.TEST_ON_BORROW);
+		poolConfig.setNumTestsPerEvictionRun(RedisSetting.NUM_TESTS_PER_EVICTION_RUN);
+		poolConfig.setTimeBetweenEvictionRunsMillis(RedisSetting.TIME_BETWEEN_EVICTION_RUNS_MILLIS);
+		poolConfig.setMaxWaitMillis(RedisSetting.MAX_WAIT_MILLIS);
+		//poolConfig.setBlockWhenExhausted(org.apache.commons.pool.impl.GenericObjectPool.WHEN_EXHAUSTED_FAIL);
+
+
+		// Timeout is set larger to the deploy environment
+		JedisPool jedisPool = new JedisPool(poolConfig,RedisSetting.ADDRESS, RedisSetting.PORT, 1000);
+		
+	   ExecutorService newFixedThreadPool = Executors.newFixedThreadPool(10);
+	    newFixedThreadPool.submit(new Runnable() {
+
+	        @Override
+	        public void run() {
+
+	                
+	                Jedis jedis = jedisPool.getResource();
+	                try {
+	                   jedis.publish("UNRECOGNIZED_INVOICE", exportDataStr);
+	                } catch (Exception e) {
+	                   e.printStackTrace();
+	                } finally {
+	                   jedisPool.returnResource(jedis);
+	                }
+	            
+
+	        }
+	    });
+		
 	}
 
 }
