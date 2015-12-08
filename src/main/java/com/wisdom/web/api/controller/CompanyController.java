@@ -1426,4 +1426,21 @@ public class CompanyController {
 		}
 		return retMap;
 	}
+	
+	@RequestMapping("/company/checkTimeAndAmountInfo")
+	@ResponseBody
+	public Map<String, String> checkTimeAndAmountInfo(HttpServletRequest request){
+		String userId = (String) request.getSession().getAttribute("userId");
+		long companyId = userService.getCompanyIdByUserId(userId);
+		CompanyPay companyPay = companyPayService.getCompanyPayByCompanyId(companyId);
+		Map<String, String> retMap = new HashMap<>();
+		if(companyPay == null) {
+			retMap.put("resultCode", "0");
+		} else {
+			retMap.put("resultCode", "1");
+			retMap.put("serviceTime", String.valueOf(companyPay.getServiceTime()));
+			retMap.put("payAmount", String.valueOf(companyPay.getPayAmount()));
+		}
+		return retMap;
+	}
 }

@@ -21,12 +21,14 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import com.wisdom.common.model.CompanyAndPayModel;
 import com.wisdom.common.model.CompanyBankSta;
 import com.wisdom.common.model.CompanyBill;
 import com.wisdom.common.model.CompanyPay;
 import com.wisdom.common.model.Recommender;
 import com.wisdom.company.dao.ICompanyBillDao;
 import com.wisdom.company.dao.ICompanyPayDao;
+import com.wisdom.company.mapper.CompanyAndPayModelMapper;
 import com.wisdom.company.mapper.CompanyBankStaMapper;
 import com.wisdom.company.mapper.CompanyBillMapper;
 import com.wisdom.company.mapper.CompanyPayMapper;
@@ -163,6 +165,21 @@ public class CompanyPayDaoImpl implements ICompanyPayDao {
 			list = jdbcTemplate.query(sql, 
 					new RowMapperResultSetExtractor<CompanyPay>(
 							new CompanyPayMapper()));	
+		} catch(Exception e){
+			logger.debug(e.toString());
+		}
+
+		return list;
+	}
+
+	@Override
+	public List<CompanyAndPayModel> getCompanyAndPayModel() {
+		String sql = "select a.id, a.name, b.pay_amount, b.service_time, b.create_time from company a left join company_pay b on a.id = b.company_id where a.parent_id = -1";
+		List<CompanyAndPayModel> list = new ArrayList<>();
+		try{
+			list = jdbcTemplate.query(sql, 
+					new RowMapperResultSetExtractor<CompanyAndPayModel>(
+							new CompanyAndPayModelMapper()));	
 		} catch(Exception e){
 			logger.debug(e.toString());
 		}

@@ -8,7 +8,7 @@
 	<link rel="stylesheet" type="text/css" href="/css/webcss/layout.css">
 </head>
 <body>
-	<div class="wrap">
+	<div class="wrap" id="mask">
 		<div class="side-bar">
 			<div class="side-bar-top">
 				<img src="/img/webimg/bss-logo.png" >
@@ -23,7 +23,7 @@
 			</div>
 		</div>
 		<div class="main">
-			<div class="menu"><a href="#" class="active">已注册公司基本信息</a></div>
+			<div class="menu"><a href="#" class="active">修改公司付款金额</a></div>
 			<div class="well mt20">
 				<div class="form-horizontal onlineTools">
 					<div class="row show-grid">
@@ -32,24 +32,23 @@
 					</div>
 				</div>
 			</div>
+			<div id="currentTips" class="tips tips-warning" style="display: none;"></div>
 			<table class="table center">
 	    		<colgroup>
-	    			<col style="width:20%;">
-	    			<col style="width:12%;">
-	    			<col style="width:12%;">
-	    			<col style="width:12%;">
-	    			<col style="width:20%;">
-	    			<col style="width:12%;">
-	    			<col style="width:12%;">
+	    			<col style="width:10%;">
+	    			<col style="width:50%;">
+	    			<col style="width:10%;">
+	    			<col style="width:10%;">
+	    			<col style="width:10%;">
+	    			<col style="width:10%;">
 	    		</colgroup>
 	    		<thead id="records">
 	    			<tr>
+	    				<th>公司ID</th>
 	    				<th>公司名称</th>
-	    				<th>注册日期</th>
-	    				<th>每月费用</th>
-	    				<th>联系电话</th>
-	    				<th>电话联系时间</th>
-	    				<th>审核状态</th>
+	    				<th>服务时间</th>
+	    				<th>服务费用</th>
+	    				<th>购买时间</th>
 	    				<th>操作</th>
 	    			</tr>
 	    		</thead>
@@ -89,122 +88,158 @@
 			</div>
 		</div>
 	</div>
+	<div id="modifyCompanyPay" style="display:none;">
+		<div id="form" class="form-horizontal">
+			<div class="control-group">
+				<label class="control-label">输入服务期限（月）：</label>
+				<div class="controls">
+					<input id="service_time" type="text" class="input-large"
+						data-rules="{required : true}" style="width:250px;">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">输入服务费用（￥）：</label>
+				<div class="controls control-row-auto">
+					<input id="service_amount" type="text" class="input-large"
+						data-rules="{required : true}" style="width:250px;">
+				</div>
+			</div>
+			<div class="control-group control-btn">
+				<div class="layer-wrap-footer"><a href="javascript:void(0);" id="modify_company_pay" class="button button-success">确定修改</a></div>
+			</div>
+		</div>
+	</div>
 <!--该js需要修改js路径及修改seajs路径-->
 <script src="/js/webjs/jquery-1.11.1.js"></script>
 <script src="http://g.alicdn.com/bui/seajs/2.3.0/sea.js"></script>
 <script src="http://g.alicdn.com/bui/bui/1.1.17/config.js"></script>
 <script src="/js/webjs/menuTree.js"></script>
 <script type="text/javascript">
-	BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
-		
-		var modifyPwdForm = new Overlay.Dialog({
-            title:'密码修改',
-            width:600,
-            height:280,
-            contentId:'modifyPwd',
-            success:function () {
-              	this.close();
-            },
-            buttons : []
-        });
-		$('#setPwd').click(function(){
-			modifyPwdForm.show();
-		})
-		$('#modify_pwd_button').click(function(){
-			var oldPwd = $('#old_pwd').val();
-			var newPwd = $('#new_pwd').val();
-			var confirmNewPwd = $('#confirm_new_pwd').val();
-			if(oldPwd == null || oldPwd == "") {
-				BUI.Message.Alert('请输入旧密码！','warning');
-				return;
-			}
-			if(newPwd == null || newPwd == "") {
-				BUI.Message.Alert('请输新密码！','warning');
-				return;
-			}
-			if(confirmNewPwd == null || confirmNewPwd == "") {
-				BUI.Message.Alert('请输入新密码！','warning');
-				return;
-			}
-			if(newPwd != confirmNewPwd) {
-				BUI.Message.Alert('两次输入的新密码不一致，请检查！','warning');
-				return;
-			}
-			$.ajax({
-				url : '/modifyPassword',
-				type : "POST",
-				data : {oldPwd:oldPwd, newPwd:newPwd},
-				success : function(data) {
-					if(data.error_code == "0") {
-						BUI.Message.Alert('修改密码成功！','success');
-					} else {
-						BUI.Message.Alert('修改密码失败！错误信息：' + data.error_msg,'warning');
-					}
-				},
-				error : function(data) {
+var currentSelectedCompanyId;
+BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
+	var modifyPwdForm = new Overlay.Dialog({
+        title:'密码修改',
+        width:600,
+        height:280,
+        contentId:'modifyPwd',
+        success:function () {
+          	this.close();
+        },
+        buttons : []
+    });
+	$('#setPwd').click(function(){
+		modifyPwdForm.show();
+	})
+	$('#modify_pwd_button').click(function(){
+		var oldPwd = $('#old_pwd').val();
+		var newPwd = $('#new_pwd').val();
+		var confirmNewPwd = $('#confirm_new_pwd').val();
+		if(oldPwd == null || oldPwd == "") {
+			BUI.Message.Alert('请输入旧密码！','warning');
+			return;
+		}
+		if(newPwd == null || newPwd == "") {
+			BUI.Message.Alert('请输新密码！','warning');
+			return;
+		}
+		if(confirmNewPwd == null || confirmNewPwd == "") {
+			BUI.Message.Alert('请输入新密码！','warning');
+			return;
+		}
+		if(newPwd != confirmNewPwd) {
+			BUI.Message.Alert('两次输入的新密码不一致，请检查！','warning');
+			return;
+		}
+		$.ajax({
+			url : '/modifyPassword',
+			type : "POST",
+			data : {oldPwd:oldPwd, newPwd:newPwd},
+			success : function(data) {
+				if(data.error_code == "0") {
+					BUI.Message.Alert('修改密码成功！','success');
+				} else {
 					BUI.Message.Alert('修改密码失败！错误信息：' + data.error_msg,'warning');
 				}
-			});
-		})
+			},
+			error : function(data) {
+				BUI.Message.Alert('修改密码失败！错误信息：' + data.error_msg,'warning');
+			}
+		});
+	})
+});
+	BUI.use(['bui/imgview', 'bui/overlay', 'bui/mask'], function(Imgview, Overlay, Mask) {
+		var loadMask = new Mask.LoadMask({
+			el : '#mask',
+			msg : 'loading ....'
+		});
+		$("#mask").css("z-index", 99);
+		var modifyCompanyPay = new Overlay.Dialog({
+	        title:'修改服务时间和费用',
+	        width:600,
+	        height:280,
+	        contentId:'modifyCompanyPay',
+	        success:function () {
+	          	this.close();
+	        },
+	        buttons : []
+	    });
 		
+			$('#modify_company_pay').click(function(){
+				var serviceTime = $('#service_time').val();
+				var serviceAmount = $('#service_amount').val();
+				if(serviceTime == null || serviceTime == "") {
+					BUI.Message.Alert('请输入服务期限！','warning');
+					return;
+				}
+				if(serviceAmount == null || serviceAmount == "") {
+					BUI.Message.Alert('请输入服务费用！','warning');
+					return;
+				}
+				$.ajax({
+					url : '/admin/modifyCompanyPayInfo',
+					type : "POST",
+					data : {serviceTime:serviceTime,serviceAmount:serviceAmount,companyId:currentSelectedCompanyId},
+					success : function(data) {
+						BUI.Message.Alert('修改成功！','success');
+						modifyCompanyPay.close();
+						loadMask.show();
+						$.ajax({
+							url : '/admin/getAllCompanyPayInfo',
+							type : "POST",
+							data : {},
+							success : function(data) {
+								createDataList(data);
+							}
+						});
+					},
+					error : function(data) {
+						BUI.Message.Alert('修改失败！','warning');
+						modifyCompanyPay.close();
+					}
+				});
+			})
 		function createDataList(data) {
 			$('#retData').html("");
-			if(data == null || data == "" || data.length == 0) return;
-			data.sort(function(a,b){return a.date<b.date?1:-1});
+			if(data == null || data == "") return;
 			var container = $('#retData');
 			for(var i=0; i<data.length; i++) {
 				var trNode = $("<tr></tr>");
-				var tdNode1 = $("<td>"+data[i].companyName+"</td><td>"+data[i].date+"</td><td>"+data[i].expense+"</td><td>"+data[i].phone+"</td><td>"+data[i].callTime+"</td><td>"+data[i].auditStatus+"</td>");
-			    var tdNode2 = $("<td></td>");
-			    var operateAuditReject = $("<a href='javascript:void(0)'>审核拒绝</a>");
-			    var operateAuditPass = $("<a href='javascript:void(0)'>审核通过</a>");
-			    (function(tempData){
-			    	operateAuditReject.click(function(event) {
-			    		BUI.Message.Alert('审核拒绝该用户！','warning');
-			    		$.ajax({
-			    			url : '/admin/auditUser',
-			    			type : "POST",
-			    			data : {userId:tempData.userId, auditStatus:2},
-			    			success : function() {
-			    				$.ajax({
-			    					url : '/admin/getAllRegisterCompanyInfo',
-			    					type : "POST",
-			    					data : {},
-			    					success : function(data) {
-			    						createDataList(data);
-			    					}
-			    				});
-			    			}
-			    		});
-					});
-			    	operateAuditPass.click(function(event) {
-			    		BUI.Message.Alert('审核通过该用户！','warning');
-			    		$.ajax({
-			    			url : '/admin/auditUser',
-			    			type : "POST",
-			    			data : {userId:tempData.userId, auditStatus:1},
-			    			success : function() {
-			    				$.ajax({
-			    					url : '/admin/getAllRegisterCompanyInfo',
-			    					type : "POST",
-			    					data : {},
-			    					success : function(data) {
-			    						createDataList(data);
-			    					}
-			    				});
-			    			}
-			    		});
-					});
-				}(data[i]));
-			    operateAuditReject.appendTo(tdNode2);
-			    operateAuditPass.appendTo(tdNode2);
-				tdNode1.appendTo(trNode);
-				tdNode2.appendTo(trNode);
+				var tdNode = $("<td>"+data[i].company_id+"</td><td>"+data[i].company_name+"</td><td>"+data[i].company_service_time+"</td><td>"+data[i].company_service_amount+"</td><td>"+data[i].company_buy_time+"</td>");
+			    var operateNode = $("<td><a href='javascript:void(0);'>修改服务时间和费用</a></td>");
+			    operateNode.attr("company_id", data[i].company_id);
+			    operateNode.click(function(event) {
+			    	currentSelectedCompanyId = $(this).attr("company_id");
+			    	modifyCompanyPay.show();
+			    });
+			    tdNode.appendTo(trNode);
+			    operateNode.appendTo(trNode);
 			    trNode.appendTo(container);
 			}
+			loadMask.hide();
 		};
+		loadMask.show();
 		$.ajax({
-			url : '/admin/getAllRegisterCompanyInfo',
+			url : '/admin/getAllCompanyPayInfo',
 			type : "POST",
 			data : {},
 			success : function(data) {
@@ -220,7 +255,7 @@
 			}
 			if(conditionType == '0') {
 				$.ajax({
-					url : '/admin/getAllRegisterCompanyInfo',
+					url : '/admin/getAllCompanyDetailInfo',
 					type : "POST",
 					data : {},
 					success : function(data) {
@@ -229,7 +264,7 @@
 				});
 			} else {
 				$.ajax({
-					url : '/admin/getAllRegisterCompanyInfoByName',
+					url : '/admin/getAllCompanyDetailInfoByName',
 					type : "POST",
 					data : {conditionValue:conditionValue},
 					success : function(data) {
@@ -251,7 +286,7 @@
     })()
 	//竖状菜单
 	//竖状菜单
-        var menu = new menuTree(
+       var menu = new menuTree(
             {"nodes" : [
 					{text : '已注册公司基本信息',id : '10',href:"/views/webviews/admin/admin.html", leaf:false, expanded : false,children: []},
 					{text : '已注册公司详细信息',id : '20',href:"/views/webviews/admin/company_detail_info.html", leaf:false, expanded : false,children: []},
@@ -260,7 +295,7 @@
 					]
             },"menuTree"
         );
-    defaultSelect("10");
+    defaultSelect("50");
     function defaultSelect(id){ 
         $("#"+id).parent().addClass("bui-menu-item-selected")
     }
