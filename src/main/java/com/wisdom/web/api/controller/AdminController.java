@@ -309,7 +309,7 @@ public class AdminController {
 		}
 		return re;
 	}
-<<<<<<< HEAD
+
 	// get company Info by company_id and user_type
 	@RequestMapping("/admin/getCompanyAndAccounter")
 	@ResponseBody
@@ -384,7 +384,6 @@ public class AdminController {
 					}
 					return companyList;
 				}	
-=======
 	
 	@RequestMapping("/admin/getAllCompanyPayInfo")
 	@ResponseBody
@@ -430,5 +429,5 @@ public class AdminController {
 		}
 		return retMap;
 	}
->>>>>>> a9987868ef160659eb75a2cdd6c7872f2c5ea6a7
+
 }
