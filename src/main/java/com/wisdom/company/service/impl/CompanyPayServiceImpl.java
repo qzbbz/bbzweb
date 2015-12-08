@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.wisdom.common.model.CompanyAndPayModel;
 import com.wisdom.common.model.CompanyBill;
 import com.wisdom.common.model.CompanyPay;
 import com.wisdom.company.dao.ICompanyBillDao;
@@ -89,6 +90,12 @@ public class CompanyPayServiceImpl implements ICompanyPayService {
 	public List<CompanyPay> getExpiredCompanyPay() {
 		// TODO Auto-generated method stub
 		return companyPayDao.getExpiredCompanyPay();
+	}
+
+	@Override
+	public List<CompanyAndPayModel> getCompanyAndPayModel() {
+		// TODO Auto-generated method stub
+		return companyPayDao.getCompanyAndPayModel();
 	}
 
 }

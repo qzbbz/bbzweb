@@ -23,14 +23,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.wisdom.accounter.service.IAccounterService;
 import com.wisdom.common.model.Company;
+import com.wisdom.common.model.CompanyAndPayModel;
+import com.wisdom.common.model.CompanyBill;
 import com.wisdom.common.model.CompanyDetail;
+import com.wisdom.common.model.CompanyPay;
 import com.wisdom.common.model.SalarySocialSecurity;
 import com.wisdom.common.model.User;
 import com.wisdom.common.model.UserPhone;
+import com.wisdom.company.service.ICompanyBillService;
 import com.wisdom.company.service.ICompanyDetailService;
+import com.wisdom.company.service.ICompanyPayService;
 import com.wisdom.company.service.ICompanyService;
 import com.wisdom.user.dao.IUserQueryDao;
 import com.wisdom.user.service.IUserService;
+import com.wisdom.web.api.ICompanyBillApi;
 
 @Controller
 public class AdminController {
@@ -38,6 +44,9 @@ public class AdminController {
 	private static final Logger logger = LoggerFactory
 			.getLogger(AdminController.class);
 
+	@Autowired
+	private ICompanyPayService companyPayService;
+	
 	@Autowired
 	private ICompanyService companyService;
 	
@@ -297,5 +306,50 @@ public class AdminController {
 			logger.debug("download exception : {}", e.toString());
 		}
 		return re;
+	}
+	
+	@RequestMapping("/admin/getAllCompanyPayInfo")
+	@ResponseBody
+	public List<Map<String, String>> getAllCompanyPayInfo(HttpServletRequest request) {
+		List<CompanyAndPayModel> companyAndPayModelList = companyPayService.getCompanyAndPayModel();
+		List<Map<String, String>> retList = new ArrayList<>();
+		if(companyAndPayModelList != null && companyAndPayModelList.size() != 0) {
+			for(CompanyAndPayModel companyAndPayModel : companyAndPayModelList) {
+				Map<String, String> itemMap = new HashMap<>();
+				itemMap.put("company_id", String.valueOf(companyAndPayModel.getCompanyId()));
+				itemMap.put("company_name", companyAndPayModel.getCompanyName());
+				itemMap.put("company_service_time", companyAndPayModel.getServiceTime() == null ? "" : String.valueOf(companyAndPayModel.getServiceTime()));
+				itemMap.put("company_service_amount", companyAndPayModel.getPayAmount() == null ? "" : String.valueOf(companyAndPayModel.getPayAmount()));
+				itemMap.put("company_buy_time", companyAndPayModel.getCreateTime() == null ? "" : String.valueOf(companyAndPayModel.getCreateTime().toString().substring(0, 11)));
+				retList.add(itemMap);
+			}
+		}
+		return retList;
+	}
+	
+	@RequestMapping("/admin/modifyCompanyPayInfo")
+	@ResponseBody
+	public Map<String, String> modifyCompanyPayInfo(HttpServletRequest request) {
+		String serviceTime = request.getParameter("serviceTime");
+		String serviceAmount = request.getParameter("serviceAmount");
+		Long companyId = Long.valueOf(request.getParameter("companyId"));
+		Map<String, String> retMap = new HashMap<>();
+		CompanyPay cp = companyPayService.getCompanyPayByCompanyId(companyId);
+		boolean success = false;
+		if(cp == null) {
+			cp = new CompanyPay();
+			cp.setCompanyId(companyId);
+			cp.setPayAmount(Double.valueOf(serviceAmount));
+			cp.setServiceTime(Integer.valueOf(serviceTime));
+			success = companyPayService.addCompanyPay(cp) != 0;
+		} else {
+			success = companyPayService.updateCompanyPayByCompanyId(companyId, 0, Double.valueOf(serviceAmount), "", Integer.valueOf(serviceTime));
+		}
+		if(success) {
+			retMap.put("result", "true");
+		} else {
+			retMap.put("result", "false");
+		}
+		return retMap;
 	}
 }

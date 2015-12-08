@@ -6,6 +6,7 @@
     <link rel="stylesheet" type="text/css" href="/css/webcss/bui.css">
 	<link rel="stylesheet" type="text/css" href="/css/webcss/golbal.css">
 	<link rel="stylesheet" type="text/css" href="/css/webcss/layout.css">
+	<link rel="stylesheet" type="text/css" href="/css/webcss/iviewer.css">
 </head>
 <body>
 	<div class="wrap">
@@ -34,23 +35,19 @@
 			</div>
 			<table class="table center">
 	    		<colgroup>
-	    			<col style="width:4%;">
-	    			<col style="width:10%;">
-	    			<col style="width:10%;">
-	    			<col style="width:16%;">
-	    			<col style="width:16%;">
-	    			<col style="width:13%;">
-	    			<col style="width:13%;">
-	    			<col style="width:18%;">
+	    			<col style="width:1%;">
+	    			<col style="width:19%;">
+	    			<col style="width:20%;">
+	    			<col style="width:60%;">
 	    		</colgroup>
 	    		<thead>
 	    			<tr>
 	    				<th>&nbsp;</th>
 	    				<th>会计期间</th>
-	    				<th>对账单日期</th>
+	    				<!-- <th>对账单日期</th>
 	    				<th>对账单户名</th>
 	    				<th>对账单账号</th>
-	    				<th>对账单银行</th>
+	    				<th>对账单银行</th> -->
 	    				<th>识别状态</th>
 	    				<th>对账单预览</th>
 	    			</tr>
@@ -71,6 +68,20 @@
 			</div>
 		</div>
 	</div>
+	<div id="iviewer">
+        <div class="loader"></div>
+
+        <div class="viewer"></div>
+
+        <ul class="controls">
+            <li class="close"></li>
+            <li class="zoomin"></li>
+            <li class="zoomout"></li>
+            <li class="angle"></li>
+        </ul>
+
+    
+    </div>
 	<div id="modifyPwd" style="display:none;">
 		<div id="form" class="form-horizontal">
 			<div class="control-group">
@@ -108,6 +119,10 @@
 <script src="http://g.alicdn.com/bui/seajs/2.3.0/sea.js"></script>
 <script src="http://g.alicdn.com/bui/bui/1.1.17/config.js"></script>
 <script src="/js/webjs/menuTree.js"></script>
+<script src="/js/webjs/jquery-ui.js"></script>
+<script src="/js/webjs/jquery-mousewheel.js"></script>
+<script src="/js/webjs/jquery.iviewer.min.js"></script>
+<script src="/js/webjs/iviewer.js"></script>
 <script type="text/javascript">
 BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 	var modifyPwdForm = new Overlay.Dialog({
@@ -269,7 +284,8 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 				var trNode = $("<tr></tr>");
 				
 				var checkNode = $("<td><input type='checkbox' value='"+data[i].id+"' style='margin-top:0px;' class='data-check-id'></td>");
-				var tdNode = $("<td>"+data[i].date+"</td><td>"+data[i].ide_date+"</td><td>"+data[i].ide_account+"</td><td>"+data[i].ide_name+"</td><td>"+data[i].ide_bank_name+"</td><td><span class='text-info'>已识别</span></td>");
+				/* var tdNode = $("<td>"+data[i].date+"</td><td>"+data[i].ide_date+"</td><td>"+data[i].ide_account+"</td><td>"+data[i].ide_name+"</td><td>"+data[i].ide_bank_name+"</td><td><span class='text-info'>已识别</span></td>"); */
+				var tdNode = $("<td>"+data[i].date+"</td><td><span class='text-info'>已识别</span></td>");
 			    var aNode = $("<td><a href='javascript:void(0);'>点击查看对账单图片</a></td>");
 			    //var a = $("<tr><td>"+data[i].date+"</td><td>data[i]</td><td>1001190719016303837</td><td>中国工商银行上海市分行公司客户存款对账单</td><td><span class='text-info'>已识别</span></td><td><a href='javascript:void(0);'>点击查看对账单图片</a></td></tr>");
 			    var imgsrc = '/files/company/' + data[i].file_name;
@@ -277,8 +293,10 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 			    aNode.attr("img-src", imgsrc);
 			    
 			    aNode.click(function(event) {
-			    	viewContent.set('imgSrc', $(this).attr("img-src"));
-				    dialogForm.show();
+			    	//viewContent.set('imgSrc', $(this).attr("img-src"));
+				    //dialogForm.show();
+			    	openBillImage($(this).attr("img-src"));
+			    	//openBillImage("/img/webimg/emily.jpg");
 			    });
 			    
 			    checkNode.appendTo(trNode);

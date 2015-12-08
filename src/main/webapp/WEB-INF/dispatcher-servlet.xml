@@ -97,10 +97,11 @@ class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer
 	<mvc:resources mapping="/views/webviews/companyUser/**" location="/WEB-INF/views/webviews/companyUser/" cache-period="3600" />
 	<mvc:resources mapping="/views/frontviews/**" location="/WEB-INF/views/frontviews/" cache-period="3600" />
 	<mvc:resources mapping="/views/webviews/error/**" location="/WEB-INF/views/webviews/error/" cache-period="3600" />
+	<mvc:resources mapping="/views/spreadviews/**" location="/WEB-INF/views/spreadviews/" cache-period="3600" />	
 	
-	<mvc:resources mapping="/files/company/**" location="file:/home/files/company/" cache-period="3600" />
-	<mvc:resources mapping="/files/image/**" location="file:/home/files/image/" cache-period="3600" />
-	<mvc:resources mapping="/files/accounter/**" location="/WEB-INF/files/accounter/" cache-period="3600" />
+	<mvc:resources mapping="/files/company/**" location="file:/home/files/company/"/>
+	<mvc:resources mapping="/files/image/**" location="file:/home/files/image/"/>
+	<mvc:resources mapping="/files/accounter/**" location="file:/home/files/accounter/"/>
 	
 	<mvc:resources mapping="/other/**" location="/WEB-INF/other/" cache-period="0" />
 	<mvc:resources mapping="/other/bootstrap/js/**" location="/WEB-INF/other/bootstrap/js/" cache-period="3600" />
@@ -222,5 +223,4 @@ class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer
 </bean>
 	<!-- import resources -->
 	<import resource="classpath:spring-config-message.xml"/>
-
 </beans>

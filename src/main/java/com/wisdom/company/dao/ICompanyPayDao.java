@@ -3,6 +3,7 @@ package com.wisdom.company.dao;
 import java.sql.Timestamp;
 import java.util.List;
 
+import com.wisdom.common.model.CompanyAndPayModel;
 import com.wisdom.common.model.CompanyPay;
 
 public interface ICompanyPayDao {
@@ -30,5 +31,7 @@ public interface ICompanyPayDao {
 	public boolean updateCompanyPayStatusToTrial(Long companyId);
 	
 	public List<CompanyPay> getExpiredCompanyPay();
+	
+	public List<CompanyAndPayModel> getCompanyAndPayModel();
 	
 }

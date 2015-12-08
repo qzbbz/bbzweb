@@ -52,7 +52,7 @@ public class CompanyBillController {
 
 	@RequestMapping("/company/uploadCompanyBill")
 	@ResponseBody
-	public String uploadCompanyBill(
+	public Map<String, String> uploadCompanyBill(
 			DefaultMultipartHttpServletRequest multipartRequest,
 			HttpServletRequest request) {
 		logger.debug("entrance uploadCompanyBill");
@@ -79,7 +79,9 @@ public class CompanyBillController {
 				companyBillApi.uploadCompanyBill(params, multifile);
 			}
 		}
-		return new HashMap<String, String>().put("url", "");
+		Map<String, String> retMap = new HashMap<>();
+		retMap.put("url", "url");
+		return retMap;
 	}
 
 	@RequestMapping("/company/getAllCompanyBill")

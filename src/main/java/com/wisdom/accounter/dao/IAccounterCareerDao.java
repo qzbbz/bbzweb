@@ -6,7 +6,7 @@ import com.wisdom.common.model.AccounterCareer;
 
 public interface IAccounterCareerDao {
 
-	public AccounterCareer getAccounterCareerById(long id);
+	public AccounterCareer getAccounterCareerById(long id);                                                                                                                                                                
 	
 	public List<AccounterCareer> getAllAccounterCareer();
 	
