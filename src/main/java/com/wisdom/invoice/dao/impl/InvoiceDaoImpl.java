@@ -233,7 +233,7 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 	}
 	@Override
 	public boolean setIsFAOfInvoice(long invoiceId, boolean isFA) {
-		String sql = "update test_invoice set is_fixed_assets = ? and modified_time = NOW() where id = ?";
+		String sql = "update test_invoice set is_fixed_assets = ? , modified_time = NOW() where id = ?";
 		Integer fA = 0;
 		if(isFA){
 			fA = 1;

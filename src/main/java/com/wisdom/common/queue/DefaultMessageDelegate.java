@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,8 @@ import com.wisdom.invoice.service.IInvoiceService;
 public class DefaultMessageDelegate implements MessageDelegate {
 	
 	@Autowired IInvoiceService invoiceService;
+	
+	private Lock lock;
 
 	@Override
 	public void handleMessage(String message) throws JsonParseException, JsonMappingException, IOException {
@@ -63,8 +67,14 @@ public class DefaultMessageDelegate implements MessageDelegate {
         List<Map<String,String>> content = mapper2.readValue(contentStr, typeRef); 
         System.out.println(content);
         invoiceService.setIsFAOfInvoice(invoiceId, fA);
-        invoiceService.deleteInvoiceArtifactByInvoiceId(invoiceId);
-        invoiceService.addInvoiceArtifact(invoiceId, content);
+
+
+			synchronized (this) {
+		        invoiceService.deleteInvoiceArtifactByInvoiceId(invoiceId);
+		        invoiceService.addInvoiceArtifact(invoiceId, content);
+			}
+
+
 /*
     HashMap<String,Object> o = mapper.readValue(message, typeRef); 
 	System.out.println(o);
