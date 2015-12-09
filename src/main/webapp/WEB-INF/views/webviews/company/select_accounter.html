@@ -9,7 +9,7 @@
 	<link rel="stylesheet" type="text/css" href="/css/webcss/layout.css">
 </head>
 <body>
-	<div class="wrap">
+	<div class="wrap"  id="mask">
 		<div class="side-bar">
 			<div class="side-bar-top">
 				<img src="/img/webimg/bss-logo.png" >
@@ -424,11 +424,19 @@
 		}
 		
 		$('#dispalyAllAccounter').click(function(){
+			BUI.use(['bui/imgview', 'bui/overlay', 'bui/mask'], function(Imgview, Overlay, Mask) {
+				var loadMask = new Mask.LoadMask({
+					el : '#mask',
+					msg : 'loading ....'
+				});
+				$("#mask").css("z-index", 99);
+				loadMask.show();
 			$.ajax({
 				url : '/getAllAccounter',
 				type : "POST",
 				data : {},
 				success : function(data) {
+					loadMask.hide();
 					if(data==null || data=='') {
 						$('#retData').html('');
 						$('#tipInfo').html('当前系统中还没有任何会计师信息，请稍后重试！');
@@ -448,7 +456,7 @@
 					    a.click(function(event) {
 					    	globalSelectedAccounterId = $(this).attr("accounter_user_id");
 					    	globalAlipayForm.show();
-					    	setTimeout(function (){
+					    	setInterval(function (){
 					        	$.ajax({
 					        		url : '/company/checkTimeAndAmountInfo',
 					        		type : "POST",
@@ -502,10 +510,11 @@
 					$('#retData').html('');
 					$('#tipInfo').html('服务器暂时无法响应您的请求，请稍后重试！');
 					$('#tipInfo').show();
+					loadMask.hide();
 				}
 			});
 		});
-		
+		});
 		$('#searchAccounter').click(function(){
 			$('#tipInfo').hide();
 			$('#tipInfoSearch').hide();

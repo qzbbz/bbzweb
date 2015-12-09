@@ -737,4 +737,9 @@ public class AccounterServiceImpl implements IAccounterService {
 		return retMap;
 	}
 
+	@Override
+	public List<Accounter> getAllAccounterList() {
+		return accounterDao.getAllAccounter();
+	}
+
 }

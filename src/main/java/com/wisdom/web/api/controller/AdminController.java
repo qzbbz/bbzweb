@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -22,10 +23,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.wisdom.accounter.service.IAccounterService;
+import com.wisdom.common.model.Accounter;
 import com.wisdom.common.model.Company;
 import com.wisdom.common.model.CompanyAndPayModel;
 import com.wisdom.common.model.CompanyBill;
 import com.wisdom.common.model.CompanyDetail;
+import com.wisdom.common.model.CompanyInfo;
 import com.wisdom.common.model.CompanyPay;
 import com.wisdom.common.model.SalarySocialSecurity;
 import com.wisdom.common.model.User;
@@ -97,7 +100,39 @@ public class AdminController {
 		}
 		return retList;
 	}
-	
+	@RequestMapping("/admin/getAllCompanyInfoAndUserIdAndPhone")
+	@ResponseBody
+	public List<Map<String, String>> getAllCompanyInfoAndUserIdAndPhone(HttpServletRequest request) {
+		List<CompanyInfo> companyInfoList=companyService.getCompanyInfoAndUserIDAndPhone();
+		List<Map<String, String>> retList = new ArrayList<>();
+		if(companyInfoList != null && companyInfoList.size() != 0) {
+			for(CompanyInfo companyInfo : companyInfoList) {
+				logger.debug("companyId: {}", companyInfo.getId());
+				User user =userQueryDao.getCompanyAdminUserByCompanyId(companyInfo.getId());
+				if(user == null) continue;
+				logger.debug("userId: {}", user.getUserId());
+				String phone = (companyInfo.getPhone() == null || companyInfo.getPhone().isEmpty() ? "未设定" : companyInfo.getPhone()); 
+				logger.debug("userPhone: {}", phone);
+				Map<String, String> map = new HashMap<>();
+				map.put("companyName", companyInfo.getName() == null ? "未设定" : companyInfo.getName());
+				map.put("date", companyInfo.getCreateTime().toString().substring(0, 10));
+				map.put("expense", String.valueOf(companyInfo.getMonthExpense()));
+				map.put("callTime", companyInfo.getPerfectMoment());
+				map.put("phone", phone);
+				map.put("userId", user.getUserId());
+				int auditStatus = user.getAuditStatus();
+				if(auditStatus == 0) {
+					map.put("auditStatus", "正在审核");
+				} else if(auditStatus == 1) {
+					map.put("auditStatus", "审核通过");
+				} else if(auditStatus == 2) {
+					map.put("auditStatus", "审核未通过");
+				}
+				retList.add(map);
+			}
+		}
+		return retList;
+	}
 	@RequestMapping("/admin/auditUser")
 	@ResponseBody
 	public Map<String, String> auditUser(HttpServletRequest request) {
@@ -307,6 +342,81 @@ public class AdminController {
 		}
 		return re;
 	}
+
+	// get company Info by company_id and user_type
+	@RequestMapping("/admin/getCompanyAndAccounter")
+	@ResponseBody
+	public List<Company> getCompanyAndAccounter(HttpServletRequest request) {
+			List <Company> companyList = new ArrayList<>();
+			try{
+				companyList = companyService.getCompanyAndAccounter();
+				for(int i = 0;i < companyList.size();i ++){
+					System.out.println(companyList.get(i).getAccounterId());
+					if(companyList.get(i).getAccounterId()==null){
+						companyList.get(i).setAccounterId("");;
+					}
+				}
+			}catch(Exception e){
+				logger.debug("getCompanyAndAccounter exception : {}", e.toString());
+			}
+		
+		return companyList;
+	}
+	// get company Info by company_id and user_type
+		@RequestMapping("/admin/getAccounterIdInfo")
+		@ResponseBody
+		public List<Accounter> getAccounterIdInfo(HttpServletRequest request) {
+			List<Accounter> accounterList = new ArrayList<>();
+			try{
+				accounterList =accounterService.getAllAccounterList();
+			}catch(Exception e){
+				logger.debug("getAccounterIdInfo exception : {}", e.toString());
+			}
+			
+			return accounterList;
+		}
+		
+		// update company with accounter_id by company_id and user_type 
+				@RequestMapping("/admin/updatCompanyAccounterIdInfo")
+				@ResponseBody
+				public Map<String, String> updatCompanyAccounterIdInfo(HttpServletRequest request) {
+					Map<String, String> retMap = new HashMap<>();
+					boolean updateBoolean = false;
+					try{
+						String companyId=request.getParameter("globalCompanyId");
+						String accounterId=request.getParameter("selectValue");
+						updateBoolean = companyService.updateAccounterForCompany(Long.parseLong(companyId), accounterId);
+					}catch(Exception e){
+						logger.debug("getAccounterIdInfo exception : {}", e.toString());
+					}
+					if(updateBoolean) {
+						retMap.put("error_code", "0");
+					} else {
+						retMap.put("error_code", "1");
+						retMap.put("error_message", "更新accounterId失败！");
+					}
+					return retMap;
+				}	
+				
+				// get company by name
+				@RequestMapping("/admin/getCompanyInfoByName")
+				@ResponseBody
+				public List<Company> getCompanyInfoByName(HttpServletRequest request) {
+					List<Company>companyList = new ArrayList<>();
+					try{
+						String companyName=request.getParameter("company_name");
+						companyList = companyService.getCompanyByName(companyName);
+						for(int i = 0;i < companyList.size();i ++){
+							System.out.println(companyList.get(i).getAccounterId());
+							if(companyList.get(i).getAccounterId()==null){
+								companyList.get(i).setAccounterId("");;
+							}
+						}
+					}catch(Exception e){
+						logger.debug("getAccounterIdInfo exception : {}", e.toString());
+					}
+					return companyList;
+				}	
 	
 	@RequestMapping("/admin/getAllCompanyPayInfo")
 	@ResponseBody
@@ -351,5 +461,25 @@ public class AdminController {
 			retMap.put("result", "false");
 		}
 		return retMap;
+	}
+	
+	@RequestMapping("/admin/getAllCompanyPayInfoByCompanyName")
+	@ResponseBody
+	public List<Map<String, String>> getAllCompanyPayInfoByCompanyName(HttpServletRequest request) {
+		String companyName = request.getParameter("conditionValue");
+		List<CompanyAndPayModel> companyAndPayModelList = companyPayService.getCompanyAndPayModelByCompanyName(companyName);
+		List<Map<String, String>> retList = new ArrayList<>();
+		if(companyAndPayModelList != null && companyAndPayModelList.size() != 0) {
+			for(CompanyAndPayModel companyAndPayModel : companyAndPayModelList) {
+				Map<String, String> itemMap = new HashMap<>();
+				itemMap.put("company_id", String.valueOf(companyAndPayModel.getCompanyId()));
+				itemMap.put("company_name", companyAndPayModel.getCompanyName());
+				itemMap.put("company_service_time", companyAndPayModel.getServiceTime() == null ? "" : String.valueOf(companyAndPayModel.getServiceTime()));
+				itemMap.put("company_service_amount", companyAndPayModel.getPayAmount() == null ? "" : String.valueOf(companyAndPayModel.getPayAmount()));
+				itemMap.put("company_buy_time", companyAndPayModel.getCreateTime() == null ? "" : String.valueOf(companyAndPayModel.getCreateTime().toString().substring(0, 11)));
+				retList.add(itemMap);
+			}
+		}
+		return retList;
 	}
 }

@@ -3,10 +3,17 @@ package com.wisdom.company.dao;
 import java.util.List;
 
 import com.wisdom.common.model.Company;
+import com.wisdom.common.model.CompanyInfo;
 
 public interface ICompanyDao {
 	
 	public Company getCompanyByCompanyId(long companyId);
+	
+	public List<Company> getCompanyByName(String companyName);
+	
+	public List<Company> getCompanyAndAccounter();
+	
+	public boolean updateAccounterForCompany(long companyId,String accounterId);
 	
 	public long addCompany(Company company);
 	
@@ -26,5 +33,7 @@ public interface ICompanyDao {
 	public List<Company> getSubCompanyListByCompanyIdOrder(long companyId);
 	
 	List<Company> getAllCompany();
+	
+	List<CompanyInfo> getCompanyInfoAndUserIDAndPhone();
 		
 }

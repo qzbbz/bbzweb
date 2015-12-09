@@ -8,7 +8,7 @@
 	<link rel="stylesheet" type="text/css" href="/css/webcss/layout.css">
 </head>
 <body>
-	<div class="wrap" id="mask">
+	<div class="wrap">
 		<div class="side-bar">
 			<div class="side-bar-top">
 				<img src="/img/webimg/bss-logo.png" >
@@ -23,7 +23,7 @@
 			</div>
 		</div>
 		<div class="main">
-			<div class="menu"><a href="#" class="active">修改公司付款金额</a></div>
+			<div class="menu"><a href="#" class="active">绑定会计</a></div>
 			<div class="well mt20">
 				<div class="form-horizontal onlineTools">
 					<div class="row show-grid">
@@ -37,24 +37,25 @@
 	    		<colgroup>
 	    			<col style="width:10%;">
 	    			<col style="width:50%;">
-	    			<col style="width:10%;">
-	    			<col style="width:10%;">
-	    			<col style="width:10%;">
+	    			<col style="width:30%;">
 	    			<col style="width:10%;">
 	    		</colgroup>
 	    		<thead id="records">
 	    			<tr>
 	    				<th>公司ID</th>
 	    				<th>公司名称</th>
-	    				<th>服务时间</th>
-	    				<th>服务费用</th>
-	    				<th>购买时间</th>
-	    				<th>操作</th>
+	    				<th>会计ID</th>
+	    				<th>修改</th>
 	    			</tr>
 	    		</thead>
 	    		<tbody id='retData'>
 	    		</tbody>
 	    	</table>
+	    	<div class="pagination"></div>
+	    	<form id="downloadForm" method="POST">
+        		<input type="hidden" id="fileName" name="fileName">
+        		<input type="hidden" id="companyId" name="companyId">
+			</form>
 		</div>
 	</div>
 	<div id="modifyPwd" style="display:none;">
@@ -88,34 +89,30 @@
 			</div>
 		</div>
 	</div>
-	<div id="modifyCompanyPay" style="display:none;">
+	<div id="updateAccounterForm" style="display:none;">
 		<div id="form" class="form-horizontal">
-			<div class="control-group">
-				<label class="control-label">输入服务期限（月）：</label>
-				<div class="controls">
-					<input id="service_time" type="text" class="input-large"
-						data-rules="{required : true}" style="width:250px;">
+			<div class="control-group" id="cName">
+				<label class="control-label" style="float:left;">公司名称：</label>
+				<div class="controls"  id="updateAccounterForm_companyName">
+					
 				</div>
 			</div>
-			<div class="control-group">
-				<label class="control-label">输入服务费用（￥）：</label>
-				<div class="controls control-row-auto">
-					<input id="service_amount" type="text" class="input-large"
-						data-rules="{required : true}" style="width:250px;">
+			<div class="control-group" id="bindingDetail">
+				<label class="control-label">会计：</label>
+				<div class="controls control-row-auto" id="updateAccounterForm_accounterSelect">
 				</div>
 			</div>
 			<div class="control-group control-btn">
-				<div class="layer-wrap-footer"><a href="javascript:void(0);" id="modify_company_pay" class="button button-success">确定修改</a></div>
+				<div  class="layer-wrap-footer" id="updateAccounterForm_accounter"><a href="javascript:void(0);" id="updateAccounterForm_accounter_info" class="button button-success">确定修改</a></div>
 			</div>
 		</div>
-	</div>
+		</div>
 <!--该js需要修改js路径及修改seajs路径-->
 <script src="/js/webjs/jquery-1.11.1.js"></script>
 <script src="http://g.alicdn.com/bui/seajs/2.3.0/sea.js"></script>
 <script src="http://g.alicdn.com/bui/bui/1.1.17/config.js"></script>
 <script src="/js/webjs/menuTree.js"></script>
 <script type="text/javascript">
-var currentSelectedCompanyId;
 BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 	var modifyPwdForm = new Overlay.Dialog({
         title:'密码修改',
@@ -127,6 +124,7 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
         },
         buttons : []
     });
+	
 	$('#setPwd').click(function(){
 		modifyPwdForm.show();
 	})
@@ -167,79 +165,101 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 		});
 	})
 });
-	BUI.use(['bui/imgview', 'bui/overlay', 'bui/mask'], function(Imgview, Overlay, Mask) {
-		var loadMask = new Mask.LoadMask({
-			el : '#mask',
-			msg : 'loading ....'
-		});
-		$("#mask").css("z-index", 99);
-		var modifyCompanyPay = new Overlay.Dialog({
-	        title:'修改服务时间和费用',
-	        width:600,
-	        height:280,
-	        contentId:'modifyCompanyPay',
-	        success:function () {
-	          	this.close();
-	        },
-	        buttons : []
-	    });
-		
-			$('#modify_company_pay').click(function(){
-				var serviceTime = $('#service_time').val();
-				var serviceAmount = $('#service_amount').val();
-				if(serviceTime == null || serviceTime == "") {
-					BUI.Message.Alert('请输入服务期限！','warning');
-					return;
-				}
-				if(serviceAmount == null || serviceAmount == "") {
-					BUI.Message.Alert('请输入服务费用！','warning');
-					return;
-				}
-				$.ajax({
-					url : '/admin/modifyCompanyPayInfo',
-					type : "POST",
-					data : {serviceTime:serviceTime,serviceAmount:serviceAmount,companyId:currentSelectedCompanyId},
-					success : function(data) {
+	var globalAlipayForm;
+	var globalSelectedAccounterId;
+	var globalCompanyId;
+	var globalCompanyName;
+	function createAccounterList(data) {
+		if(data == null || data == "") return;
+		var selectNode = $("<select id='selectTag' style=\"width:250px;\" ></select>");
+		for(var i=0; i<data.length; i++) {
+			var tdNode1=$("<option value="+data[i].userId+">"+data[i].userId+"</option>  ");
+			 tdNode1.appendTo(selectNode);
+		}
+		$('#updateAccounterForm_accounterSelect').html(selectNode);
+	};
+	
+	$.ajax({
+		url : '/admin/getAccounterIdInfo',
+		type : "POST",
+		data : {},
+		success : function(data) {
+			createAccounterList(data);
+		},
+		error : function(data) {
+			BUI.Message.Alert('获取信息失败!');
+		}
+	});
+	BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
+		var updateAccounterForm = new Overlay.Dialog({
+            title:'修改绑定会计',
+            width:600,
+            height:250,
+            contentId:'updateAccounterForm',
+            success:function () {
+              	this.close();
+            },
+            buttons : []
+        });
+		$('#updateAccounterForm_accounter_info').click(function(){
+			var selectValue = $('#selectTag option:selected').val();
+			if(selectValue == null || selectValue == ""){
+				BUI.Message.Alert('没有选到值！','warning');
+				return;
+			}
+			if(globalCompanyId == null || globalCompanyId == ""){
+				BUI.Message.Alert('没有获取到公司名称！','warning');
+				return;
+			}
+			$.ajax({
+				url : '/admin/updatCompanyAccounterIdInfo',
+				type : "POST",
+				data : {selectValue:selectValue, globalCompanyId:globalCompanyId},
+				success : function(data) {
+					if(data.error_code == "0") {
 						BUI.Message.Alert('修改成功！','success');
-						modifyCompanyPay.close();
-						loadMask.show();
+						updateAccounterForm.close();
 						$.ajax({
-							url : '/admin/getAllCompanyPayInfo',
+							url : '/admin/getCompanyAndAccounter',
 							type : "POST",
 							data : {},
 							success : function(data) {
 								createDataList(data);
 							}
 						});
-					},
-					error : function(data) {
-						BUI.Message.Alert('修改失败！','warning');
-						modifyCompanyPay.close();
+					} else {
+						BUI.Message.Alert('修改失败！错误信息~~：' + data.error_msg,'warning');
+						updateAccounterForm.close();
 					}
-				});
-			})
+				},
+				error : function(data) {
+					BUI.Message.Alert('修改失败！错误信息：' + data.error_msg,'warning');
+				}
+			});
+		})
 		function createDataList(data) {
 			$('#retData').html("");
 			if(data == null || data == "") return;
 			var container = $('#retData');
 			for(var i=0; i<data.length; i++) {
 				var trNode = $("<tr></tr>");
-				var tdNode = $("<td>"+data[i].company_id+"</td><td>"+data[i].company_name+"</td><td>"+data[i].company_service_time+"</td><td>"+data[i].company_service_amount+"</td><td>"+data[i].company_buy_time+"</td>");
-			    var operateNode = $("<td><a href='javascript:void(0);'>修改服务时间和费用</a></td>");
-			    operateNode.attr("company_id", data[i].company_id);
-			    operateNode.click(function(event) {
-			    	currentSelectedCompanyId = $(this).attr("company_id");
-			    	modifyCompanyPay.show();
+				var tdNode = $("<td>"+data[i].id+"</td><td>"+data[i].name+"</td><td>"+data[i].accounterId+"</td>");
+			    var companyNode = $("<td><a  id='updateshow_company' href='javascript:void(0);' class='button button-success'>修改</a></td>");
+			    companyNode.attr("company-id", data[i].id);
+			    companyNode.attr("company-name",data[i].name);
+			    companyNode.click(function(event) {
+			    	globalCompanyId=$(this).attr("company-id");
+			    	globalCompanyName=$(this).attr("company-name");
+			    	var companyName=$('#updateAccounterForm_companyName').html(globalCompanyName);
+			    	updateAccounterForm.show();
 			    });
 			    tdNode.appendTo(trNode);
-			    operateNode.appendTo(trNode);
+			    companyNode.appendTo(trNode);
 			    trNode.appendTo(container);
 			}
-			loadMask.hide();
 		};
-		loadMask.show();
 		$.ajax({
-			url : '/admin/getAllCompanyPayInfo',
+			url : '/admin/getCompanyAndAccounter',
 			type : "POST",
 			data : {},
 			success : function(data) {
@@ -255,7 +275,7 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 			}
 			if(conditionType == '0') {
 				$.ajax({
-					url : '/admin/getAllCompanyPayInfo',
+					url : '/admin/getCompanyAndAccounter',
 					type : "POST",
 					data : {},
 					success : function(data) {
@@ -264,9 +284,9 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 				});
 			} else {
 				$.ajax({
-					url : '/admin/getAllCompanyPayInfoByCompanyName',
+					url : '/admin/getCompanyInfoByName',
 					type : "POST",
-					data : {conditionValue:conditionValue},
+					data : {company_name:conditionValue},
 					success : function(data) {
 						createDataList(data);
 					}
@@ -296,8 +316,7 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 					]
             },"menuTree"
         );
-	
-    defaultSelect("50");
+    defaultSelect("40");
     function defaultSelect(id){ 
         $("#"+id).parent().addClass("bui-menu-item-selected")
     }
