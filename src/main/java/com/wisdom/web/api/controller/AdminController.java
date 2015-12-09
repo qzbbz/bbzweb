@@ -28,6 +28,7 @@ import com.wisdom.common.model.Company;
 import com.wisdom.common.model.CompanyAndPayModel;
 import com.wisdom.common.model.CompanyBill;
 import com.wisdom.common.model.CompanyDetail;
+import com.wisdom.common.model.CompanyInfo;
 import com.wisdom.common.model.CompanyPay;
 import com.wisdom.common.model.SalarySocialSecurity;
 import com.wisdom.common.model.User;
@@ -99,7 +100,39 @@ public class AdminController {
 		}
 		return retList;
 	}
-	
+	@RequestMapping("/admin/getAllCompanyInfoAndUserIdAndPhone")
+	@ResponseBody
+	public List<Map<String, String>> getAllCompanyInfoAndUserIdAndPhone(HttpServletRequest request) {
+		List<CompanyInfo> companyInfoList=companyService.getCompanyInfoAndUserIDAndPhone();
+		List<Map<String, String>> retList = new ArrayList<>();
+		if(companyInfoList != null && companyInfoList.size() != 0) {
+			for(CompanyInfo companyInfo : companyInfoList) {
+				logger.debug("companyId: {}", companyInfo.getId());
+				User user =userQueryDao.getCompanyAdminUserByCompanyId(companyInfo.getId());
+				if(user == null) continue;
+				logger.debug("userId: {}", user.getUserId());
+				String phone = (companyInfo.getPhone() == null || companyInfo.getPhone().isEmpty() ? "未设定" : companyInfo.getPhone()); 
+				logger.debug("userPhone: {}", phone);
+				Map<String, String> map = new HashMap<>();
+				map.put("companyName", companyInfo.getName() == null ? "未设定" : companyInfo.getName());
+				map.put("date", companyInfo.getCreateTime().toString().substring(0, 10));
+				map.put("expense", String.valueOf(companyInfo.getMonthExpense()));
+				map.put("callTime", companyInfo.getPerfectMoment());
+				map.put("phone", phone);
+				map.put("userId", user.getUserId());
+				int auditStatus = user.getAuditStatus();
+				if(auditStatus == 0) {
+					map.put("auditStatus", "正在审核");
+				} else if(auditStatus == 1) {
+					map.put("auditStatus", "审核通过");
+				} else if(auditStatus == 2) {
+					map.put("auditStatus", "审核未通过");
+				}
+				retList.add(map);
+			}
+		}
+		return retList;
+	}
 	@RequestMapping("/admin/auditUser")
 	@ResponseBody
 	public Map<String, String> auditUser(HttpServletRequest request) {
