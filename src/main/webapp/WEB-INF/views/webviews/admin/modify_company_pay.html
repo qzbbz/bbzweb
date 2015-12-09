@@ -255,7 +255,7 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 			}
 			if(conditionType == '0') {
 				$.ajax({
-					url : '/admin/getAllCompanyDetailInfo',
+					url : '/admin/getAllCompanyPayInfo',
 					type : "POST",
 					data : {},
 					success : function(data) {
@@ -264,7 +264,7 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 				});
 			} else {
 				$.ajax({
-					url : '/admin/getAllCompanyDetailInfoByName',
+					url : '/admin/getAllCompanyPayInfoByCompanyName',
 					type : "POST",
 					data : {conditionValue:conditionValue},
 					success : function(data) {

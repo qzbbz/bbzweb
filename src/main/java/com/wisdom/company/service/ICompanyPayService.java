@@ -34,4 +34,7 @@ public interface ICompanyPayService {
 	public List<CompanyPay> getExpiredCompanyPay();
 	
 	public List<CompanyAndPayModel> getCompanyAndPayModel();
+	
+	public List<CompanyAndPayModel> getCompanyAndPayModelByCompanyName(String companyName);
+	
 }
