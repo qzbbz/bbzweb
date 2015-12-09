@@ -34,4 +34,6 @@ public interface ICompanyPayDao {
 	
 	public List<CompanyAndPayModel> getCompanyAndPayModel();
 	
+	public List<CompanyAndPayModel> getCompanyAndPayModelByCompanyName(String companyName);
+	
 }

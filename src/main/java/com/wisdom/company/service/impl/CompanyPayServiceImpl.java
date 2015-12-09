@@ -98,4 +98,10 @@ public class CompanyPayServiceImpl implements ICompanyPayService {
 		return companyPayDao.getCompanyAndPayModel();
 	}
 
+	@Override
+	public List<CompanyAndPayModel> getCompanyAndPayModelByCompanyName(String companyName) {
+		// TODO Auto-generated method stub
+		return companyPayDao.getCompanyAndPayModelByCompanyName(companyName);
+	}
+
 }

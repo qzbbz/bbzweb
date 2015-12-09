@@ -352,4 +352,24 @@ public class AdminController {
 		}
 		return retMap;
 	}
+	
+	@RequestMapping("/admin/getAllCompanyPayInfoByCompanyName")
+	@ResponseBody
+	public List<Map<String, String>> getAllCompanyPayInfoByCompanyName(HttpServletRequest request) {
+		String companyName = request.getParameter("conditionValue");
+		List<CompanyAndPayModel> companyAndPayModelList = companyPayService.getCompanyAndPayModelByCompanyName(companyName);
+		List<Map<String, String>> retList = new ArrayList<>();
+		if(companyAndPayModelList != null && companyAndPayModelList.size() != 0) {
+			for(CompanyAndPayModel companyAndPayModel : companyAndPayModelList) {
+				Map<String, String> itemMap = new HashMap<>();
+				itemMap.put("company_id", String.valueOf(companyAndPayModel.getCompanyId()));
+				itemMap.put("company_name", companyAndPayModel.getCompanyName());
+				itemMap.put("company_service_time", companyAndPayModel.getServiceTime() == null ? "" : String.valueOf(companyAndPayModel.getServiceTime()));
+				itemMap.put("company_service_amount", companyAndPayModel.getPayAmount() == null ? "" : String.valueOf(companyAndPayModel.getPayAmount()));
+				itemMap.put("company_buy_time", companyAndPayModel.getCreateTime() == null ? "" : String.valueOf(companyAndPayModel.getCreateTime().toString().substring(0, 11)));
+				retList.add(itemMap);
+			}
+		}
+		return retList;
+	}
 }
