@@ -1,12 +1,19 @@
 package com.wisdom.company.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.wisdom.common.model.Company;
 
 public interface ICompanyDao {
 	
 	public Company getCompanyByCompanyId(long companyId);
+	
+	public List<Company> getCompanyByName(String companyName);
+	
+	public List<Company> getCompanyAndAccounter();
+	
+	public boolean updateAccounterForCompany(long companyId,String accounterId);
 	
 	public long addCompany(Company company);
 	

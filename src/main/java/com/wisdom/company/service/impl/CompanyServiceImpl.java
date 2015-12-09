@@ -2,6 +2,7 @@ package com.wisdom.company.service.impl;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -147,6 +148,22 @@ public class CompanyServiceImpl implements ICompanyService {
 	public List<Company> getCompanyListByAccounterId(String accounterId) {
 		return companyDao.getCompanyListByAccounterId(accounterId);
 	}
+
+	@Override
+	public List<Company> getCompanyAndAccounter() {
+		return companyDao.getCompanyAndAccounter();
+	}
+
+	@Override
+	public boolean updateAccounterForCompany(long companyId, String accounterId) {
+		return companyDao.updateAccounterForCompany(companyId, accounterId);
+	}
+
+	@Override
+	public List<Company> getCompanyByName(String companyName) {
+		return companyDao.getCompanyByName(companyName);
+	}
+
 	
 	
 }

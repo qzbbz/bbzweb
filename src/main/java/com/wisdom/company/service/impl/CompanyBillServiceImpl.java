@@ -31,7 +31,7 @@ public class CompanyBillServiceImpl implements ICompanyBillService {
 	}
 
 	@Override
-	public long addCompanyBill(CompanyBill companyBill) {
+	public long addCompanyBill(CompanyBill companyBill) {	
 		return companyBillDao.addCompanyBill(companyBill);
 	}
 

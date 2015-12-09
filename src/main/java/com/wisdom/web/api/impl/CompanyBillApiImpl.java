@@ -23,6 +23,7 @@ import com.wisdom.common.model.Company;
 import com.wisdom.common.model.CompanyBill;
 import com.wisdom.company.service.ICompanyBillService;
 import com.wisdom.company.service.ICompanyService;
+import com.wisdom.invoice.service.IInvoiceService;
 import com.wisdom.user.service.IUserService;
 import com.wisdom.web.api.ICompanyBillApi;
 
@@ -41,6 +42,9 @@ public class CompanyBillApiImpl implements ICompanyBillApi {
 	@Autowired
 	private ICompanyBillService companyBillService;
 	
+	@Autowired
+	private IInvoiceService invoiceService;
+	
 	@Override
 	public Map<String, String> uploadCompanyBill(Map<String, String> params, MultipartFile file) {
 		Map<String, String> retMap = new HashMap<>();
@@ -51,8 +55,8 @@ public class CompanyBillApiImpl implements ICompanyBillApi {
 			String isFixedAssets = params.get("isFixedAssets");
 			long companyId = userService.getCompanyIdByUserId(userId);
 			String fileName = getGernarateFileName(file, userId);
-			FileUtils.copyInputStreamToFile(file.getInputStream(),
-					new File(params.get("realPath"), fileName));
+			//FileUtils.copyInputStreamToFile(file.getInputStream(),
+			//		new File(params.get("realPath"), fileName));
 			CompanyBill cb = new CompanyBill();
 			cb.setCompanyId(companyId);
 			cb.setFileName(fileName);
@@ -62,8 +66,16 @@ public class CompanyBillApiImpl implements ICompanyBillApi {
 			cb.setIsFixedAssets(fixedAssetFlag);*/
 			cb.setCreateTime(new Timestamp(System.currentTimeMillis()));
 			companyBillService.addCompanyBill(cb);
+			
+			
+			//Create invoice
+			long invoiceId = invoiceService.addInvoice(companyId, fileName, date, 0);
+			Company company = companyService.getCompanyByCompanyId(companyId);
+			//Send to queue
+			invoiceService.publishUnrecognizedInvoive(invoiceId, companyId, fileName, company.getName());
+			
 			retMap.put("error_code", "0");
-		} catch (IOException e) {
+		} catch (Exception e) {
 			logger.debug("uploadCompanyBill exception : {}", e.toString());
 			retMap.put("error_code", "1");
 			retMap.put("error_message", "上传发票失败，请稍后重试！");
