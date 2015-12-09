@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.wisdom.common.model.Company;
+import com.wisdom.common.model.CompanyInfo;
 import com.wisdom.common.model.Dept;
 import com.wisdom.common.model.Employment;
 import com.wisdom.common.utils.Result;
@@ -162,6 +163,10 @@ public class CompanyServiceImpl implements ICompanyService {
 	@Override
 	public List<Company> getCompanyByName(String companyName) {
 		return companyDao.getCompanyByName(companyName);
+	}
+	@Override
+	public List<CompanyInfo> getCompanyInfoAndUserIDAndPhone() {
+		return companyDao.getCompanyInfoAndUserIDAndPhone();
 	}
 
 	

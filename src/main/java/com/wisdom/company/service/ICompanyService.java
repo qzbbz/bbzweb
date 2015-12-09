@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.wisdom.common.model.Company;
+import com.wisdom.common.model.CompanyInfo;
 import com.wisdom.common.utils.Result;
 
 public interface ICompanyService {
@@ -38,4 +39,6 @@ public interface ICompanyService {
 	List<Company> getCompanyListByAccounterId(String accounterId);
 	
 	public List<Company> getCompanyByName(String companyName);
+	
+	public List<CompanyInfo> getCompanyInfoAndUserIDAndPhone();
 }
