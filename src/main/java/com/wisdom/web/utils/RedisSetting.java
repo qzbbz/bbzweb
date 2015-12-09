@@ -22,5 +22,7 @@ public class RedisSetting {
 	public static final Integer TIME_BETWEEN_EVICTION_RUNS_MILLIS = 6000;
 	
 	public static final Integer MAX_WAIT_MILLIS = 10000;
+	
+	public static final String PASSWORD = "T4729VT95%XsIvM";
 
 }
