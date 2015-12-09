@@ -682,7 +682,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 
 
 		// Timeout is set larger to the deploy environment
-		JedisPool jedisPool = new JedisPool(poolConfig,RedisSetting.ADDRESS, RedisSetting.PORT, 1000);
+		JedisPool jedisPool = new JedisPool(poolConfig,RedisSetting.ADDRESS, RedisSetting.PORT, 1000, RedisSetting.PASSWORD);
 		
 	   ExecutorService newFixedThreadPool = Executors.newFixedThreadPool(10);
 	    newFixedThreadPool.submit(new Runnable() {

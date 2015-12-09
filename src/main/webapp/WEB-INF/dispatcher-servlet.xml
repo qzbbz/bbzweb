@@ -201,7 +201,7 @@ class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer
 	<context:component-scan base-package="com.wisdom.contactus.utils" />
 	
 	
-	  <bean id="srpConnectionFactory" class="org.springframework.data.redis.connection.srp.SrpConnectionFactory" p:host-name="139.196.40.99" p:port="6379"/>
+	  <bean id="srpConnectionFactory" class="org.springframework.data.redis.connection.srp.SrpConnectionFactory" p:host-name="139.196.40.99" p:port="6379" p:password="T4729VT95%XsIvM"/>
   
   <bean id="messageListener" class="org.springframework.data.redis.listener.adapter.MessageListenerAdapter">
   <constructor-arg>
