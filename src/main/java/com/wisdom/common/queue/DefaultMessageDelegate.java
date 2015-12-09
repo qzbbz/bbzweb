@@ -24,10 +24,11 @@ public class DefaultMessageDelegate implements MessageDelegate {
 	
 	@Autowired IInvoiceService invoiceService;
 	
-	private Lock lock;
+
+
 
 	@Override
-	public void handleMessage(String message) throws JsonParseException, JsonMappingException, IOException {
+	public synchronized void handleMessage(String message) throws JsonParseException, JsonMappingException, IOException {
 		// TODO Auto-generated method stub
 		System.out.println(message);
 		
@@ -68,11 +69,7 @@ public class DefaultMessageDelegate implements MessageDelegate {
         System.out.println(content);
         invoiceService.setIsFAOfInvoice(invoiceId, fA);
 
-
-			synchronized (this) {
-		        invoiceService.deleteInvoiceArtifactByInvoiceId(invoiceId);
-		        invoiceService.addInvoiceArtifact(invoiceId, content);
-			}
+	    invoiceService.addInvoiceArtifact(invoiceId, content);
 
 
 /*

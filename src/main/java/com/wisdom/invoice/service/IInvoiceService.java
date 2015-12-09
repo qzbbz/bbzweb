@@ -60,8 +60,6 @@ public interface IInvoiceService {
 	public boolean setIsFAOfInvoice(long invoiceId, boolean isFA);
 	
 	public boolean addInvoiceArtifact(long invoiceId, List<Map<String, String>> content);
-	
-	public boolean deleteInvoiceArtifactByInvoiceId(long invoiceId);
  
 	public long addInvoice(long companyId, String fileName, String billDate, Integer isFA);
 	

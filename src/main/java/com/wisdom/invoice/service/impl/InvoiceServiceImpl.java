@@ -1,9 +1,12 @@
 package com.wisdom.invoice.service.impl;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -112,6 +115,19 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		
 		log.debug("addInvoiceRevord");
 		Long invoiceId = singleInvoiceService.addInvoiceRecord(invoice);
+		//Put the data into the new table
+		TestInvoice newInvoice = new TestInvoice();
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM");
+		Date now=new Date();
+		String billDate = format.format(now);
+		long companyId = userService.getCompanyIdByUserId(userId);
+		Path p = Paths.get(image);
+		String fileName = p.getFileName().toString();
+		newInvoice.setBillDate(billDate);
+		newInvoice.setCompanyId(companyId);
+		newInvoice.setFileName(fileName);
+		newInvoice.setIsFixedAssets(0);
+		invoiceDao.addInvoice(newInvoice);
 		if(null == invoiceId || invoiceId.longValue() == -1){
 			log.error("addInvoiceRecord failed");
 			return retMap;
@@ -621,8 +637,10 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		return invoiceDao.setIsFAOfInvoice(invoiceId, isFA);
 	}
 
+	@Transactional
 	@Override
 	public boolean addInvoiceArtifact(long invoiceId, List<Map<String, String>> content) {
+		invoiceDao.deleteInvoiceArtifactByInvoiceId(invoiceId);
 		for(Map<String, String>row: content){
 			String type = row.get("description");
 			double amount = Double.parseDouble(row.get("amount"));
@@ -630,11 +648,6 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			invoiceDao.addInvoiceArtifact(invoiceId, amount, type, supplierName);
 		}
 		return true;
-	}
-
-	@Override
-	public boolean deleteInvoiceArtifactByInvoiceId(long invoiceId) {
-		return invoiceDao.deleteInvoiceArtifactByInvoiceId(invoiceId);
 	}
 
 	@Override
