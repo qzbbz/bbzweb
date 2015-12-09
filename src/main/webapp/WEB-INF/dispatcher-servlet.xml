@@ -201,7 +201,9 @@ class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer
 	<context:component-scan base-package="com.wisdom.contactus.utils" />
 	
 	
-	  <bean id="srpConnectionFactory" class="org.springframework.data.redis.connection.srp.SrpConnectionFactory" p:host-name="139.196.40.99" p:port="6379"/>
+	  <bean id="jedisConnectionFactory"
+		class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
+		p:host-name="localhost" p:port="6379" />
   
   <bean id="messageListener" class="org.springframework.data.redis.listener.adapter.MessageListenerAdapter">
   <constructor-arg>
@@ -210,7 +212,7 @@ class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer
 </bean>
 
 <bean id="redisContainer" class="org.springframework.data.redis.listener.RedisMessageListenerContainer">
-  <property name="connectionFactory" ref="srpConnectionFactory"/>
+  <property name="connectionFactory" ref="jedisConnectionFactory"/>
   <property name="messageListeners">
     <map>
       <entry key-ref="messageListener">
