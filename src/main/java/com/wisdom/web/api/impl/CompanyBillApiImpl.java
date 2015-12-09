@@ -55,8 +55,8 @@ public class CompanyBillApiImpl implements ICompanyBillApi {
 			String isFixedAssets = params.get("isFixedAssets");
 			long companyId = userService.getCompanyIdByUserId(userId);
 			String fileName = getGernarateFileName(file, userId);
-			//FileUtils.copyInputStreamToFile(file.getInputStream(),
-			//		new File(params.get("realPath"), fileName));
+			FileUtils.copyInputStreamToFile(file.getInputStream(),
+					new File(params.get("realPath"), fileName));
 			CompanyBill cb = new CompanyBill();
 			cb.setCompanyId(companyId);
 			cb.setFileName(fileName);
