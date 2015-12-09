@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.wisdom.common.model.Attachment;
 import com.wisdom.common.model.Invoice;
+import com.wisdom.common.model.TestInvoice;
 import com.wisdom.invoice.domain.InvoiceInfoVo;
 
 public interface IInvoiceService {
@@ -55,4 +56,14 @@ public interface IInvoiceService {
 	public boolean deleteInvoiceByInvoiceId(long invoiceId);
 	
 	public Invoice getInvoiceById(long id);
+	
+	public boolean setIsFAOfInvoice(long invoiceId, boolean isFA);
+	
+	public boolean addInvoiceArtifact(long invoiceId, List<Map<String, String>> content);
+	
+	public boolean deleteInvoiceArtifactByInvoiceId(long invoiceId);
+ 
+	public long addInvoice(long companyId, String fileName, String billDate, Integer isFA);
+	
+	public void publishUnrecognizedInvoive(long invoiceId, long companyId, String fileName, String companyName);
 }
