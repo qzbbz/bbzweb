@@ -21,11 +21,16 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import com.wisdom.common.model.CompanyBill;
 import com.wisdom.common.model.Invoice;
 import com.wisdom.common.model.TestInvoice;
+import com.wisdom.common.model.TestInvoiceRecord;
 import com.wisdom.common.model.UserInvoice;
+import com.wisdom.company.mapper.CompanyBillMapper;
 import com.wisdom.invoice.dao.IInvoiceDao;
 import com.wisdom.invoice.mapper.InvoiceMapper;
+import com.wisdom.invoice.mapper.TestInvoiceMapper;
+import com.wisdom.invoice.mapper.TestInvoiceRecordMapper;
 import com.wisdom.invoice.mapper.UserInvoiceMapper;
 
 @Repository("invoiceDao")
@@ -324,5 +329,19 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 			e.printStackTrace();
 		}
 		return false;
+	}
+	@Override
+	public List<TestInvoiceRecord> getAllInvoicesByCompanyId(long companyId) {
+
+			List<TestInvoiceRecord> list = null;
+			try {
+				String sql = "select i.id as invoice_id, i.company_id as company_id, group_concat(a.type separator ', ') as type, sum(a.amount) as amount, i.created_time as created_time, i.is_fixed_assets as is_fixed_assets, i.bill_date as bill_date, a.supplier_name as supplier_name , i.file_name as file_name from test_invoice_artifact a  left join test_invoice i on i.item_id = a.item_id where  i.company_id = ? group by i.id";
+				list = jdbcTemplate.query(sql, new Object[]{companyId}, 
+						new RowMapperResultSetExtractor<TestInvoiceRecord>(
+								new TestInvoiceRecordMapper()));
+			} catch (Exception e) {
+				logger.error(e.toString());
+			}
+			return list;
 	}
 }

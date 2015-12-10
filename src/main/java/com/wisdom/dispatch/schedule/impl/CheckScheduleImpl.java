@@ -47,13 +47,13 @@ public class CheckScheduleImpl implements CheckSchedule {
 		
 	}
 
-	@Scheduled(fixedDelay=60) //每小时
+	@Scheduled(fixedDelay=60*60*100) //每小时
 	@Override
 	public void redundantInvoiceArtifactCheckService() {
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(now);
-		cal.add(Calendar.MINUTE, -1);
+		cal.add(Calendar.HOUR_OF_DAY, -1);
 		Timestamp toTime = new Timestamp(0);
 		toTime.setTime(cal.getTime().getTime()); 
 		invoiceService.removeRedundantInvoiceArtifact(toTime);

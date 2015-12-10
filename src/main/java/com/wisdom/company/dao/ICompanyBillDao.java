@@ -6,6 +6,8 @@ import com.wisdom.common.model.CompanyBill;
 
 public interface ICompanyBillDao {
 	
+	//Used by com.wisdom.web.api.impl.CompanyBillApiImpl.deleteCompanyBill
+	@Deprecated
 	public CompanyBill getCompanyBillById(long id);
 	
 	public List<CompanyBill> getAllCompanyBill(long companyId);

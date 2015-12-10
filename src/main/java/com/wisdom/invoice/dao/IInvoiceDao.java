@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.wisdom.common.model.Invoice;
 import com.wisdom.common.model.TestInvoice;
+import com.wisdom.common.model.TestInvoiceRecord;
 
 public interface IInvoiceDao {
 
@@ -35,4 +36,6 @@ public interface IInvoiceDao {
 	public long addInvoice(TestInvoice invoice);
 	
 	public boolean removeRedundantInvoiceArtifact(Timestamp toTime);
+	
+	public List<TestInvoiceRecord> getAllInvoicesByCompanyId(long companyId);
 }

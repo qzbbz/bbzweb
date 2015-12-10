@@ -36,6 +36,7 @@ import com.wisdom.common.model.CompanySalary;
 import com.wisdom.common.model.CompanySales;
 import com.wisdom.common.model.Invoice;
 import com.wisdom.common.model.SalarySocialSecurity;
+import com.wisdom.common.model.TestInvoiceRecord;
 import com.wisdom.common.model.User;
 import com.wisdom.common.model.UserInvoice;
 import com.wisdom.common.model.UserPhone;
@@ -47,6 +48,7 @@ import com.wisdom.company.service.ICompanySalesService;
 import com.wisdom.company.service.ICompanyService;
 import com.wisdom.company.service.IExpenseTypeService;
 import com.wisdom.company.service.ISalarySocialSecurityService;
+import com.wisdom.invoice.dao.IInvoiceDao;
 import com.wisdom.invoice.service.IInvoiceService;
 import com.wisdom.invoice.service.IUserInvoiceService;
 import com.wisdom.user.service.IUserService;
@@ -65,6 +67,9 @@ public class AccounterServiceImpl implements IAccounterService {
 
 	@Autowired
 	private IAccounterDao accounterDao;
+	
+	@Autowired
+	private IInvoiceDao invoiceDao;
 	
 	@Autowired
 	private IUserService userService;
@@ -221,15 +226,16 @@ public class AccounterServiceImpl implements IAccounterService {
 			for(Company company : companyList) {
 				long companyId = company.getId();
 				String companyName = companyService.getCompanyName(companyId);
-				List<CompanyBill> companyBillList = companyBillDao.getAllCompanyBill(companyId);
-				if(companyBillList != null) {
-					for(CompanyBill bill : companyBillList) {
+				//List<CompanyBill> companyBillList = companyBillDao.getAllCompanyBill(companyId);
+				List<TestInvoiceRecord> invoiceRecords = invoiceDao.getAllInvoicesByCompanyId(companyId);
+				if(invoiceRecords != null) {
+					for(TestInvoiceRecord invoiceRecord : invoiceRecords) {
 						Map<String, String> map = new HashMap<>();
-						map.put("date", bill.getCreateTime().toString().substring(0, 10));
-						map.put("file", bill.getFileName());
+						map.put("date", invoiceRecord.getCreatedTime().toString().substring(0, 10));
+						map.put("file", invoiceRecord.getFileName());
 						DecimalFormat format = new DecimalFormat("#0.000");
-						map.put("amount", format.format(bill.getAmount() == null ? 0 : bill.getAmount()));
-						map.put("type", bill.getType() == null || bill.getType().isEmpty() ? "未设定" : bill.getType());
+						map.put("amount", format.format(invoiceRecord.getAmount()));
+						map.put("type", invoiceRecord.getType() == null || invoiceRecord.getType().isEmpty() ? "未设定" : invoiceRecord.getType());
 						map.put("companyName", companyName);
 						map.put("item_type", "公司发票");
 						retMap.get("companyExpense").add(map);
