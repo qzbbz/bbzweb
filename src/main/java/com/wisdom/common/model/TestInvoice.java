@@ -14,7 +14,9 @@ public class TestInvoice implements java.io.Serializable {
 	private Integer isFixedAssets;
 	private Timestamp createTime;
 	private Timestamp modifiyTime;
+	private String itemId;
 	// Constructors
+
 
 	/** default constructor */
 	public TestInvoice() {
@@ -26,7 +28,7 @@ public class TestInvoice implements java.io.Serializable {
 	}
 
 	public TestInvoice(Long id, Long companyId,
-			String fileName, String billDate, Integer isFixedAssets, Timestamp createTime, Timestamp modifyTime) {
+			String fileName, String billDate, Integer isFixedAssets, Timestamp createTime, Timestamp modifyTime, String itemId) {
 		super();
 		this.id = id;
 		this.companyId = companyId;
@@ -35,6 +37,7 @@ public class TestInvoice implements java.io.Serializable {
 		this.isFixedAssets = isFixedAssets;
 		this.createTime = createTime;
 		this.modifiyTime = modifyTime;
+		this.itemId = itemId;
 	}
 
 	public Long getId() {
@@ -94,5 +97,12 @@ public class TestInvoice implements java.io.Serializable {
 	}
 
 
+	public String getItemId() {
+		return itemId;
+	}
+
+	public void setItemId(String itemId) {
+		this.itemId = itemId;
+	}
 
 }

@@ -1,5 +1,7 @@
 package com.wisdom.dispatch.schedule.impl;
 
+import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -13,6 +15,7 @@ import com.wisdom.common.model.CompanyPay;
 import com.wisdom.company.service.ICompanyPayService;
 import com.wisdom.company.service.ICompanyService;
 import com.wisdom.dispatch.schedule.CheckSchedule;
+import com.wisdom.invoice.service.IInvoiceService;
 
 @Component
 public class CheckScheduleImpl implements CheckSchedule {
@@ -24,6 +27,8 @@ public class CheckScheduleImpl implements CheckSchedule {
 	@Autowired ICompanyPayService companyPayService;
 	
 	@Autowired ICompanyService companyService;
+	
+	@Autowired IInvoiceService invoiceService;
 	
 	@Scheduled(fixedDelay=86400000) //每1天
 	@Override
@@ -39,6 +44,20 @@ public class CheckScheduleImpl implements CheckSchedule {
 			}
 		}
 		
+		
+	}
+
+	@Scheduled(fixedDelay=60*60*100) //每小时
+	@Override
+	public void redundantInvoiceArtifactCheckService() {
+		Timestamp now = new Timestamp(System.currentTimeMillis());
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(now);
+		cal.add(Calendar.HOUR_OF_DAY, -1);
+		Timestamp toTime = new Timestamp(0);
+		toTime.setTime(cal.getTime().getTime()); 
+		invoiceService.removeRedundantInvoiceArtifact(toTime);
+		log.info("Remove redundant invoice artifacts.");
 		
 	}
 }

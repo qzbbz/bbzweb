@@ -1,11 +1,13 @@
 package com.wisdom.invoice.service;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
 import com.wisdom.common.model.Attachment;
 import com.wisdom.common.model.Invoice;
 import com.wisdom.common.model.TestInvoice;
+import com.wisdom.common.model.TestInvoiceRecord;
 import com.wisdom.invoice.domain.InvoiceInfoVo;
 
 public interface IInvoiceService {
@@ -57,11 +59,15 @@ public interface IInvoiceService {
 	
 	public Invoice getInvoiceById(long id);
 	
-	public boolean setIsFAOfInvoice(long invoiceId, boolean isFA);
+	public boolean setIsFAOfInvoice(long invoiceId, boolean isFA, String itemId);
 	
-	public boolean addInvoiceArtifact(long invoiceId, List<Map<String, String>> content);
+	public boolean addInvoiceArtifact(long invoiceId, List<Map<String, String>> content, String itemId);
  
 	public long addInvoice(long companyId, String fileName, String billDate, Integer isFA);
 	
 	public void publishUnrecognizedInvoive(long invoiceId, long companyId, String fileName, String companyName);
+	
+	public boolean removeRedundantInvoiceArtifact(Timestamp toTime);
+	
+	public List<TestInvoiceRecord> getAllInvoicesByCompanyId(long companyId);
 }

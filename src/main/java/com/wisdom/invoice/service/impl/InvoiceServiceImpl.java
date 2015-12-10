@@ -23,6 +23,7 @@ import com.wisdom.common.model.Dispatcher;
 import com.wisdom.common.model.Invoice;
 import com.wisdom.common.model.InvoiceApproval;
 import com.wisdom.common.model.TestInvoice;
+import com.wisdom.common.model.TestInvoiceRecord;
 import com.wisdom.common.model.UserInvoice;
 import com.wisdom.company.service.IExpenseTypeService;
 import com.wisdom.dispatch.service.IDispatcherService;
@@ -633,19 +634,19 @@ public class InvoiceServiceImpl implements IInvoiceService {
 	}
 
 	@Override
-	public boolean setIsFAOfInvoice(long invoiceId, boolean isFA) {
-		return invoiceDao.setIsFAOfInvoice(invoiceId, isFA);
+	public boolean setIsFAOfInvoice(long invoiceId, boolean isFA, String itemId) {
+		return invoiceDao.setIsFAOfInvoice(invoiceId, isFA, itemId);
 	}
 
 	@Transactional
 	@Override
-	public boolean addInvoiceArtifact(long invoiceId, List<Map<String, String>> content) {
-		invoiceDao.deleteInvoiceArtifactByInvoiceId(invoiceId);
+	public boolean addInvoiceArtifact(long invoiceId, List<Map<String, String>> content, String itemId) {
+		//invoiceDao.deleteInvoiceArtifactByInvoiceId(invoiceId, itemId);
 		for(Map<String, String>row: content){
 			String type = row.get("description");
 			double amount = Double.parseDouble(row.get("amount"));
 			String supplierName = row.get("supplier");
-			invoiceDao.addInvoiceArtifact(invoiceId, amount, type, supplierName);
+			invoiceDao.addInvoiceArtifact(invoiceId, amount, type, supplierName, itemId);
 		}
 		return true;
 	}
@@ -704,6 +705,16 @@ public class InvoiceServiceImpl implements IInvoiceService {
 	        }
 	    });
 		
+	}
+
+	@Override
+	public boolean removeRedundantInvoiceArtifact(Timestamp toTime) {
+		return invoiceDao.removeRedundantInvoiceArtifact(toTime); 		
+	}
+
+	@Override
+	public List<TestInvoiceRecord> getAllInvoicesByCompanyId(long companyId) {
+		return invoiceDao.getAllInvoicesByCompanyId(companyId);
 	}
 
 }
