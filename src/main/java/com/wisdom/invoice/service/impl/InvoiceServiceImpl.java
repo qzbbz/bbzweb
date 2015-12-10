@@ -23,6 +23,7 @@ import com.wisdom.common.model.Dispatcher;
 import com.wisdom.common.model.Invoice;
 import com.wisdom.common.model.InvoiceApproval;
 import com.wisdom.common.model.TestInvoice;
+import com.wisdom.common.model.TestInvoiceRecord;
 import com.wisdom.common.model.UserInvoice;
 import com.wisdom.company.service.IExpenseTypeService;
 import com.wisdom.dispatch.service.IDispatcherService;
@@ -709,6 +710,11 @@ public class InvoiceServiceImpl implements IInvoiceService {
 	@Override
 	public boolean removeRedundantInvoiceArtifact(Timestamp toTime) {
 		return invoiceDao.removeRedundantInvoiceArtifact(toTime); 		
+	}
+
+	@Override
+	public List<TestInvoiceRecord> getAllInvoicesByCompanyId(long companyId) {
+		return invoiceDao.getAllInvoicesByCompanyId(companyId);
 	}
 
 }

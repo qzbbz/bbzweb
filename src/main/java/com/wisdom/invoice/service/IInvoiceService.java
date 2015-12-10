@@ -7,6 +7,7 @@ import java.util.Map;
 import com.wisdom.common.model.Attachment;
 import com.wisdom.common.model.Invoice;
 import com.wisdom.common.model.TestInvoice;
+import com.wisdom.common.model.TestInvoiceRecord;
 import com.wisdom.invoice.domain.InvoiceInfoVo;
 
 public interface IInvoiceService {
@@ -67,4 +68,6 @@ public interface IInvoiceService {
 	public void publishUnrecognizedInvoive(long invoiceId, long companyId, String fileName, String companyName);
 	
 	public boolean removeRedundantInvoiceArtifact(Timestamp toTime);
+	
+	public List<TestInvoiceRecord> getAllInvoicesByCompanyId(long companyId);
 }
