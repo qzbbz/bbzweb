@@ -14,7 +14,9 @@ public class TestInvoice implements java.io.Serializable {
 	private Integer isFixedAssets;
 	private Timestamp createTime;
 	private Timestamp modifiyTime;
+	private String itemId;
 	// Constructors
+
 
 	/** default constructor */
 	public TestInvoice() {
@@ -94,5 +96,12 @@ public class TestInvoice implements java.io.Serializable {
 	}
 
 
+	public String getItemId() {
+		return itemId;
+	}
+
+	public void setItemId(String itemId) {
+		this.itemId = itemId;
+	}
 
 }

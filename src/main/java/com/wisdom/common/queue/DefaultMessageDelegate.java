@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 
@@ -67,9 +68,10 @@ public class DefaultMessageDelegate implements MessageDelegate {
         String contentStr = (String) data.get("data");
         List<Map<String,String>> content = mapper2.readValue(contentStr, typeRef); 
         System.out.println(content);
-        invoiceService.setIsFAOfInvoice(invoiceId, fA);
+        String requestId = UUID.randomUUID().toString();
+        invoiceService.setIsFAOfInvoice(invoiceId, fA, requestId);
 
-	    invoiceService.addInvoiceArtifact(invoiceId, content);
+	    invoiceService.addInvoiceArtifact(invoiceId, content, requestId);
 
 
 /*
