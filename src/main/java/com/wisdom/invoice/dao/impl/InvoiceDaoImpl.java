@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -232,14 +234,14 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 		return false;
 	}
 	@Override
-	public boolean setIsFAOfInvoice(long invoiceId, boolean isFA) {
-		String sql = "update test_invoice set is_fixed_assets = ? , modified_time = NOW() where id = ?";
+	public boolean setIsFAOfInvoice(long invoiceId, boolean isFA, String itemId) {
+		String sql = "update test_invoice set is_fixed_assets = ? , modified_time = NOW(), item_id = ? where id = ?";
 		Integer fA = 0;
 		if(isFA){
 			fA = 1;
 		}
 		try {
-			int affectedRows = jdbcTemplate.update(sql, fA, invoiceId);
+			int affectedRows = jdbcTemplate.update(sql, fA, itemId, invoiceId);
 			logger.debug("updateInvoice result : {}", affectedRows);
 			return affectedRows != 0;
 		} catch (DataAccessException e) {
@@ -248,15 +250,16 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 		return false;
 	}
 	@Override
-	public boolean addInvoiceArtifact(long invoiceId, double amount, String type, String supplierName) {
-		String sql = "insert into test_invoice_artifact (invoice_id, amount, type, supplier_name) values (?, ?, ?, ?)";
+	public boolean addInvoiceArtifact(long invoiceId, double amount, String type, String supplierName, String itemId) {
+		String sql = "insert into test_invoice_artifact (invoice_id, amount, type, supplier_name, item_id, created_time) values (?, ?, ?, ?, ?, NOW())";
 		try {
 			int affectedRows = jdbcTemplate
 					.update(sql,
 							invoiceId,
 							amount,
 							type,
-							supplierName);
+							supplierName,
+							itemId);
 			logger.debug("addInvoiceArtifact result : {}", affectedRows);
 			return affectedRows != 0;
 		} catch (Exception e) {
@@ -307,5 +310,19 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 			e.printStackTrace();
 		}
 		return -1;
+	}
+	@Override
+	public boolean removeRedundantInvoiceArtifact(Timestamp toTime) {
+		String sql = "delete from test_invoice_artifact where id in (select aid from (select a.id as aid from test_invoice v left join test_invoice_artifact a on v.id = a.invoice_id where v.item_id <> a.item_id and (a.created_time < ? ) or a.created_time is null) as delete_items)";
+		DateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
+	    String toTimeStr = timeFormat.format(toTime);  
+		try {
+			int affectedRows = jdbcTemplate.update(sql, toTimeStr);
+			logger.debug("deleteInvoiceArtifactByInvoiceId result : {}", affectedRows);
+			return affectedRows != 0;
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 }
