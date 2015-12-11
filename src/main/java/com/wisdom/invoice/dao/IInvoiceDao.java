@@ -38,4 +38,8 @@ public interface IInvoiceDao {
 	public boolean removeRedundantInvoiceArtifact(Timestamp toTime);
 	
 	public List<TestInvoiceRecord> getAllInvoicesByCompanyId(long companyId);
+	
+	public boolean updateInoviceStatus(long invoiceId, String status);
+	
+	public List<TestInvoiceRecord> getInvoicesByDate(String date, long companyId);
 }

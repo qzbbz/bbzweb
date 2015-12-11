@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.wisdom.common.model.Company;
 import com.wisdom.common.model.CompanyBill;
+import com.wisdom.common.model.TestInvoiceRecord;
 import com.wisdom.company.service.ICompanyBillService;
 import com.wisdom.company.service.ICompanyService;
 import com.wisdom.invoice.service.IInvoiceService;
@@ -181,5 +182,69 @@ public class CompanyBillApiImpl implements ICompanyBillApi {
 		}
 		return resultList;
 	}
+
+	@Override
+	public List<Map<String, String>> getAllInvoicesByUserId(String userId) {
+
+		if(userId == null || userId.isEmpty()) return null;
+		long companyId = userService.getCompanyIdByUserId(userId);
+		if(companyId <= 0) return null;
+		String companyName = companyService.getCompanyName(companyId);
+		Map<String, String> extraParams = new HashMap<>();
+		extraParams.put("company_name", companyName);
+		List<TestInvoiceRecord> list = invoiceService.getAllInvoicesByCompanyId(companyId);
+		return createInvoiceList(list, extraParams);
+		//List<CompanyBill> list = companyBillService.getAllCompanyBill(companyId);
+		//return createCompanyBillList(list, extraParams); 
+
+	}
+	
+	
+	@Override
+	public List<Map<String, String>> getAllInvoicesByCondition(Map<String, String> params, String userId) {
+		if(userId == null || userId.isEmpty()) return null;
+		long companyId = userService.getCompanyIdByUserId(userId);
+		if(companyId <= 0) return null;
+		String companyName = companyService.getCompanyName(companyId);
+		Map<String, String> extraParams = new HashMap<>();
+		extraParams.put("company_name", companyName);
+		if(params.get("conditionType") == null || params.get("conditionType").isEmpty() ||
+				("0").equals(params.get("conditionType")) ||
+				params.get("conditionValue") == null || params.get("conditionValue").isEmpty()) {
+			List<TestInvoiceRecord> list = invoiceService.getAllInvoicesByCompanyId(companyId);
+			return createInvoiceList(list, extraParams); 
+		}
+		if(("1").equals(params.get("conditionType")) && params.get("conditionValue") != null) {
+			List<TestInvoiceRecord> list = invoiceService.getInvoicesByDate(params.get("conditionValue"), companyId);
+			return createInvoiceList(list, extraParams);
+		}
+		return null;
+	}
+	
+	private List<Map<String, String>> createInvoiceList(List<TestInvoiceRecord> list, Map<String, String> extraParams) {
+		List<Map<String, String>> retList = new ArrayList<>();
+		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		if(list == null) return null;
+		for(TestInvoiceRecord invoiceRecord : list) {
+			Map<String, String> map = new HashMap<>();
+			Timestamp stamp = invoiceRecord.getCreatedTime();
+			map.put("id", String.valueOf(invoiceRecord.getInvoiceId()));
+			map.put("date", sdf.format(stamp));
+			Double amount = invoiceRecord.getAmount();
+			DecimalFormat format = new DecimalFormat("#0.000");
+			map.put("amount", format.format(amount));
+			map.put("expense_type", invoiceRecord.getType());
+			map.put("file_name", invoiceRecord.getFileName() == null ? "" : invoiceRecord.getFileName());
+			map.put("supplyName", invoiceRecord.getSupplierName());
+			map.put("isFixedAssets", String.valueOf(invoiceRecord.getIsFa()));
+			map.put("status", invoiceRecord.getStatus());
+			map.putAll(extraParams);
+			retList.add(map);
+		}
+		return retList.size() > 0 ? retList : null;
+	}
+
+
+	
 	
 }

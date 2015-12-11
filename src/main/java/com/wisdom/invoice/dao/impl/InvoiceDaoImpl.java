@@ -297,14 +297,15 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 			int id = jdbcTemplate.update(new PreparedStatementCreator() {
 				public PreparedStatement createPreparedStatement(
 						Connection connection) throws SQLException {
-					String sql = "insert into test_invoice (company_id, file_name, bill_date, is_fixed_assets, created_time, modified_time)"
-							+ " values (?, ?, ?, ?, NOW(), NOW())";
+					String sql = "insert into test_invoice (company_id, file_name, bill_date, is_fixed_assets, created_time, modified_time, cost_center)"
+							+ " values (?, ?, ?, ?, NOW(), NOW(), ?)";
 					PreparedStatement ps = connection.prepareStatement(sql,
 							Statement.RETURN_GENERATED_KEYS);
 					ps.setLong(1, invoice.getCompanyId() == null? 0: invoice.getCompanyId());
 					ps.setString(2, invoice.getFileName() == null? "": invoice.getFileName());
 					ps.setString(3, invoice.getBillDate() == null? "": invoice.getBillDate());
 					ps.setInt(4, invoice.getIsFixedAssets() == 0? 0: 1);
+					ps.setString(7, invoice.getCostCenter() == null? "":invoice.getCostCenter());
 					return ps;
 				}
 			}, keyHolder);
@@ -335,7 +336,7 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 
 			List<TestInvoiceRecord> list = null;
 			try {
-				String sql = "select i.id as invoice_id, i.company_id as company_id, group_concat(a.type separator ', ') as type, sum(a.amount) as amount, i.created_time as created_time, i.is_fixed_assets as is_fixed_assets, i.bill_date as bill_date, a.supplier_name as supplier_name , i.file_name as file_name from test_invoice_artifact a  left join test_invoice i on i.item_id = a.item_id where  i.company_id = ? group by i.id";
+				String sql = "select i.id as invoice_id, i.company_id as company_id, group_concat(a.type separator ', ') as type, sum(a.amount) as amount, i.created_time as created_time, i.is_fixed_assets as is_fixed_assets, i.bill_date as bill_date, a.supplier_name as supplier_name , i.file_name as file_name, i.status as status from test_invoice_artifact a  right join test_invoice i on i.item_id = a.item_id where  i.company_id = ? group by i.id";
 				list = jdbcTemplate.query(sql, new Object[]{companyId}, 
 						new RowMapperResultSetExtractor<TestInvoiceRecord>(
 								new TestInvoiceRecordMapper()));
@@ -343,5 +344,31 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 				logger.error(e.toString());
 			}
 			return list;
+	}
+	@Override
+	public boolean updateInoviceStatus(long invoiceId, String status) {
+		String sql = "update test_invoice set status = ? where id = ?";
+		try {
+			int affectedRows = jdbcTemplate.update(sql, status, invoiceId);
+			logger.debug("updateInvoiceStatus result : {}", affectedRows);
+			return affectedRows != 0;
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	@Override
+	public List<TestInvoiceRecord> getInvoicesByDate(String date, long companyId) {
+		List<TestInvoiceRecord> list = null;
+		try {
+			String sql = "select i.id as invoice_id, i.company_id as company_id, group_concat(a.type separator ', ') as type, sum(a.amount) as amount, i.created_time as created_time, i.is_fixed_assets as is_fixed_assets, i.bill_date as bill_date, a.supplier_name as supplier_name , i.file_name as file_name, i.status as status from test_invoice_artifact a  right join test_invoice i on i.item_id = a.item_id where  i.company_id = ?";
+			sql += " and i.created_time like '%" + date + "%' group by i.id";
+			list = jdbcTemplate.query(sql, new Object[]{companyId}, 
+					new RowMapperResultSetExtractor<TestInvoiceRecord>(
+							new TestInvoiceRecordMapper()));
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return list;
 	}
 }

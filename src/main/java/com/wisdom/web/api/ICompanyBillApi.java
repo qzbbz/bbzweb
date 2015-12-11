@@ -17,4 +17,8 @@ public interface ICompanyBillApi {
 	
 	public boolean modifyCompanyBill(String id, String amount, String type, String supplyName, String isFixedAssets);
 	
+	public List<Map<String, String>> getAllInvoicesByUserId(String uid);
+	
+	public List<Map<String, String>> getAllInvoicesByCondition(Map<String, String> params, String uid);
+	
 }
