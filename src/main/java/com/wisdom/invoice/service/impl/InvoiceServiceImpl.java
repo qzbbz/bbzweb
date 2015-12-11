@@ -128,6 +128,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		newInvoice.setCompanyId(companyId);
 		newInvoice.setFileName(fileName);
 		newInvoice.setIsFixedAssets(0);
+		newInvoice.setCostCenter(costCenterCode);
 		invoiceDao.addInvoice(newInvoice);
 		if(null == invoiceId || invoiceId.longValue() == -1){
 			log.error("addInvoiceRecord failed");
@@ -658,6 +659,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		invoice.setFileName(fileName);
 		invoice.setBillDate(billDate);
 		invoice.setIsFixedAssets(isFA);
+		invoice.setCostCenter(null);
 		long invoiceId = invoiceDao.addInvoice(invoice);
 		return invoiceId;
 	}
@@ -715,6 +717,16 @@ public class InvoiceServiceImpl implements IInvoiceService {
 	@Override
 	public List<TestInvoiceRecord> getAllInvoicesByCompanyId(long companyId) {
 		return invoiceDao.getAllInvoicesByCompanyId(companyId);
+	}
+
+	@Override
+	public boolean updateInvoiceStatus(long invoiceId, String status) {
+		return invoiceDao.updateInoviceStatus(invoiceId, status);
+	}
+
+	@Override
+	public List<TestInvoiceRecord> getInvoicesByDate(String date, long companyId) {
+		return invoiceDao.getInvoicesByDate(date, companyId);
 	}
 
 }

@@ -97,6 +97,27 @@ public class CompanyBillController {
 		return companyBillApi.getCompanyBillByCondition(params);
 	}
 	
+	@RequestMapping("/company/getAllInvoices")
+	@ResponseBody
+	public List<Map<String, String>> getAllInvoices(HttpServletRequest request){
+		String userId = (String)request.getSession().getAttribute("userId");
+		return companyBillApi.getAllInvoicesByUserId(userId);
+	}
+	
+
+	@RequestMapping("/company/getAllInvoicesByCondition")
+	@ResponseBody
+	public List<Map<String, String>> getAllInvoicesByCondition(
+			HttpServletRequest request) {
+		String userId = (String) request.getSession().getAttribute("userId");
+		Map<String, String> params = new HashMap<>();
+		params.put("conditionValue", request.getParameter("conditionValue"));
+		params.put("conditionType", request.getParameter("conditionType"));
+		params.put("userId", userId);
+		logger.debug("params : {}", params.toString());
+		return companyBillApi.getAllInvoicesByCondition(params, userId);
+	}
+	
 	@RequestMapping("/company/deleteCompanyBill")
 	@ResponseBody
 	public Map<String, String> deleteCompanyBill(

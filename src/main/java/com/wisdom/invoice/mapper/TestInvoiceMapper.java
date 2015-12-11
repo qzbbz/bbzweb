@@ -12,7 +12,7 @@ public class TestInvoiceMapper  implements RowMapper<TestInvoice> {
 		TestInvoice u = new TestInvoice(rs.getLong("id"), rs.getLong("company_id"),
 				rs.getString("file_name"), rs.getString("bill_date"), rs.getInt("is_fixed_assets"),
 				rs.getTimestamp("created_time"),rs.getTimestamp("modified_time"),
-				rs.getString("item_id"));
+				rs.getString("item_id"), rs.getString("status"), rs.getString("cost_center"));
 		return u;
 	}
 }
