@@ -140,10 +140,8 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		newInvoice.setIsFixedAssets(0);
 		newInvoice.setCostCenter(costCenterCode);
 		long newInvoiceId = invoiceDao.addInvoice(newInvoice);
-		log.error("Add new Invoice: line 144");
 		String companyName = companyService.getCompanyName(companyId);
-		publishUnrecognizedInvoive(newInvoiceId, companyId, fileName, companyName);
-		log.error("Add new Invoice: line 147");		
+		publishUnrecognizedInvoive(newInvoiceId, companyId, fileName, companyName);	
 		log.debug("addAttachMentRecord");
 		boolean blRet = attachmentService.addAttachMentRecord(newInvoiceId,image);
 		logger.debug("attachmentService image : " + image);
