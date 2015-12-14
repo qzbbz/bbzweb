@@ -78,8 +78,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 	private ISingleInvoiceService singleInvoiceService;
 	@Autowired
 	private ICompanyService companyService;
-	@Autowired
-	private IInvoiceService invoiceService;
+
 	
 	
 	@Transactional
@@ -143,7 +142,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		long newInvoiceId = invoiceDao.addInvoice(newInvoice);
 		log.error("Add new Invoice: line 144");
 		String companyName = companyService.getCompanyName(companyId);
-		invoiceService.publishUnrecognizedInvoive(newInvoiceId, companyId, fileName, companyName);
+		publishUnrecognizedInvoive(newInvoiceId, companyId, fileName, companyName);
 		log.error("Add new Invoice: line 147");		
 		log.debug("addAttachMentRecord");
 		boolean blRet = attachmentService.addAttachMentRecord(newInvoiceId,image);
