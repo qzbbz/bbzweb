@@ -371,4 +371,16 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 		}
 		return list;
 	}
+	@Override
+	public boolean deleteTestInvoice(long invoiceId) {
+		String sql = "delete from test_invoice where id = ?";
+		try {
+			int affectedRows = jdbcTemplate.update(sql, invoiceId);
+			logger.debug("deleteTestInvoice result : {}", affectedRows);
+			return affectedRows != 0;
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 }

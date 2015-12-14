@@ -21,6 +21,7 @@ public class InvoiceApproval implements java.io.Serializable {
 	private Integer approvalStatus;
 	private Timestamp updateTime;
 	private Timestamp createTime;
+	private long newInvoiceId;
 
 	// Constructors
 
@@ -29,7 +30,7 @@ public class InvoiceApproval implements java.io.Serializable {
 	}
 
 	/** minimal constructor */
-	public InvoiceApproval(Long id, Long invoiceId, String userId) {
+	public InvoiceApproval(Long id, Long invoiceId, String userId, long newInvoiceId) {
 		this.id = id;
 		this.invoiceId = invoiceId;
 		this.userId = userId;
@@ -37,7 +38,7 @@ public class InvoiceApproval implements java.io.Serializable {
 
 	/** full constructor */
 	public InvoiceApproval(Long id, Long invoiceId, String userId,
-			Integer status, Integer approvalStatus,Timestamp updateTime, Timestamp createTime) {
+			Integer status, Integer approvalStatus,Timestamp updateTime, Timestamp createTime, long newInvoiceId) {
 		this.id = id;
 		this.invoiceId = invoiceId;
 		this.userId = userId;
@@ -45,6 +46,7 @@ public class InvoiceApproval implements java.io.Serializable {
 		this.approvalStatus = approvalStatus;
 		this.updateTime = updateTime;
 		this.createTime = createTime;
+		this.newInvoiceId = newInvoiceId;
 	}
 
 	// Property accessors
@@ -105,4 +107,11 @@ public class InvoiceApproval implements java.io.Serializable {
 		this.approvalStatus = approvalStatus;
 	}
 
+	public long getNewInvoiceId() {
+		return newInvoiceId;
+	}
+
+	public void setNewInvoiceId(long newInvoiceId) {
+		this.newInvoiceId = newInvoiceId;
+	}
 }
