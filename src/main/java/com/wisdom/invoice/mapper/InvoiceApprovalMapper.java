@@ -12,7 +12,7 @@ public class InvoiceApprovalMapper implements RowMapper<InvoiceApproval> {
 		InvoiceApproval u = new InvoiceApproval(rs.getLong("id"), 
 				rs.getLong("invoice_id"), rs.getString("user_id"),
 				rs.getInt("status"),rs.getInt("approval_status"), rs.getTimestamp("create_time"),
-				rs.getTimestamp("update_time"), rs.getLong("new_invoice_id"));
+				rs.getTimestamp("update_time"));
 		return u;
 	}
 }

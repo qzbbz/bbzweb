@@ -383,4 +383,17 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 		}
 		return false;
 	}
+	@Override
+	public TestInvoiceRecord getInvoiceRecordById(long invoiceId) {
+		TestInvoiceRecord record = null;
+		try {
+			String sql = "select i.id as invoice_id, i.company_id as company_id, group_concat(a.type separator ', ') as type, sum(a.amount) as amount, i.created_time as created_time, i.is_fixed_assets as is_fixed_assets, i.bill_date as bill_date, a.supplier_name as supplier_name , i.file_name as file_name, i.status as status from test_invoice_artifact a  right join test_invoice i on i.item_id = a.item_id where  i.id=? limit 1";
+			record = (TestInvoiceRecord) jdbcTemplate.query(sql, new Object[]{invoiceId}, 
+					new RowMapperResultSetExtractor<TestInvoiceRecord>(
+							new TestInvoiceRecordMapper()));
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return record;
+	}
 }
