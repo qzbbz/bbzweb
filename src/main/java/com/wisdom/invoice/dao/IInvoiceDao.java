@@ -42,4 +42,6 @@ public interface IInvoiceDao {
 	public boolean updateInoviceStatus(long invoiceId, String status);
 	
 	public List<TestInvoiceRecord> getInvoicesByDate(String date, long companyId);
+	
+	public boolean deleteTestInvoice(long invoiceId);
 }

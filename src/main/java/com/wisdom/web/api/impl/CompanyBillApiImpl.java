@@ -244,6 +244,22 @@ public class CompanyBillApiImpl implements ICompanyBillApi {
 		return retList.size() > 0 ? retList : null;
 	}
 
+	@Override
+	public boolean deleteInvoice(String idList, String realPath) {
+		String[] ids = idList.split(",");
+		for (String id : ids) {
+			// delete from cb
+			/*CompanyBill cb = companyBillService.getCompanyBillById(Long.valueOf(id));
+			if(cb == null) continue;
+			File file = new File(realPath + "/" + cb.getFileName());
+			FileUtils.deleteQuietly(file);
+			companyBillService.deleteCompanyBillById(Long.valueOf(id));*/
+			// delete from invoice
+			invoiceService.deleteTestInvoice(Long.valueOf(id));
+		}
+		return true;
+	}
+
 
 	
 	

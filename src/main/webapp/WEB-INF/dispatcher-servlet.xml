@@ -224,7 +224,7 @@ class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer
           <constructor-arg value="RECOGNIZED_INVOICE"></constructor-arg>
         </bean>
       </entry>
-            <entry key-ref="messageListener2">
+      <entry key-ref="messageListener2">
         <bean class="org.springframework.data.redis.listener.ChannelTopic">
           <constructor-arg value="INVALID_INVOICE"></constructor-arg>
         </bean>

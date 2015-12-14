@@ -74,4 +74,6 @@ public interface IInvoiceService {
 	public boolean updateInvoiceStatus(long invoiceId, String status);
 	
 	public List<TestInvoiceRecord> getInvoicesByDate(String date, long companyId);
+	
+	public boolean deleteTestInvoice(long invoiceId);
 }

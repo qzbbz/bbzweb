@@ -127,7 +127,7 @@ public class CompanyBillController {
 		String realPath = request.getSession().getServletContext()
 				.getRealPath("/WEB-INF/files/company");
 		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
-		if(companyBillApi.deleteCompanyBill(idList, realPath)) {
+		if(companyBillApi.deleteInvoice(idList, realPath)) {
 			retMap.put("error_code", "0");
 		} else {
 			retMap.put("error_code", "1");
