@@ -25,6 +25,7 @@ import com.wisdom.common.model.InvoiceApproval;
 import com.wisdom.common.model.TestInvoice;
 import com.wisdom.common.model.TestInvoiceRecord;
 import com.wisdom.common.model.UserInvoice;
+import com.wisdom.company.service.ICompanyService;
 import com.wisdom.company.service.IExpenseTypeService;
 import com.wisdom.dispatch.service.IDispatcherService;
 import com.wisdom.invoice.dao.IInvoiceDao;
@@ -75,6 +76,11 @@ public class InvoiceServiceImpl implements IInvoiceService {
 	private IExpenseTypeService expenseTypeService;
 	@Autowired
 	private ISingleInvoiceService singleInvoiceService;
+	@Autowired
+	private ICompanyService companyService;
+	@Autowired
+	private IInvoiceService invoiceService;
+	
 	
 	@Transactional
 	@Override
@@ -116,12 +122,17 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		
 		log.debug("addInvoiceRevord");
 		Long invoiceId = singleInvoiceService.addInvoiceRecord(invoice);
+		if(null == invoiceId || invoiceId.longValue() == -1){
+			log.error("addInvoiceRecord failed");
+			return retMap;
+		}
 		//Put the data into the new table
 		TestInvoice newInvoice = new TestInvoice();
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM");
 		Date now=new Date();
 		String billDate = format.format(now);
 		long companyId = userService.getCompanyIdByUserId(userId);
+		
 		Path p = Paths.get(image);
 		String fileName = p.getFileName().toString();
 		newInvoice.setBillDate(billDate);
@@ -129,13 +140,13 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		newInvoice.setFileName(fileName);
 		newInvoice.setIsFixedAssets(0);
 		newInvoice.setCostCenter(costCenterCode);
-		invoiceDao.addInvoice(newInvoice);
-		if(null == invoiceId || invoiceId.longValue() == -1){
-			log.error("addInvoiceRecord failed");
-			return retMap;
-		}
+		long newInvoiceId = invoiceDao.addInvoice(newInvoice);
+		log.error("Add new Invoice: line 144");
+		String companyName = companyService.getCompanyName(companyId);
+		invoiceService.publishUnrecognizedInvoive(newInvoiceId, companyId, fileName, companyName);
+		log.error("Add new Invoice: line 147");		
 		log.debug("addAttachMentRecord");
-		boolean blRet = attachmentService.addAttachMentRecord(invoiceId,image);
+		boolean blRet = attachmentService.addAttachMentRecord(newInvoiceId,image);
 		logger.debug("attachmentService image : " + image);
 		if(!blRet){
 			log.error("addAttachMentRecord error");
@@ -152,14 +163,14 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		}
 		
 		log.debug("addUserInvoiceRecord");
-		blRet = userInvoiceService.addUserInvoiceRecord(invoiceId,userId,receiver,ProcessStatus.PROCESSING);
+		blRet = userInvoiceService.addUserInvoiceRecord(newInvoiceId,userId,receiver,ProcessStatus.PROCESSING);
 		if(!blRet){
 			log.error("addUserInvoiceRecord error! userId=" + userId + ",invoiceId:" + invoice.getId());
 			return retMap;
 		}
 		
 		//先生成一条审批记录
-		blRet = invoiceApprovalService.addInvoiceApprovalRecord(invoiceId,receiver,0);
+		blRet = invoiceApprovalService.addInvoiceApprovalRecord(newInvoiceId,receiver,0);
 		if(!blRet){
 			log.error("add invoiceAppovalRecord failed");
 			retMap.put("message", "");
@@ -172,7 +183,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		String userName = userService.getUserNameByUserId(userId); 
 		log.debug("getUserNameByUserId:" + userName);
 		//生成一条dispatcher日志。
-		blRet = dispatcherService.addDispatcherRecord(userId,userName,invoiceId,0,0,receiver,openId,1);		//TODO 
+		blRet = dispatcherService.addDispatcherRecord(userId,userName,newInvoiceId,0,0,receiver,openId,1);		//TODO 
 		if(!blRet){
 			log.error("add dispatcher log error!" + "userId:" + userId + ",reciever:" + receiver + ",InvoiceId:" + invoice.getId());
 			return retMap;
