@@ -484,7 +484,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			}
 			map.put("bill_title", invoiceRecord.getType());
 			map.put("bill_amount", invoiceRecord.getAmount());
-			map.put("bill_expenseTypeId", invoiceRecord.getSupplierName());
+			map.put("bill_expenseTypeId", 5);
 			map.put("desc", invoiceRecord.getType());
 			map.put("bill_expenseTypeName", invoiceRecord.getSupplierName());
 			//Attachment attach = attachmentService.getAttachMentByInvoiceId(invoice.getId());
@@ -497,6 +497,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			}else{
 				finishedList.add(map);
 			}
+			logger.debug("Get invoice record data");
 			
 		}
 		if(finishedList.size() > 0) retMap.put("finishedList", finishedList);
