@@ -475,21 +475,22 @@ public class InvoiceServiceImpl implements IInvoiceService {
 				map.put("reasons", userInvoice.getReasons() == null || userInvoice.getReasons().isEmpty() ? "无" : userInvoice.getReasons());
 			}		
 			map.put("approval_id", approvalId);
-			Invoice invoice =  singleInvoiceService.getSingleInvoiceInfo(invoiceApproval.getInvoiceId());
-			if(null == invoice){
-				logger.debug("invoice not exsisted, invoice_id : {}", invoiceApproval.getInvoiceId());
+			//Invoice invoice =  singleInvoiceService.getSingleInvoiceInfo(invoiceApproval.getInvoiceId());
+			TestInvoiceRecord invoiceRecord = invoiceDao.getInvoiceRecordById(invoiceApproval.getInvoiceId());
+			if(null == invoiceRecord){
+				logger.debug("invoice  record not exsisted, invoice_id : {}", invoiceApproval.getInvoiceId());
 				//return map;
 				continue;
 			}
-			map.put("bill_title", invoice.getTitle());
-			map.put("bill_amount", invoice.getAmount());
-			map.put("bill_expenseTypeId", invoice.getExpenseTypeId());
-			map.put("desc", invoice.getDetailDesc());
-			map.put("bill_expenseTypeName", expenseTypeService.getExpenseTypeNameById(invoice.getExpenseTypeId()));
-			Attachment attach = attachmentService.getAttachMentByInvoiceId(invoice.getId());
-			if(null != attach){
-				map.put("bill_img", "/files/company/" + attach.getImage());
-			}
+			map.put("bill_title", invoiceRecord.getType());
+			map.put("bill_amount", invoiceRecord.getAmount());
+			map.put("bill_expenseTypeId", invoiceRecord.getSupplierName());
+			map.put("desc", invoiceRecord.getType());
+			map.put("bill_expenseTypeName", invoiceRecord.getSupplierName());
+			//Attachment attach = attachmentService.getAttachMentByInvoiceId(invoice.getId());
+			//if(null != attach){
+				map.put("bill_img", "/files/company/" + invoiceRecord.getFileName());
+			//}
 			
 			if(0 == invoiceApproval.getStatus()){
 				processingList.add(map);
