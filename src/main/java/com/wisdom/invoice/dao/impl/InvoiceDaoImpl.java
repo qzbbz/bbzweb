@@ -26,6 +26,7 @@ import com.wisdom.common.model.Invoice;
 import com.wisdom.common.model.TestInvoice;
 import com.wisdom.common.model.TestInvoiceRecord;
 import com.wisdom.common.model.UserInvoice;
+import com.wisdom.company.mapper.CompanyBankStaMapper;
 import com.wisdom.company.mapper.CompanyBillMapper;
 import com.wisdom.invoice.dao.IInvoiceDao;
 import com.wisdom.invoice.mapper.InvoiceMapper;
@@ -388,9 +389,8 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 		TestInvoiceRecord record = null;
 		try {
 			String sql = "select i.id as invoice_id, i.company_id as company_id, group_concat(a.type separator ', ') as type, sum(a.amount) as amount, i.created_time as created_time, i.is_fixed_assets as is_fixed_assets, i.bill_date as bill_date, a.supplier_name as supplier_name , i.file_name as file_name, i.status as status from test_invoice_artifact a  right join test_invoice i on i.item_id = a.item_id where  i.id=? limit 1";
-			record = (TestInvoiceRecord) jdbcTemplate.query(sql, new Object[]{invoiceId}, 
-					new RowMapperResultSetExtractor<TestInvoiceRecord>(
-							new TestInvoiceRecordMapper()));
+			record = jdbcTemplate.queryForObject(sql,
+					new Object[] { invoiceId }, new TestInvoiceRecordMapper());
 		} catch (Exception e) {
 			logger.error(e.toString());
 		}
