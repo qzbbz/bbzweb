@@ -475,6 +475,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 				map.put("reasons", userInvoice.getReasons() == null || userInvoice.getReasons().isEmpty() ? "无" : userInvoice.getReasons());
 			}		
 			map.put("approval_id", approvalId);
+
 			//Invoice invoice =  singleInvoiceService.getSingleInvoiceInfo(invoiceApproval.getInvoiceId());
 			TestInvoiceRecord invoiceRecord = invoiceDao.getInvoiceRecordById(invoiceApproval.getInvoiceId());
 			if(null == invoiceRecord){
@@ -487,6 +488,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			map.put("bill_expenseTypeId", 5);
 			map.put("desc", invoiceRecord.getType());
 			map.put("bill_expenseTypeName", invoiceRecord.getSupplierName());
+			map.put("bill_date", sdf.format(stamp));
 			//Attachment attach = attachmentService.getAttachMentByInvoiceId(invoice.getId());
 			//if(null != attach){
 				map.put("bill_img", "/files/company/" + invoiceRecord.getFileName());
