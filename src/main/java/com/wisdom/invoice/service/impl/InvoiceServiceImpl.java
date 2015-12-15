@@ -405,22 +405,22 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		map.put("approval_id", userInvoice.getApprovalId());
 		String userName = userService.getUserNameByUserId(userInvoice.getUserId());
 		map.put("user_name", userName);
-		
-		Invoice invoice =  singleInvoiceService.getSingleInvoiceInfo(userInvoice.getInvoiceId());
-		if(null == invoice){
-			log.debug("invoice not exsisted");
+
+		TestInvoiceRecord invoiceRecord = invoiceDao.getInvoiceRecordById(userInvoice.getInvoiceId());
+		if(null == invoiceRecord){
+			log.debug("invoice record not exsisted");
 			map.clear();
 			return map;
 		}
-		map.put("bill_title", invoice.getTitle());
-		map.put("bill_commit_status", invoice.getStatus());
-		map.put("bill_amount", invoice.getAmount());
-		map.put("bill_desc", invoice.getDetailDesc() == null || invoice.getDetailDesc().isEmpty() ? "无" : invoice.getDetailDesc());
-		map.put("bill_expenseTypeId", invoice.getExpenseTypeId());
-		String exTypeName = expenseTypeService.getExpenseTypeNameById(invoice.getExpenseTypeId());
-		map.put("bill_expenseTypeName", exTypeName == null || exTypeName.isEmpty() ? "未设置" : exTypeName);
+		map.put("bill_title", invoiceRecord.getType());
+		map.put("bill_commit_status", invoiceRecord.getStatus());
+		map.put("bill_amount", invoiceRecord.getAmount());
+		map.put("bill_desc", invoiceRecord.getSupplierName() == null || invoiceRecord.getSupplierName().isEmpty() ? "无" : invoiceRecord.getSupplierName());
+		//map.put("bill_expenseTypeId", invoice.getExpenseTypeId());
+		//String exTypeName = expenseTypeService.getExpenseTypeNameById(invoiceRecord.getType());
+		map.put("bill_expenseTypeName", invoiceRecord.getType() == null || invoiceRecord.getType().isEmpty() ? "未设置" : invoiceRecord.getType());
 		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
-		Timestamp stamp = invoice.getDate();
+		Timestamp stamp = invoiceRecord.getCreatedTime();
 		map.put("bill_date", sdf.format(stamp));
 		stamp = userInvoice.getUpdateTime();
 		map.put("update_time",sdf.format(stamp));
@@ -428,12 +428,10 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			String approvalName = userService.getUserNameByUserId((String)map.get("approval_id"));
 			map.put("approval_name", approvalName);
 		}
-		
-		Attachment attach = attachmentService.getAttachMentByInvoiceId(invoice.getId());
-		if(null != attach){
-			map.put("bill_img", "/files/company/" + attach.getImage());
-		}
 
+			map.put("bill_img", "/files/company/" + invoiceRecord.getFileName());
+
+		
 		return map;
 	}
 	
@@ -485,7 +483,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			}
 			map.put("bill_title", invoiceRecord.getType());
 			map.put("bill_amount", invoiceRecord.getAmount());
-			map.put("bill_expenseTypeId", 5);
+			//map.put("bill_expenseTypeId", 5);
 			map.put("desc", invoiceRecord.getType());
 			map.put("bill_expenseTypeName", invoiceRecord.getSupplierName());
 			map.put("bill_date", sdf.format(stamp));
