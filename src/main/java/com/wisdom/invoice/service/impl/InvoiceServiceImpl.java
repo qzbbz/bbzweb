@@ -456,6 +456,10 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		List<Map<String,Object>> processingList = new ArrayList<Map<String,Object>>();
 		for(InvoiceApproval invoiceApproval : invoiceApprovalList){
 			logger.debug("invoiceApproval, invoice_id :{}", invoiceApproval.getInvoiceId());
+			Dispatcher dispatch = dispatcherService.getDispatcherByInvoiceId(invoiceApproval.getInvoiceId());
+			if (dispatch != null && -1 == dispatch.getStatus()){
+				continue;
+			}
 			Map map = new HashMap<String,Object>();
 			map.put("processStatus", invoiceApproval.getStatus());
 			map.put("invoice_id", invoiceApproval.getInvoiceId());
