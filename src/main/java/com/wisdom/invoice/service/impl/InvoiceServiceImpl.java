@@ -312,7 +312,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		}
 		
 		//先生成一条审批记录
-		boolean blRet = invoiceApprovalService.addInvoiceApprovalRecord(Long.parseLong(invoiceId),userId,0);
+		boolean blRet = invoiceApprovalService.addInvoiceApprovalRecord(userInvoice.getInvoiceId(),userId,0);
 		if(!blRet){
 			log.error("add invoiceAppovalRecord failed");
 			retMap.put("message", "");
@@ -362,8 +362,12 @@ public class InvoiceServiceImpl implements IInvoiceService {
 					finishedList.add(billInfo);
 				}else{
 					Dispatcher dispatch = dispatcherService.getDispatcherByInvoiceId(invoice.getInvoiceId());
+
 					//if(null != dispatch && dispatch.getStatus() == 1){
 					if(null != dispatch){
+						if(-1 == dispatch.getStatus()){
+							continue;
+						}
 						billInfo.put("bill_status", "0");
 //						billInfo.put("approval_id",dispatch.getReciever());
 						processingList.add(billInfo);
@@ -455,7 +459,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			Map map = new HashMap<String,Object>();
 			map.put("processStatus", invoiceApproval.getStatus());
 			map.put("invoice_id", invoiceApproval.getInvoiceId());
-			map.put("approval_status", invoiceApproval.getApprovalStatus());
+			map.put("approval_status", invoiceApproval.getApprovalStatus() == 0?true:false);
 			map.put("approval_id", approvalId);
 			DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
 			Timestamp stamp = invoiceApproval.getUpdateTime();
