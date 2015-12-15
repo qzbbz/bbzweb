@@ -180,7 +180,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		String userName = userService.getUserNameByUserId(userId); 
 		log.debug("getUserNameByUserId:" + userName);
 		//生成一条dispatcher日志。
-		blRet = dispatcherService.addDispatcherRecord(userId,userName,newInvoiceId,0,0,receiver,openId,1);		//TODO 
+		blRet = dispatcherService.addDispatcherRecord(userId,userName,newInvoiceId,-1,0,receiver,openId,1);		//TODO 
 		if(!blRet){
 			log.error("add dispatcher log error!" + "userId:" + userId + ",reciever:" + receiver + ",InvoiceId:" + newInvoiceId);
 			return retMap;
@@ -598,7 +598,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		String userName = userService.getUserNameByUserId(userId); 
 		log.debug("getUserNameByUserId:" + userName);
 		//生成一条dispatcher日志。
-		blRet = dispatcherService.addDispatcherRecord(userId,userName,invoiceId,0,0,receiver,openId,1);		//TODO 
+		blRet = dispatcherService.addDispatcherRecord(userId,userName,invoiceId,-1,0,receiver,openId,1);		//TODO 
 		if(!blRet){
 			log.error("add dispatcher log error!" + "userId:" + userId + ",reciever:" + receiver + ",InvoiceId:" + invoiceId);
 			return retMap;
