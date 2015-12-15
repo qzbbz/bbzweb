@@ -17,6 +17,8 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wisdom.dispatch.service.IDispatcherService;
+import com.wisdom.invoice.service.IInvoiceApprovalService;
 import com.wisdom.invoice.service.IInvoiceService;
 
 
@@ -24,6 +26,8 @@ import com.wisdom.invoice.service.IInvoiceService;
 public class DefaultMessageDelegate implements MessageDelegate {
 	
 	@Autowired IInvoiceService invoiceService;
+	
+	@Autowired IDispatcherService dispatcherService;
 	
 
 
@@ -72,6 +76,7 @@ public class DefaultMessageDelegate implements MessageDelegate {
         invoiceService.setIsFAOfInvoice(invoiceId, fA, requestId);
 
 	    invoiceService.addInvoiceArtifact(invoiceId, content, requestId);
+	    dispatcherService.updateDispatcherStatus(invoiceId, 0);
 
 
 /*

@@ -25,7 +25,7 @@ public class DispatchServiceImpl implements IDispatcherService {
 		notifyLog.setUserId(userId);
 		notifyLog.setUserName(userName);
 		notifyLog.setInvoiceId(invoiceId);
-		notifyLog.setStatus(status); //0-初始状态 1-已经发送成功
+		notifyLog.setStatus(status); //-1-初始状态 0-识别后状态 1-已经发送成功
 		notifyLog.setChannelTypeId(channalTypeID);
 		notifyLog.setReciever(receiver);
 		notifyLog.setOpenId(openId);
@@ -54,10 +54,10 @@ public class DispatchServiceImpl implements IDispatcherService {
 	}
 
 	@Override
-	public boolean updateDispatcherStatus(long invoiceId) {
+	public boolean updateDispatcherStatus(long invoiceId, int status) {
 		Dispatcher dispatcher = new Dispatcher();
 		dispatcher.setInvoiceId(invoiceId);
-		dispatcher.setStatus(1);//已发送
+		dispatcher.setStatus(status);
 		dispatcher.setUpdateTime(new Timestamp(new Date().getTime()));
 		return dispatcherDao.updateDispatcherByInvoiceId(dispatcher);
 	}

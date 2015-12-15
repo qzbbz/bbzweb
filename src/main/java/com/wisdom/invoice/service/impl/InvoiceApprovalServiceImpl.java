@@ -42,11 +42,14 @@ public class InvoiceApprovalServiceImpl implements IInvoiceApprovalService {
 			int status) {
 		InvoiceApproval invoiceApproval = new InvoiceApproval();
 		invoiceApproval.setInvoiceId(invoiceId);
-		invoiceApproval.setStatus(0);
+		//Set status to -1 first, set it back to 0 if the invoice is recognized
+		invoiceApproval.setStatus(-1);
 		invoiceApproval.setUserId(approvalId);
 		Timestamp time = new Timestamp(new Date().getTime());
 		invoiceApproval.setCreateTime(time);
 		invoiceApproval.setUpdateTime(time);
 		return invoiceApprovalDao.addInvoiceApproval(invoiceApproval);
 	}
+
+
 }
