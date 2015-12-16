@@ -188,62 +188,74 @@
 			if(data['message'] == "yes"){
 				var time = $('#alipay_time option:selected').val();
 				if(time == '1') $('#alipay_sum').html('99');
-				if(time == '6') $('#alipay_sum').html('669');
+				if(time == '6') {
+					$('#alipay_sum').html('594');
+				}
 				if(time == '12') $('#alipay_sum').html('1089');
 				
 			}
 			else {
 				if(time == '1') $('#alipay_sum').html('99');
-				if(time == '6') $('#alipay_sum').html('768');
+				if(time == '6') $('#alipay_sum').html('594');
 				if(time == '12') $('#alipay_sum').html('1188');
 			}
 		});
 		$('#alipay_time').change(function(){
 			var time = $('#alipay_time option:selected').val();
-			console.log("hello");
+
 			$.get('/recommend/isRecommended', function(data){
-				console.log(data);
+
 				if(data['message'] == "yes"){
 					if(time == '1') $('#alipay_sum').html('99');
-					if(time == '6') $('#alipay_sum').html('669');
+					if(time == '6') {
+						$('#alipay_sum').html('594');
+					}
 					if(time == '12') $('#alipay_sum').html('1089');
 					
 				}
 				else {
 					if(time == '1') $('#alipay_sum').html('99');
-					if(time == '6') $('#alipay_sum').html('768');
+					if(time == '6') $('#alipay_sum').html('594');
 					if(time == '12') $('#alipay_sum').html('1188');
 				}
 			});
 
 		});
 		$('#alipay_button').click(function(){
-			console.log("click");
-			$.ajax({
-				url : '/company/selectOneAccounter',
-				type : "POST",
-				data : {accounterId:globalSelectedAccounterId, alipayMonth:$('#alipay_time option:selected').val(), alipayAmount:$('#alipay_sum').html(), type:'normal'},
-				success : function(data) {
-					console.log("success");
-					console.log(data);
-					if (data == ""){
-						BUI.Message.Alert('请先在左侧的组织架构内完善公司信息！',function(){
-						},'warning');
-						
-					}else {
-						$('#payHtml').html(data);
-					}
-				},
-				error : function() {
-					console.log("error");
-					BUI.use('bui/overlay',function(overlay){
-						function show () {
-							BUI.Message.Alert('选择会计师失败，请稍后重试！',function(){
-							},'warning');
-						}
-						show();	      
-					});	
+			var time = $('#alipay_time option:selected').val();
+			var realTime = parseInt(time);
+
+			$.get('/recommend/isRecommended', function(data){
+				
+				if(data["message"] == "yes"){
+					realTime += 1;
 				}
+
+
+				$.ajax({
+					url : '/company/selectOneAccounter',
+					type : "POST",
+					data : {accounterId:globalSelectedAccounterId, alipayMonth:realTime, alipayAmount:$('#alipay_sum').html(), type:'normal'},
+					success : function(data) {
+						if (data == ""){
+							BUI.Message.Alert('请先在左侧的组织架构内完善公司信息！',function(){
+							},'warning');
+							
+						}else {
+							$('#payHtml').html(data);
+						}
+					},
+					error : function() {
+						console.log("error");
+						BUI.use('bui/overlay',function(overlay){
+							function show () {
+								BUI.Message.Alert('选择会计师失败，请稍后重试！',function(){
+								},'warning');
+							}
+							show();	      
+						});	
+					}
+				});
 			});
 		});
 		
@@ -456,7 +468,8 @@
 					    a.click(function(event) {
 					    	globalSelectedAccounterId = $(this).attr("accounter_user_id");
 					    	globalAlipayForm.show();
-					    	setInterval(function (){
+					    	//TODO the additional one month will be added to the drop down list
+					    	/*setInterval(function (){
 					        	$.ajax({
 					        		url : '/company/checkTimeAndAmountInfo',
 					        		type : "POST",
@@ -477,7 +490,7 @@
 					        			}
 					        		}
 					        	});
-					        }, 5000);
+					        }, 5000);*/
 					    	/* $.ajax({
 								url : '/company/selectOneAccounter',
 								type : "POST",
