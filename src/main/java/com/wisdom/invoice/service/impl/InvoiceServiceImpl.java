@@ -263,7 +263,8 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		}
 		long longId = Long.parseLong(invoiceId);
 		Invoice invoice = singleInvoiceService.getSingleInvoiceInfo(longId);
-		if(null == invoice || null == invoice.getAmount()){// || 0 == invoice.getAmount()){
+		TestInvoiceRecord invoiceRecord = invoiceDao.getInvoiceRecordById(longId);
+		if(null == invoiceRecord || 0 == invoiceRecord.getAmount()){// || 0 == invoice.getAmount()){
 			log.error("发票信息不存在或不完整!");
 			retMap.put("message","发票信息不完整或不存在！");
 			return retMap;
