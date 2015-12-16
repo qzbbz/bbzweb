@@ -294,7 +294,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		}
 		
 		//是否需要上一级审批
-		if(!ifNeedSuperApproval(userId,approvalUserId,invoice.getAmount())){
+		if(!ifNeedSuperApproval(userId,approvalUserId,invoiceRecord.getAmount())){
 			//更改发票审批状态
 			userInvoiceService.updateInvoiceApprovalStatus(userId,approvalUserId,longId,1,approvalStatus, reasons);
 			invoiceApprovalService.updateApprovalRecord(userId,longId,1,approvalStatus);
