@@ -290,13 +290,11 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 				type : "POST",
 				data : {id:id, amount:amount, type:type, supplyName:supplyName, isFixedAssets:flag},
 				success : function(data) {
-					console.log(data);
 					$.ajax({
 						url : '/accounter/getAllCompanyBill',
 						type : "POST",
 						data : {},
 						success : function(data) {
-							console.log(data);
 							createDataList(data);
 						}
 					});
