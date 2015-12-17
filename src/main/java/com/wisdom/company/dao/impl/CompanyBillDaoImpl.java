@@ -18,8 +18,10 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.wisdom.common.model.CompanyBill;
+import com.wisdom.common.model.TestInvoiceRecord;
 import com.wisdom.company.dao.ICompanyBillDao;
 import com.wisdom.company.mapper.CompanyBillMapper;
+import com.wisdom.invoice.mapper.TestInvoiceRecordMapper;
 
 @Repository("companyBillDao")
 public class CompanyBillDaoImpl implements ICompanyBillDao {
@@ -44,19 +46,7 @@ public class CompanyBillDaoImpl implements ICompanyBillDao {
 		return companyBill;
 	}
 
-	@Override
-	public List<CompanyBill> getAllCompanyBill(long companyId) {
-		List<CompanyBill> list = null;
-		try {
-			String sql = "select * from company_bill where company_id=?";
-			list = jdbcTemplate.query(sql, new Object[]{companyId}, 
-					new RowMapperResultSetExtractor<CompanyBill>(
-							new CompanyBillMapper()));
-		} catch (Exception e) {
-			logger.error(e.toString());
-		}
-		return list;
-	}
+
 
 	@Override
 	public List<CompanyBill> getAllCompanyBillByDate(long companyId, String date) {

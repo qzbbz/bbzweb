@@ -340,20 +340,20 @@ public class AccounterServiceImpl implements IAccounterService {
 					if(conditionMap.keySet().contains("1")) {
 						if(companyName.indexOf(conditionMap.get("1")) == -1) continue;
 					}
-					List<CompanyBill> companyBillList = companyBillDao.getAllCompanyBill(companyId);
-					if(companyBillList != null) {
+					List<TestInvoiceRecord> invoiceRecords = invoiceService.getAllCompanyInvoicesByCompanyId(companyId);
+					if(invoiceRecords != null) {
 						if(conditionMap.keySet().contains("2") && conditionMap.keySet().contains("3")){
-							for(CompanyBill bill : companyBillList) {
-								if(bill.getCreateTime().toString().substring(0, 10).indexOf(conditionMap.get("2")) == -1 || ("公司发票").indexOf(conditionMap.get("3")) < 1 )
+							for(TestInvoiceRecord invoiceRecord : invoiceRecords) {
+								if(invoiceRecord.getCreatedTime().toString().substring(0, 10).indexOf(conditionMap.get("2")) == -1 || ("公司发票").indexOf(conditionMap.get("3")) < 1 )
 								{
 									continue;
 								}
 								Map<String, String> map = new HashMap<>();
-								map.put("date", bill.getCreateTime().toString().substring(0, 10));
-								map.put("file", bill.getFileName());
+								map.put("date", invoiceRecord.getCreatedTime().toString().substring(0, 10));
+								map.put("file", invoiceRecord.getFileName());
 								DecimalFormat format = new DecimalFormat("#0.000");
-								map.put("amount", format.format(bill.getAmount() == null ? 0 : bill.getAmount()));
-								map.put("type", bill.getType() == null || bill.getType().isEmpty() ? "未设定" : bill.getType());
+								map.put("amount", format.format(invoiceRecord.getAmount()));
+								map.put("type",invoiceRecord.getType() == null || invoiceRecord.getType().isEmpty() ? "未设定" : invoiceRecord.getType());
 								map.put("companyName", companyName);
 								map.put("item_type", "公司发票");
 								retMap.get("companyExpense").add(map);
@@ -362,29 +362,29 @@ public class AccounterServiceImpl implements IAccounterService {
 						}
 						else if(conditionMap.keySet().contains("3")) {
 							if(("公司发票").indexOf(conditionMap.get("3")) > 1) {
-								for(CompanyBill bill : companyBillList) {
+								for(TestInvoiceRecord invoiceRecord : invoiceRecords) {
 									Map<String, String> map = new HashMap<>();
-									map.put("date", bill.getCreateTime().toString().substring(0, 10));
-									map.put("file", bill.getFileName());
+									map.put("date", invoiceRecord.getCreatedTime().toString().substring(0, 10));
+									map.put("file", invoiceRecord.getFileName());
 									DecimalFormat format = new DecimalFormat("#0.000");
-									map.put("amount", format.format(bill.getAmount() == null ? 0 : bill.getAmount()));
-									map.put("type", bill.getType() == null || bill.getType().isEmpty() ? "未设定" : bill.getType());
+									map.put("amount", format.format(invoiceRecord.getAmount()));
+									map.put("type", invoiceRecord.getType() == null || invoiceRecord.getType().isEmpty() ? "未设定" : invoiceRecord.getType());
 									map.put("companyName", companyName);
 									map.put("item_type", "公司发票");
 									retMap.get("companyExpense").add(map);
 								}
 							}
 						} else {
-							for(CompanyBill bill : companyBillList) {
+							for(TestInvoiceRecord invoiceRecord : invoiceRecords) {
 								if(conditionMap.keySet().contains("2")) {
-									if(bill.getCreateTime().toString().substring(0, 10).indexOf(conditionMap.get("2")) == -1) continue;
+									if(invoiceRecord.getCreatedTime().toString().substring(0, 10).indexOf(conditionMap.get("2")) == -1) continue;
 								}
 								Map<String, String> map = new HashMap<>();
-								map.put("date", bill.getCreateTime().toString().substring(0, 10));
-								map.put("file", bill.getFileName());
+								map.put("date", invoiceRecord.getCreatedTime().toString().substring(0, 10));
+								map.put("file", invoiceRecord.getFileName());
 								DecimalFormat format = new DecimalFormat("#0.000");
-								map.put("amount", format.format(bill.getAmount() == null ? 0 : bill.getAmount()));
-								map.put("type", bill.getType() == null || bill.getType().isEmpty() ? "未设定" : bill.getType());
+								map.put("amount", format.format(invoiceRecord.getAmount()));
+								map.put("type", invoiceRecord.getType() == null || invoiceRecord.getType().isEmpty() ? "未设定" : invoiceRecord.getType());
 								map.put("companyName", companyName);
 								map.put("item_type", "公司发票");
 								retMap.get("companyExpense").add(map);
@@ -396,7 +396,7 @@ public class AccounterServiceImpl implements IAccounterService {
 					List<CompanyBankSta> companyBankStaList = companyBankStaDao.getAllCompanyBankSta(companyId);
 					if(companyBankStaList != null ) {
 						if(conditionMap.keySet().contains("2") && conditionMap.keySet().contains("3")){
-							for(CompanyBill bill : companyBillList) {
+							for(CompanyBankSta bill : companyBankStaList) {
 
 								if(bill.getCreateTime().toString().substring(0, 10).indexOf(conditionMap.get("2")) == -1 || ("公司银行对账单").indexOf(conditionMap.get("3")) < 1 )
 								{
@@ -406,8 +406,8 @@ public class AccounterServiceImpl implements IAccounterService {
 								map.put("date", bill.getCreateTime().toString().substring(0, 10));
 								map.put("file", bill.getFileName());
 								DecimalFormat format = new DecimalFormat("#0.000");
-								map.put("amount", format.format(bill.getAmount() == null ? 0 : bill.getAmount()));
-								map.put("type", bill.getType() == null || bill.getType().isEmpty() ? "未设定" : bill.getType());
+								map.put("amount", "无");
+								map.put("type", "无");
 								map.put("companyName", companyName);
 								map.put("item_type", "公司银行对账单");
 								retMap.get("companyExpense").add(map);
@@ -448,17 +448,17 @@ public class AccounterServiceImpl implements IAccounterService {
 					List<CompanySales> companySalesList = companySalesService.getAllCompanySales(companyId);
 					if(companySalesList != null ) {
 						if(conditionMap.keySet().contains("2") && conditionMap.keySet().contains("3")){
-							for(CompanyBill bill : companyBillList) {
-								if(bill.getCreateTime().toString().substring(0, 10).indexOf(conditionMap.get("2")) == -1 || ("公司销售清单").indexOf(conditionMap.get("3")) < 1 )
+							for(CompanySales companySales : companySalesList) {
+								if(companySales.getCreateTime().toString().substring(0, 10).indexOf(conditionMap.get("2")) == -1 || ("公司销售清单").indexOf(conditionMap.get("3")) < 1 )
 								{
 									continue;
 								}
 								Map<String, String> map = new HashMap<>();
-								map.put("date", bill.getCreateTime().toString().substring(0, 10));
-								map.put("file", bill.getFileName());
+								map.put("date", companySales.getCreateTime().toString().substring(0, 10));
+								map.put("file", companySales.getFileName());
 								DecimalFormat format = new DecimalFormat("#0.000");
-								map.put("amount", format.format(bill.getAmount() == null ? 0 : bill.getAmount()));
-								map.put("type", bill.getType() == null || bill.getType().isEmpty() ? "未设定" : bill.getType());
+								map.put("amount", "无");
+								map.put("type", "无");
 								map.put("companyName", companyName);
 								map.put("item_type", "公司销售清单");
 								retMap.get("companyExpense").add(map);
@@ -499,17 +499,17 @@ public class AccounterServiceImpl implements IAccounterService {
 					List<CompanySalary> companySalaryList = companySalaryService.getAllCompanySalary(companyId);
 					if(companySalaryList != null) {
 						if(conditionMap.keySet().contains("2") && conditionMap.keySet().contains("3")){
-							for(CompanyBill bill : companyBillList) {
-								if(bill.getCreateTime().toString().substring(0, 10).indexOf(conditionMap.get("2")) == -1 || ("公司工资单").indexOf(conditionMap.get("3")) < 1 )
+							for(CompanySalary companySalary : companySalaryList) {
+								if(companySalary.getCreateTime().toString().substring(0, 10).indexOf(conditionMap.get("2")) == -1 || ("公司工资单").indexOf(conditionMap.get("3")) < 1 )
 								{
 									continue;
 								}
 								Map<String, String> map = new HashMap<>();
-								map.put("date", bill.getCreateTime().toString().substring(0, 10));
-								map.put("file", bill.getFileName());
+								map.put("date", companySalary.getCreateTime().toString().substring(0, 10));
+								map.put("file", companySalary.getSalaryFile());
 								DecimalFormat format = new DecimalFormat("#0.000");
-								map.put("amount", format.format(bill.getAmount() == null ? 0 : bill.getAmount()));
-								map.put("type", bill.getType() == null || bill.getType().isEmpty() ? "未设定" : bill.getType());
+								map.put("amount", "无");
+								map.put("type", "无");
 								map.put("companyName", companyName);
 								map.put("item_type", "公司工资单");
 								retMap.get("companyExpense").add(map);
@@ -550,27 +550,25 @@ public class AccounterServiceImpl implements IAccounterService {
 					List<User> userList = userService.getUserListByCompanyId(companyId);
 					if(userList != null) {
 						if(conditionMap.keySet().contains("2") && conditionMap.keySet().contains("3")){
-							for(CompanyBill bill : companyBillList) {
-								if(bill.getCreateTime().toString().substring(0, 10).indexOf(conditionMap.get("2")) == -1 || ("公司员工发票").indexOf(conditionMap.get("3")) < 1 )
+							for(User companyUser : userList) {
+								if(companyUser.getCreateTime().toString().substring(0, 10).indexOf(conditionMap.get("2")) == -1 || ("公司员工发票").indexOf(conditionMap.get("3")) < 1 )
 								{
 									continue;
 								}
-								for(User companyUser : userList) {
-									List<UserInvoice> userInvoiceList = userInvoiceService.getUserInvoiceByUserIdAndStatusAndApprovalStatus(companyUser.getUserId(), 1, 0);
-									if(userInvoiceList != null) {
-										for(UserInvoice userInvoice : userInvoiceList) {
-											Map<String, String> map = new HashMap<>();
-											map.put("date", userInvoice.getUpdateTime().toString().substring(0, 10));
-											Invoice invoice = invoiceService.getInvoiceById(userInvoice.getInvoiceId());
-											DecimalFormat format = new DecimalFormat("#0.000");
-											map.put("amount", format.format(invoice.getAmount() == null ? 0 : invoice.getAmount()));
-											map.put("companyName", companyName);
-											int expenseTypeId = invoice.getExpenseTypeId();
-											String typeName = expenseTypeService.getExpenseTypeNameById(expenseTypeId);
-											map.put("type", typeName == null || typeName.isEmpty() ? "未设定" : typeName);
-											map.put("item_type", "公司员工发票");
-											retMap.get("companyInvoice").add(map);
-										}
+								List<UserInvoice> userInvoiceList = userInvoiceService.getUserInvoiceByUserIdAndStatusAndApprovalStatus(companyUser.getUserId(), 1, 0);
+								if(userInvoiceList != null) {
+									for(UserInvoice userInvoice : userInvoiceList) {
+										Map<String, String> map = new HashMap<>();
+										map.put("date", userInvoice.getUpdateTime().toString().substring(0, 10));
+										TestInvoiceRecord invoiceRecord = invoiceDao.getInvoiceRecordById(userInvoice.getInvoiceId());
+										DecimalFormat format = new DecimalFormat("#0.000");
+										map.put("amount", format.format(invoiceRecord.getAmount()));
+										map.put("companyName", companyName);
+										String typeName = invoiceRecord.getType();
+										map.put("type", typeName == null || typeName.isEmpty() ? "未设定" : typeName);
+										map.put("item_type", "公司员工发票");
+										retMap.get("companyInvoice").add(map);
+
 									}
 								}
 								
@@ -584,12 +582,11 @@ public class AccounterServiceImpl implements IAccounterService {
 										for(UserInvoice userInvoice : userInvoiceList) {
 											Map<String, String> map = new HashMap<>();
 											map.put("date", userInvoice.getUpdateTime().toString().substring(0, 10));
-											Invoice invoice = invoiceService.getInvoiceById(userInvoice.getInvoiceId());
+											TestInvoiceRecord invoiceRecord = invoiceDao.getInvoiceRecordById(userInvoice.getInvoiceId());
 											DecimalFormat format = new DecimalFormat("#0.000");
-											map.put("amount", format.format(invoice.getAmount() == null ? 0 : invoice.getAmount()));
+											map.put("amount", format.format(invoiceRecord.getAmount()));
 											map.put("companyName", companyName);
-											int expenseTypeId = invoice.getExpenseTypeId();
-											String typeName = expenseTypeService.getExpenseTypeNameById(expenseTypeId);
+											String typeName = invoiceRecord.getType();
 											map.put("type", typeName == null || typeName.isEmpty() ? "未设定" : typeName);
 											map.put("item_type", "公司员工发票");
 											retMap.get("companyInvoice").add(map);
@@ -607,12 +604,11 @@ public class AccounterServiceImpl implements IAccounterService {
 										}
 										Map<String, String> map = new HashMap<>();
 										map.put("date", userInvoice.getUpdateTime().toString().substring(0, 10));
-										Invoice invoice = invoiceService.getInvoiceById(userInvoice.getInvoiceId());
+										TestInvoiceRecord invoiceRecord = invoiceDao.getInvoiceRecordById(userInvoice.getInvoiceId());
 										DecimalFormat format = new DecimalFormat("#0.000");
-										map.put("amount", format.format(invoice.getAmount() == null ? 0 : invoice.getAmount()));
+										map.put("amount", format.format(invoiceRecord.getAmount()));
 										map.put("companyName", companyName);
-										int expenseTypeId = invoice.getExpenseTypeId();
-										String typeName = expenseTypeService.getExpenseTypeNameById(expenseTypeId);
+										String typeName = invoiceRecord.getType();
 										map.put("type", typeName == null || typeName.isEmpty() ? "未设定" : typeName);
 										map.put("item_type", "公司员工发票");
 										retMap.get("companyInvoice").add(map);

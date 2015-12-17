@@ -76,4 +76,6 @@ public interface IInvoiceService {
 	public List<TestInvoiceRecord> getInvoicesByDate(String date, long companyId);
 	
 	public boolean deleteTestInvoice(long invoiceId);
+	
+	public List<TestInvoiceRecord> getAllCompanyInvoicesByCompanyId(long companyId);
 }
