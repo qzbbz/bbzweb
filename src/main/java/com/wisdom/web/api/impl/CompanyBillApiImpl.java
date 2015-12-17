@@ -96,13 +96,14 @@ public class CompanyBillApiImpl implements ICompanyBillApi {
 		extraParams.put("company_name", companyName);
 		if(params.get("conditionType") == null || params.get("conditionType").isEmpty() ||
 				("0").equals(params.get("conditionType")) ||
-				params.get("conditionValue") == null || params.get("conditionValue").isEmpty()) {
-			List<CompanyBill> list = companyBillService.getAllCompanyBill(companyId);
-			return createCompanyBillList(list, extraParams); 
+				params.get("conditionValue") == null || params.get("conditionValue").isEmpty()) {			
+			List<TestInvoiceRecord> list = invoiceService.getAllInvoicesByCompanyId(companyId);
+			return createInvoiceList(list, extraParams);
+
 		}
 		if(("1").equals(params.get("conditionType")) && params.get("conditionValue") != null) {
-			List<CompanyBill> list = companyBillService.getAllCompanyBillByDate(companyId, params.get("conditionValue"));
-			return createCompanyBillList(list, extraParams);
+			List<TestInvoiceRecord> list = invoiceService.getInvoicesByDate(params.get("conditionValue"), companyId);
+			return createInvoiceList(list, extraParams);
 		}
 		return null;
 	}
@@ -176,9 +177,9 @@ public class CompanyBillApiImpl implements ICompanyBillApi {
 			String companyName = companyService.getCompanyName(companyId);
 			Map<String, String> extraParams = new HashMap<>();
 			extraParams.put("company_name", companyName);
-			List<CompanyBill> list = companyBillService.getAllCompanyBill(companyId);
+			List<TestInvoiceRecord> list = invoiceService.getAllInvoicesByCompanyId(companyId);
 			if(list == null || list.size() == 0) continue;
-			resultList.addAll(createCompanyBillList(list, extraParams));
+			resultList.addAll(createInvoiceList(list, extraParams));
 		}
 		return resultList;
 	}
@@ -194,8 +195,6 @@ public class CompanyBillApiImpl implements ICompanyBillApi {
 		extraParams.put("company_name", companyName);
 		List<TestInvoiceRecord> list = invoiceService.getAllInvoicesByCompanyId(companyId);
 		return createInvoiceList(list, extraParams);
-		//List<CompanyBill> list = companyBillService.getAllCompanyBill(companyId);
-		//return createCompanyBillList(list, extraParams); 
 
 	}
 	

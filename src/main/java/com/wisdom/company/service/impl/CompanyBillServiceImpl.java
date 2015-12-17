@@ -21,11 +21,6 @@ public class CompanyBillServiceImpl implements ICompanyBillService {
 	}
 
 	@Override
-	public List<CompanyBill> getAllCompanyBill(long companyId) {
-		return companyBillDao.getAllCompanyBill(companyId);
-	}
-
-	@Override
 	public List<CompanyBill> getAllCompanyBillByDate(long companyId, String date) {
 		return companyBillDao.getAllCompanyBillByDate(companyId, date);
 	}

@@ -396,4 +396,19 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 		}
 		return record;
 	}
+	
+	
+	@Override
+	public List<TestInvoiceRecord> getAllCompanyInvoicesByCompanyId(long companyId) {
+		List<TestInvoiceRecord> list = null;
+		try {
+			String sql = "select * from test_invoice where company_id=? and cost_center is null";
+			list = jdbcTemplate.query(sql, new Object[]{companyId}, 
+					new RowMapperResultSetExtractor<TestInvoiceRecord>(
+							new TestInvoiceRecordMapper()));
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return list;
+	}
 }

@@ -14,6 +14,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +34,7 @@ import com.wisdom.invoice.domain.ApprovalStatus;
 import com.wisdom.invoice.domain.InvoiceInfoVo;
 import com.wisdom.invoice.domain.InvoiceStatus;
 import com.wisdom.invoice.domain.ProcessStatus;
+import com.wisdom.invoice.mapper.TestInvoiceRecordMapper;
 import com.wisdom.invoice.service.IAttachmentService;
 import com.wisdom.invoice.service.IInvoiceApprovalService;
 import com.wisdom.invoice.service.IInvoiceService;
@@ -788,6 +790,11 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		    return true;
 		}
 		return false;
+	}
+
+	@Override
+	public List<TestInvoiceRecord> getAllCompanyInvoicesByCompanyId(long companyId) {
+		return invoiceDao.getAllCompanyInvoicesByCompanyId(companyId);
 	}
 
 }

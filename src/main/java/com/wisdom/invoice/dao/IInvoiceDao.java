@@ -46,4 +46,6 @@ public interface IInvoiceDao {
 	public boolean deleteTestInvoice(long invoiceId);
 	
 	public TestInvoiceRecord getInvoiceRecordById(long invoiceId);
+	
+	public List<TestInvoiceRecord> getAllCompanyInvoicesByCompanyId(long companyId);
 }
