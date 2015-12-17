@@ -1,9 +1,11 @@
 package com.wisdom.web.api.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
+import com.wisdom.invoice.service.IInvoiceService;
 import com.wisdom.user.service.IUserService;
 import com.wisdom.web.api.ICompanyBillApi;
 
@@ -34,6 +37,8 @@ public class CompanyBillController {
 	@Autowired
 	private IUserService userService;
 
+	@Autowired
+	private IInvoiceService invoiceService;
 	/*
 	 * @RequestMapping("/company/uploadCompanyBill") public String
 	 * uploadCompanyBill(@RequestParam("files") MultipartFile file,
@@ -145,10 +150,21 @@ public class CompanyBillController {
 		String type = (String)request.getParameter("type");
 		String supplyName = (String)request.getParameter("supplyName");
 		String isFixedAssets = (String)request.getParameter("isFixedAssets");
-		if(companyBillApi.modifyCompanyBill(id, amount, type, supplyName, isFixedAssets)) {
+		Long invoiceId = Long.parseLong(id);
+		List<Map<String, String>> contentList = new ArrayList<>();
+		Map<String, String> content = new HashMap<>();
+		content.put("description", type);
+		content.put("amount", amount);
+		content.put("supplier", supplyName);
+		contentList.add(content);
+		Boolean fA = Boolean.valueOf(isFixedAssets);
+		String itemId = UUID.randomUUID().toString();
+		try {
+			invoiceService.addInvoiceArtifact(invoiceId, contentList, itemId);
+			invoiceService.setIsFAOfInvoice(invoiceId, fA, itemId);
 			retMap.put("error_code", "0");
-		} else {
-			 retMap.put("error_code", "1");
+		}catch(Exception e){
+			retMap.put("error_code", "1");
 		}
 		return retMap;
 	}
