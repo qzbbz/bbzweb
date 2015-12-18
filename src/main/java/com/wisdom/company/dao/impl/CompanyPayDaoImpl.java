@@ -96,9 +96,9 @@ public class CompanyPayDaoImpl implements ICompanyPayDao {
 	}
 
 	@Override
-	public boolean updateCompanyPayStatusAndTimeByOrderNo(String orderNo, int status, Timestamp time, String contractFile) {
-		String sql = "update company_pay set pay_status=?, create_time=?, contract_file=? where order_no=?";
-		int affectedRows = jdbcTemplate.update(sql, status, time, contractFile, orderNo);
+	public boolean updateCompanyPayStatusAndTimeByOrderNo(String orderNo, int status, Timestamp time, String contractFile, Timestamp expiredTime) {
+		String sql = "update company_pay set pay_status=?, create_time=?, contract_file=?, expired_time=? where order_no=?";
+		int affectedRows = jdbcTemplate.update(sql, status, time, contractFile, expiredTime, orderNo);
 		logger.debug("updateCompanyPay result : {}", affectedRows);
 		return affectedRows != 0;
 	}
@@ -117,9 +117,9 @@ public class CompanyPayDaoImpl implements ICompanyPayDao {
 	}
 
 	@Override
-	public boolean updateCompanyPayByCompanyId(Long companyId, Integer payStatus, Double amount, String orderNo, int serviceTime) {
-		String sql = "update company_pay set pay_status=?, pay_amount=?, service_time=?, order_no=?, create_time=NOW() where company_id=?";
-		int affectedRows = jdbcTemplate.update(sql, payStatus, amount, serviceTime, orderNo, companyId);
+	public boolean updateCompanyPayByCompanyId(Long companyId, Integer payStatus, Double amount, String orderNo, int serviceTime, Timestamp expiredTime) {
+		String sql = "update company_pay set pay_status=?, pay_amount=?, service_time=?, order_no=?, create_time=NOW(), expired_time=? where company_id=?";
+		int affectedRows = jdbcTemplate.update(sql, payStatus, amount, serviceTime, orderNo, expiredTime, companyId);
 		logger.debug("updateCompanyPay result : {}", affectedRows);
 		return affectedRows != 0;
 	}

@@ -49,9 +49,12 @@
                     </div>
                 </div>
 			</div>
-			
-			<div class="tips tips-warning mt20" id="tipInfo" style="display:none;"></div>
-			
+			<div>
+
+			<div class="tips tips-warning mt20" id="tipInfo" style="display:none;">
+							
+			</div>
+			</div>
 			<div class="tips tips-success mt20" id="tipInfoSearch">请选择条件，然后点击查询会计师！</div>
 			
 			<div class="member-wrap" style="margin-bottom:30px;">
@@ -150,7 +153,7 @@
 		data : {},
 		success : function(data) {
 			if(data.selected == 'true') {
-				$('#tipInfo').html(data.info);
+				$('#tipInfo').html(data.info + '<a href="javascript:void(0)" id="renew" class="button button-success" style="margin-left:15px">续费</a>');
 				$('#tipInfo').show();
 				$('#tipInfoSearch').hide();
 				$('#searchAccounter').attr('disabled',"true");
@@ -170,6 +173,7 @@
 			$('#tipInfoSearch').show();
 		}
 	});
+
     var globalAlipayForm;
     var globalSelectedAccounterId;
     BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
@@ -224,7 +228,11 @@
 		$('#alipay_button').click(function(){
 			var time = $('#alipay_time option:selected').val();
 			var realTime = parseInt(time);
-
+			console.log(globalSelectedAccounterId);
+			if(globalSelectedAccounterId === undefined){
+				globalSelectedAccounterId = "";
+			}
+			console.log(globalSelectedAccounterId);
 			$.get('/recommend/isRecommended', function(data){
 				
 				if(data["message"] == "yes"){
@@ -260,6 +268,9 @@
 		});
 		
 		$('#trial_button').click(function(){
+			if(globalSelectedAccounterId === undefined){
+				globalSelectedAccounterId = "";
+			}
 			$.ajax({
 				url : '/company/selectOneAccounter',
 				type : "POST",
@@ -290,6 +301,9 @@
 			});
 		});
 	});
+    
+
+
     
     BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 		var modifyPwdForm = new Overlay.Dialog({
@@ -461,7 +475,7 @@
 						var li = $('<li style="padding 0 20px;margin-bottom:20px;" ></li>');
 						var img = $('<div class="member-photo"><img src="/files/image/'+data.image+'" width="200px" height="200px">');
 						var detail = $('<div class="member-text"><p><label for="">姓名：</label>'+data.userName+'</p><p><label for="">职业经历：</label>'+data.career+'</p><p><label for="">职业证书：</label>'+data.certificate+'</p><p><label for="">行业：</label>'+data.industry+'</p><p><label for="">地区：</label>'+data.province+data.city+data.area+'</p></div>');
-						var a = $('<a href="javascript:void(0)" class="button button-success" style="width:180px;">点选当前会计</a>');
+						var a = $('<a href="javascript:void(0)" class="button button-success" style="width:180px;">选择并付费</a>');
 						li.append(img);
 						li.append(detail);
 						a.attr("accounter_user_id", data.user_id);
@@ -528,6 +542,13 @@
 			});
 		});
 		});
+		
+	    $("#renew").on("click", function(){
+	    	console.log("click");
+	    	globalAlipayForm.show();
+	    	
+	    });
+	    
 		$('#searchAccounter').click(function(){
 			$('#tipInfo').hide();
 			$('#tipInfoSearch').hide();
@@ -567,7 +588,7 @@
 						var li = $('<li style="padding 0 10px;margin-bottom:20px;"></li>');
 						var img = $('<div class="member-photo"><img src="'+data.image+'" width="200px" height="200px">');
 						var detail = $('<div class="member-text"><p><label for="">姓名：</label>'+data.userName+'</p><p><label for="">职业经历：</label>'+data.career+'</p><p><label for="">职业证书：</label>'+data.certificate+'</p><p><label for="">行业：</label>'+data.industry+'</p><p><label for="">地区：</label>'+data.province+data.city+data.area+'</p></div>');
-						var a = $('<a href="javascript:void(0)" class="button button-success" style="width:180px;">点选当前会计</a>');
+						var a = $('<a href="javascript:void(0)" class="button button-success" style="width:180px;">选择并付费</a>');
 						li.append(img);
 						li.append(detail);
 						a.attr("accounter_user_id", data.user_id);
