@@ -34,6 +34,7 @@ import com.wisdom.area.service.IAreaService;
 import com.wisdom.common.model.Company;
 import com.wisdom.common.model.CompanyDetail;
 import com.wisdom.common.model.CompanyPay;
+import com.wisdom.common.model.CompanyPayHistory;
 import com.wisdom.common.model.SheetBalance;
 import com.wisdom.common.model.SheetCash;
 import com.wisdom.common.model.SheetIncome;
@@ -44,6 +45,7 @@ import com.wisdom.company.dao.ISheetCashDao;
 import com.wisdom.company.dao.ISheetIncomeDao;
 import com.wisdom.company.dao.ISheetSalaryTaxDao;
 import com.wisdom.company.service.ICompanyDetailService;
+import com.wisdom.company.service.ICompanyPayHistoryService;
 import com.wisdom.company.service.ICompanyPayService;
 import com.wisdom.company.service.ICompanyService;
 import com.wisdom.user.dao.IUserOpenIdDao;
@@ -101,6 +103,9 @@ public class CompanyController {
 	
 	@Autowired
 	private IRecommendService recommendService;
+	
+	@Autowired
+	private ICompanyPayHistoryService companyPayHistoryService;
 	
 	@RequestMapping("/company/selectAccounter")
 	@ResponseBody
@@ -160,13 +165,28 @@ public class CompanyController {
 			resHtml = "您已试用过本公司产品";
 			return resHtml;
 		}
-		companyService.updateCompanyAccounter(companyId, accounterUserId);
+		if(!accounterUserId.equals("")){
+			companyService.updateCompanyAccounter(companyId, accounterUserId);
+		}
 		if (companyPay != null && (type.equals("trial") && companyPay.getTrial() == 0)){
 			companyPayService.updateCompanyPayStatusToTrial(companyId);
 			Integer status = 2;
 			alipayMonth = "1";
 			alipayAmount = "99";
+
 			companyPayService.updateCompanyPayByCompanyId(companyId, 2, Double.valueOf(alipayAmount), "", Integer.valueOf(alipayMonth));
+			//Add record to company_pay_history
+			CompanyPayHistory companyPayHistory = new CompanyPayHistory();
+			companyPayHistory.setApplyInvoice(companyPay.getApplyInvoice());
+			companyPayHistory.setCompanyId(companyPay.getCompanyId());
+			companyPayHistory.setContractFile(companyPay.getContractFile());
+			companyPayHistory.setCreatedTime(null);
+			companyPayHistory.setMailAddress(companyPay.getMailAddress());
+			companyPayHistory.setOrderNo(null);
+			companyPayHistory.setPayAmount(Double.valueOf(alipayAmount));
+			companyPayHistory.setServiceTime(Integer.valueOf(alipayMonth));
+			companyPayHistory.setPayStatus(2);
+			companyPayHistoryService.addCompanyPayHistory(companyPayHistory);
 			resHtml = "欢迎试用帮帮账，您将能够免费试用本产品一个月！";
 			return resHtml;
 		}
@@ -192,7 +212,8 @@ public class CompanyController {
 		}
 
 		AlipayService alipayService = new AlipayService();
-		resHtml = alipayService.buildAlipayRequest(Double.valueOf(alipayAmount), orderNo);
+		//resHtml = alipayService.buildAlipayRequest(Double.valueOf(alipayAmount), orderNo);
+		resHtml = alipayService.buildAlipayRequest(Double.valueOf(0.01), orderNo);
 		logger.info("leave selectOneAccounter");
 		return resHtml;
 	}
@@ -299,15 +320,16 @@ public class CompanyController {
 		if(companyDetail == null) {
 			retMap.put("error", "companyinfo");
 		}
+		SimpleDateFormat sdf= new SimpleDateFormat("yyyy-MM-dd");
 		if(company != null && company.getAccounterId() != null && !company.getAccounterId().isEmpty()) {
 			CompanyPay companyPay = companyPayService.getCompanyPayByCompanyIdAndPayStatus(companyId, 1);
 			if(companyPay != null) {
 				String accounterId = company.getAccounterId();
 				String accounterName = userService.getUserNameByUserId(accounterId);
-				int serviceTime = companyPay.getServiceTime();
+				Timestamp expiredTime = companyPay.getExpiredTime();
 				String payTime = companyPay.getCreateTime().toString();
 				retMap.put("selected", "true");
-				retMap.put("info", "您已选择了会计师："+accounterName+",您购买的服务时间为:"+String.valueOf(serviceTime)+"个月,您付款的时间为："+payTime+"。");
+				retMap.put("info", "您已选择了会计师："+accounterName+",您购买的服务到期时间为:"+sdf.format(expiredTime)+"。");
 				retMap.put("amount", String.valueOf(companyPay.getPayAmount()));
 				retMap.put("companyName", company.getName());
 			}else{
@@ -316,10 +338,10 @@ public class CompanyController {
 				if(companyPay != null) {
 					String accounterId = company.getAccounterId();
 					String accounterName = userService.getUserNameByUserId(accounterId);
-					int serviceTime = companyPay.getServiceTime();
+					Timestamp expiredTime = companyPay.getExpiredTime();
 					String payTime = companyPay.getCreateTime().toString();
 					retMap.put("selected", "true");
-					retMap.put("info", "您已选择了会计师："+accounterName+",您的试用时间为1个月,您的试用开始时间为："+payTime+"。");
+					retMap.put("info", "您已选择了会计师："+accounterName+",您的试用服务到期时间为："+sdf.format(expiredTime)+"。");
 					retMap.put("amount", String.valueOf(companyPay.getPayAmount()));
 					retMap.put("companyName", company.getName());
 				}else{

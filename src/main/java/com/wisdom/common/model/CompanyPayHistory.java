@@ -6,50 +6,45 @@ import java.sql.Timestamp;
  * Accounter entity. @author MyEclipse Persistence Tools
  */
 
-public class CompanyPay implements java.io.Serializable {
+public class CompanyPayHistory implements java.io.Serializable {
 
 	// Fields
 
 	private static final long serialVersionUID = 1L;
 	private Long id;
 	private Long companyId;
-	private Integer payStatus;
 	private Double payAmount;
 	private Integer serviceTime;
 	private String orderNo;
 	private Integer applyInvoice;
 	private String mailAddress;
 	private String contractFile;
-	private Timestamp createTime;
-	private Integer trial;
-	private Timestamp expiredTime;
+	private Timestamp createdTime;
+	private Integer payStatus;
 
 	// Constructors
 
 	/** default constructor */
-	public CompanyPay() {
+	public CompanyPayHistory() {
 	}
 
 	/** minimal constructor */
-	public CompanyPay(Long id) {
+	public CompanyPayHistory(Long id) {
 		this.id = id;
 	}
 
-	public CompanyPay(Long id, Long companyId, Integer payStatus, Double payAmount, Integer serviceTime,
-			String orderNo, int applyInvoice, String mailAddress, String contractFile, Timestamp createTime, Integer trial, Timestamp expiredTime) {
+	public CompanyPayHistory(Long id, Long companyId, Double payAmount, Integer serviceTime,
+			String orderNo, int applyInvoice, String mailAddress, String contractFile, Timestamp createdTime, Integer payStatus) {
 		super();
 		this.id = id;
 		this.companyId = companyId;
-		this.payStatus = payStatus;
 		this.payAmount = payAmount;
 		this.serviceTime = serviceTime;
 		this.orderNo = orderNo;
 		this.applyInvoice = applyInvoice;
 		this.mailAddress = mailAddress;
 		this.contractFile = contractFile;
-		this.createTime = createTime;
-		this.trial = trial;
-		this.expiredTime = expiredTime;
+		this.payStatus = payStatus;
 	}
 
 	public Long getId() {
@@ -92,14 +87,6 @@ public class CompanyPay implements java.io.Serializable {
 		this.applyInvoice = applyInvoice;
 	}
 
-	public Integer getPayStatus() {
-		return payStatus;
-	}
-
-	public void setPayStatus(Integer payStatus) {
-		this.payStatus = payStatus;
-	}
-
 	public Double getPayAmount() {
 		return payAmount;
 	}
@@ -116,12 +103,12 @@ public class CompanyPay implements java.io.Serializable {
 		this.serviceTime = serviceTime;
 	}
 
-	public Timestamp getCreateTime() {
-		return createTime;
+	public Timestamp getCreatedTime() {
+		return createdTime;
 	}
 
-	public void setCreateTime(Timestamp createTime) {
-		this.createTime = createTime;
+	public void setCreatedTime(Timestamp createdTime) {
+		this.createdTime = createdTime;
 	}
 
 	public static long getSerialversionuid() {
@@ -135,21 +122,13 @@ public class CompanyPay implements java.io.Serializable {
 	public void setOrderNo(String orderNo) {
 		this.orderNo = orderNo;
 	}
-	
-	public Integer getTrial(){
-		return trial;
-	}
-	
-	public void setTrial(Integer trial){
-		this.trial = trial;
+
+	public Integer getPayStatus() {
+		return payStatus;
 	}
 
-	public Timestamp getExpiredTime() {
-		return expiredTime;
-	}
-
-	public void setExpiredTime(Timestamp expiredTime) {
-		this.expiredTime = expiredTime;
+	public void setPayStatus(Integer payStatus) {
+		this.payStatus = payStatus;
 	}
 	
 	

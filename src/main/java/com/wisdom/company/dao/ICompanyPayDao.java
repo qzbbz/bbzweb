@@ -22,9 +22,9 @@ public interface ICompanyPayDao {
 	
 	public boolean updateCompanyOrderNoByCompanyId(long companyId, String orderNo);
 	
-	public boolean updateCompanyPayStatusAndTimeByOrderNo(String orderNo, int status, Timestamp time, String contractFile);
+	public boolean updateCompanyPayStatusAndTimeByOrderNo(String orderNo, int status, Timestamp time, String contractFile, Timestamp expiredTime);
 	
-	public boolean updateCompanyPayByCompanyId(Long companyId, Integer payStatus, Double amount, String orderNo, int serviceTime);
+	public boolean updateCompanyPayByCompanyId(Long companyId, Integer payStatus, Double amount, String orderNo, int serviceTime, Timestamp expiredTime);
 	
 	public boolean updateApplyInvoiceByCompanyId(Long companyId, int applyInvoice, String address);
 	
