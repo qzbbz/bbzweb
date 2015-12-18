@@ -72,7 +72,8 @@ public class CompanyPayServiceImpl implements ICompanyPayService {
 			c.setTime(now);
 			c.add(Calendar.MONTH, companyPay.getServiceTime()); 
 		}
-		Timestamp newExpiredTime = (Timestamp) c.getTime();
+		Timestamp newExpiredTime = new Timestamp(0);
+		newExpiredTime.setTime(c.getTime().getTime());
 		//Add record to company_pay_history
 		CompanyPayHistory companyPayHistory = new CompanyPayHistory();
 		companyPayHistory.setApplyInvoice(companyPay.getApplyInvoice());
