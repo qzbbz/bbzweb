@@ -90,9 +90,6 @@ public class CompanyPayServiceImpl implements ICompanyPayService {
 		companyPayHistory.setServiceTime(companyPay.getServiceTime());
 		companyPayHistory.setPayStatus(status);
 		companyPayHistoryDao.addCompanyHistoryPay(companyPayHistory);
-		if(companyPay.getContractFile() != null){
-			return false;
-		}
 		return companyPayDao.updateCompanyPayStatusAndTimeByOrderNo(orderNo, status, time, contractFile, newExpiredTime);
 	}
 
