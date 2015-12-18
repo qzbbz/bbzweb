@@ -212,8 +212,8 @@ public class CompanyController {
 		}
 
 		AlipayService alipayService = new AlipayService();
-		//resHtml = alipayService.buildAlipayRequest(Double.valueOf(alipayAmount), orderNo);
-		resHtml = alipayService.buildAlipayRequest(Double.valueOf(0.01), orderNo);
+		resHtml = alipayService.buildAlipayRequest(Double.valueOf(alipayAmount), orderNo);
+		//resHtml = alipayService.buildAlipayRequest(Double.valueOf(0.01), orderNo);
 		logger.info("leave selectOneAccounter");
 		return resHtml;
 	}
