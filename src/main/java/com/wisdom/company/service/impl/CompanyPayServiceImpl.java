@@ -65,7 +65,7 @@ public class CompanyPayServiceImpl implements ICompanyPayService {
 		Date date= new Date();
 		Timestamp now = new Timestamp(date.getTime());
 		Calendar c = Calendar.getInstance();
-		if(now.before(currentExpiredTime)){
+		if(currentExpiredTime != null && now.before(currentExpiredTime)){
 			c.setTime(currentExpiredTime);
 			c.add(Calendar.MONTH, companyPay.getServiceTime()); 
 		}else{
