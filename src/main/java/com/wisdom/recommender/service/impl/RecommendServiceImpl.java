@@ -116,6 +116,9 @@ public class RecommendServiceImpl implements IRecommendService {
 	}
 	@Override
 	public Boolean setCustomerPaid(String email) {
+		if(!isRecommendRecordExisted(email)){
+			return false;
+		}
 		RecommendRecord recommendRecord = recommendRecordDao.getRecommendRecordByEmail(email);
 		recommendRecord.setIsPaid(1);
 		recommendRecordDao.updateRecommendRecord(recommendRecord);

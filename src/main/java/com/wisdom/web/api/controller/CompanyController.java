@@ -285,7 +285,9 @@ public class CompanyController {
 					String email = recommendService.getCustomerEmailByCompanyId(companyPay.getCompanyId());
 					logger.info(email);
 					recommendService.setCustomerPaid(email);
+					logger.info("debug1");
 					PdfProcess.generateContractPdf(realPath + contractFileName, company.getName(), code, address, owner, String.valueOf(companyPay.getPayAmount()), date, webRoot);
+					logger.info("debug2");
 					
 				} catch(Exception e) {
 					logger.error(e.toString());

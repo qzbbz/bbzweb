@@ -60,6 +60,9 @@ public class CompanyPayServiceImpl implements ICompanyPayService {
 	@Override
 	public boolean updateCompanyPayStatusAndTimeByOrderNo(String orderNo, int status, Timestamp time, String contractFile) {
 		// TODO Auto-generated method stub
+		if(status != 1){
+			return false;
+		}
 		CompanyPay companyPay = companyPayDao.getCompanyPayByOrderNo(orderNo);
 		Timestamp currentExpiredTime = companyPay.getExpiredTime();
 		Date date= new Date();
@@ -85,7 +88,7 @@ public class CompanyPayServiceImpl implements ICompanyPayService {
 		companyPayHistory.setOrderNo(orderNo);
 		companyPayHistory.setPayAmount(companyPay.getPayAmount());
 		companyPayHistory.setServiceTime(companyPay.getServiceTime());
-		companyPayHistory.setPayStatus(companyPay.getPayStatus());
+		companyPayHistory.setPayStatus(status);
 		companyPayHistoryDao.addCompanyHistoryPay(companyPayHistory);
 		return companyPayDao.updateCompanyPayStatusAndTimeByOrderNo(orderNo, status, time, contractFile, newExpiredTime);
 	}
