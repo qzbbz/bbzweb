@@ -70,6 +70,7 @@ public class CompanyPayServiceImpl implements ICompanyPayService {
 			c.add(Calendar.MONTH, companyPay.getServiceTime()); 
 		}else{
 			c.setTime(now);
+			
 			c.add(Calendar.MONTH, companyPay.getServiceTime()); 
 		}
 		Timestamp newExpiredTime = new Timestamp(0);
@@ -99,19 +100,24 @@ public class CompanyPayServiceImpl implements ICompanyPayService {
 	public boolean updateCompanyPayByCompanyId(Long companyId, Integer payStatus, Double amount, String orderNo, int serviceTime) {
 		// TODO Auto-generated method stub
 		CompanyPay companyPay = companyPayDao.getCompanyPayByCompanyId(companyId);
-		Timestamp currentExpiredTime = companyPay.getExpiredTime();
-		java.util.Date date= new java.util.Date();
-		Timestamp now = new Timestamp(date.getTime());
-		Calendar c = Calendar.getInstance();
-		if(currentExpiredTime != null && now.before(currentExpiredTime)){
-			c.setTime(currentExpiredTime);
-			c.add(Calendar.MONTH, serviceTime); 
-		}else{
-			c.setTime(now);
-			c.add(Calendar.MONTH, serviceTime); 
-		}
 		Timestamp newExpiredTime = new Timestamp(0);
-		newExpiredTime.setTime(c.getTime().getTime());
+		if(payStatus == 2){
+			Timestamp currentExpiredTime = companyPay.getExpiredTime();
+			java.util.Date date= new java.util.Date();
+			Timestamp now = new Timestamp(date.getTime());
+			Calendar c = Calendar.getInstance();
+			if(currentExpiredTime != null && now.before(currentExpiredTime)){
+				c.setTime(currentExpiredTime);
+				c.add(Calendar.MONTH, serviceTime); 
+			}else{
+				c.setTime(now);
+				c.add(Calendar.MONTH, serviceTime); 
+			}
+
+			newExpiredTime.setTime(c.getTime().getTime());
+		}else{
+			newExpiredTime = companyPay.getExpiredTime();
+		}
 		return companyPayDao.updateCompanyPayByCompanyId(companyId, payStatus, amount, orderNo, serviceTime, newExpiredTime);
 	}
 
