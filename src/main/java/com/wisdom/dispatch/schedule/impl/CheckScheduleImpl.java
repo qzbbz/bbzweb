@@ -34,7 +34,7 @@ public class CheckScheduleImpl implements CheckSchedule {
 	@Override
 	public void companyPayCheckService() {
 		//Get all expired payments
-	/*	List<CompanyPay> list = companyPayService.getExpiredCompanyPay();
+		List<CompanyPay> list = companyPayService.getExpiredCompanyPay();
 		for(CompanyPay companyPay: list){
 			Company company = companyService.getCompanyByCompanyId(companyPay.getCompanyId());
 			if(!company.getAccounterId().equals("")){
@@ -42,7 +42,7 @@ public class CheckScheduleImpl implements CheckSchedule {
 				companyService.updateCompanyAccounter(companyPay.getCompanyId(), "");
 				log.info("Remove accountant from " + company.getName());
 			}
-		}*/
+		}
 		
 		
 	}
