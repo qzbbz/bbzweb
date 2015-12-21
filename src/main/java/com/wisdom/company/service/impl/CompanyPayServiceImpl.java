@@ -76,21 +76,26 @@ public class CompanyPayServiceImpl implements ICompanyPayService {
 			
 			c.add(Calendar.MONTH, companyPay.getServiceTime()); 
 		}
-		Timestamp newExpiredTime = new Timestamp(0);
-		newExpiredTime.setTime(c.getTime().getTime());
-		//Add record to company_pay_history
-		CompanyPayHistory companyPayHistory = new CompanyPayHistory();
-		companyPayHistory.setApplyInvoice(companyPay.getApplyInvoice());
-		companyPayHistory.setCompanyId(companyPay.getCompanyId());
-		companyPayHistory.setContractFile(companyPay.getContractFile());
-		companyPayHistory.setCreatedTime(now);
-		companyPayHistory.setMailAddress(companyPay.getMailAddress());
-		companyPayHistory.setOrderNo(orderNo);
-		companyPayHistory.setPayAmount(companyPay.getPayAmount());
-		companyPayHistory.setServiceTime(companyPay.getServiceTime());
-		companyPayHistory.setPayStatus(status);
-		companyPayHistoryDao.addCompanyHistoryPay(companyPayHistory);
-		return companyPayDao.updateCompanyPayStatusAndTimeByOrderNo(orderNo, status, time, contractFile, newExpiredTime);
+		if(companyPay.getPayStatus() != 1){
+			Timestamp newExpiredTime = new Timestamp(0);
+			newExpiredTime.setTime(c.getTime().getTime());
+			//Add record to company_pay_history
+			CompanyPayHistory companyPayHistory = new CompanyPayHistory();
+			companyPayHistory.setApplyInvoice(companyPay.getApplyInvoice());
+			companyPayHistory.setCompanyId(companyPay.getCompanyId());
+			companyPayHistory.setContractFile(companyPay.getContractFile());
+			companyPayHistory.setCreatedTime(now);
+			companyPayHistory.setMailAddress(companyPay.getMailAddress());
+			companyPayHistory.setOrderNo(orderNo);
+			companyPayHistory.setPayAmount(companyPay.getPayAmount());
+			companyPayHistory.setServiceTime(companyPay.getServiceTime());
+			companyPayHistory.setPayStatus(status);
+			companyPayHistoryDao.addCompanyHistoryPay(companyPayHistory);
+			return companyPayDao.updateCompanyPayStatusAndTimeByOrderNo(orderNo, status, time, contractFile, newExpiredTime);
+		}
+		else{
+			return false;
+		}
 	}
 
 	@Override
