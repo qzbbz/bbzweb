@@ -30,19 +30,20 @@ public class CheckScheduleImpl implements CheckSchedule {
 	
 	@Autowired IInvoiceService invoiceService;
 	
-	@Scheduled(fixedDelay=86400000) //每1天
+	@Scheduled(fixedDelay=60*1000)//(fixedDelay=86400000) //每1天
 	@Override
 	public void companyPayCheckService() {
 		//Get all expired payments
-	/*	List<CompanyPay> list = companyPayService.getExpiredCompanyPay();
+		List<CompanyPay> list = companyPayService.getExpiredCompanyPay();
 		for(CompanyPay companyPay: list){
 			Company company = companyService.getCompanyByCompanyId(companyPay.getCompanyId());
 			if(!company.getAccounterId().equals("")){
 				//Remove the accountant from the company
 				companyService.updateCompanyAccounter(companyPay.getCompanyId(), "");
+				System.out.println("Remove accountant from " + company.getName());
 				log.info("Remove accountant from " + company.getName());
 			}
-		}*/
+		}
 		
 		
 	}

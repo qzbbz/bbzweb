@@ -323,37 +323,30 @@ public class CompanyController {
 			retMap.put("error", "companyinfo");
 		}
 		SimpleDateFormat sdf= new SimpleDateFormat("yyyy-MM-dd");
-		if(company != null && company.getAccounterId() != null && !company.getAccounterId().isEmpty()) {
-			CompanyPay companyPay = companyPayService.getCompanyPayByCompanyIdAndPayStatus(companyId, 1);
-			if(companyPay != null) {
-				String accounterId = company.getAccounterId();
-				String accounterName = userService.getUserNameByUserId(accounterId);
-				Timestamp expiredTime = companyPay.getExpiredTime();
-				String payTime = companyPay.getCreateTime().toString();
+		
+		if(company != null && company.getAccounterId() != null && !company.getAccounterId().isEmpty()){
+			CompanyPay companyPay = companyPayService.getCompanyPayByCompanyId(companyId);
+			
+			Timestamp expiredTime = companyPay.getExpiredTime();
+			java.util.Date date= new java.util.Date();
+			Timestamp now = new Timestamp(date.getTime());
+			String accounterId = company.getAccounterId();
+			String accounterName = userService.getUserNameByUserId(accounterId);
+			if(expiredTime != null && expiredTime.after(now)){
+				long gap = expiredTime.getTime() - now.getTime();
+				if(gap <= 5 * 24* 60 * 60 * 1000){
+					retMap.put("alert", "您的服务时间已少于五天，请尽快续费！");
+				}
 				retMap.put("selected", "true");
-				retMap.put("info", "您已选择了会计师："+accounterName+",您购买的服务到期时间为:"+sdf.format(expiredTime)+"。");
+				retMap.put("info", "您已选择了会计师：" + accounterName + ", 您的服务到期时间为：" + sdf.format(expiredTime) + "。");
 				retMap.put("amount", String.valueOf(companyPay.getPayAmount()));
 				retMap.put("companyName", company.getName());
 			}else{
-				//Check the trial
-				companyPay = companyPayService.getCompanyPayByCompanyIdAndPayStatus(companyId, 2);
-				if(companyPay != null) {
-					String accounterId = company.getAccounterId();
-					String accounterName = userService.getUserNameByUserId(accounterId);
-					Timestamp expiredTime = companyPay.getExpiredTime();
-					String payTime = companyPay.getCreateTime().toString();
-					retMap.put("selected", "true");
-					retMap.put("info", "您已选择了会计师："+accounterName+",您的试用服务到期时间为："+sdf.format(expiredTime)+"。");
-					retMap.put("amount", String.valueOf(companyPay.getPayAmount()));
-					retMap.put("companyName", company.getName());
-				}else{
-					retMap.put("selected", "false");
-				}
+				retMap.put("selected", "false");
 			}
-
-		} else {
+		}else{
 			retMap.put("selected", "false");
-			if(company == null) {
+			if(company == null){
 				retMap.put("error", "companyinfo");
 			}
 		}
@@ -1448,6 +1441,17 @@ public class CompanyController {
 		}else{
 			retMap.put("data", "");
 		}
+		return retMap;
+	}
+	
+	@RequestMapping("/checkCompanyPayExpired")
+	@ResponseBody
+	public Map<String, String> checkCompanyPayExpired(HttpServletRequest request){
+		Map<String, String> retMap = new HashMap<>();
+		String userId = (String) request.getSession().getAttribute("userId");
+		long companyId = userService.getCompanyIdByUserId(userId);
+		CompanyPay companyPay = companyPayService.getCompanyPayByCompanyId(companyId);
+		
 		return retMap;
 	}
 	

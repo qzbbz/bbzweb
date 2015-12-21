@@ -159,7 +159,7 @@ public class CompanyPayDaoImpl implements ICompanyPayDao {
 
 	@Override
 	public List<CompanyPay> getExpiredCompanyPay() {
-		String sql = "select * from company_pay where DATE_ADD(create_time, INTERVAL service_time MONTH)  < NOW()";
+		String sql = "select * from company_pay where expired_time  < NOW()";
 		List<CompanyPay> list = new ArrayList<>();
 		try{
 			list = jdbcTemplate.query(sql, 

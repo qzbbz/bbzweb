@@ -146,7 +146,8 @@
     (function(){
     	$('a.media').media();
     })()
-    $.ajax({
+
+	$.ajax({
 		url : '/company/checkSelectAccounter',
 		type : "POST",
 		async:false,
@@ -158,6 +159,12 @@
 				$('#tipInfoSearch').hide();
 				$('#searchAccounter').attr('disabled',"true");
 				$('#dispalyAllAccounter').attr('disabled',"true");
+				if(data.alert){
+				    BUI.use('bui/overlay',function(overlay){
+						BUI.Message.Alert(data.alert,function(){
+						},'warning');
+				    });
+				}	
 			} else if(data.error == "companyinfo"){
 				$('#tipInfo').html("请您先在组织架构菜单下面的基本信息设置中，完善您公司的基本信息！");
 				$('#tipInfo').show();
@@ -228,11 +235,9 @@
 		$('#alipay_button').click(function(){
 			var time = $('#alipay_time option:selected').val();
 			var realTime = parseInt(time);
-			console.log(globalSelectedAccounterId);
 			if(globalSelectedAccounterId === undefined){
 				globalSelectedAccounterId = "";
 			}
-			console.log(globalSelectedAccounterId);
 			$.get('/recommend/isRecommended', function(data){
 				
 				if(data["message"] == "yes"){
@@ -254,7 +259,6 @@
 						}
 					},
 					error : function() {
-						console.log("error");
 						BUI.use('bui/overlay',function(overlay){
 							function show () {
 								BUI.Message.Alert('选择会计师失败，请稍后重试！',function(){
@@ -544,7 +548,7 @@
 		});
 		
 	    $("#renew").on("click", function(){
-	    	console.log("click");
+	    	console.log("hello");
 	    	globalAlipayForm.show();
 	    	
 	    });
