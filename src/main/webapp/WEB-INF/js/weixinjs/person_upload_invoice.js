@@ -145,6 +145,8 @@ mui.previewImage({
 	isUpload: true
 });
 
+var userOpenId = "";
+
 function getImageDataURL(img) {
 	var canvas = document.createElement('canvas');
 	canvas.width = img.width;
@@ -207,41 +209,30 @@ document.getElementById('fapiaoluru_submit').addEventListener('tap', function(ev
 	var mask = mui.createUploadMask(false);
 	mask.show();
 	$('#upload_progress').find('strong').html(0 + '<i>%</i>');
-	/*var i = 0.01;
-	setInterval(function(){
-		$('#upload_progress').trigger('circle_progress_percent', [i]);
-		i = i + 0.01;
-	},100);*/
-	var formData = {openId:"oJO1gtyVvLuWxm6N4T1JuYMzgysw"};
+	var formData = {openId:userOpenId};
 	var xhr = new XMLHttpRequest();
 	var fd = new FormData();
 	for (var jsonKey in formData) {
 		fd.append(jsonKey, formData[jsonKey]);
 	}
-	var fileIndex = 0;
 	for (var jsonKey in invoiceList) {
-		fd.append("file" + fileIndex, invoiceList[jsonKey]);
-		fileIndex++;
+		fd.append("files", invoiceList[jsonKey]);
 	}
 	xhr.upload.addEventListener("progress", function(evt) {
 		if (evt.lengthComputable) {
-			var percentComplete = Math.round(evt.loaded * 100 / evt.total);
+			var percentComplete = Math.round(evt.loaded * 100 / evt.total) / 100;
 			$('#upload_progress').trigger('circle_progress_percent', [percentComplete]);
 		}
 	}, false);
 	xhr.addEventListener("load", function(evt) {
 		var res = evt.target.responseText;
-		if (res.error_code == '0') {
+		res = JSON.parse(res);
+		if (res.error_code == "0") {
 			mui.createTipDialog('发票上传成功!',null).show();
 			invoiceList = {};
-			document.getElementById('fapiaoluru_amount').innerText = '0';
-			document.getElementById('fapiaoluru_type').innerText = '选择发票类型';
-			document.getElementById('fapiaoluru_date').innerText = currentDate;
-			var imgList = document.getElementById('fapiaoluru_image').childNodes;
-			for (var i = 0; i < imgList.length; i++) {
-				document.getElementById('fapiaoluru_image').removeChild(imgList[i]);
-			}
-			document.getElementById('fapiaoluru_image').innerHTML = '<p style="margin-top: -5px;margin-left: 10px;">票据图像</p>';
+			document.getElementById('tips_image').style.display = "";
+			document.getElementById('invoice_img_list_ul').innerText = "";
+			document.getElementById('invoice_img_list_root_div').style.display = "none";
 		} else {
 			mui.createTipDialog(res.error_message, null).show();
 		}
@@ -252,6 +243,38 @@ document.getElementById('fapiaoluru_submit').addEventListener('tap', function(ev
 		mask.close();
 	}, false);
 	xhr.addEventListener("abort", null, false);
-	xhr.open("POST", "");
+	xhr.open("POST", "/uploadPersonInvoice");
 	xhr.send(fd);
 }, false);
+
+mui.ajax({ 
+    type : "POST", 
+    url  : "/getUserOpenIdAndCheckBindCompany",
+    data : {}, 
+    success : function(data) {
+    	if (data == null || data.openId == null || data.openId == "") {
+			mui.createTipDialog('无法获取您的微信Openid,请稍后重试！',null).show();
+			document.getElementById("data_loading").style.display = "none";
+			document.getElementById("tips_info_detail").innerHTML = "无法获取您的微信Openid,请稍后重试！";
+	    	document.getElementById("tips_info").style.display = "";
+		} else {
+			userOpenId = data.openId;
+			if(data.bind_status == "has_bind") {
+				document.getElementById("data_loading").style.display = "none";
+				document.getElementById("add_invoice_page").style.display = "";
+				document.getElementById("tips_image").style.display = "";
+				document.getElementById("fapiaoluru_submit").style.display = "";
+			} else {
+				document.getElementById("data_loading").style.display = "none";
+				document.getElementById("tips_info_detail").innerHTML = "您还没有绑定公司，<br/>请先在账号设置中绑定您的公司！";
+		    	document.getElementById("tips_info").style.display = "";
+			}
+		}
+    }, 
+    error : function() {
+    	mui.createTipDialog('服务器暂时无法响应请求，请稍后重试！',null).show();
+    	document.getElementById("data_loading").style.display = "none";
+    	document.getElementById("tips_info_detail").innerHTML = "服务器暂时无法响应请求，请稍后重试！";
+    	document.getElementById("tips_info").style.display = "";
+    } 
+});

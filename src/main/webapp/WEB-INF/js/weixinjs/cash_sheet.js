@@ -158,3 +158,33 @@ function getCashSheetData(date) {
 		}
 	});
 }
+
+mui.ajax({ 
+    type : "POST", 
+    url  : "/getUserOpenIdAndCheckBindCompany",
+    data : {}, 
+    success : function(data) {
+    	if (data == null || data.openId == null || data.openId == "") {
+			mui.createTipDialog('无法获取您的微信Openid,请稍后重试！',null).show();
+			document.getElementById("data_loading").style.display = "none";
+			document.getElementById("tips_info_detail").innerHTML = "无法获取您的微信Openid,请稍后重试！";
+	    	document.getElementById("tips_info").style.display = "";
+		} else {
+			userOpenId = data.openId;
+			if(data.bind_status == "has_bind") {
+				document.getElementById("data_loading").style.display = "none";
+				document.getElementById("mui_main_page1").style.display = "";
+			} else {
+				document.getElementById("data_loading").style.display = "none";
+				document.getElementById("tips_info_detail").innerHTML = "您还没有绑定公司，<br/>请先在账号设置中绑定您的公司！";
+		    	document.getElementById("tips_info").style.display = "";
+			}
+		}
+    }, 
+    error : function() {
+    	mui.createTipDialog('服务器暂时无法响应请求，请稍后重试！',null).show();
+    	document.getElementById("data_loading").style.display = "none";
+    	document.getElementById("tips_info_detail").innerHTML = "服务器暂时无法响应请求，请稍后重试！";
+    	document.getElementById("tips_info").style.display = "";
+    } 
+});

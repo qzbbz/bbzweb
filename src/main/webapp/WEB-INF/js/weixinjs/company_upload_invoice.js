@@ -1,17 +1,42 @@
+function checkJsonIsEmpty(json) {
+	var isEmpty = true;
+	if(json == null) return true;
+	for (var jsonKey in invoiceList) {
+		isEmpty = false;
+		break;
+	}
+	return isEmpty;
+}
+
 mui.createUploadMask = function(callback) {
 	var element = document.createElement('div');
-	element.classList.add('upload-file');
-	element.innerHTML = "<meter id='upLoadProgress' style='width:80%;margin:50% 10%;' value='50' max='100'></meter>";
+	element.classList.add('upload-file');	
 	element.addEventListener('touchmove', mui.preventDefault);
 	element.addEventListener('tap', function() {
-		mask.close();
+		//mask.close();
 	});
+	var progressNode = document.createElement('div');
+	progressNode.id="upload_progress";
+	progressNode.setAttribute('class', 'circle');
+	progressNode.innerHTML = "<strong></strong>";
+	element.appendChild(progressNode);
 	var mask = [element];
 	mask._show = false;
 	mask.show = function() {
 		mask._show = true;
 		element.setAttribute('style', 'opacity:1');
+		progressNode.style.marginLeft = window.screen.availWidth/2-50 + "px";
+		progressNode.style.marginTop = window.screen.availHeight/2-50 + "px";
 		document.body.appendChild(element);
+		$('#upload_progress').circleProgress({
+	    	value: 0,
+	    	emptyFill: 'rgba(74, 197, 248, 1)',
+	    	animation: false,
+	    	fill: { gradient: ["red", "blue", "green"], gradientAngle: Math.PI / 4 }	
+	    }).on('circle_progress_percent', function(event, progress) {
+	        $(this).find('strong').html(parseInt(100 * progress) + '<i>%</i>');
+	        $('#upload_progress').circleProgress('value', progress);
+	    });
 		return mask;
 	};
 	mask._remove = function() {
@@ -113,7 +138,14 @@ mui.createConfirmDialog = function(info, cancelCallBack, acceptCallBack) {
 	return mask;
 };
 
+mui.init();
 mui('.mui-scroll-wrapper').scroll();
+mui.initPreviewImage();
+mui.previewImage({
+	isUpload: true
+});
+
+var userOpenId = "";
 
 function getImageDataURL(img) {
 	var canvas = document.createElement('canvas');
@@ -124,18 +156,22 @@ function getImageDataURL(img) {
 	var dataURL = canvas.toDataURL('image/png');
 	return dataURL;
 }
-var imgURL;
+
 document.getElementById("fapiaoluru_addInvoiceImage").onchange = function(event) {
-	var imageRootNode = document.getElementById('fapiaoluru_image');
-	if (imageRootNode.innerHTML.indexOf('img') == -1) imageRootNode.innerHTML = '';
-	var imgEle = document.createElement('img');
-	imgEle.style.marginLeft = '5px';
-	imgEle.style.borderRadius = '5px';
-	imgEle.style.width = '70px';
-	imgEle.style.height = '70px';
-	imgEle.setAttribute('data-preview-group', '1');
-	imgEle.setAttribute('data-preview-src', '');
-	imageRootNode.appendChild(imgEle);
+	document.getElementById('tips_image').style.display = 'none';
+	document.getElementById('invoice_img_list_root_div').style.display = '';
+	document.getElementById('invoice_img_list_root_div').style.height = window.screen.availHeight - 198 + "px";
+	var imageRootNode = document.getElementById('invoice_img_list_ul');
+	var liNode = document.createElement('li');
+	liNode.setAttribute("class", "mui-table-view-cell mui-media mui-col-xs-6");
+	var imgNode = document.createElement('img');
+	imgNode.setAttribute("class", "mui-media-object");
+	imgNode.style.width = '300px';
+	imgNode.style.height = '200px';
+	imgNode.setAttribute('data-preview-group', '1');
+	imgNode.setAttribute('data-preview-src', '');
+	liNode.appendChild(imgNode);
+	imageRootNode.appendChild(liNode);
 	var files = event.target.files,
 		file;
 	if (files && files.length > 0) {
@@ -143,15 +179,15 @@ document.getElementById("fapiaoluru_addInvoiceImage").onchange = function(event)
 		try {
 			var URL = window.URL || window.webkitURL;
 			imgURL = URL.createObjectURL(file);
-			imgEle.src = imgURL;
+			imgNode.src = imgURL;
 			invoiceList[imgURL] = document.getElementById('fapiaoluru_addInvoiceImage').files[0];
 			//URL.revokeObjectURL(imgURL);
 		} catch (e) {
 			try {
 				var fileReader = new FileReader();
 				fileReader.onload = function(event) {
-					imgEle.src = event.target.result;
-					invoiceList[imgEle.src] = document.getElementById('fapiaoluru_addInvoiceImage').files[0];
+					imgNode.src = event.target.result;
+					invoiceList[imgNode.src] = document.getElementById('fapiaoluru_addInvoiceImage').files[0];
 				};
 				fileReader.readAsDataURL(file);
 			} catch (e) {
@@ -160,70 +196,85 @@ document.getElementById("fapiaoluru_addInvoiceImage").onchange = function(event)
 		}
 	}
 }
-/*document.getElementById('fapiaoluru_submit').addEventListener('tap', function(event) {
-	var invoiceAmount = document.getElementById('fapiaoluru_amount').innerText;
-	var invoiceType = document.getElementById('fapiaoluru_type').innerText;
-	var invoiceDate = document.getElementById('fapiaoluru_date').innerText;
+document.getElementById('fapiaoluru_submit').addEventListener('tap', function(event) {
 	var isEmpty = true;
 	for (var jsonKey in invoiceList) {
 		isEmpty = false;
 		break;
 	}
 	if (isEmpty) {
-		mui.createTipDialog('您还没有添加发票图像!',null).show();
-		return;
-	}
-	if (isNaN(invoiceAmount) || invoiceAmount <= 0) {
-		mui.createTipDialog('您还没有输入发票金额!',null).show();
-		return;
-	}
-	if (invoiceType == "选择发票类型") {
-		mui.createTipDialog('您还没有选择发票类型!',null).show();
-		您还没有输入发票金额
+		mui.createTipDialog('您还没有添加发票图像，请先添加!',null).show();
 		return;
 	}
 	var mask = mui.createUploadMask(false);
 	mask.show();
-	var formData = {};
+	$('#upload_progress').find('strong').html(0 + '<i>%</i>');
+	var formData = {openId:userOpenId};
 	var xhr = new XMLHttpRequest();
 	var fd = new FormData();
 	for (var jsonKey in formData) {
 		fd.append(jsonKey, formData[jsonKey]);
 	}
-	var fileIndex = 0;
 	for (var jsonKey in invoiceList) {
-		fd.append("file" + fileIndex, invoiceList[jsonKey]);
-		fileIndex++;
+		fd.append("files", invoiceList[jsonKey]);
 	}
 	xhr.upload.addEventListener("progress", function(evt) {
 		if (evt.lengthComputable) {
-			var percentComplete = Math.round(evt.loaded * 100 / evt.total) * 100;
-			document.getElementById('upLoadProgress').value = percentComplete;
+			var percentComplete = Math.round(evt.loaded * 100 / evt.total) / 100;
+			$('#upload_progress').trigger('circle_progress_percent', [percentComplete]);
 		}
 	}, false);
 	xhr.addEventListener("load", function(evt) {
 		var res = evt.target.responseText;
-		if (res.error_code == '0') {
-			mui.createTipDialog('发票提交成功!',null).show();
+		res = JSON.parse(res);
+		if (res.error_code == "0") {
+			mui.createTipDialog('发票上传成功!',null).show();
 			invoiceList = {};
-			document.getElementById('fapiaoluru_amount').innerText = '0';
-			document.getElementById('fapiaoluru_type').innerText = '选择发票类型';
-			document.getElementById('fapiaoluru_date').innerText = currentDate;
-			var imgList = document.getElementById('fapiaoluru_image').childNodes;
-			for (var i = 0; i < imgList.length; i++) {
-				document.getElementById('fapiaoluru_image').removeChild(imgList[i]);
-			}
-			document.getElementById('fapiaoluru_image').innerHTML = '<p style="margin-top: -5px;margin-left: 10px;">票据图像</p>';
+			document.getElementById('tips_image').style.display = "";
+			document.getElementById('invoice_img_list_ul').innerText = "";
+			document.getElementById('invoice_img_list_root_div').style.display = "none";
 		} else {
-			mui.createTipDialog('发票提交失败!，请稍后重试',null).show();
+			mui.createTipDialog(res.error_message, null).show();
 		}
 		mask.close();
 	}, false);
 	xhr.addEventListener("error", function(evt) {
-		mui.createTipDialog('发票提交失败!，请稍后重试',null).show();
+		mui.createTipDialog('发票上传失败!，请稍后重试',null).show();
 		mask.close();
 	}, false);
 	xhr.addEventListener("abort", null, false);
-	xhr.open("POST", "http://139.196.23.131:8080/user/uploadifyTest_doUpload");
+	xhr.open("POST", "/uploadPersonInvoice");
 	xhr.send(fd);
-}, false);*/
+}, false);
+
+mui.ajax({ 
+    type : "POST", 
+    url  : "/getUserOpenIdAndCheckBindCompany",
+    data : {}, 
+    success : function(data) {
+    	if (data == null || data.openId == null || data.openId == "") {
+			mui.createTipDialog('无法获取您的微信Openid,请稍后重试！',null).show();
+			document.getElementById("data_loading").style.display = "none";
+			document.getElementById("tips_info_detail").innerHTML = "无法获取您的微信Openid,请稍后重试！";
+	    	document.getElementById("tips_info").style.display = "";
+		} else {
+			userOpenId = data.openId;
+			if(data.bind_status == "has_bind") {
+				document.getElementById("data_loading").style.display = "none";
+				document.getElementById("add_invoice_page").style.display = "";
+				document.getElementById("tips_image").style.display = "";
+				document.getElementById("fapiaoluru_submit").style.display = "";
+			} else {
+				document.getElementById("data_loading").style.display = "none";
+				document.getElementById("tips_info_detail").innerHTML = "您还没有绑定公司，<br/>请先在账号设置中绑定您的公司！";
+		    	document.getElementById("tips_info").style.display = "";
+			}
+		}
+    }, 
+    error : function() {
+    	mui.createTipDialog('服务器暂时无法响应请求，请稍后重试！',null).show();
+    	document.getElementById("data_loading").style.display = "none";
+    	document.getElementById("tips_info_detail").innerHTML = "服务器暂时无法响应请求，请稍后重试！";
+    	document.getElementById("tips_info").style.display = "";
+    } 
+});

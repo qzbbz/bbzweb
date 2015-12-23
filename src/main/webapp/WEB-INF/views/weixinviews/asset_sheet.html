@@ -5,8 +5,8 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<title></title>
-		<link href="css/mui.min.css" rel="stylesheet" />
-		<link rel="stylesheet" type="text/css" href="css/mui.picker.min.css" />
+		<link href="/css/weixincss/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="/css/weixincss/mui.picker.min.css" />
 		<style>
 			.upload-file {
 				position: fixed;
@@ -123,7 +123,14 @@
 			<h1 class="mui-title" style='text-align: center;'>资产负债表</h1>
 		</div>
 		<div class="mui-page-content">
-			<div class="mui-scroll-wrapper" id="mui_main_page1" >
+			<div id="data_loading" class="mui-loading" style="margin-top:50%;">
+				<div class="mui-spinner"></div>
+				<div style="text-align: center;">正在加载数据</div>
+			</div>
+			<div id="tips_info" style="display:none;margin-top:50%;">
+				<div style="text-align: center;" id="tips_info_detail">服务器暂时无法处理请求，请稍后重试！</div>
+			</div>
+			<div class="mui-scroll-wrapper" id="mui_main_page1" style="display:none;">
 				<div class="mui-scroll">
 					<div class="mui-card" style="margin-top:55px;margin-left:5px;margin-right:5px;">
 						<ul class="mui-table-view">
@@ -460,14 +467,14 @@
 					</div>
 				</div>
 			</div>
-			<div id="scrollToTop" style="position:fixed;bottom: 75px;right:5px;z-index:9999999999;"><img class="scroll_to_top" style="width:25px;" src="images/scroll_top.png"></div>
-			<div id="scrollToBottom" style="position:fixed;bottom: 50px;right:5px;z-index:9999999999;"><img class="scroll_to_bottom" style="width:25px;" src="images/scroll_bottom.png"></div>
+			<div id="scrollToTop" style="position:fixed;bottom: 75px;right:5px;z-index:9999999999;"><img class="scroll_to_top" style="width:25px;" src="/img/weixinimg/scroll_top.png"></div>
+			<div id="scrollToBottom" style="position:fixed;bottom: 50px;right:5px;z-index:9999999999;"><img class="scroll_to_bottom" style="width:25px;" src="/img/weixinimg/scroll_bottom.png"></div>
 		</div>
 	</body>
-	<script src="js/mui.min.js"></script>
-	<script src="js/jquery-1.11.1.min.js"></script>
-	<script src="js/mui.picker.min.js"></script>
-	<script src="js/asset_sheet.js"></script>
+	<script src="/js/weixinjs/mui.min.js"></script>
+	<script src="/js/weixinjs/jquery-1.11.1.min.js"></script>
+	<script src="/js/weixinjs/mui.picker.min.js"></script>
+	<script src="/js/weixinjs/asset_sheet.js"></script>
 	<script>
 		(function($) {
 			$.init();

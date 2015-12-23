@@ -325,13 +325,13 @@ var testData = [{
 	"invoice_count": "2",
 	"invoice_total_amount": "678.89",
 	list: [{
-		"bill_img": "images/shuijiao.jpg",
+		"bill_img": "/img/weixinimg/shuijiao.jpg",
 		"invoice_id": "11",
 		"bill_amount": "258.79",
 		"submit_time": "2015-12-09",
 		"expense_type_name": "餐饮消费"
 	}, {
-		"bill_img": "images/shuijiao.jpg",
+		"bill_img": "/img/weixinimg/shuijiao.jpg",
 		"invoice_id": "14",
 		"bill_amount": "22.79",
 		"submit_time": "2015-12-08",
@@ -342,13 +342,13 @@ var testData = [{
 	"invoice_count": "2",
 	"invoice_total_amount": "4678.89",
 	list: [{
-		"bill_img": "images/shuijiao.jpg",
+		"bill_img": "/img/weixinimg/shuijiao.jpg",
 		"invoice_id": "21",
 		"bill_amount": "158.79",
 		"submit_time": "2015-11-09",
 		"expense_type_name": "餐饮消费"
 	}, {
-		"bill_img": "images/shuijiao.jpg",
+		"bill_img": "/img/weixinimg/shuijiao.jpg",
 		"invoice_id": "167",
 		"bill_amount": "3822.79",
 		"submit_time": "2015-12-08",
@@ -359,13 +359,13 @@ var testData = [{
 	"invoice_count": "2",
 	"invoice_total_amount": "678.89",
 	list: [{
-		"bill_img": "images/shuijiao.jpg",
+		"bill_img": "/img/weixinimg/shuijiao.jpg",
 		"invoice_id": "11",
 		"bill_amount": "258.79",
 		"submit_time": "2015-12-09",
 		"expense_type_name": "餐饮消费"
 	}, {
-		"bill_img": "images/shuijiao.jpg",
+		"bill_img": "/img/weixinimg/shuijiao.jpg",
 		"invoice_id": "14",
 		"bill_amount": "22.79",
 		"submit_time": "2015-12-08",
@@ -376,13 +376,13 @@ var testData = [{
 	"invoice_count": "2",
 	"invoice_total_amount": "4678.89",
 	list: [{
-		"bill_img": "images/shuijiao.jpg",
+		"bill_img": "/img/weixinimg/shuijiao.jpg",
 		"invoice_id": "21",
 		"bill_amount": "158.79",
 		"submit_time": "2015-11-09",
 		"expense_type_name": "餐饮消费"
 	}, {
-		"bill_img": "images/shuijiao.jpg",
+		"bill_img": "/img/weixinimg/shuijiao.jpg",
 		"invoice_id": "167",
 		"bill_amount": "3822.79",
 		"submit_time": "2015-12-08",
