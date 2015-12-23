@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/mui.picker.min.css" />
+		<style>
+			.upload-file {
+				position: fixed;
+				z-index: 998;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				left: 0;
+				background-color: rgba(0, 0, 0, .8);
+			}
+			
+			.dialog {
+				position: fixed;
+				z-index: 998;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				left: 0;
+				background-color: rgba(0, 0, 0, .4);
+			}
+			
+			table {
+				overflow: hidden;
+				border: 1px solid #d3d3d3;
+				background: #fefefe;
+				width: 100%;
+				margin: 10px 0px;
+				-moz-border-radius: 5px;
+				/* FF1+ */
+				-webkit-border-radius: 5px;
+				/* Saf3-4 */
+				border-radius: 5px;
+				-moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+				-webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+			}
+			
+			th,
+			td {
+				padding: 2px 4px 2px;
+				text-align: center;
+			}
+			
+			th {
+				padding-top: 5px;
+				text-shadow: 1px 1px 1px #fff;
+				background: #e8eaeb;
+				font-size: 15px;
+				color: #838B8B;
+			}
+			
+			td {
+				border-top: 1px solid #e0e0e0;
+				border-right: 1px solid #e0e0e0;
+				font-size: 15px;
+				color: #838B8B;
+			}
+			
+			tr.odd-row td {
+				background: #f6f6f6;
+			}
+			
+			td.first,
+			th.first {
+				text-align: left
+			}
+			
+			td.last {
+				border-right: none;
+			}
+			
+			td {
+				background: -moz-linear-gradient(100% 25% 90deg, #fefefe, #f9f9f9);
+				background: -webkit-gradient(linear, 0% 0%, 0% 25%, from(#f9f9f9), to(#fefefe));
+			}
+			
+			tr.odd-row td {
+				background: -moz-linear-gradient(100% 25% 90deg, #f6f6f6, #f1f1f1);
+				background: -webkit-gradient(linear, 0% 0%, 0% 25%, from(#f1f1f1), to(#f6f6f6));
+			}
+			
+			th {
+				background: -moz-linear-gradient(100% 20% 90deg, #e8eaeb, #ededed);
+				background: -webkit-gradient(linear, 0% 0%, 0% 20%, from(#ededed), to(#e8eaeb));
+			}
+			
+			tr:first-child th.first {
+				-moz-border-radius-topleft: 5px;
+				-webkit-border-top-left-radius: 5px;
+				/* Saf3-4 */
+			}
+			
+			tr:first-child th.last {
+				-moz-border-radius-topright: 5px;
+				-webkit-border-top-right-radius: 5px;
+				/* Saf3-4 */
+			}
+			
+			tr:last-child td.first {
+				-moz-border-radius-bottomleft: 5px;
+				-webkit-border-bottom-left-radius: 5px;
+				/* Saf3-4 */
+			}
+			
+			tr:last-child td.last {
+				-moz-border-radius-bottomright: 5px;
+				-webkit-border-bottom-right-radius: 5px;
+				/* Saf3-4 */
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="mui-navbar-inner mui-bar mui-bar-nav">
+			<h1 class="mui-title" style='text-align: center;'>薪酬及税费表</h1>
+		</div>
+		<div class="mui-page-content">
+			<div class="mui-scroll-wrapper" id="mui_main_page1">
+				<div class="mui-scroll">
+					<div class="mui-card" style="margin-top:55px;margin-left:5px;margin-right:5px;">
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell">
+								<h5>当前选择的月份为：<span id="current_select_date">2015-12</span></h5>
+								<button data-options='{"type":"month"}' class="mui-btn mui-btn-primary">月份选择</button>
+							</li>
+						</ul>
+					</div>
+					<div style="margin-left:5px;margin-right: 5px;">
+						<p style="margin-top:10px;">应付职工薪酬明细表</p>
+						<table cellspacing="0" style="margin-top:0px;">
+							<tr>
+								<th>项目</th>
+								<th nowrap="nowrap">期末账面余额</th>
+								<th nowrap="nowrap">年初账面余额</th>
+							</tr>
+							<tr>
+								<td>职工工资</td>
+								<td id="salery_end"></td>
+								<td id="salery_begin"></td>
+							</tr>
+							<tr>
+								<td>奖金、津贴和补贴</td>
+								<td id="salery_end"></td>
+								<td id="salery_begin"></td>
+							</tr>
+							<tr>
+								<td>职工福利费</td>
+								<td id="salery_end"></td>
+								<td id="salery_begin"></td>
+							</tr>
+							<tr>
+								<td>社会保险费</td>
+								<td id="salery_end"></td>
+								<td id="salery_begin"></td>
+							</tr>
+							<tr>
+								<td>住房公积金</td>
+								<td id="salery_end"></td>
+								<td id="salery_begin"></td>
+							</tr>
+							<tr>
+								<td>工会经费</td>
+								<td id="salery_end"></td>
+								<td id="salery_begin"></td>
+							</tr>
+							<tr>
+								<td>职工教育经费</td>
+								<td id="salery_end"></td>
+								<td id="salery_begin"></td>
+							</tr>
+							<tr>
+								<td>非货币性福利</td>
+								<td id="salery_end"></td>
+								<td id="salery_begin"></td>
+							</tr>
+							<tr>
+								<td>辞退福利</td>
+								<td id="salery_end"></td>
+								<td id="salery_begin"></td>
+							</tr>
+							<tr>
+								<td>其他</td>
+								<td id="salery_end"></td>
+								<td id="salery_begin"></td>
+							</tr>
+							<tr>
+								<td>合计</td>
+								<td id="salary_total_end"></td>
+								<td id="salary_total_begin"></td>
+							</tr>
+
+						</table>
+						<p style="margin-top:10px;">应交税费明细表</p>
+						<table cellspacing="0">
+							<tr>
+								<th>项目</th>
+								<th nowrap="nowrap">期末账面余额</th>
+								<th nowrap="nowrap">年初账面余额</th>
+							</tr>
+							<tr>
+								<td>增值税</td>
+								<td id="excise_tax_end"></td>
+								<td id="excise_tax_begin"></td>
+							</tr>
+							<tr>
+								<td>消费税</td>
+								<td id="excise_tax_end"></td>
+								<td id="excise_tax_begin"></td>
+							</tr>
+							<tr>
+								<td>营业税</td>
+								<td id="excise_tax_end"></td>
+								<td id="excise_tax_begin"></td>
+							</tr>
+							<tr>
+								<td>城市维护建设税</td>
+								<td id="salery_end"></td>
+								<td id="salery_begin"></td>
+							</tr>
+							<tr>
+								<td>企业所得税</td>
+								<td id="excise_tax_end"></td>
+								<td id="excise_tax_begin"></td>
+							</tr>
+							<tr>
+								<td>资源税</td>
+								<td id="excise_tax_end"></td>
+								<td id="excise_tax_begin"></td>
+							</tr>
+							<tr>
+								<td>土地增值税</td>
+								<td id="excise_tax_end"></td>
+								<td id="excise_tax_begin"></td>
+							</tr>
+							<tr>
+								<td>城镇土地使用税</td>
+								<td id="excise_tax_end"></td>
+								<td id="excise_tax_begin"></td>
+							</tr>
+							<tr>
+								<td>房产税</td>
+								<td id="excise_tax_end"></td>
+								<td id="excise_tax_begin"></td>
+							</tr>
+							<tr>
+								<td>车船税</td>
+								<td id="excise_tax_end"></td>
+								<td id="excise_tax_begin"></td>
+							</tr>
+							<tr>
+								<td>教育费附加</td>
+								<td id="excise_tax_end"></td>
+								<td id="excise_tax_begin"></td>
+							</tr>
+							<tr>
+								<td>矿产资源补偿费</td>
+								<td id="excise_tax_end"></td>
+								<td id="excise_tax_begin"></td>
+							</tr>
+							<tr>
+								<td>排污费</td>
+								<td id="excise_tax_end"></td>
+								<td id="excise_tax_begin"></td>
+							</tr>
+							<tr>
+								<td>代扣代缴的个人所得税</td>
+								<td id="excise_tax_end"></td>
+								<td id="excise_tax_begin"></td>
+							</tr>
+							<tr>
+								<td>合计</td>
+								<td id="tax_total_end"></td>
+								<td id="tax_total_begin"></td>
+							</tr>
+
+						</table>
+
+					</div>
+					<div style="margin-left:5px;margin-right: 5px;margin-bottom:100px;">
+						<div style="display:inline;">
+							<h5 style="width:50%;float:left;">制表人：<span id="tabulator"></span></h5>
+							<h5 style="width:50%;float:left;">编制单位：<span id="preparedby1"></span></h5>
+						</div>
+						<div style="display:inline;">
+							<h5 style="width:50%;float:left;">财务负责人：<span id="finance_chief"></span></h5>
+							<h5 style="width:50%;float:left;">企业负责人：<span id="company_controller"></span></h5>
+						</div>
+						<div style="display:inline;">
+							<h5 style="width:50%;float:left;">表中数字单位：<span>元</span></h5>
+							<h5 style="width:50%;float:left;">表中数字截止日期：<span id="expiry_date" ></span></h5>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="scrollToTop" style="position:fixed;bottom: 75px;right:5px;z-index:9999999999;"><img class="scroll_to_top" style="width:25px;" src="images/scroll_top.png"></div>
+			<div id="scrollToBottom" style="position:fixed;bottom: 50px;right:5px;z-index:9999999999;"><img class="scroll_to_bottom" style="width:25px;" src="images/scroll_bottom.png"></div>
+		</div>
+	</body>
+	<script src="js/mui.min.js"></script>
+	<script src="js/jquery-1.11.1.min.js"></script>
+	<script src="js/mui.picker.min.js"></script>
+	<script src="js/salary_sheet.js"></script>
+	<script>
+		(function($) {
+			$.init();
+			var result = $('#current_select_date')[0];
+			var btns = $('.mui-btn');
+			btns.each(function(i, btn) {
+				btn.addEventListener('tap', function() {
+					var optionsJson = this.getAttribute('data-options') || '{}';
+					var options = JSON.parse(optionsJson);
+					var id = this.getAttribute('id');
+					var picker = new $.DtPicker(options);
+					picker.show(function(rs) {
+						result.innerText = rs.text;
+						picker.dispose();
+					});
+				}, false);
+			});
+		})(mui);
+		$(function() {
+			$("table tr:nth-child(odd)").addClass("odd-row");
+			$("table td:first-child, table th:first-child").addClass("first");
+			$("table td:last-child, table th:last-child").addClass("last");
+		});
+		mui("#scrollToTop").on("tap", ".scroll_to_top", function() {
+			mui('#mui_main_page1').scroll().scrollTo(0, 0);
+		});
+		mui("#scrollToBottom").on("tap", ".scroll_to_bottom", function() {
+			mui('#mui_main_page1').scroll().scrollToBottom();
+		})
+	</script>
+
+</html>

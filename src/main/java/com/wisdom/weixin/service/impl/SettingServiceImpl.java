@@ -101,15 +101,29 @@ public class SettingServiceImpl implements ISettingService {
 			retMap.put("error_message", "无法查询到您的UserId，请联系公司管理员！");
 			return retMap;
 		}
-		if(!userService.setUserNameByUserId(name, userId)) {
-			retMap.put("error_code", "1");
-			retMap.put("error_message", "更新用户姓名出错，请联系公司管理员！");
-			return retMap;
+		if(name == null || name.isEmpty()) {
+			String uName = userService.getUserNameByUserId(userId);
+			retMap.put("userName", uName == null ? "" : uName);
+		} else {
+			if(!userService.setUserNameByUserId(name, userId)) {
+				retMap.put("error_code", "1");
+				retMap.put("error_message", "更新用户姓名出错，请联系公司管理员！");
+				return retMap;
+			} else {
+				retMap.put("userName", name);
+			}
 		}
-		if(!userService.updateUserMsgEmailByUserId(email, userId)) {
-			retMap.put("error_code", "1");
-			retMap.put("error_message", "更新用户邮箱出错，请联系公司管理员！");
-			return retMap;
+		if(email == null || email.isEmpty()) {
+			String uEmail = userService.getUserMsgEmailByUserId(userId);
+			retMap.put("userMsgEmail", uEmail == null ? "" : uEmail);
+		} else {
+			if(!userService.updateUserMsgEmailByUserId(email, userId)) {
+				retMap.put("error_code", "1");
+				retMap.put("error_message", "更新用户邮箱出错，请联系公司管理员！");
+				return retMap;
+			} else {
+				retMap.put("userMsgEmail", email);
+			}
 		}
 		retMap.put("error_code", "0");
 		return retMap;

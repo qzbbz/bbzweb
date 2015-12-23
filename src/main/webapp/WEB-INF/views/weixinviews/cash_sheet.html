@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/mui.picker.min.css" />
+		<style>
+			.upload-file {
+				position: fixed;
+				z-index: 998;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				left: 0;
+				background-color: rgba(0, 0, 0, .8);
+			}
+			
+			.dialog {
+				position: fixed;
+				z-index: 998;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				left: 0;
+				background-color: rgba(0, 0, 0, .4);
+			}
+			
+			table {
+				overflow: hidden;
+				border: 1px solid #d3d3d3;
+				background: #fefefe;
+				width:100%;
+				margin: 10px 0px;
+				-moz-border-radius: 5px;
+				/* FF1+ */
+				-webkit-border-radius: 5px;
+				/* Saf3-4 */
+				border-radius: 5px;
+				-moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+				-webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+			}
+			
+			th,
+			td {
+				padding: 2px 4px 2px;
+				text-align: center;
+			}
+			
+			th {
+				padding-top: 5px;
+				text-shadow: 1px 1px 1px #fff;
+				background: #e8eaeb;
+				font-size: 15px;
+				color:#838B8B;
+			}
+			
+			td {
+				border-top: 1px solid #e0e0e0;
+				border-right: 1px solid #e0e0e0;
+				font-size: 15px;
+				color:#838B8B;
+			}
+			
+			tr.odd-row td {
+				background: #f6f6f6;
+			}
+			
+			td.first,
+			th.first {
+				text-align: left
+			}
+			
+			td.last {
+				border-right: none;
+			}
+			
+			td {
+				background: -moz-linear-gradient(100% 25% 90deg, #fefefe, #f9f9f9);
+				background: -webkit-gradient(linear, 0% 0%, 0% 25%, from(#f9f9f9), to(#fefefe));
+			}
+			
+			tr.odd-row td {
+				background: -moz-linear-gradient(100% 25% 90deg, #f6f6f6, #f1f1f1);
+				background: -webkit-gradient(linear, 0% 0%, 0% 25%, from(#f1f1f1), to(#f6f6f6));
+			}
+			
+			th {
+				background: -moz-linear-gradient(100% 20% 90deg, #e8eaeb, #ededed);
+				background: -webkit-gradient(linear, 0% 0%, 0% 20%, from(#ededed), to(#e8eaeb));
+			}
+			
+			tr:first-child th.first {
+				-moz-border-radius-topleft: 5px;
+				-webkit-border-top-left-radius: 5px;
+				/* Saf3-4 */
+			}
+			
+			tr:first-child th.last {
+				-moz-border-radius-topright: 5px;
+				-webkit-border-top-right-radius: 5px;
+				/* Saf3-4 */
+			}
+			
+			tr:last-child td.first {
+				-moz-border-radius-bottomleft: 5px;
+				-webkit-border-bottom-left-radius: 5px;
+				/* Saf3-4 */
+			}
+			
+			tr:last-child td.last {
+				-moz-border-radius-bottomright: 5px;
+				-webkit-border-bottom-right-radius: 5px;
+				/* Saf3-4 */
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="mui-navbar-inner mui-bar mui-bar-nav">
+			<h1 class="mui-title" style='text-align: center;'>现金流量表</h1>
+		</div>
+		<div class="mui-page-content">
+			<div class="mui-scroll-wrapper" id="mui_main_page1" >
+				<div class="mui-scroll">
+					<div class="mui-card" style="margin-top:55px;margin-left:5px;margin-right:5px;">
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell">
+								<h5>当前选择的月份为：<span id="current_select_date">2015-12</span></h5>
+								<button data-options='{"type":"month"}' class="mui-btn mui-btn-primary">月份选择</button>
+							</li>
+						</ul>
+					</div>
+										<div style="margin-left:5px;margin-right: 5px;">
+						<table cellspacing="0">
+							<tr>
+								<th>项目</th>
+								<th nowrap="nowrap">本年累计金额</th>
+								<th nowrap="nowrap">本月金额</th>
+							</tr>
+							<tr>
+								<td style="color:#7D9EC0;font-weight:bold;">一、经营活动产生的现金流量：</td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>销售产成品、商品、提供劳务收到的现金</td>
+								<td id="sales_year" ></td>
+								<td id="sales_month"></td>
+							</tr>
+							<tr>
+								<td>收到其他与经营活动有关的现金</td>
+								<td id="receive_year"></td>
+								<td id="receive_month"></td>
+							</tr>
+							<tr>
+								<td>购买原材料、商品、接受劳务支付的现金</td>
+								<td id="buy_year"></td>
+								<td id="buy_month"></td>
+							</tr>
+							<tr>
+								<td>支付的职工薪酬</td>
+								<td id="salary_year"></td>
+								<td id="salary_month"></td>
+							</tr>
+							<tr>
+								<td>支付的税费</td>
+								<td id="tax_year"></td>
+								<td id="tax_month"></td>
+							</tr>
+							<tr>
+								<td>支付其他与经营活动有关的现金</td>
+								<td id="other_pay_year"></td>
+								<td id="other_pay_month"></td>
+							</tr>
+							<tr>
+								<td>经营活动产生的现金流量净额</td>
+								<td id="operating_activities_year"></td>
+								<td id="operating_activities_month"></td>
+							</tr>
+
+							<tr>
+								<td style="color:#7D9EC0;font-weight:bold;">二、投资活动产生的现金流量：</td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>收回短期投资、长期债券投资和长期股权投资收到的现金</td>
+								<td id="take_back_year"></td>
+								<td id="take_back_month"></td>
+							</tr>
+							<tr>
+								<td>取得投资收益收到的现金</td>
+								<td id="equity_earnings_year"></td>
+								<td id="equity_earnings_month"></td>
+							</tr>
+							<tr>
+								<td>处置固定资产、无形资产和其他非流动资产收回的现金净额</td>
+								<td id="handle_year"></td>
+								<td id="handle_month"></td>
+							</tr>
+							<tr>
+								<td>短期投资、长期债券投资和长期股权投资支付的现金</td>
+								<td id="investments_pay_year"></td>
+								<td id="investments_pay_month"></td>
+							</tr>
+							<tr>
+								<td>购建固定资产、无形资产和其他非流动资产支付的现金</td>
+								<td id="coustruction_year"></td>
+								<td id="coustruction_month"></td>
+							</tr>
+							<tr>
+								<td>投资活动产生的现金流量净额</td>
+								<td id="activity_investment_year"></td>
+								<td id="activity_investment_month"></td>
+							</tr>
+
+							<tr>
+								<td style="color:#7D9EC0;font-weight:bold;">三、筹资活动产生的现金流量：</td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>取得借款收到的现金</td>
+								<td id="loan_year"></td>
+								<td id="loan_month"></td>
+							</tr>
+							<tr>
+								<td>吸收投资者投资收到的现金</td>
+								<td id="investors_to_invest_year"></td>
+								<td id="investors_to_invest_month"></td>
+							</tr>
+							<tr>
+								<td>偿还借款本金支付的现金</td>
+								<td id="payment_of_principal_year"></td>
+								<td id="payment_of_principal_month"></td>
+							</tr>
+							<tr>
+								<td>偿还借款利息支付的现金</td>
+								<td id="paid_interest_year"></td>
+								<td id="paid_interest_month"></td>
+							</tr>
+							<tr>
+								<td>分配利润支付的现金</td>
+								<td id="distribute_profit_year"></td>
+								<td id="distribute_profit_month"></td>
+							</tr>
+							<tr>
+								<td>筹资活动产生的现金流量净额</td>
+								<td id="financing_activity_year"></td>
+								<td id="financing_activity_month"></td>
+							</tr>
+							<tr>
+								<td style="color:#7D9EC0;font-weight:bold;">四、现金净增加额</td>
+								<td id="net_increase_in_cash_year"></td>
+								<td id="net_increase_in_cash_month"></td>
+							</tr>
+							<tr>
+								<td>加：期初现金余额</td>
+								<td id="cash_at_beginning_of_period_year"></td>
+								<td id="cash_at_beginning_of_period_month"></td>
+							</tr>
+							<tr>
+								<td style="color:#7D9EC0;font-weight:bold;">五、期末现金余额</td>
+								<td id="ending_cash_balance_year"></td>
+								<td id="ending_cash_balance_month"></td>
+							</tr>
+							
+						</table>
+					</div>
+					<div style="margin-left:5px;margin-right: 5px;margin-bottom:100px;">
+						<div style="display:inline;">
+							<h5 style="width:50%;float:left;">制表人：<span id="tabulator"></span></h5>
+							<h5 style="width:50%;float:left;">编制单位：<span id="preparedby"></span></h5>
+						</div>
+						<div style="display:inline;">
+							<h5 style="width:50%;float:left;">财务负责人：<span id="company_controller"></span></h5>
+							<h5 style="width:50%;float:left;">企业负责人：<span id="finance_chief"></span></h5>
+						</div>
+						<div style="display:inline;">
+							<h5 style="width:50%;float:left;">表中数字单位：<span>元</span></h5>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="scrollToTop" style="position:fixed;bottom: 75px;right:5px;z-index:9999999999;"><img class="scroll_to_top" style="width:25px;" src="images/scroll_top.png"></div>
+			<div id="scrollToBottom" style="position:fixed;bottom: 50px;right:5px;z-index:9999999999;"><img class="scroll_to_bottom" style="width:25px;" src="images/scroll_bottom.png"></div>
+		</div>
+	</body>
+	<script src="js/mui.min.js"></script>
+	<script src="js/jquery-1.11.1.min.js"></script>
+	<script src="js/mui.picker.min.js"></script>
+	<script src="js/cash_sheet.js"></script>
+	<script>
+		(function($) {
+			$.init();
+			var result = $('#current_select_date')[0];
+			var btns = $('.mui-btn');
+			btns.each(function(i, btn) {
+				btn.addEventListener('tap', function() {
+					var optionsJson = this.getAttribute('data-options') || '{}';
+					var options = JSON.parse(optionsJson);
+					var id = this.getAttribute('id');
+					var picker = new $.DtPicker(options);
+					picker.show(function(rs) {
+						result.innerText = rs.text;
+						picker.dispose();
+					});
+				}, false);
+			});
+		})(mui);
+		$(function() {
+			$("table tr:nth-child(odd)").addClass("odd-row");
+			$("table td:first-child, table th:first-child").addClass("first");
+			$("table td:last-child, table th:last-child").addClass("last");
+		});
+		mui("#scrollToTop").on("tap", ".scroll_to_top", function(){
+			mui('#mui_main_page1').scroll().scrollTo(0,0);
+		});
+		mui("#scrollToBottom").on("tap", ".scroll_to_bottom", function(){			
+			mui('#mui_main_page1').scroll().scrollToBottom();
+		})
+	</script>
+
+</html>

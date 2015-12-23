@@ -129,6 +129,32 @@ public class CommonController {
 		return result;
 	}
 	
+	@RequestMapping("/getUserOpenIdAndCheckBindCompany")
+	@ResponseBody
+	public Map<String, String> getUserOpenIdAndCheckBindCompany(Model model,
+			HttpServletRequest request) {
+		logger.debug("getUserOpenIdAndCheckBindCompany");
+		Map<String, String> result = new HashMap<>();
+		result.put("openId", "");
+		if (true/*model.asMap().containsKey("userOpenId")*/) {
+			result.put("openId", (String) model.asMap().get("userOpenId"));
+			result.put("openId", "oJO1gtyVvLuWxm6N4T1JuYMzgysw");
+			String openId = result.get("openId");
+			if (openId == null || openId.isEmpty()) {
+				result.put("error_code", String.valueOf(WeixinJsonCode.NO_OPENID_ERROR_CODE));
+				result.put("error_message", WeixinJsonCode.NO_OPENID_ERROR_MESSAGE);
+			} else {
+				result.put("error_code", String.valueOf(WeixinJsonCode.NO_ERROR_CODE));
+				result.put("error_message", WeixinJsonCode.NO_ERROR_MESSAGE);
+				Map<String, String> ret = settingService.checkCompanyBind(openId);
+				result.putAll(ret);
+			}
+		}
+		logger.debug("getUserOpenIdAndCheckBindCompany");
+		logger.debug("resultMap :{}", result.toString());
+		return result;
+	}
+	
 	@RequestMapping("/checkBindCompany")
 	@ResponseBody
 	public Map<String, String> checkBindCompany(HttpServletRequest request) {
