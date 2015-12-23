@@ -43,6 +43,7 @@ public class SettingServiceImpl implements ISettingService {
 			String userId = userService.getUserIdByOpenId(openId);
 			String userName = userService.getUserNameByUserId(userId);
 			String userMsgEmail = userService.getUserMsgEmailByUserId(userId);
+			
 			retMap = getCompanyNameAndDeptName(userId);
 			retMap.put("bind_status", "has_bind");
 			retMap.put("userName", userName);

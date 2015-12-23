@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import com.wisdom.common.model.ContactUs;
 import com.wisdom.contactus.utils.ContactUsDaoImpl;
 import com.wisdom.contactus.utils.IContactUsDao;
+import com.wisdom.user.service.IUserService;
+import com.wisdom.user.service.IUserWeixinService;
 import com.wisdom.weixin.service.IMessageProcessService;
 import com.wisdom.weixin.service.ISettingService;
 import com.wisdom.weixin.service.ITokenCheckService;
@@ -32,7 +34,7 @@ public class CommonController {
 
 	@Autowired
 	private ITokenCheckService tokenCheckService;
-
+	
 	@Autowired
 	private IMessageProcessService messageProcessService;
 	
@@ -136,9 +138,9 @@ public class CommonController {
 		logger.debug("getUserOpenIdAndCheckBindCompany");
 		Map<String, String> result = new HashMap<>();
 		result.put("openId", "");
-		if (true/*model.asMap().containsKey("userOpenId")*/) {
+		if (model.asMap().containsKey("userOpenId")) {
 			result.put("openId", (String) model.asMap().get("userOpenId"));
-			result.put("openId", "oJO1gtyVvLuWxm6N4T1JuYMzgysw");
+			//result.put("openId", "oJO1gtyVvLuWxm6N4T1JuYMzgysw");
 			String openId = result.get("openId");
 			if (openId == null || openId.isEmpty()) {
 				result.put("error_code", String.valueOf(WeixinJsonCode.NO_OPENID_ERROR_CODE));
