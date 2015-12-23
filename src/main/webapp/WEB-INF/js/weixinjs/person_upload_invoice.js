@@ -212,7 +212,7 @@ document.getElementById('fapiaoluru_submit').addEventListener('tap', function(ev
 		$('#upload_progress').trigger('circle_progress_percent', [i]);
 		i = i + 0.01;
 	},100);*/
-	var formData = {};
+	var formData = {openId:"oJO1gtyVvLuWxm6N4T1JuYMzgysw"};
 	var xhr = new XMLHttpRequest();
 	var fd = new FormData();
 	for (var jsonKey in formData) {
@@ -243,7 +243,7 @@ document.getElementById('fapiaoluru_submit').addEventListener('tap', function(ev
 			}
 			document.getElementById('fapiaoluru_image').innerHTML = '<p style="margin-top: -5px;margin-left: 10px;">票据图像</p>';
 		} else {
-			mui.createTipDialog('发票上传失败!，请稍后重试',null).show();
+			mui.createTipDialog(res.error_message, null).show();
 		}
 		mask.close();
 	}, false);
@@ -252,6 +252,6 @@ document.getElementById('fapiaoluru_submit').addEventListener('tap', function(ev
 		mask.close();
 	}, false);
 	xhr.addEventListener("abort", null, false);
-	xhr.open("POST", "http://139.196.23.131:8080/user/uploadifyTest_doUpload");
+	xhr.open("POST", "");
 	xhr.send(fd);
 }, false);

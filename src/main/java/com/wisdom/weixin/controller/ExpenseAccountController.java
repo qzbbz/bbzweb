@@ -1,11 +1,17 @@
 package com.wisdom.weixin.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +20,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
+import com.wisdom.common.model.Company;
+import com.wisdom.common.model.CompanyBill;
 import com.wisdom.user.service.IUserService;
 import com.wisdom.weixin.service.IExpenseAccountService;
 import com.wisdom.weixin.service.IWeixinPushService;
@@ -91,6 +101,58 @@ public class ExpenseAccountController {
 			}
 		}
 		logger.debug("retMap : {}", retMap.toString());
+		return retMap;
+	}
+	
+	@RequestMapping("/uploadPersonInvoice")
+	@ResponseBody
+	public Map<String, String> uploadPersonInvoice(
+			MultipartFile[] files,
+			HttpServletRequest request) {
+		logger.debug("uploadPersonInvoice");
+		String openId = request.getParameter("openId");
+		Map<String, String> retMap = new HashMap<>();
+		if(openId == null || openId.isEmpty()) {
+			retMap.put("error_code", "3");
+			retMap.put("error_message", "无法获取您微信的Openid，请稍后重新进入！");
+			return retMap;
+		}
+		String userId = userService.getUserIdByOpenId(openId);
+		if(userId == null || userId.isEmpty()) {
+			retMap.put("error_code", "30");
+			retMap.put("error_message", "无法获取您的用户ID，请稍后重新进入！");
+			return retMap;
+		}
+		if (files != null) {
+			for(MultipartFile file:files) {
+				long companyId = userService.getCompanyIdByUserId(userId);
+				String fileName = getGernarateFileName(file, userId);
+				try {
+					FileUtils.copyInputStreamToFile(file.getInputStream(),
+							new File("D:\\test", fileName));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				/*CompanyBill cb = new CompanyBill();
+				cb.setCompanyId(companyId);
+				cb.setFileName(fileName);
+				cb.setBillDate(date);
+				cb.setSupplyName(supplyName);
+				Integer fixedAssetFlag = Integer.valueOf(isFixedAssets);
+				cb.setIsFixedAssets(fixedAssetFlag);
+				cb.setCreateTime(new Timestamp(System.currentTimeMillis()));
+				companyBillService.addCompanyBill(cb);
+				
+				
+				//Create invoice
+				long invoiceId = invoiceService.addInvoice(companyId, fileName, date, 0);
+				Company company = companyService.getCompanyByCompanyId(companyId);
+				//Send to queue
+				invoiceService.publishUnrecognizedInvoive(invoiceId, companyId, fileName, company.getName());*/
+			}
+		}
+		retMap.put("error_code", "0");
+		retMap.put("error_message", "");
 		return retMap;
 	}
 
@@ -225,6 +287,14 @@ public class ExpenseAccountController {
 		}
 		logger.debug("submitBillListAudit result : {}", retMap.toString());
 		return retMap;
+	}
+	
+	private String getGernarateFileName(MultipartFile file, String userId) {
+		Random rdm = new Random(System.currentTimeMillis());
+		String extendName = file.getOriginalFilename().substring(
+				file.getOriginalFilename().indexOf(".") + 1);
+		return userId + System.currentTimeMillis() + Math.abs(rdm.nextInt())
+				% 1000 + (extendName == null ? ".unknown" : "." + extendName);
 	}
 
 }
