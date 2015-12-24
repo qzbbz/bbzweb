@@ -148,135 +148,173 @@
 								<th nowrap="nowrap">本月金额</th>
 							</tr>
 							<tr>
-								<td style="color:#7D9EC0;font-weight:bold;">一、经营活动产生的现金流量：</td>
-								<td></td>
-								<td></td>
+								<td style="color:#7D9EC0;font-weight:bold;">一、营业收入：</td>
+								<td id="operating_receipt_year"></td>
+								<td id="operating_receipt_month"></td>
 							</tr>
 							<tr>
-								<td>销售产成品、商品、提供劳务收到的现金</td>
-								<td id="sales_year" ></td>
-								<td id="sales_month"></td>
+								<td style="color:#7D9EC0;font-weight:bold;">减：营业成本</td>
+								<td id="cost_in_business_year" ></td>
+								<td id="cost_in_business_month"></td>
 							</tr>
 							<tr>
-								<td>收到其他与经营活动有关的现金</td>
-								<td id="receive_year"></td>
-								<td id="receive_month"></td>
+								<td>营业税金及附加</td>
+								<td id="sales_tax_year"></td>
+								<td id="sales_tax_month"></td>
 							</tr>
 							<tr>
-								<td>购买原材料、商品、接受劳务支付的现金</td>
-								<td id="buy_year"></td>
-								<td id="buy_month"></td>
+								<td style="color:#7D9EC0;font-weight:bold;">其中：消费税</td>
+								<td id="excise_tax_year"></td>
+								<td id="excise_tax_month"></td>
 							</tr>
 							<tr>
-								<td>支付的职工薪酬</td>
-								<td id="salary_year"></td>
-								<td id="salary_month"></td>
+								<td>营业税</td>
+								<td ></td>
+								<td ></td>
 							</tr>
 							<tr>
-								<td>支付的税费</td>
-								<td id="tax_year"></td>
-								<td id="tax_month"></td>
+								<td>城市维护建设税</td>
+								<td id="urban_maintenance_and_construction_tax_year"></td>
+								<td id="urban_maintenance_and_construction_month"></td>
 							</tr>
 							<tr>
-								<td>支付其他与经营活动有关的现金</td>
-								<td id="other_pay_year"></td>
-								<td id="other_pay_month"></td>
+								<td>资源税</td>
+								<td id="resource_tax_year"></td>
+								<td id="resource_tax_month"></td>
 							</tr>
 							<tr>
-								<td>经营活动产生的现金流量净额</td>
-								<td id="operating_activities_year"></td>
-								<td id="operating_activities_month"></td>
+								<td>土地增值税</td>
+								<td id="land_value_increment_tax_year"></td>
+								<td id="land_value_increment_tax_month"></td>
 							</tr>
 
 							<tr>
-								<td style="color:#7D9EC0;font-weight:bold;">二、投资活动产生的现金流量：</td>
-								<td></td>
-								<td></td>
+								<td style="color:#7D9EC0;font-weight:bold;">城镇土地使用税、房产税、车船税、印花税</td>
+								<td id="land_house_tax_year"></td>
+								<td id="land_house_tax_month"></td>
 							</tr>
 							<tr>
-								<td>收回短期投资、长期债券投资和长期股权投资收到的现金</td>
-								<td id="take_back_year"></td>
-								<td id="take_back_month"></td>
+								<td>教育费附加、矿产资源补偿费、排污费</td>
+								<td id="education_year"></td>
+								<td id="education_month"></td>
 							</tr>
 							<tr>
-								<td>取得投资收益收到的现金</td>
+								<td>销售费用</td>
+								<td id="sales_year"></td>
+								<td id="sales_month"></td>
+							</tr>
+							<tr>
+								<td style="color:#7D9EC0;font-weight:bold;">其中：商品维修费</td>
+								<td id="maintenance_year"></td>
+								<td id="maintenance_month"></td>
+							</tr>
+							<tr>
+								<td>广告费和业务宣传费</td>
+								<td id="advertise_year"></td>
+								<td id="advertise_month"></td>
+							</tr>
+							<tr>
+								<td>管理费用</td>
+								<td id="manage_year"></td>
+								<td id="manage_month"></td>
+							</tr>
+							<tr>
+								<td style="color:#7D9EC0;font-weight:bold;">其中：开办费</td>
+								<td id="establishment_charges_year"></td>
+								<td id="establishment_charges_month"></td>
+							</tr>
+
+							<tr>
+								<td style="color:#7D9EC0;font-weight:bold;">业务招待费</td>
+								<td id="business_entertainment_year"></td>
+								<td id="business_entertainment_month"></td>
+							</tr>
+							<tr>
+								<td>研究费用</td>
+								<td id="research_year"></td>
+								<td id="research_month"></td>
+							</tr>
+							<tr>
+								<td>财务费用</td>
+								<td id="finance_year"></td>
+								<td id="finance_month"></td>
+							</tr>
+							<tr>
+								<td style="color:#7D9EC0;font-weight:bold;">其中：利息费用（收入以“-”号填列）</td>
+								<td id="interest_year"></td>
+								<td id="interest_month"></td>
+							</tr>
+							<tr>
+								<td style="color:#7D9EC0;font-weight:bold;">加：投资收益（损失以“-”号填列）</td>
 								<td id="equity_earnings_year"></td>
 								<td id="equity_earnings_month"></td>
 							</tr>
 							<tr>
-								<td>处置固定资产、无形资产和其他非流动资产收回的现金净额</td>
-								<td id="handle_year"></td>
-								<td id="handle_month"></td>
+								<td style="color:#7D9EC0;font-weight:bold;">二、营业利润（亏损以“-”号填列）</td>
+								<td id="operating_profit_year"></td>
+								<td id="operating_profit_month"></td>
 							</tr>
 							<tr>
-								<td>短期投资、长期债券投资和长期股权投资支付的现金</td>
-								<td id="investments_pay_year"></td>
-								<td id="investments_pay_month"></td>
+								<td style="color:#7D9EC0;font-weight:bold;">加：营业外收入</td>
+								<td id="nonbusiness_income_year"></td>
+								<td id="nonbusiness_income_month"></td>
 							</tr>
 							<tr>
-								<td>购建固定资产、无形资产和其他非流动资产支付的现金</td>
-								<td id="coustruction_year"></td>
-								<td id="coustruction_month"></td>
+								<td style="color:#7D9EC0;font-weight:bold;">其中：政府补助</td>
+								<td id="government_grants_year"></td>
+								<td id="government_grants_month"></td>
 							</tr>
 							<tr>
-								<td>投资活动产生的现金流量净额</td>
-								<td id="activity_investment_year"></td>
-								<td id="activity_investment_month"></td>
-							</tr>
-
-							<tr>
-								<td style="color:#7D9EC0;font-weight:bold;">三、筹资活动产生的现金流量：</td>
-								<td></td>
-								<td></td>
+								<td style="color:#7D9EC0;font-weight:bold;">减：营业外支出</td>
+								<td id="non_business_expenditure_year"></td>
+								<td id="non_business_expenditure_month"></td>
 							</tr>
 							<tr>
-								<td>取得借款收到的现金</td>
-								<td id="loan_year"></td>
-								<td id="loan_month"></td>
+								<td style="color:#7D9EC0;font-weight:bold;">其中：坏账损失</td>
+								<td id="loss_on_bad_debt_year"></td>
+								<td id="loss_on_bad_debt_month"></td>
 							</tr>
 							<tr>
-								<td>吸收投资者投资收到的现金</td>
-								<td id="investors_to_invest_year"></td>
-								<td id="investors_to_invest_month"></td>
+								<td>无法收回的长期债券投资损失</td>
+								<td id="loss_on_long_term_bonds_year"></td>
+								<td id="loss_on_long_term_bonds_month"></td>
+							</tr>
+				
+							<tr>
+								<td>无法收回的长期股权投资损失</td>
+								<td id="loss_on_long_term_stock_year"></td>
+								<td id="loss_on_long_term_stock_month"></td>
+							</tr>
+				
+							<tr>
+								<td>自然灾害等不可抗力因素造成的损失</td>
+								<td id="loss_on_long_term_natural_calamities_year"></td>
+								<td id="loss_on_long_term_natural_calamities_month"></td>
+							</tr>
+				
+							<tr>
+								<td >税收滞纳金</td>
+								<td id="tax_delay_charge_year"></td>
+								<td id="tax_delay_charge_month"></td>
 							</tr>
 							<tr>
-								<td>偿还借款本金支付的现金</td>
-								<td id="payment_of_principal_year"></td>
-								<td id="payment_of_principal_month"></td>
+								<td style="color:#7D9EC0;font-weight:bold;">三、利润总额（亏损总额以“-”号填列）</td>
+								<td id="total_profit_year"></td>
+								<td id="total_profit_month"></td>
 							</tr>
 							<tr>
-								<td>偿还借款利息支付的现金</td>
-								<td id="paid_interest_year"></td>
-								<td id="paid_interest_month"></td>
+								<td style="color:#7D9EC0;font-weight:bold;">减：所得税费用</td>
+								<td id="income_tax_expense_year"></td>
+								<td id="income_tax_expense_month"></td>
 							</tr>
 							<tr>
-								<td>分配利润支付的现金</td>
-								<td id="distribute_profit_year"></td>
-								<td id="distribute_profit_month"></td>
-							</tr>
-							<tr>
-								<td>筹资活动产生的现金流量净额</td>
-								<td id="financing_activity_year"></td>
-								<td id="financing_activity_month"></td>
-							</tr>
-							<tr>
-								<td style="color:#7D9EC0;font-weight:bold;">四、现金净增加额</td>
-								<td id="net_increase_in_cash_year"></td>
-								<td id="net_increase_in_cash_month"></td>
-							</tr>
-							<tr>
-								<td>加：期初现金余额</td>
-								<td id="cash_at_beginning_of_period_year"></td>
-								<td id="cash_at_beginning_of_period_month"></td>
-							</tr>
-							<tr>
-								<td style="color:#7D9EC0;font-weight:bold;">五、期末现金余额</td>
-								<td id="ending_cash_balance_year"></td>
-								<td id="ending_cash_balance_month"></td>
+								<td style="color:#7D9EC0;font-weight:bold;">四、净利润（净亏损以“-”号填列）</td>
+								<td id="net_margin_year"></td>
+								<td id="net_margin_month"></td>
 							</tr>
 						</table>
 					</div>
-					<div style="margin-left:5px;margin-right: 5px;margin-bottom:100px;">
+					<div style="margin-left:5px;margin-right: 5px;margin-bottom:30px;">
 							<h5 >制表人：<span id="tabulator"></span></h5>
 							<h5 >编制单位：<span id="preparedby"></span></h5>
 							<h5 >财务负责人：<span id="company_controller"></span></h5>

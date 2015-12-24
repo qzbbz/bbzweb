@@ -82,6 +82,8 @@ mui.createTipDialog = function(info, callBack) {
 mui.init();
 mui('.mui-scroll-wrapper').scroll();
 
+var userOpenId = "";
+
 function fillDataIntoHtml(data) {
 	$('#create_time1').html(data.create_time);
 	$('#preparedby1').html(data.preparedby);
@@ -151,10 +153,10 @@ function getSalarySheetData(date) {
 	var mask = mui.createProcessingMask(null);
 	mask.show();
 	mui.ajax({
-		url: '/approvalBill',
+		url: '/getNewestSheetSalaryTax',
 		type: "POST",
 		data: {
-
+			userOpenId:userOpenId,date:date
 		},
 		success: function(data) {
 			if (data == null || data.result_is_null == 'true') {
