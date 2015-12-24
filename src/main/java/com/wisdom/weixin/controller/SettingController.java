@@ -30,6 +30,8 @@ public class SettingController {
         Map<String, String> result = new HashMap<>();
         String openId = request.getParameter("openId");
         String inviteCode = request.getParameter("inviteCode");
+        String name = request.getParameter("name") == null ? "" : request.getParameter("name");
+        String email = request.getParameter("email") == null ? "" : request.getParameter("email");
         if (openId == null || openId.isEmpty() || inviteCode == null || inviteCode.isEmpty()) {
             result.put("error_code", String.valueOf(WeixinJsonCode.NO_OPENID_OR_INVITE_CODE_ERROR_CODE));
             result.put("error_message", WeixinJsonCode.NO_OPENID_OR_INVITE_CODE_ERROR_MESSAGE);
@@ -38,6 +40,7 @@ public class SettingController {
         	result.put("error_code", String.valueOf(WeixinJsonCode.NO_ERROR_CODE));
             result.put("error_message", WeixinJsonCode.NO_ERROR_MESSAGE);
             Map<String, String> ret = settingService.userBindCompany(openId, inviteCode);
+            settingService.updateUserInfo(openId, name, email);
             result.putAll(ret);
         }
         logger.debug("finishUserBindCompany");
@@ -74,6 +77,7 @@ public class SettingController {
         String openId = request.getParameter("openId");
         String name = request.getParameter("name");
         String email = request.getParameter("email");
+        logger.debug("updateUserInfo email : {}", email);
         if (openId == null || openId.isEmpty()){
             result.put("error_code", "1");
             result.put("error_message", "无法获取您的微信Openid，请稍后重试!");
@@ -89,6 +93,8 @@ public class SettingController {
             } else {
             	result.put("error_code", "0");
                 result.put("error_message", "更新信息成功！");
+                result.put("userName", name);
+                result.put("userMsgEmail", email);
             }
         }
         logger.debug("finishUpdateUserInfo");

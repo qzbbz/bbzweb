@@ -1,11 +1,14 @@
 package com.wisdom.weixin.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +16,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
+import org.springframework.web.multipart.MultipartFile;
+import com.wisdom.invoice.service.IInvoiceService;
 import com.wisdom.user.service.IUserService;
 import com.wisdom.weixin.service.IExpenseAccountService;
 import com.wisdom.weixin.service.IWeixinPushService;
@@ -37,6 +42,8 @@ public class ExpenseAccountController {
 	private IWeixinPushService weixinPushService;
 	@Autowired
 	private IUserService userService;
+	@Autowired
+	private IInvoiceService invoiceService;
 	
 	@RequestMapping(value="/downloadUserBill", method=RequestMethod.POST, consumes="application/json")
 	@ResponseBody
@@ -91,6 +98,46 @@ public class ExpenseAccountController {
 			}
 		}
 		logger.debug("retMap : {}", retMap.toString());
+		return retMap;
+	}
+	
+	@RequestMapping("/uploadPersonInvoice")
+	@ResponseBody
+	public Map<String, String> uploadPersonInvoice(
+			@RequestParam MultipartFile[] files,
+			HttpServletRequest request) {
+		logger.debug("uploadPersonInvoice");
+		String openId = request.getParameter("openId");
+		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/files/company");
+		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
+		logger.debug("openId realPath : {}, {}", openId, realPath);
+		Map<String, String> retMap = new HashMap<>();
+		if(openId == null || openId.isEmpty()) {
+			retMap.put("error_code", "3");
+			retMap.put("error_message", "无法获取您微信的Openid，请稍后重新进入！");
+			return retMap;
+		}
+		String userId = userService.getUserIdByOpenId(openId);
+		if(userId == null || userId.isEmpty()) {
+			retMap.put("error_code", "30");
+			retMap.put("error_message", "无法获取您的用户ID，请稍后重新进入！");
+			return retMap;
+		}
+		if (files != null) {
+			for(MultipartFile file:files) {
+				String fileName = openId
+						+ String.valueOf(System.currentTimeMillis()) + ".jpg";
+				try {
+					FileUtils.copyInputStreamToFile(file.getInputStream(),
+							new File(realPath, fileName));
+					invoiceService.createInvoiceProcess(userId, fileName, "0", "1", new HashMap<>());
+				} catch (IOException e) {
+					logger.debug(e.toString());
+				}
+			}
+		}
+		retMap.put("error_code", "0");
+		retMap.put("error_message", "");
 		return retMap;
 	}
 
@@ -149,6 +196,29 @@ public class ExpenseAccountController {
 		logger.debug("approvalBill result : {}", retMap.toString());
 		return retMap;
 	}
+	
+	@RequestMapping(value="/newApprovalBill")
+	@ResponseBody
+	public Map<String, String> newApprovalBill(HttpServletRequest request) {
+		Map<String, String> retMap = new HashMap<>();
+		String openId = request.getParameter("openId");
+		logger.debug("openid : {}", openId);
+		if(openId == null || openId.isEmpty()) {
+			retMap.put("error_code", "1");
+			retMap.put("error_message", "无法获取您微信的Openid，请稍后重新进入！");
+			return retMap;
+		}
+		String invoiceIdString = request.getParameter("invoiceId");
+		String approvalStatus = request.getParameter("approvalStatus");
+		String[] invoiceIds = invoiceIdString.split(",");
+		for(String invoiceId : invoiceIds) {
+			expenseAccounterService.newApprovalBill(invoiceId, approvalStatus, "");
+		}
+		retMap.put("error_code", "0");
+		retMap.put("error_message", "");
+		logger.debug("newApprovalBill result : {}", retMap.toString());
+		return retMap;
+	}
 
 	@RequestMapping("/getNeedAuditBills")
 	@ResponseBody
@@ -161,6 +231,17 @@ public class ExpenseAccountController {
 		return retMap;
 	}
 	
+	@RequestMapping("/newGetNeedAuditBills")
+	@ResponseBody
+	public List<Map<String, Object>> newGetNeedAuditBills(
+			HttpServletRequest request) {
+		String openId = request.getParameter("openId");
+		List<Map<String, Object>> retMap = expenseAccounterService
+				.newGetNeedAuditBillsByOpenId(openId);
+		logger.debug("newGetNeedAuditBills result : {}", retMap.toString());
+		return retMap;
+	}
+	
 	@RequestMapping("/getInboxBills")
 	@ResponseBody
 	public Map<String, List<Map<String, Object>>> getMyInbox(
@@ -170,6 +251,28 @@ public class ExpenseAccountController {
 				.getInboxBillsByOpenId(openId);
 		logger.debug("getInboxBills result : {}", retMap.toString());
 		return retMap;
+	}
+	
+	@RequestMapping("/getWaitAuditInvoices")
+	@ResponseBody
+	public List<Map<String, Object>> getWaitAuditInvoices(
+			HttpServletRequest request) {
+		String openId = request.getParameter("openId");
+		List<Map<String, Object>> ret = expenseAccounterService
+				.getWaitAuditInvoices(openId);
+		logger.debug("getWaitAuditInvoices result : {}", ret.toString());
+		return ret;
+	}
+	
+	@RequestMapping("/getFinishAuditInvoices")
+	@ResponseBody
+	public List<Map<String, Object>> getFinishAuditInvoices(
+			HttpServletRequest request) {
+		String openId = request.getParameter("openId");
+		List<Map<String, Object>> ret = expenseAccounterService
+				.getFinishAuditInvoices(openId);
+		logger.debug("getFinishAuditInvoices result : {}", ret.toString());
+		return ret;
 	}
 	
 	@RequestMapping("/getAllExpenseType")
