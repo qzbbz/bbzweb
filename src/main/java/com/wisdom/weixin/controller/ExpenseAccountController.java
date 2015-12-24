@@ -2,12 +2,9 @@ package com.wisdom.weixin.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -22,10 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
-
-import com.wisdom.common.model.Company;
-import com.wisdom.common.model.CompanyBill;
+import com.wisdom.invoice.service.IInvoiceService;
 import com.wisdom.user.service.IUserService;
 import com.wisdom.weixin.service.IExpenseAccountService;
 import com.wisdom.weixin.service.IWeixinPushService;
@@ -48,6 +42,8 @@ public class ExpenseAccountController {
 	private IWeixinPushService weixinPushService;
 	@Autowired
 	private IUserService userService;
+	@Autowired
+	private IInvoiceService invoiceService;
 	
 	@RequestMapping(value="/downloadUserBill", method=RequestMethod.POST, consumes="application/json")
 	@ResponseBody
@@ -112,6 +108,9 @@ public class ExpenseAccountController {
 			HttpServletRequest request) {
 		logger.debug("uploadPersonInvoice");
 		String openId = request.getParameter("openId");
+		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/files/company");
+		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
+		logger.debug("openId realPath : {}, {}", openId, realPath);
 		Map<String, String> retMap = new HashMap<>();
 		if(openId == null || openId.isEmpty()) {
 			retMap.put("error_code", "3");
@@ -126,30 +125,15 @@ public class ExpenseAccountController {
 		}
 		if (files != null) {
 			for(MultipartFile file:files) {
-				long companyId = userService.getCompanyIdByUserId(userId);
-				String fileName = getGernarateFileName(file, userId);
+				String fileName = openId
+						+ String.valueOf(System.currentTimeMillis()) + ".jpg";
 				try {
 					FileUtils.copyInputStreamToFile(file.getInputStream(),
-							new File("D:\\test", fileName));
+							new File(realPath, fileName));
+					invoiceService.createInvoiceProcess(userId, fileName, "0", "1", new HashMap<>());
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.debug(e.toString());
 				}
-				/*CompanyBill cb = new CompanyBill();
-				cb.setCompanyId(companyId);
-				cb.setFileName(fileName);
-				cb.setBillDate(date);
-				cb.setSupplyName(supplyName);
-				Integer fixedAssetFlag = Integer.valueOf(isFixedAssets);
-				cb.setIsFixedAssets(fixedAssetFlag);
-				cb.setCreateTime(new Timestamp(System.currentTimeMillis()));
-				companyBillService.addCompanyBill(cb);
-				
-				
-				//Create invoice
-				long invoiceId = invoiceService.addInvoice(companyId, fileName, date, 0);
-				Company company = companyService.getCompanyByCompanyId(companyId);
-				//Send to queue
-				invoiceService.publishUnrecognizedInvoive(invoiceId, companyId, fileName, company.getName());*/
 			}
 		}
 		retMap.put("error_code", "0");
@@ -212,6 +196,29 @@ public class ExpenseAccountController {
 		logger.debug("approvalBill result : {}", retMap.toString());
 		return retMap;
 	}
+	
+	@RequestMapping(value="/newApprovalBill")
+	@ResponseBody
+	public Map<String, String> newApprovalBill(HttpServletRequest request) {
+		Map<String, String> retMap = new HashMap<>();
+		String openId = request.getParameter("openId");
+		logger.debug("openid : {}", openId);
+		if(openId == null || openId.isEmpty()) {
+			retMap.put("error_code", "1");
+			retMap.put("error_message", "无法获取您微信的Openid，请稍后重新进入！");
+			return retMap;
+		}
+		String invoiceIdString = request.getParameter("invoiceId");
+		String approvalStatus = request.getParameter("approvalStatus");
+		String[] invoiceIds = invoiceIdString.split(",");
+		for(String invoiceId : invoiceIds) {
+			expenseAccounterService.newApprovalBill(invoiceId, approvalStatus, "");
+		}
+		retMap.put("error_code", "0");
+		retMap.put("error_message", "");
+		logger.debug("newApprovalBill result : {}", retMap.toString());
+		return retMap;
+	}
 
 	@RequestMapping("/getNeedAuditBills")
 	@ResponseBody
@@ -224,6 +231,17 @@ public class ExpenseAccountController {
 		return retMap;
 	}
 	
+	@RequestMapping("/newGetNeedAuditBills")
+	@ResponseBody
+	public List<Map<String, Object>> newGetNeedAuditBills(
+			HttpServletRequest request) {
+		String openId = request.getParameter("openId");
+		List<Map<String, Object>> retMap = expenseAccounterService
+				.newGetNeedAuditBillsByOpenId(openId);
+		logger.debug("newGetNeedAuditBills result : {}", retMap.toString());
+		return retMap;
+	}
+	
 	@RequestMapping("/getInboxBills")
 	@ResponseBody
 	public Map<String, List<Map<String, Object>>> getMyInbox(
@@ -233,6 +251,28 @@ public class ExpenseAccountController {
 				.getInboxBillsByOpenId(openId);
 		logger.debug("getInboxBills result : {}", retMap.toString());
 		return retMap;
+	}
+	
+	@RequestMapping("/getWaitAuditInvoices")
+	@ResponseBody
+	public List<Map<String, Object>> getWaitAuditInvoices(
+			HttpServletRequest request) {
+		String openId = request.getParameter("openId");
+		List<Map<String, Object>> ret = expenseAccounterService
+				.getWaitAuditInvoices(openId);
+		logger.debug("getWaitAuditInvoices result : {}", ret.toString());
+		return ret;
+	}
+	
+	@RequestMapping("/getFinishAuditInvoices")
+	@ResponseBody
+	public List<Map<String, Object>> getFinishAuditInvoices(
+			HttpServletRequest request) {
+		String openId = request.getParameter("openId");
+		List<Map<String, Object>> ret = expenseAccounterService
+				.getFinishAuditInvoices(openId);
+		logger.debug("getFinishAuditInvoices result : {}", ret.toString());
+		return ret;
 	}
 	
 	@RequestMapping("/getAllExpenseType")
@@ -288,14 +328,6 @@ public class ExpenseAccountController {
 		}
 		logger.debug("submitBillListAudit result : {}", retMap.toString());
 		return retMap;
-	}
-	
-	private String getGernarateFileName(MultipartFile file, String userId) {
-		Random rdm = new Random(System.currentTimeMillis());
-		String extendName = file.getOriginalFilename().substring(
-				file.getOriginalFilename().indexOf(".") + 1);
-		return userId + System.currentTimeMillis() + Math.abs(rdm.nextInt())
-				% 1000 + (extendName == null ? ".unknown" : "." + extendName);
 	}
 
 }

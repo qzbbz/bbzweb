@@ -22,6 +22,10 @@ public interface IInvoiceService {
 	 */
 	public Map<String,List<Map<String,Object>>> getBillsList(String userId);
 	
+	public List<Map<String, Object>> getWaitAuditInvoices(String userId);
+	
+	public List<Map<String, Object>> getFinishAuditInvoices(String userId);
+	
 	
 	/**
 	 * 创建一个新的发票处理记录 for weixin
@@ -47,6 +51,8 @@ public interface IInvoiceService {
 	public Map<String,Object> excuteApproval(String userId,String approvalUerId,String invoiceId,int approvalStatus, String reasons);
 	
 	public Map<String, List<Map<String, Object>>> getNeededAuditBillList(String userId);
+	
+	public List<Map<String, Object>> newGetNeededAuditBillList(String userId);
 	/**
 	 * 将某个订单从草稿提交审批
 	 * @param userId

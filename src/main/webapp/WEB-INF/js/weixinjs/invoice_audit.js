@@ -1,7 +1,9 @@
+var userOpenId = "";
+
 function checkJsonIsEmpty(json) {
 	var isEmpty = true;
 	if (json == null) return true;
-	for (var jsonKey in invoiceList) {
+	for (var jsonKey in json) {
 		isEmpty = false;
 		break;
 	}
@@ -130,25 +132,24 @@ mui.createConfirmDialog = function(info, cancelCallBack, acceptCallBack) {
 
 //invoiceIdString:12,23,32
 //approvalStatus:0-pass,1-reject
-function auditInvoice(invoiceIdString, approvalStatus, successCallback, failCallback) {
-	if (successCallback) successCallback();
-	return;
+function auditInvoice(invoiceId, approvalStatus, successCallback, failCallback) {
 	mui.ajax({
-		url: '/approvalBill',
+		url: '/newApprovalBill',
 		type: "POST",
 		data: {
-			invoiceIdString: invoiceIdString,
-			approvalStatus: approvalStatus
+			openId : userOpenId,
+			invoiceId : invoiceId,
+			approvalStatus : approvalStatus
 		},
 		success: function(data) {
 			if (data.error_code == "0") {
 				if (successCallback) successCallback();
 			} else {
-				if (failCallback) failCallback();
+				if (failCallback) failCallback(data.error_message);
 			}
 		},
 		error: function(status, error) {
-			if (failCallback) failCallback();
+			if (failCallback) failCallback(null);
 		}
 	});
 }
@@ -176,10 +177,16 @@ function leftAndRightSliderEventCallback(element, approvalStatus) {
 			}
 		}
 		mask.close();
-	}, function() {
+	}, function(msg) {
 		mask.close();
-		mui.createTipDialog('服务器处理请求失败，请稍后重试!', null).show();
-
+		setTimeout(function() {
+			mui.swipeoutClose(elem);
+		}, 0);
+		if(msg == null) {
+			mui.createTipDialog('服务器处理请求失败，请稍后重试!', null).show();
+		} else {
+			mui.createTipDialog(msg, null).show();
+		}
 	});
 }
 
@@ -212,10 +219,13 @@ function bindAllPassButtonEvent() {
 				document.getElementById('no_data_tips').style.display = '';
 			}
 			mask.close();
-		}, function() {
+		}, function(msg) {
 			mask.close();
-			mui.createTipDialog('服务器处理请求失败，请稍后重试!', null).show();
-
+			if(msg == null) {
+				mui.createTipDialog('服务器处理请求失败，请稍后重试!', null).show();
+			} else {
+				mui.createTipDialog(msg, null).show();
+			}
 		});
 	});
 }
@@ -240,7 +250,7 @@ function createDataList(data) {
 		var abstractNode = document.createElement('div');
 		abstractNode.style.backgroundColor = "white";
 		abstractNode.style.border = "1px solid #ddd";
-		abstractNode.innerHTML = "<div style='background-color: white;border:1px solid #ddd;'><div style='height:60px;line-height: 60px;'><div class='mui-pull-left' style='margin-left:10px;'><span>提交人：" + data[i].user_name + "，合计：&#65509;</span><span class='person_total_amount'>" + data[i].invoice_total_amount + "</span></div><div class='mui-pull-right' style='margin-right:10px;margin-top:10px;'><button class='mui-btn mui-btn-block mui-btn-success' style='height:40px;width:120px;padding:0px 0px;'><span style='font-size: 15px;'>全部通过</span></button></div></div></div>";
+		abstractNode.innerHTML = "<div style='background-color: white;border:1px solid #ddd;'><div style='height:60px;'><div class='mui-pull-left' style='margin-left:10px;margin-top:8px;'><div style='font-size:11px;color:#7D9EC0;'>发票提交人：" + data[i].user_name + "</div><div style='font-size:11px;color:#7D9EC0;'>发票总金额：&#65509;<span class='person_total_amount' style='font-size:11px;'>" + data[i].invoice_total_amount + "</span></div></div><div class='mui-pull-right' style='margin-right:10px;margin-top:10px;'><button class='mui-btn mui-btn-block mui-btn-success' style='height:40px;width:120px;padding:0px 0px;'><span style='font-size: 15px;'>全部通过</span></button></div></div></div>";
 		rootNode.appendChild(abstractNode);
 		var ulNode = document.createElement('div');
 		ulNode.setAttribute("class", "mui-table-view");
@@ -252,7 +262,7 @@ function createDataList(data) {
 			liNode.setAttribute('class', 'mui-table-view-cell');
 			liNode.setAttribute('invoice_id', detailDataList[j].invoice_id);
 			liNode.setAttribute('invoice_amount', detailDataList[j].bill_amount);
-			liNode.innerHTML = "<div class='mui-slider-left mui-disabled'><a class='mui-btn mui-btn-green'>通过</a></div><div class='mui-slider-right mui-disabled'><a class='mui-btn mui-btn-red'>驳回</a></div><div class='mui-slider-handle'><img class='mui-media-object mui-pull-left' data-preview-group='" + img_group + "' data-preview-src='' style='width:60px;height:60px;max-width:60px;border-radius: 5px;' src='" + detailDataList[j].bill_img + "'><div class='mui-media-body'><div class='mui-pull-left' style='margin-top:15px;'><h5 style='color:black;'>" + detailDataList[j].expense_type_name + "</h5><p class='mui-ellipsis'>提交日期：<span>" + detailDataList[j].submit_time + "</span></p></div><div class='mui-pull-right' style='margin-top:35px;'><span style='color:black;'>&#65509;" + detailDataList[j].bill_amount + "</span></div></div></div>";
+			liNode.innerHTML = "<div class='mui-slider-left mui-disabled'><a class='mui-btn mui-btn-green'>通过</a></div><div class='mui-slider-right mui-disabled'><a class='mui-btn mui-btn-red'>驳回</a></div><div class='mui-slider-handle'><img class='mui-media-object mui-pull-left' data-preview-group='" + img_group + "' data-preview-src='' style='width:60px;height:60px;max-width:60px;border-radius: 5px;' src='" + detailDataList[j].bill_img + "'><div class='mui-media-body'><div class='mui-pull-left' style='margin-top:15px;'><p>" + detailDataList[j].bill_title + "</p><p class='mui-ellipsis'>提交日期：<span>" + detailDataList[j].submit_time + "</span></p></div><div class='mui-pull-right' style='margin-top:35px;'><p>&#65509;" + detailDataList[j].bill_amount + "</p></div></div></div>";
 			ulNode.appendChild(liNode);
 			invoice_id_list_string = invoice_id_list_string + detailDataList[j].invoice_id;
 			person_invoice_count = person_invoice_count + 1;
@@ -271,7 +281,7 @@ function createDataList(data) {
 
 function getNeedAuditInvoice(ajaxCallBack) {
 	mui.ajax({
-		url: 'http://localhost:8080/getNeedAuditBills?openId=oJO1gtyVvLuWxm6N4T1JuYMzgysw',
+		url: '/newGetNeedAuditBills?openId=' + userOpenId,
 		type: "POST",
 		data: {},
 		success: function(data) {
@@ -319,7 +329,28 @@ mui(mui('#pull_refresh')[0]).pullToRefresh({
 		}
 	}
 });
-//getNeedAuditInvoice(null);
+mui.ajax({
+	url: '/getUserOpenId',
+	type: "POST",
+	data: {},
+	success: function(data) {
+		if (data.openId == "") {
+			mui.createTipDialog('无法获取您的微信Openid,请稍后重试！', null).show();
+			document.getElementById('data_loading').style.display = 'none';
+			document.getElementById('no_data_tips').style.innerHTML = "无法获取您的微信Openid,请稍后重试！";
+			document.getElementById('no_data_tips').style.display = '';
+		} else {
+			userOpenId = data.openId;
+			getNeedAuditInvoice(null);
+		}
+	},
+	error: function(status, error) {
+		mui.createTipDialog('请求服务器数据出错，请稍后下拉刷新重试！', null).show();
+		document.getElementById('data_loading').style.display = 'none';
+		document.getElementById('no_data_tips').style.innerHTML = "请求服务器数据出错，请稍后下拉刷新重试！";
+		document.getElementById('no_data_tips').style.display = '';
+	}
+});
 var testData = [{
 	"user_name": "小明",
 	"invoice_count": "2",
@@ -389,4 +420,4 @@ var testData = [{
 		"expense_type_name": "餐饮消费"
 	}]
 }];
-createDataList(testData);
+//createDataList(testData);

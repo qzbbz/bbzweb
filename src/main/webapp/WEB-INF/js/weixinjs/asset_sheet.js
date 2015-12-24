@@ -81,7 +81,7 @@ mui.createTipDialog = function(info, callBack) {
 
 mui.init();
 mui('.mui-scroll-wrapper').scroll();
-var userOpenId = "";
+var userOpenId = "oJO1gtyaaLM2QMHFNBSPLkZy1Pmk";
 
 function fillDataIntoHtml(data) {
 	$('#create_time').html(data.create_time);
@@ -203,10 +203,10 @@ function getAssetSheetData(date) {
 	var mask = mui.createProcessingMask(null);
 	mask.show();
 	mui.ajax({
-		url: '/approvalBill',
+		url: '/getNewestSheetBalance',
 		type: "POST",
 		data: {
-
+			userOpenId:userOpenId,date:date
 		},
 		success: function(data) {
 			if (data == null || data.result_is_null == 'true') {
@@ -229,21 +229,21 @@ mui.ajax({
     url  : "/getUserOpenIdAndCheckBindCompany",
     data : {}, 
     success : function(data) {
-    	if (data == null || data.openId == null || data.openId == "") {
+    	if (false/*data == null || data.openId == null || data.openId == ""*/) {
 			mui.createTipDialog('无法获取您的微信Openid,请稍后重试！',null).show();
 			document.getElementById("data_loading").style.display = "none";
 			document.getElementById("tips_info_detail").innerHTML = "无法获取您的微信Openid,请稍后重试！";
 	    	document.getElementById("tips_info").style.display = "";
 		} else {
-			userOpenId = data.openId;
-			if(data.bind_status == "has_bind") {
+			//userOpenId = data.openId;
+			/*if(data.bind_status == "has_bind") {*/
 				document.getElementById("data_loading").style.display = "none";
 				document.getElementById("mui_main_page1").style.display = "";
-			} else {
+			/*} else {
 				document.getElementById("data_loading").style.display = "none";
 				document.getElementById("tips_info_detail").innerHTML = "您还没有绑定公司，<br/>请先在账号设置中绑定您的公司！";
 		    	document.getElementById("tips_info").style.display = "";
-			}
+			}*/
 		}
     }, 
     error : function() {

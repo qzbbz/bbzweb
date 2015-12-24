@@ -1,10 +1,11 @@
 var currentPage = 1;
 var displayCountPerPage = 6;
+var userOpenId = "";
 
 function checkJsonIsEmpty(json) {
 	var isEmpty = true;
 	if (json == null) return true;
-	for (var jsonKey in invoiceList) {
+	for (var jsonKey in json) {
 		isEmpty = false;
 		break;
 	}
@@ -126,7 +127,7 @@ function createDataList(data) {
 
 function getWaitAuditInvoice(ajaxCallBack) {
 	mui.ajax({
-		url: 'http://localhost:8080/getNeedAuditBills?openId=oJO1gtyVvLuWxm6N4T1JuYMzgysw',
+		url: '/getWaitAuditInvoices?openId=' + userOpenId,
 		type: "POST",
 		data: {},
 		success: function(data) {
@@ -172,7 +173,28 @@ mui(mui('#pull_refresh')[0]).pullToRefresh({
 		}
 	}
 });
-//getWaitAuditInvoice(null);
+mui.ajax({
+	url: '/getUserOpenId',
+	type: "POST",
+	data: {},
+	success: function(data) {
+		if (data.openId == "") {
+			mui.createTipDialog('无法获取您的微信Openid,请稍后重试！', null).show();
+			document.getElementById('data_loading').style.display = 'none';
+			document.getElementById('no_data_tips').style.innerHTML = "无法获取您的微信Openid,请稍后重试！";
+			document.getElementById('no_data_tips').style.display = '';
+		} else {
+			userOpenId = data.openId;
+			getWaitAuditInvoice(null);
+		}
+	},
+	error: function(status, error) {
+		mui.createTipDialog('请求服务器数据出错，请稍后下拉刷新重试！', null).show();
+		document.getElementById('data_loading').style.display = 'none';
+		document.getElementById('no_data_tips').style.innerHTML = "请求服务器数据出错，请稍后下拉刷新重试！";
+		document.getElementById('no_data_tips').style.display = '';
+	}
+});
 var testData = [{"submit_time":"2015-12-22","list":[{"bill_img": "images/shuijiao.jpg",
 	"invoice_id": "11",
 	"bill_amount": "258.79",
@@ -190,4 +212,4 @@ var testData = [{"submit_time":"2015-12-22","list":[{"bill_img": "images/shuijia
 	"bill_amount": "2218.79",
 	"expense_type_name": "餐饮消费",
 	"approval_name":"柴快长"}]}];
-createDataList(testData);
+//createDataList(testData);
