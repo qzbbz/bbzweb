@@ -247,7 +247,7 @@ document.getElementById('fapiaoluru_submit').addEventListener('tap', function(ev
 	xhr.send(fd);
 }, false);
 
-mui.ajax({ 
+/*mui.ajax({ 
     type : "POST", 
     url  : "/getUserOpenIdAndCheckBindCompany",
     data : {}, 
@@ -277,4 +277,7 @@ mui.ajax({
     	document.getElementById("tips_info_detail").innerHTML = "服务器暂时无法响应请求，请稍后重试！";
     	document.getElementById("tips_info").style.display = "";
     } 
-});
+});*/
+document.getElementById("data_loading").style.display = "none";
+document.getElementById("tips_info_detail").innerHTML = "尚未开放，敬请期待...";
+document.getElementById("tips_info").style.display = "";
