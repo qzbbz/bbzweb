@@ -36,6 +36,7 @@ import com.wisdom.common.model.CompanySalary;
 import com.wisdom.common.model.CompanySales;
 import com.wisdom.common.model.Invoice;
 import com.wisdom.common.model.SalarySocialSecurity;
+import com.wisdom.common.model.TestInvoice;
 import com.wisdom.common.model.TestInvoiceRecord;
 import com.wisdom.common.model.User;
 import com.wisdom.common.model.UserInvoice;
@@ -288,13 +289,11 @@ public class AccounterServiceImpl implements IAccounterService {
 							for(UserInvoice userInvoice : userInvoiceList) {
 								Map<String, String> map = new HashMap<>();
 								map.put("date", userInvoice.getUpdateTime().toString().substring(0, 10));
-								Invoice invoice = invoiceService.getInvoiceById(userInvoice.getInvoiceId());
+								TestInvoiceRecord invoice = invoiceDao.getInvoiceRecordById(userInvoice.getInvoiceId());
 								DecimalFormat format = new DecimalFormat("#0.000");
-								map.put("amount", format.format(invoice.getAmount() == null ? 0 : invoice.getAmount()));
+								map.put("amount",  Double.toString(invoice.getAmount()));
 								map.put("companyName", companyName);
-								int expenseTypeId = invoice.getExpenseTypeId();
-								String typeName = expenseTypeService.getExpenseTypeNameById(expenseTypeId);
-								map.put("type", typeName == null || typeName.isEmpty() ? "未设定" : typeName);
+								map.put("type", invoice.getType() == null || invoice.getType().isEmpty() ? "未设定" : invoice.getType());
 								map.put("item_type", "公司员工发票");
 								retMap.get("companyInvoice").add(map);
 							}
