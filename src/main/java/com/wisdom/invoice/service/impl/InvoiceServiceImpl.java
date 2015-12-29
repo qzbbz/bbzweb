@@ -96,7 +96,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			return retMap;
 		}
 
-		if (null == params || null == (Integer) params.get("expenseTypeId")) {
+		/*if (null == params || null == (Integer) params.get("expenseTypeId")) {
 			log.error("expenseTypeId not exsited");
 			retMap.put("message", "lost expenseTypeId param!");
 			return retMap;
@@ -110,10 +110,10 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			log.error("costCenterCode not exsited");
 			retMap.put("message", "lost costCenterCode param!");
 			return retMap;
-		}
-		int expenseTypeId = (Integer) params.get("expenseTypeId");
-		double amount = (Double) params.get("amount");
-		String costCenterCode = (String) params.get("costCenterCode");
+		}*/
+		int expenseTypeId = 1;
+		double amount = 0.0;
+		String costCenterCode = "";
 		Invoice invoice = new Invoice();
 		invoice.setExpenseTypeId(expenseTypeId);
 		invoice.setAmount(amount);
