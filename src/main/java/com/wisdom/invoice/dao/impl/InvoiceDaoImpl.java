@@ -306,7 +306,7 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 					ps.setString(2, invoice.getFileName() == null? "": invoice.getFileName());
 					ps.setString(3, invoice.getBillDate() == null? "": invoice.getBillDate());
 					ps.setInt(4, invoice.getIsFixedAssets() == 0? 0: 1);
-					ps.setString(5, invoice.getCostCenter() == null? "":invoice.getCostCenter());
+					ps.setString(5, invoice.getCostCenter());
 					return ps;
 				}
 			}, keyHolder);
