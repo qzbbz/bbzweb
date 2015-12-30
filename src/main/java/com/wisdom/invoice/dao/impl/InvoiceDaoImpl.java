@@ -298,8 +298,8 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 			int id = jdbcTemplate.update(new PreparedStatementCreator() {
 				public PreparedStatement createPreparedStatement(
 						Connection connection) throws SQLException {
-					String sql = "insert into test_invoice (company_id, file_name, bill_date, is_fixed_assets, created_time, modified_time, cost_center)"
-							+ " values (?, ?, ?, ?, NOW(), NOW(), ?)";
+					String sql = "insert into test_invoice (company_id, file_name, bill_date, is_fixed_assets, created_time, modified_time, cost_center, type, generated)"
+							+ " values (?, ?, ?, ?, NOW(), NOW(), ?, ?, 0)";
 					PreparedStatement ps = connection.prepareStatement(sql,
 							Statement.RETURN_GENERATED_KEYS);
 					ps.setLong(1, invoice.getCompanyId() == null? 0: invoice.getCompanyId());
@@ -307,6 +307,7 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 					ps.setString(3, invoice.getBillDate() == null? "": invoice.getBillDate());
 					ps.setInt(4, invoice.getIsFixedAssets() == 0? 0: 1);
 					ps.setString(5, invoice.getCostCenter());
+					ps.setString(6, invoice.getType());
 					return ps;
 				}
 			}, keyHolder);
@@ -410,5 +411,29 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 			logger.error(e.toString());
 		}
 		return list;
+	}
+	@Override
+	public List<TestInvoice> getUngeneratedInvoices(Integer limit) {
+		List<TestInvoice> list = null;
+		try{
+			String sql = "select * from test_invoice where generated = 0 and type = 'wechat' order by created_time asc limit ?";
+			list = jdbcTemplate.query(sql,  new Object[]{limit},
+					new RowMapperResultSetExtractor<TestInvoice>(
+							new TestInvoiceMapper()));
+		}catch(Exception e){
+			logger.error(e.toString());
+		}
+		return list;
+	}
+	@Override
+	public boolean setInvoiceToGenerated(long invoiceId) {
+		String sql = "update test_invoice set generated = 1 where id = ?";
+		try{
+			int affectedRows = jdbcTemplate.update(sql, invoiceId);
+			return affectedRows != 0;
+		}catch(DataAccessException e){
+			e.printStackTrace();
+		}
+		return false;
 	}
 }

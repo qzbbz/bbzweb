@@ -69,7 +69,7 @@ public interface IInvoiceService {
 	
 	public boolean addInvoiceArtifact(long invoiceId, List<Map<String, String>> content, String itemId);
  
-	public long addInvoice(long companyId, String fileName, String billDate, Integer isFA);
+	public long addInvoice(long companyId, String fileName, String billDate, Integer isFA, String type);
 	
 	public void publishUnrecognizedInvoive(long invoiceId, long companyId, String fileName, String companyName);
 	
@@ -84,4 +84,8 @@ public interface IInvoiceService {
 	public boolean deleteTestInvoice(long invoiceId);
 	
 	public List<TestInvoiceRecord> getAllCompanyInvoicesByCompanyId(long companyId);
+	
+	public List<TestInvoice> getUngeneratedInvoiceImages(Integer limit);
+	
+	public boolean setInvoiceImageToGenerated(long invoiceId);
 }

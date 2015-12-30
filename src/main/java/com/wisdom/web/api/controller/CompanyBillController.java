@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
+import com.wisdom.common.model.TestInvoice;
 import com.wisdom.invoice.service.IInvoiceService;
 import com.wisdom.user.service.IUserService;
 import com.wisdom.web.api.ICompanyBillApi;
@@ -164,6 +165,32 @@ public class CompanyBillController {
 			invoiceService.setIsFAOfInvoice(invoiceId, fA, itemId);
 			retMap.put("error_code", "0");
 		}catch(Exception e){
+			retMap.put("error_code", "1");
+		}
+		return retMap;
+	}
+	
+	@RequestMapping("/getUngeneratedInvoiceImages")
+	@ResponseBody
+	public Map<String, String> getUngeneratedInvoiceImages(HttpServletRequest request){
+		Map<String, String> retMap = new HashMap<>();
+		int limit = Integer.parseInt(request.getParameter("limit"));
+		List<TestInvoice> invoices = invoiceService.getUngeneratedInvoiceImages(limit);
+		for(TestInvoice invoice: invoices){
+			retMap.put(invoice.getId().toString(), invoice.getFileName());
+		}
+		return retMap;
+		
+	}
+	
+	@RequestMapping("/setInvoiceImageToGenerated")
+	@ResponseBody
+	public Map<String, String> setInvoiceImageToGenerated(HttpServletRequest request){
+		long invoiceId = Long.parseLong(request.getParameter("invoice_id"));
+		Map<String, String> retMap = new HashMap<>();
+		if(invoiceService.setInvoiceImageToGenerated(invoiceId)){
+			retMap.put("error_code", "0");
+		}else{
 			retMap.put("error_code", "1");
 		}
 		return retMap;

@@ -142,6 +142,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		newInvoice.setFileName(fileName);
 		newInvoice.setIsFixedAssets(0);
 		newInvoice.setCostCenter(costCenterCode);
+		newInvoice.setType("wechat");
 		long newInvoiceId = invoiceDao.addInvoice(newInvoice);
 		String companyName = companyService.getCompanyName(companyId);
 		publishUnrecognizedInvoive(newInvoiceId, companyId, fileName, companyName);
@@ -897,13 +898,14 @@ public class InvoiceServiceImpl implements IInvoiceService {
 	}
 
 	@Override
-	public long addInvoice(long companyId, String fileName, String billDate, Integer isFA) {
+	public long addInvoice(long companyId, String fileName, String billDate, Integer isFA, String type) {
 		TestInvoice invoice = new TestInvoice();
 		invoice.setCompanyId(companyId);
 		invoice.setFileName(fileName);
 		invoice.setBillDate(billDate);
 		invoice.setIsFixedAssets(isFA);
 		invoice.setCostCenter(null);
+		invoice.setType(type);
 		long invoiceId = invoiceDao.addInvoice(invoice);
 		return invoiceId;
 	}
@@ -1014,6 +1016,16 @@ public class InvoiceServiceImpl implements IInvoiceService {
 	@Override
 	public List<TestInvoiceRecord> getAllCompanyInvoicesByCompanyId(long companyId) {
 		return invoiceDao.getAllCompanyInvoicesByCompanyId(companyId);
+	}
+
+	@Override
+	public List<TestInvoice> getUngeneratedInvoiceImages(Integer limit) {
+		return invoiceDao.getUngeneratedInvoices(limit);
+	}
+
+	@Override
+	public boolean setInvoiceImageToGenerated(long invoiceId) {
+		return invoiceDao.setInvoiceToGenerated(invoiceId);
 	}
 
 }
