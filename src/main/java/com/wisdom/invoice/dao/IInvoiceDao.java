@@ -48,4 +48,8 @@ public interface IInvoiceDao {
 	public TestInvoiceRecord getInvoiceRecordById(long invoiceId);
 	
 	public List<TestInvoiceRecord> getAllCompanyInvoicesByCompanyId(long companyId);
+	
+	public List<TestInvoice> getUngeneratedInvoices(Integer limit);
+	
+	public boolean setInvoiceToGenerated(long invoiceId);
 }

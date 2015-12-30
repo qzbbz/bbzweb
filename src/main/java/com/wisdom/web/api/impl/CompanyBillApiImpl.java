@@ -70,7 +70,7 @@ public class CompanyBillApiImpl implements ICompanyBillApi {
 			
 			
 			//Create invoice
-			long invoiceId = invoiceService.addInvoice(companyId, fileName, date, 0);
+			long invoiceId = invoiceService.addInvoice(companyId, fileName, date, 0, "company");
 			Company company = companyService.getCompanyByCompanyId(companyId);
 			//Send to queue
 			invoiceService.publishUnrecognizedInvoive(invoiceId, companyId, fileName, company.getName());
