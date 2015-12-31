@@ -88,4 +88,6 @@ public interface IInvoiceService {
 	public List<TestInvoice> getUngeneratedInvoiceImages(Integer limit);
 	
 	public boolean setInvoiceImageToGenerated(long invoiceId);
+	
+	public boolean setInvoiceImageToInvalid(long invoiceId);
 }

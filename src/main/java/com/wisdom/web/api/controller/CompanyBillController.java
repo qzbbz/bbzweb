@@ -195,4 +195,17 @@ public class CompanyBillController {
 		}
 		return retMap;
 	}
+	
+	@RequestMapping("/setInvoiceImageToInvalid")
+	@ResponseBody
+	public Map<String, String> setInvoiceImageToInvalid(HttpServletRequest request){
+		long invoiceId = Long.parseLong(request.getParameter("invoice_id"));
+		Map<String, String> retMap = new HashMap<>();
+		if(invoiceService.setInvoiceImageToInvalid(invoiceId)){
+			retMap.put("error_code", "0");
+		}else{
+			retMap.put("error_code", "1");
+		}
+		return retMap;
+	}
 }
