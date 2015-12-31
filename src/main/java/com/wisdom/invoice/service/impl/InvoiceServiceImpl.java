@@ -1028,4 +1028,9 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		return invoiceDao.setInvoiceToGenerated(invoiceId);
 	}
 
+	@Override
+	public boolean setInvoiceImageToInvalid(long invoiceId) {
+		return invoiceDao.setInvoiceToInvalid(invoiceId);
+	}
+
 }

@@ -436,4 +436,15 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 		}
 		return false;
 	}
+	@Override
+	public boolean setInvoiceToInvalid(long invoiceId) {
+		String sql = "update test_invoice set generated = -1 where id = ?";
+		try{
+			int affectedRows = jdbcTemplate.update(sql, invoiceId);
+			return affectedRows != 0;
+		}catch(DataAccessException e){
+			e.printStackTrace();
+		}
+		return false;
+	}
 }

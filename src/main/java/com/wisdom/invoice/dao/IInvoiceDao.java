@@ -52,4 +52,6 @@ public interface IInvoiceDao {
 	public List<TestInvoice> getUngeneratedInvoices(Integer limit);
 	
 	public boolean setInvoiceToGenerated(long invoiceId);
+	
+	public boolean setInvoiceToInvalid(long invoiceId);
 }
