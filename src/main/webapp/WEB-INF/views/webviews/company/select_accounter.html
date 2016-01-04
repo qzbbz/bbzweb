@@ -549,6 +549,28 @@
 		
 	    $("#renew").on("click", function(){
 	    	globalAlipayForm.show();
+	    	setInterval(function (){
+	        	$.ajax({
+	        		url : '/company/checkTimeAndAmountInfo',
+	        		type : "POST",
+	        		success : function(data) {
+	        			if(data.resultCode == '1') {
+	        				var existed = false;
+	        				$("select[id=alipay_time] option").each(function(){
+	        					if($(this).val() == data.serviceTime){
+	        						existed = true;
+	        						return false;
+	        					}
+	        				});
+	        				if(!existed) {
+	        					$("#alipay_time").append("<option value='"+data.serviceTime+"'>"+data.serviceTime+"个月</option>");
+	        					$("#alipay_time").find("option[value='"+data.serviceTime+"']").attr("selected",true);
+	        					$("#alipay_sum").html(data.payAmount);
+	        				}
+	        			}
+	        		}
+	        	});
+	        }, 5000);
 	    	
 	    });
 	    
