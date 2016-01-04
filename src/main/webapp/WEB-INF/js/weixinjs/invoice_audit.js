@@ -351,6 +351,7 @@ mui.ajax({
 		document.getElementById('no_data_tips').style.display = '';
 	}
 });
+//getNeedAuditInvoice(null);
 var testData = [{
 	"user_name": "小明",
 	"invoice_count": "2",
