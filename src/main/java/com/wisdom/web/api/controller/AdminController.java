@@ -2,7 +2,11 @@ package com.wisdom.web.api.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -430,7 +434,7 @@ public class AdminController {
 				itemMap.put("company_name", companyAndPayModel.getCompanyName());
 				itemMap.put("company_service_time", companyAndPayModel.getServiceTime() == null ? "" : String.valueOf(companyAndPayModel.getServiceTime()));
 				itemMap.put("company_service_amount", companyAndPayModel.getPayAmount() == null ? "" : String.valueOf(companyAndPayModel.getPayAmount()));
-				itemMap.put("company_buy_time", companyAndPayModel.getCreateTime() == null ? "" : String.valueOf(companyAndPayModel.getCreateTime().toString().substring(0, 11)));
+				itemMap.put("company_expired_time", companyAndPayModel.getExpiredTime() == null ? "" : String.valueOf(companyAndPayModel.getExpiredTime().toString().substring(0, 11)));
 				retList.add(itemMap);
 			}
 		}
@@ -443,17 +447,35 @@ public class AdminController {
 		String serviceTime = request.getParameter("serviceTime");
 		String serviceAmount = request.getParameter("serviceAmount");
 		Long companyId = Long.valueOf(request.getParameter("companyId"));
+		String serviceExpiredTime = request.getParameter("expiredTime");
+		
 		Map<String, String> retMap = new HashMap<>();
 		CompanyPay cp = companyPayService.getCompanyPayByCompanyId(companyId);
 		boolean success = false;
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	    Date parsedDate = null;
+		try {
+			parsedDate = dateFormat.parse(serviceExpiredTime);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		if(cp == null) {
 			cp = new CompanyPay();
 			cp.setCompanyId(companyId);
 			cp.setPayAmount(Double.valueOf(serviceAmount));
 			cp.setServiceTime(Integer.valueOf(serviceTime));
+			if(parsedDate != null){
+				Timestamp expiredTimestamp = new java.sql.Timestamp(parsedDate.getTime());
+				cp.setExpiredTime(expiredTimestamp);
+			}
 			success = companyPayService.addCompanyPay(cp) != 0;
 		} else {
-			success = companyPayService.updateCompanyPayByCompanyId(companyId, 0, Double.valueOf(serviceAmount), "", Integer.valueOf(serviceTime));
+			Timestamp expiredTimestamp = null;
+			if(parsedDate != null){
+				expiredTimestamp = new java.sql.Timestamp(parsedDate.getTime());
+			}
+			success = companyPayService.updateCompanyPayByCompanyId(companyId, 0, Double.valueOf(serviceAmount), "", Integer.valueOf(serviceTime), expiredTimestamp);
 		}
 		if(success) {
 			retMap.put("result", "true");
