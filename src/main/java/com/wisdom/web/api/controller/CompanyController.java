@@ -174,7 +174,7 @@ public class CompanyController {
 			alipayMonth = "1";
 			alipayAmount = "99";
 
-			companyPayService.updateCompanyPayByCompanyId(companyId, 2, Double.valueOf(alipayAmount), "", Integer.valueOf(alipayMonth));
+			companyPayService.updateCompanyPayByCompanyId(companyId, 2, Double.valueOf(alipayAmount), "", Integer.valueOf(alipayMonth),null);
 			//Add record to company_pay_history
 			CompanyPayHistory companyPayHistory = new CompanyPayHistory();
 			companyPayHistory.setApplyInvoice(companyPay.getApplyInvoice());
@@ -208,7 +208,7 @@ public class CompanyController {
 			companyPayService.addCompanyPay(newPay);
 		} else {
 			
-			companyPayService.updateCompanyPayByCompanyId(companyId, 0, Double.valueOf(alipayAmount), orderNo, Integer.valueOf(alipayMonth));
+			companyPayService.updateCompanyPayByCompanyId(companyId, 0, Double.valueOf(alipayAmount), orderNo, Integer.valueOf(alipayMonth),null);
 		}
 
 		AlipayService alipayService = new AlipayService();
