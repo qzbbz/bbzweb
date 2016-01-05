@@ -48,7 +48,7 @@
 	    				<th>公司名称</th>
 	    				<th>服务时间</th>
 	    				<th>服务费用</th>
-	    				<th>购买时间</th>
+	    				<th>服务时间</th>
 	    				<th>操作</th>
 	    			</tr>
 	    		</thead>
@@ -101,6 +101,13 @@
 				<label class="control-label">输入服务费用（￥）：</label>
 				<div class="controls control-row-auto">
 					<input id="service_amount" type="text" class="input-large"
+						data-rules="{required : true}" style="width:250px;">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">服务到期期限（YYYY-MM-DD）：</label>
+				<div class="controls control-row-auto">
+					<input id="service_expired_date" type="text" class="input-large"
 						data-rules="{required : true}" style="width:250px;">
 				</div>
 			</div>
@@ -187,6 +194,7 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 			$('#modify_company_pay').click(function(){
 				var serviceTime = $('#service_time').val();
 				var serviceAmount = $('#service_amount').val();
+				var serviceExpiredTime = $('#service_expired_date').val();
 				if(serviceTime == null || serviceTime == "") {
 					BUI.Message.Alert('请输入服务期限！','warning');
 					return;
@@ -195,10 +203,14 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 					BUI.Message.Alert('请输入服务费用！','warning');
 					return;
 				}
+				if(serviceExpiredTime == null || serviceExpiredTime == ""){
+					BUI.Message.Alert('请输入服务到期时间', 'warning');
+					return;
+				}
 				$.ajax({
 					url : '/admin/modifyCompanyPayInfo',
 					type : "POST",
-					data : {serviceTime:serviceTime,serviceAmount:serviceAmount,companyId:currentSelectedCompanyId},
+					data : {serviceTime:serviceTime,serviceAmount:serviceAmount,expiredTime:serviceExpiredTime,companyId:currentSelectedCompanyId},
 					success : function(data) {
 						BUI.Message.Alert('修改成功！','success');
 						modifyCompanyPay.close();
@@ -224,7 +236,7 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 			var container = $('#retData');
 			for(var i=0; i<data.length; i++) {
 				var trNode = $("<tr></tr>");
-				var tdNode = $("<td>"+data[i].company_id+"</td><td>"+data[i].company_name+"</td><td>"+data[i].company_service_time+"</td><td>"+data[i].company_service_amount+"</td><td>"+data[i].company_buy_time+"</td>");
+				var tdNode = $("<td>"+data[i].company_id+"</td><td>"+data[i].company_name+"</td><td>"+data[i].company_service_time+"</td><td>"+data[i].company_service_amount+"</td><td>"+data[i].company_expired_time+"</td>");
 			    var operateNode = $("<td><a href='javascript:void(0);'>修改服务时间和费用</a></td>");
 			    operateNode.attr("company_id", data[i].company_id);
 			    operateNode.click(function(event) {

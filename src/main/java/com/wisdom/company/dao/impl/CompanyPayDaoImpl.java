@@ -174,7 +174,7 @@ public class CompanyPayDaoImpl implements ICompanyPayDao {
 
 	@Override
 	public List<CompanyAndPayModel> getCompanyAndPayModel() {
-		String sql = "select a.id, a.name, b.pay_amount, b.service_time, b.create_time from company a left join company_pay b on a.id = b.company_id where a.parent_id = -1";
+		String sql = "select a.id, a.name, b.pay_amount, b.service_time, b.create_time, b.expired_time from company a left join company_pay b on a.id = b.company_id where a.parent_id = -1";
 		List<CompanyAndPayModel> list = new ArrayList<>();
 		try{
 			list = jdbcTemplate.query(sql, 
@@ -189,7 +189,7 @@ public class CompanyPayDaoImpl implements ICompanyPayDao {
 
 	@Override
 	public List<CompanyAndPayModel> getCompanyAndPayModelByCompanyName(String companyName) {
-		String sql = "select a.id, a.name, b.pay_amount, b.service_time, b.create_time from company a left join company_pay b on a.id = b.company_id where a.parent_id = -1 and a.name like '%"+companyName+"%'";
+		String sql = "select a.id, a.name, b.pay_amount, b.service_time, b.create_time, b.expired_time from company a left join company_pay b on a.id = b.company_id where a.parent_id = -1 and a.name like '%"+companyName+"%'";
 		List<CompanyAndPayModel> list = new ArrayList<>();
 		try{
 			list = jdbcTemplate.query(sql, 

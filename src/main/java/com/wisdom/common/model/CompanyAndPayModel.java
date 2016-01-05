@@ -13,15 +13,18 @@ public class CompanyAndPayModel {
 	private Double payAmount;
 	
 	private Timestamp createTime;
+	
+	private Timestamp expiredTime;
 
 	public CompanyAndPayModel(Long companyId, String companyName, Integer serviceTime, Double payAmount,
-			Timestamp createTime) {
+			Timestamp createTime, Timestamp expiredTime) {
 		super();
 		this.companyId = companyId;
 		this.companyName = companyName;
 		this.serviceTime = serviceTime;
 		this.payAmount = payAmount;
 		this.createTime = createTime;
+		this.expiredTime = expiredTime;
 	}
 
 	public Long getCompanyId() {
@@ -62,6 +65,14 @@ public class CompanyAndPayModel {
 
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
+	}
+
+	public Timestamp getExpiredTime() {
+		return expiredTime;
+	}
+
+	public void setExpiredTime(Timestamp expiredTime) {
+		this.expiredTime = expiredTime;
 	}
 
 	@Override
