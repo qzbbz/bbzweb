@@ -1,6 +1,7 @@
 var currentPage = 1;
 var displayCountPerPage = 6;
 var userOpenId = "";
+userOpenId = "oJO1gtyaaLM2QMHFNBSPLkZy1Pmk";
 function checkJsonIsEmpty(json) {
 	var isEmpty = true;
 	if (json == null) return true;
@@ -176,6 +177,7 @@ mui(mui('#pull_refresh')[0]).pullToRefresh({
 		}
 	}
 });
+/*
 mui.ajax({
 	url: '/getUserOpenId',
 	type: "POST",
@@ -197,7 +199,7 @@ mui.ajax({
 		document.getElementById('no_data_tips').style.innerHTML = "请求服务器数据出错，请稍后下拉刷新重试！";
 		document.getElementById('no_data_tips').style.display = '';
 	}
-});
+});*/
 var testData = [{"submit_time":"2015-12-22","list":[{"bill_img": "images/shuijiao.jpg",
 	"invoice_id": "11",
 	"bill_amount": "258.79",

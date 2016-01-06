@@ -131,6 +131,41 @@ mui.createConfirmDialog = function(info, cancelCallBack, acceptCallBack) {
 	return mask;
 };
 
+mui.createCommentDialog = function(info, cancelCallBack, acceptCallBack) {
+	var template = "<div style='width:80%;margin:50% 10%;border:1px solid #ddd;background-color: white;border-radius: 5px;'><div style='margin-top:20px;margin-left:20px;'>审核信息</div><hr/><div style='margin-top:20px;margin-left:20px;margin-bottom:20px;margin-right:20px;height:60px;'><textarea id='comment' placeholder='输入审核'></textarea></div><div style='text-align:right;margin-bottom:20px;margin-right:20px;'><a id='createCommentDialog_accept' href='javascript:void(0);' style='text-decoration:none;'>确定</a></div></div>";
+	var element = document.createElement('div');
+	element.classList.add('dialog');
+	element.innerHTML = template.replace('{{info}}', info);
+	element.addEventListener('touchmove', mui.preventDefault);
+	var mask = [element];
+	mask._show = false;
+	mask.show = function() {
+		mask._show = true;
+		element.setAttribute('style', 'opacity:1');
+		document.body.appendChild(element);
+		document.getElementById('createCommentDialog_accept').addEventListener('tap', function() {
+			if (acceptCallBack) acceptCallBack();
+			mask.close();
+		});
+		return mask;
+	};
+	mask._remove = function() {
+		if (mask._show) {
+			mask._show = false;
+			element.setAttribute('style', 'opacity:0');
+			mui.later(function() {
+				var body = document.body;
+				element.parentNode === body && body.removeChild(element);
+			}, 350);
+		}
+		return mask;
+	};
+	mask.close = function() {
+		mask._remove();
+	};
+	return mask;
+};
+
 //invoiceIdString:12,23,32
 //approvalStatus:0-pass,1-reject
 function auditInvoice(invoiceId, approvalStatus, successCallback, failCallback) {
@@ -154,13 +189,38 @@ function auditInvoice(invoiceId, approvalStatus, successCallback, failCallback) 
 		}
 	});
 }
-
+function addCommentToInvoice(invoice_id){
+	var commentNode = document.getElementById("comment");
+	console.log(commentNode);
+	if(commentNode !== null){
+		var comment = commentNode.value;
+		mui.ajax({
+			url: '/addCommentToInvoice',
+			type: "POST",
+			data: {'invoice_id': invoice_id, 'comment': comment},
+			success: function(data) {
+				window.location = "/views/weixinviews/invoice_audit_detail.html";
+				if (ajaxCallBack) ajaxCallBack();
+			},
+			error: function(status, error) {
+				mui.createTipDialog('请求服务器数据出错，请稍后下拉刷新重试！', null).show();
+				document.getElementById('data_loading').style.display = 'none';
+				document.getElementById('no_data_tips').style.display = '';
+				document.getElementById('data_abstract').style.display = "none";
+				document.getElementById('data_details').style.display = "none";
+				if (ajaxCallBack) ajaxCallBack();
+			}
+		});
+	}
+	
+}
 function leftAndRightSliderEventCallback(element, approvalStatus) {
 	var elem = element;
 	var invoice_id = elem.getAttribute('invoice_id');
 	var invoice_amount = parseFloat(elem.getAttribute('invoice_amount'));
-	var mask = mui.createProcessingMask(null);
-	mask.show();
+	//var mask = mui.createProcessingMask(null);
+	mui.createCommentDialog("hola", null, addCommentToInvoice(invoice_id)).show();
+	//mask.show();
 	auditInvoice(invoice_id, approvalStatus, function() {
 		var ulNode = elem.parentNode;
 		var personDataNode = ulNode.parentNode;
@@ -177,9 +237,9 @@ function leftAndRightSliderEventCallback(element, approvalStatus) {
 				document.getElementById('no_data_tips').style.display = '';
 			}
 		}
-		mask.close();
+		//mask.close();
 	}, function(msg) {
-		mask.close();
+		//mask.close();
 		setTimeout(function() {
 			mui.swipeoutClose(elem);
 		}, 0);
@@ -241,24 +301,23 @@ function createDataList(data) {
 	var all_invoice_count = 0;
 	var all_invoice_total_amount = 0.0;
 	var img_group = 0;
-	for (var i in data) {
 		var invoice_id_list_string = "";
 		var person_invoice_count = 0;
-		all_invoice_count = all_invoice_count + parseInt(data[i].invoice_count);
-		all_invoice_total_amount = all_invoice_total_amount + parseFloat(data[i].invoice_total_amount);
+		all_invoice_count = all_invoice_count + parseInt(data.invoice_count);
+		all_invoice_total_amount = all_invoice_total_amount + parseFloat(data.invoice_total_amount);
 		var rootNode = document.createElement('div');
-		rootNode.setAttribute('person_invoice_count', data[i].invoice_count);
-		rootNode.setAttribute('person_invoice_total_amount', data[i].invoice_total_amount);
+		rootNode.setAttribute('person_invoice_count', data.invoice_count);
+		rootNode.setAttribute('person_invoice_total_amount', data.invoice_total_amount);
 		rootNode.style.marginBottom = '20px';
 		var abstractNode = document.createElement('div');
 		abstractNode.style.backgroundColor = "white";
 		abstractNode.style.border = "1px solid #ddd";
-		abstractNode.innerHTML = "<div style='background-color: white;border:1px solid #ddd;'><div style='height:60px;'><div class='mui-pull-left' style='margin-left:10px;margin-top:8px;'><div style='font-size:11px;color:#7D9EC0;'>发票提交人：" + data[i].user_name + "</div><div style='font-size:11px;color:#7D9EC0;'>发票总金额：&#65509;<span class='person_total_amount' style='font-size:11px;'>" + data[i].invoice_total_amount + "</span></div></div><div class='mui-pull-right' style='margin-right:10px;margin-top:10px;'><button class='mui-btn mui-btn-block mui-btn-success' style='height:40px;width:120px;padding:0px 0px;'><span style='font-size: 15px;'>全部通过</span></button></div></div></div>";
+		abstractNode.innerHTML = "<div style='background-color: white;border:1px solid #ddd;'><div style='height:60px;'><div class='mui-pull-left' style='margin-left:10px;margin-top:8px;'><div style='font-size:11px;color:#7D9EC0;'>发票提交人：" + data.user_name + "</div><div style='font-size:11px;color:#7D9EC0;'>发票总金额：&#65509;<span class='person_total_amount' style='font-size:11px;'>" + data.invoice_total_amount + "</span></div></div><div class='mui-pull-right' style='margin-right:10px;margin-top:10px;'><button class='mui-btn mui-btn-block mui-btn-success' style='height:40px;width:120px;padding:0px 0px;'><span style='font-size: 15px;'>全部通过</span></button></div></div></div>";
 		rootNode.appendChild(abstractNode);
 		var ulNode = document.createElement('div');
 		ulNode.setAttribute("class", "mui-table-view");
 		img_group = img_group + 1;
-		/*var detailDataList = data[i].list;
+		var detailDataList = data.list;
 		for (var j in detailDataList) {
 			if(invoice_id_list_string != "") {invoice_id_list_string = invoice_id_list_string + ","}
 			var liNode = document.createElement('li');
@@ -271,19 +330,19 @@ function createDataList(data) {
 			person_invoice_count = person_invoice_count + 1;
 		}
 		rootNode.setAttribute('invoice_id_list_string', invoice_id_list_string);
-		rootNode.appendChild(ulNode);*/
-		invoice_id_list_string = data[i].invoice_id_list_string;
-		person_invoice_count = data[i].person_invoice_count;
+		rootNode.appendChild(ulNode);
+		invoice_id_list_string = data.invoice_id_list_string;
+		person_invoice_count = data.person_invoice_count;
 		//rootNode.setAttribute('user_name', data[i].user_name);
 		rootNode.setAttribute('person_invoice_count', person_invoice_count);
 		rootNode.setAttribute('invoice_id_list_string', invoice_id_list_string);
 		rootNode.addEventListener("tap", function(){
 			var id_list = this.getAttribute("invoice_id_list_string");
-			alert(id_list);
+
 			mui.ajax({
 				url: '/storeRequestInvoiceIds',
 				type: "POST",
-				data: {'invoice_ids': id_list},
+				data: {},
 				success: function(data) {
 					window.location = "/views/weixinviews/invoice_audit_detail.html";
 					if (ajaxCallBack) ajaxCallBack();
@@ -300,7 +359,7 @@ function createDataList(data) {
 
 		});
 		dataDetailsNode.appendChild(rootNode);
-	}
+	
 	bindLeftAndRightSliderEvent();
 	bindAllPassButtonEvent();
 	document.getElementById('need_audit_invoice_count').innerHTML = all_invoice_count;
@@ -311,9 +370,9 @@ function createDataList(data) {
 
 function getNeedAuditInvoice(ajaxCallBack) {
 	mui.ajax({
-		url: '/newGetNeedAuditBillsSummary?openId=' + userOpenId,
+		url: '/getInovicesByIds',
 		type: "POST",
-		data: {},
+		data: {"open_id": userOpenId},
 		success: function(data) {
 			if (!checkJsonIsEmpty(data)) {
 				document.getElementById('no_data_tips').style.display = 'none';

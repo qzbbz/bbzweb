@@ -54,4 +54,6 @@ public interface IInvoiceDao {
 	public boolean setInvoiceToGenerated(long invoiceId);
 	
 	public boolean setInvoiceToInvalid(long invoiceId);
+	
+	public boolean setInvoiceComment(long invoiceId, String comment);
 }

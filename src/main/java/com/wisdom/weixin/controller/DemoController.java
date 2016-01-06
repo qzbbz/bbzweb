@@ -92,7 +92,7 @@ public class DemoController {
 			base64ImageStr = fileName;
 			logger.debug("uploadDemoFilePath : {}", base64ImageStr);
 			Map<String, Object> retMap = invoiceService.createInvoiceProcess("jzzbeyond@163.com", base64ImageStr, "0", "1",
-					new HashMap<>());
+					new HashMap<>(), "wechat");
 			if (!retMap.containsKey("success") || !(boolean) retMap.get("success")) {
 				base64ImageStr = "";
 			}

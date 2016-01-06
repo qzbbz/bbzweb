@@ -19,6 +19,7 @@ public class TestInvoice implements java.io.Serializable {
 	private String costCenter;
 	private String type;
 	private Integer generated;
+	private String comment;
 	// Constructors
 
 
@@ -32,7 +33,7 @@ public class TestInvoice implements java.io.Serializable {
 	}
 
 	public TestInvoice(Long id, Long companyId,
-			String fileName, String billDate, Integer isFixedAssets, Timestamp createTime, Timestamp modifyTime, String itemId, String status, String costCenter, String type, Integer generated) {
+			String fileName, String billDate, Integer isFixedAssets, Timestamp createTime, Timestamp modifyTime, String itemId, String status, String costCenter, String type, Integer generated, String comment) {
 		super();
 		this.id = id;
 		this.companyId = companyId;
@@ -46,6 +47,7 @@ public class TestInvoice implements java.io.Serializable {
 		this.costCenter = costCenter;
 		this.type = type;
 		this.generated = generated;
+		this.comment = comment;
 	}
 
 	public Long getId() {
@@ -144,6 +146,15 @@ public class TestInvoice implements java.io.Serializable {
 	public void setGenerated(Integer generated) {
 		this.generated = generated;
 	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+	
 	
 	
 

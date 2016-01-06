@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -27,6 +28,7 @@ import com.wisdom.common.model.Dispatcher;
 import com.wisdom.common.model.Invoice;
 import com.wisdom.common.model.InvoiceApproval;
 import com.wisdom.common.model.TestInvoice;
+import com.wisdom.common.model.TestInvoiceArtifact;
 import com.wisdom.common.model.TestInvoiceRecord;
 import com.wisdom.common.model.UserInvoice;
 import com.wisdom.company.service.ICompanyService;
@@ -87,7 +89,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 	@Transactional
 	@Override
 	public Map<String, Object> createInvoiceProcess(String userId, String image, String channelTypeId,
-			String objectTypeId, Map<String, Object> params) {
+			String objectTypeId, Map<String, Object> params, String type) {
 		Map<String, Object> retMap = new HashMap<String, Object>();
 		retMap.put("success", false);
 		log.debug("createInvoiceProcess");
@@ -144,8 +146,18 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		newInvoice.setCostCenter(costCenterCode);
 		newInvoice.setType("wechat");
 		long newInvoiceId = invoiceDao.addInvoice(newInvoice);
+		
+		if(type.equals("wechat")){
+			String itemId = UUID.randomUUID().toString();
+			invoiceDao.addInvoiceArtifact(newInvoiceId, Double.parseDouble(params.get("amount").toString()), params.get("type").toString(), params.get("type").toString(), itemId);
+			invoiceDao.setIsFAOfInvoice(newInvoiceId, false, itemId);
+			dispatcherService.updateDispatcherStatus(invoiceId, 0);
+		}
+		
 		String companyName = companyService.getCompanyName(companyId);
-		publishUnrecognizedInvoive(newInvoiceId, companyId, fileName, companyName);
+		if(! type.equals("wechat")){
+			publishUnrecognizedInvoive(newInvoiceId, companyId, fileName, companyName);
+		}
 		log.debug("addAttachMentRecord");
 		boolean blRet = attachmentService.addAttachMentRecord(newInvoiceId, image);
 		logger.debug("attachmentService image : " + image);
@@ -1032,5 +1044,11 @@ public class InvoiceServiceImpl implements IInvoiceService {
 	public boolean setInvoiceImageToInvalid(long invoiceId) {
 		return invoiceDao.setInvoiceToInvalid(invoiceId);
 	}
+
+	@Override
+	public boolean setInvoiceComment(long invoiceId, String comment) {
+		return invoiceDao.setInvoiceComment(invoiceId, comment);
+	}
+
 
 }

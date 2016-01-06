@@ -36,7 +36,7 @@ public interface IInvoiceService {
 	 * @return
 	 */
 	public Map<String,Object> createInvoiceProcess(String userId,String image,String channelType,
-			String objectTypeId,Map<String,Object> params);
+			String objectTypeId,Map<String,Object> params, String type);
 	
 	public Map<String,Object> createDraftInvoice(String userId, String image, String costCenterCode);
 	
@@ -90,4 +90,7 @@ public interface IInvoiceService {
 	public boolean setInvoiceImageToGenerated(long invoiceId);
 	
 	public boolean setInvoiceImageToInvalid(long invoiceId);
+	
+	public boolean setInvoiceComment(long invoiceId, String comment);
+
 }
