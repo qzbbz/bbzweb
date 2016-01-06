@@ -17,8 +17,10 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.wisdom.common.model.Company;
+import com.wisdom.common.model.CompanyInfo;
 import com.wisdom.common.model.ExpenseType;
 import com.wisdom.company.dao.ICompanyDao;
+import com.wisdom.company.mapper.CompanyInfoMapper;
 import com.wisdom.company.mapper.CompanyMapper;
 import com.wisdom.company.mapper.ExpenseTypeMapper;
 
@@ -162,6 +164,56 @@ public class CompanyDaoImpl implements ICompanyDao {
 			logger.error(e.toString());
 		}
 		return list;
+	}
+
+	@Override
+	public List<Company> getCompanyAndAccounter() {
+		List<Company> companyList = null;
+		try {
+			String sql = "select * from company c left join user u on c.id = u.company_id where u.type_id = 2";
+			companyList = jdbcTemplate.query(sql,
+					new RowMapperResultSetExtractor<Company>(
+							new CompanyMapper()));
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return companyList;
+	}
+	//update accounter_id from company table
+	@Override
+	public boolean updateAccounterForCompany(long companyId, String accounterId) {
+		String sql="update company set accounter_id=? where id=?";
+		int affectedRows = jdbcTemplate.update(sql, accounterId, companyId);
+		logger.debug("updateCompanyAccounter accounter_id result : {}", affectedRows);
+		return  affectedRows != 0;
+	}
+	//get company information by name
+	@Override
+	public List<Company> getCompanyByName(String companyName) {
+		List<Company> companyList = null;
+		String sql="select * from company where name = ?";
+		try{
+			companyList=jdbcTemplate.query(sql, 	new Object[]{companyName},
+					new RowMapperResultSetExtractor<Company>(
+							new CompanyMapper()));
+		}catch(Exception e){
+			logger.error(e.toString());
+		}
+		return companyList;
+	}
+
+	@Override
+	public List<CompanyInfo> getCompanyInfoAndUserIDAndPhone() {
+		List<CompanyInfo> companyList = null;
+		try {
+			String sql = "select distinct c.id,c.name,c.perfect_moment,c.month_expense,c.create_time,u.type_id,up.phone  from  (company c left join user u on c.id = u.company_id AND u.type_id = 2) LEFT JOIN user_phone up on u.user_id=up.user_id WHERE up.phone is NOT NULL ";
+			companyList = jdbcTemplate.query(sql,
+					new RowMapperResultSetExtractor<CompanyInfo>(
+							new CompanyInfoMapper()));
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return companyList;
 	}
 
 }

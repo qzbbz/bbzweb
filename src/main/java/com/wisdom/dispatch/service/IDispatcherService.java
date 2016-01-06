@@ -27,5 +27,5 @@ public interface IDispatcherService {
 	
 	public Dispatcher getDispatcherByInvoiceId(long id);
 	
-	public boolean updateDispatcherStatus(long invoiceId);
+	public boolean updateDispatcherStatus(long invoiceId, int status);
 }

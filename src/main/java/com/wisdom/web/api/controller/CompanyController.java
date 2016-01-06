@@ -34,6 +34,7 @@ import com.wisdom.area.service.IAreaService;
 import com.wisdom.common.model.Company;
 import com.wisdom.common.model.CompanyDetail;
 import com.wisdom.common.model.CompanyPay;
+import com.wisdom.common.model.CompanyPayHistory;
 import com.wisdom.common.model.SheetBalance;
 import com.wisdom.common.model.SheetCash;
 import com.wisdom.common.model.SheetIncome;
@@ -44,6 +45,7 @@ import com.wisdom.company.dao.ISheetCashDao;
 import com.wisdom.company.dao.ISheetIncomeDao;
 import com.wisdom.company.dao.ISheetSalaryTaxDao;
 import com.wisdom.company.service.ICompanyDetailService;
+import com.wisdom.company.service.ICompanyPayHistoryService;
 import com.wisdom.company.service.ICompanyPayService;
 import com.wisdom.company.service.ICompanyService;
 import com.wisdom.user.dao.IUserOpenIdDao;
@@ -54,6 +56,8 @@ import com.wisdom.web.utils.CompanyOrgStructure;
 import com.wisdom.web.utils.ErrorCode;
 import com.wisdom.web.utils.PdfProcess;
 import com.wisdom.web.utils.SessionConstant;
+import com.wisdom.recommender.service.IRecommendService;
+
 
 @Controller
 public class CompanyController {
@@ -97,6 +101,12 @@ public class CompanyController {
 	@Autowired
 	private IUserOpenIdDao userOpenIdDao;
 	
+	@Autowired
+	private IRecommendService recommendService;
+	
+	@Autowired
+	private ICompanyPayHistoryService companyPayHistoryService;
+	
 	@RequestMapping("/company/selectAccounter")
 	@ResponseBody
 	public Map<Integer, String> selectAccounter(HttpServletRequest request) {
@@ -105,7 +115,13 @@ public class CompanyController {
 		Map<Integer, String> retMap = new HashMap<>();
 		String accounterUserId = request.getParameter("accounterId");
 		String userId = (String) request.getSession().getAttribute("userId");
+		
 		long companyId = userService.getCompanyIdByUserId(userId);
+		CompanyDetail companyDetail = companyDetailService.getCompanyDetailByCompanyId(companyId);
+		if(companyDetail == null) {
+			return retMap;
+			
+		}
 		int accounterAmount = companyService
 				.accounterAmountBelongToCompany(companyId);
 		if (companyId > -1 && accounterAmount < 2) {
@@ -141,8 +157,45 @@ public class CompanyController {
 		String alipayMonth = request.getParameter("alipayMonth");
 		String alipayAmount = request.getParameter("alipayAmount");
 		String userId = (String) request.getSession().getAttribute("userId");
+		String type = request.getParameter("type");
 		long companyId = userService.getCompanyIdByUserId(userId);
 		CompanyPay companyPay = companyPayService.getCompanyPayByCompanyId(companyId);
+		String resHtml = "";
+		if(companyPay != null &&(companyPay.getTrial() == 1 && type.equals("trial"))){
+			resHtml = "您已试用过本公司产品";
+			return resHtml;
+		}
+		if(!accounterUserId.equals("")){
+			companyService.updateCompanyAccounter(companyId, accounterUserId);
+		}
+		if (companyPay != null && (type.equals("trial") && companyPay.getTrial() == 0)){
+			companyPayService.updateCompanyPayStatusToTrial(companyId);
+			Integer status = 2;
+			alipayMonth = "1";
+			alipayAmount = "99";
+
+			companyPayService.updateCompanyPayByCompanyId(companyId, 2, Double.valueOf(alipayAmount), "", Integer.valueOf(alipayMonth),null);
+			//Add record to company_pay_history
+			CompanyPayHistory companyPayHistory = new CompanyPayHistory();
+			companyPayHistory.setApplyInvoice(companyPay.getApplyInvoice());
+			companyPayHistory.setCompanyId(companyPay.getCompanyId());
+			companyPayHistory.setContractFile(companyPay.getContractFile());
+			companyPayHistory.setCreatedTime(null);
+			companyPayHistory.setMailAddress(companyPay.getMailAddress());
+			companyPayHistory.setOrderNo(null);
+			companyPayHistory.setPayAmount(Double.valueOf(alipayAmount));
+			companyPayHistory.setServiceTime(Integer.valueOf(alipayMonth));
+			companyPayHistory.setPayStatus(2);
+			companyPayHistoryService.addCompanyPayHistory(companyPayHistory);
+			resHtml = "欢迎试用帮帮账，您将能够免费试用本产品一个月！";
+			return resHtml;
+		}
+		
+		CompanyDetail companyDetail = companyDetailService.getCompanyDetailByCompanyId(companyId);
+		if(companyDetail == null) {
+			return "";
+			
+		}
 		UUID uuid = UUID.randomUUID();
 		String orderNo = uuid.toString();
 		if(companyPay == null) {
@@ -154,11 +207,13 @@ public class CompanyController {
 			newPay.setCreateTime(new Timestamp(System.currentTimeMillis()));
 			companyPayService.addCompanyPay(newPay);
 		} else {
-			companyPayService.updateCompanyPayByCompanyId(companyId, Double.valueOf(alipayAmount), orderNo, Integer.valueOf(alipayMonth));
+			
+			companyPayService.updateCompanyPayByCompanyId(companyId, 0, Double.valueOf(alipayAmount), orderNo, Integer.valueOf(alipayMonth),null);
 		}
-		companyService.updateCompanyAccounter(companyId, accounterUserId);
+
 		AlipayService alipayService = new AlipayService();
-        String resHtml = alipayService.buildAlipayRequest(Double.valueOf(alipayAmount), orderNo);
+		resHtml = alipayService.buildAlipayRequest(Double.valueOf(alipayAmount), orderNo);
+		//resHtml = alipayService.buildAlipayRequest(Double.valueOf(0.01), orderNo);
 		logger.info("leave selectOneAccounter");
 		return resHtml;
 	}
@@ -200,9 +255,13 @@ public class CompanyController {
 				//如果有做过处理，不执行商户的业务程序
 				logger.info("alipayFinish : TRADE_FINISHED || TRADE_SUCCESS");
 				CompanyPay companyPay = companyPayService.getCompanyPayByOrderNo(out_trade_no);
+				logger.info(companyPay.toString());
 				String contractFileName = "";
 				try {
 					Company company = companyService.getCompanyByCompanyId(companyPay.getCompanyId());
+					logger.info("Line 212");
+
+					logger.info(company.toString());
 					UUID uuid = UUID.randomUUID();
 					contractFileName = uuid.toString() + "_contract_" + String.valueOf(company.getId()) + ".pdf";
 					Calendar c = Calendar.getInstance();    
@@ -223,7 +282,12 @@ public class CompanyController {
 					logger.info(owner);
 					logger.info(String.valueOf(companyPay.getPayAmount()));
 					logger.info(date);
+					String email = recommendService.getCustomerEmailByCompanyId(companyPay.getCompanyId());
+					logger.info(email);
+					recommendService.setCustomerPaid(email);
+					logger.info("debug1");
 					PdfProcess.generateContractPdf(realPath + contractFileName, company.getName(), code, address, owner, String.valueOf(companyPay.getPayAmount()), date, webRoot);
+					logger.info("debug2");
 					
 				} catch(Exception e) {
 					logger.error(e.toString());
@@ -245,6 +309,7 @@ public class CompanyController {
 		return "redirect:/views/webviews/company/select_accounter.html";
 	}
 	
+	
 	@RequestMapping("/company/checkSelectAccounter")
 	@ResponseBody
 	public Map<String, String> checkSelectAccounter(HttpServletRequest request) {
@@ -253,23 +318,35 @@ public class CompanyController {
 		String userId = (String) request.getSession().getAttribute("userId");
 		long companyId = userService.getCompanyIdByUserId(userId);
 		Company company = companyService.getCompanyByCompanyId(companyId);
-		if(company != null && company.getAccounterId() != null && !company.getAccounterId().isEmpty()) {
-			CompanyPay companyPay = companyPayService.getCompanyPayByCompanyIdAndPayStatus(companyId, 1);
-			if(companyPay != null) {
-				String accounterId = company.getAccounterId();
-				String accounterName = userService.getUserNameByUserId(accounterId);
-				int serviceTime = companyPay.getServiceTime();
-				String payTime = companyPay.getCreateTime().toString();
+		CompanyDetail companyDetail = companyDetailService.getCompanyDetailByCompanyId(companyId);
+		if(companyDetail == null) {
+			retMap.put("error", "companyinfo");
+		}
+		SimpleDateFormat sdf= new SimpleDateFormat("yyyy-MM-dd");
+		
+		if(company != null && company.getAccounterId() != null && !company.getAccounterId().isEmpty()){
+			CompanyPay companyPay = companyPayService.getCompanyPayByCompanyId(companyId);
+			
+			Timestamp expiredTime = companyPay.getExpiredTime();
+			java.util.Date date= new java.util.Date();
+			Timestamp now = new Timestamp(date.getTime());
+			String accounterId = company.getAccounterId();
+			String accounterName = userService.getUserNameByUserId(accounterId);
+			if(expiredTime != null && expiredTime.after(now)){
+				long gap = expiredTime.getTime() - now.getTime();
+				if(gap <= 5 * 24* 60 * 60 * 1000){
+					retMap.put("alert", "您的服务时间已少于五天，请尽快续费！");
+				}
 				retMap.put("selected", "true");
-				retMap.put("info", "您已选择了会计师："+accounterName+",您购买的服务时间为:"+String.valueOf(serviceTime)+"个月,您付款的时间为："+payTime+"。");
+				retMap.put("info", "您已选择了会计师：" + accounterName + ", 您的服务到期时间为：" + sdf.format(expiredTime) + "。");
 				retMap.put("amount", String.valueOf(companyPay.getPayAmount()));
 				retMap.put("companyName", company.getName());
-			} else {
+			}else{
 				retMap.put("selected", "false");
 			}
-		} else {
+		}else{
 			retMap.put("selected", "false");
-			if(company == null) {
+			if(company == null){
 				retMap.put("error", "companyinfo");
 			}
 		}
@@ -375,7 +452,8 @@ public class CompanyController {
 	}
 	
 	@RequestMapping("/company/uploadSalary")
-	public String uploadSalary(@RequestParam("salaryFile") MultipartFile file, HttpServletRequest request) throws ParseException {
+	@ResponseBody
+	public Map<String, String> uploadSalary(@RequestParam("salaryFile") MultipartFile file, HttpServletRequest request) throws ParseException {
 		logger.debug("get upload request");
 		String date=request.getParameter("salary_date");
 		
@@ -383,7 +461,9 @@ public class CompanyController {
 		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/files/company");
 		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
 		companyApi.uploadCompanySalary(userId, realPath, file,date);
-		return "redirect:/views/webviews/company/salary_welfare_upload.html";
+		Map<String, String> retMap = new HashMap<>();
+		retMap.put("url", "url");
+		return retMap;
 	}
 	
 	/*@RequestMapping("/company/uploadBankSta")
@@ -401,7 +481,7 @@ public class CompanyController {
 	
 	@RequestMapping("/company/uploadBankSta")
 	@ResponseBody
-	public String uploadBankSta(DefaultMultipartHttpServletRequest multipartRequest,
+	public Map<String, String> uploadBankSta(DefaultMultipartHttpServletRequest multipartRequest,
 			HttpServletRequest request) {
 		logger.debug("===>uploadBankSta");
 		String userId = (String) request.getSession().getAttribute("userId");
@@ -421,12 +501,14 @@ public class CompanyController {
 				companyApi.uploadCompanyBankSta(multifile, params);
 			}
 		}
-		return new HashMap<String, String>().put("url", "");
+		Map<String, String> retMap = new HashMap<String, String>();
+		retMap.put("url", "url");
+		return retMap;
 	}
 	
 	@RequestMapping("/company/uploadCompanySales")
 	@ResponseBody
-	public String uploadCompanySales(DefaultMultipartHttpServletRequest multipartRequest,
+	public Map<String, String> uploadCompanySales(DefaultMultipartHttpServletRequest multipartRequest,
 			HttpServletRequest request) {
 		logger.debug("===>uploadBankSta");
 		String userId = (String) request.getSession().getAttribute("userId");
@@ -445,7 +527,9 @@ public class CompanyController {
 				companyApi.uploadCompanySales(multifile, params);
 			}
 		}
-		return new HashMap<String, String>().put("url", "");
+		Map<String, String> retMap = new HashMap<String, String>();
+		retMap.put("url", "url");
+		return retMap;
 	}
 	
 	@RequestMapping("/company/deleteCompanyBankSta")
@@ -1333,6 +1417,57 @@ public class CompanyController {
 			retMap.put("income_tax_for_individuals_begin", format.format(sheetSalaryTax.getIncomeTaxForIndividualsBegin() == null ? 0 : sheetSalaryTax.getIncomeTaxForIndividualsBegin()));
 			retMap.put("tax_total_end", format.format(sheetSalaryTax.getTaxTotalEnd() == null ? 0 : sheetSalaryTax.getTaxTotalEnd()));
 			retMap.put("tax_total_begin", format.format(sheetSalaryTax.getTaxTotalBegin() == null ? 0 : sheetSalaryTax.getTaxTotalBegin()));
+		}
+		return retMap;
+	}
+	
+	@RequestMapping("/checkCompanyPayTrialExpired")
+	@ResponseBody
+	public Map<String, String> checkCompanyPayTrialExpired(HttpServletRequest request){
+		Map<String, String> retMap = new HashMap<>();
+		String userId = (String) request.getSession().getAttribute("userId");
+		long companyId = userService.getCompanyIdByUserId(userId);
+		CompanyPay companyPay = companyPayService.getCompanyPayByCompanyId(companyId);
+		if (companyPay.getTrial() == 1 && companyPay.getPayStatus() == 2){
+			Timestamp payTime = companyPay.getCreateTime();
+			Timestamp now = new Timestamp(System.currentTimeMillis());
+			Long gap = now.getTime() - payTime.getTime();
+			Long expiredTime = (long) 25 * (long)24 * (long)60 * (long)60 * (long)1000;
+			if(gap >= expiredTime){
+				retMap.put("data", "您的试用期已少于五天！");
+			}else{
+				retMap.put("data", "");
+			}
+		}else{
+			retMap.put("data", "");
+		}
+		return retMap;
+	}
+	
+	@RequestMapping("/checkCompanyPayExpired")
+	@ResponseBody
+	public Map<String, String> checkCompanyPayExpired(HttpServletRequest request){
+		Map<String, String> retMap = new HashMap<>();
+		String userId = (String) request.getSession().getAttribute("userId");
+		long companyId = userService.getCompanyIdByUserId(userId);
+		CompanyPay companyPay = companyPayService.getCompanyPayByCompanyId(companyId);
+		
+		return retMap;
+	}
+	
+	@RequestMapping("/company/checkTimeAndAmountInfo")
+	@ResponseBody
+	public Map<String, String> checkTimeAndAmountInfo(HttpServletRequest request){
+		String userId = (String) request.getSession().getAttribute("userId");
+		long companyId = userService.getCompanyIdByUserId(userId);
+		CompanyPay companyPay = companyPayService.getCompanyPayByCompanyId(companyId);
+		Map<String, String> retMap = new HashMap<>();
+		if(companyPay == null) {
+			retMap.put("resultCode", "0");
+		} else {
+			retMap.put("resultCode", "1");
+			retMap.put("serviceTime", String.valueOf(companyPay.getServiceTime()));
+			retMap.put("payAmount", String.valueOf(companyPay.getPayAmount()));
 		}
 		return retMap;
 	}

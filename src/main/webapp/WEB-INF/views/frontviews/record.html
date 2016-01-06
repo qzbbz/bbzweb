@@ -1,0 +1,42 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="/css/webcss/bootstrap.css">
+		<script src="/js/webjs/jquery-1.10.2.js"></script>
+	</head>
+	<body>
+		<div class="panel panel-default">
+		  <!-- Table -->
+		  <table class="table">
+		    	<th>
+		    		<tr>
+		    			<td>姓名</td>
+		    			<td>客户</td>
+		    			<td>注册时间</td>
+		    			<td>是否付款</td>
+		    		</tr>
+		    	</th>
+		    	<tbody id="table">
+
+				</tbody>    		
+		  </table>
+		</div>
+		<script>
+			$.get("/recommend/getAllRecommendRecords", function(data){
+
+				var table = $("#table");
+
+				for (var email in data) {
+					//console.log(row);
+					var paid = "未付款";
+					if(data[email][2] == "1"){
+						paid = "已付款";
+					}
+					table.append("<tr><td>" + data[email][0] + "</td><td>" + email + "</td><td>" + data[email][1] + "</td><td>" + paid + "</td></tr>");
+				}
+				
+				
+			});
+
+		</script>
+	</body>
+</html>

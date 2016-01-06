@@ -5,7 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,10 +21,17 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import com.wisdom.common.model.CompanyBill;
 import com.wisdom.common.model.Invoice;
+import com.wisdom.common.model.TestInvoice;
+import com.wisdom.common.model.TestInvoiceRecord;
 import com.wisdom.common.model.UserInvoice;
+import com.wisdom.company.mapper.CompanyBankStaMapper;
+import com.wisdom.company.mapper.CompanyBillMapper;
 import com.wisdom.invoice.dao.IInvoiceDao;
 import com.wisdom.invoice.mapper.InvoiceMapper;
+import com.wisdom.invoice.mapper.TestInvoiceMapper;
+import com.wisdom.invoice.mapper.TestInvoiceRecordMapper;
 import com.wisdom.invoice.mapper.UserInvoiceMapper;
 
 @Repository("invoiceDao")
@@ -225,6 +235,225 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 			logger.debug("deleteInvoice result : {}", affectedRows);
 			return affectedRows != 0;
 		} catch (DataAccessException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	@Override
+	public boolean setIsFAOfInvoice(long invoiceId, boolean isFA, String itemId) {
+		String sql = "update test_invoice set is_fixed_assets = ? , modified_time = NOW(), item_id = ? where id = ?";
+		Integer fA = 0;
+		if(isFA){
+			fA = 1;
+		}
+		try {
+			int affectedRows = jdbcTemplate.update(sql, fA, itemId, invoiceId);
+			logger.debug("updateInvoice result : {}", affectedRows);
+			return affectedRows != 0;
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	@Override
+	public boolean addInvoiceArtifact(long invoiceId, double amount, String type, String supplierName, String itemId) {
+		String sql = "insert into test_invoice_artifact (invoice_id, amount, type, supplier_name, item_id, created_time) values (?, ?, ?, ?, ?, NOW())";
+		try {
+			int affectedRows = jdbcTemplate
+					.update(sql,
+							invoiceId,
+							amount,
+							type,
+							supplierName,
+							itemId);
+			logger.debug("addInvoiceArtifact result : {}", affectedRows);
+			return affectedRows != 0;
+		} catch (Exception e) {
+			logger.error("addInvoiceArtifact error:" + e.getMessage());
+		}
+		return false;
+	}
+	@Override
+	public boolean deleteInvoiceArtifactByInvoiceId(long invoiceId) {
+		String sql = "delete from test_invoice_artifact where invoice_id = ?";
+		try {
+			int affectedRows = jdbcTemplate.update(sql, invoiceId);
+			logger.debug("deleteInvoiceArtifactByInvoiceId result : {}", affectedRows);
+			return affectedRows != 0;
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	@Override
+	public long addInvoice(TestInvoice invoice) {
+		logger.debug("Enter addInvoiceAndGetKey");
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		//String title = invoice.getTitle() == null ? "" : invoice.getTitle();
+		//String dateTime = invoice.getDate() == null ? 
+		//		new Timestamp(System.currentTimeMillis()).toString() : String.valueOf(invoice.getDate());
+		//logger.debug("DATE:" + dateTime);
+		//logger.debug("AMOUNT:" + invoice.getAmount());
+		try {
+			int id = jdbcTemplate.update(new PreparedStatementCreator() {
+				public PreparedStatement createPreparedStatement(
+						Connection connection) throws SQLException {
+					String sql = "insert into test_invoice (company_id, file_name, bill_date, is_fixed_assets, created_time, modified_time, cost_center, type, generated)"
+							+ " values (?, ?, ?, ?, NOW(), NOW(), ?, ?, 0)";
+					PreparedStatement ps = connection.prepareStatement(sql,
+							Statement.RETURN_GENERATED_KEYS);
+					ps.setLong(1, invoice.getCompanyId() == null? 0: invoice.getCompanyId());
+					ps.setString(2, invoice.getFileName() == null? "": invoice.getFileName());
+					ps.setString(3, invoice.getBillDate() == null? "": invoice.getBillDate());
+					ps.setInt(4, invoice.getIsFixedAssets() == 0? 0: 1);
+					ps.setString(5, invoice.getCostCenter());
+					ps.setString(6, invoice.getType());
+					return ps;
+				}
+			}, keyHolder);
+			logger.debug("addInvoiceAndGetKey result : {}", keyHolder.getKey().longValue());
+			return keyHolder.getKey().longValue();
+		} catch (DataAccessException e) {
+			logger.error("addInvoiceAndGetKey error." + e.getMessage());
+			e.printStackTrace();
+		}
+		return -1;
+	}
+	@Override
+	public boolean removeRedundantInvoiceArtifact(Timestamp toTime) {
+		String sql = "delete from test_invoice_artifact where id in (select aid from (select a.id as aid from test_invoice v left join test_invoice_artifact a on v.id = a.invoice_id where v.item_id <> a.item_id and (a.created_time < ? ) or a.created_time is null) as delete_items)";
+		DateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
+	    String toTimeStr = timeFormat.format(toTime);  
+		try {
+			int affectedRows = jdbcTemplate.update(sql, toTimeStr);
+			logger.debug("deleteInvoiceArtifactByInvoiceId result : {}", affectedRows);
+			return affectedRows != 0;
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	@Override
+	public List<TestInvoiceRecord> getAllInvoicesByCompanyId(long companyId) {
+
+			List<TestInvoiceRecord> list = null;
+			try {
+				String sql = "select i.id as invoice_id, i.company_id as company_id, group_concat(a.type separator ', ') as type, sum(a.amount) as amount, i.created_time as created_time, i.is_fixed_assets as is_fixed_assets, i.bill_date as bill_date, a.supplier_name as supplier_name , i.file_name as file_name, i.status as status from test_invoice_artifact a  right join test_invoice i on i.item_id = a.item_id where  i.company_id = ? group by i.id";
+				list = jdbcTemplate.query(sql, new Object[]{companyId}, 
+						new RowMapperResultSetExtractor<TestInvoiceRecord>(
+								new TestInvoiceRecordMapper()));
+			} catch (Exception e) {
+				logger.error(e.toString());
+			}
+			return list;
+	}
+	@Override
+	public boolean updateInoviceStatus(long invoiceId, String status) {
+		String sql = "update test_invoice set status = ? where id = ?";
+		try {
+			int affectedRows = jdbcTemplate.update(sql, status, invoiceId);
+			logger.debug("updateInvoiceStatus result : {}", affectedRows);
+			return affectedRows != 0;
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	@Override
+	public List<TestInvoiceRecord> getInvoicesByDate(String date, long companyId) {
+		List<TestInvoiceRecord> list = null;
+		try {
+			String sql = "select i.id as invoice_id, i.company_id as company_id, group_concat(a.type separator ', ') as type, sum(a.amount) as amount, i.created_time as created_time, i.is_fixed_assets as is_fixed_assets, i.bill_date as bill_date, a.supplier_name as supplier_name , i.file_name as file_name, i.status as status from test_invoice_artifact a  right join test_invoice i on i.item_id = a.item_id where  i.company_id = ?";
+			sql += " and i.created_time like '%" + date + "%' group by i.id";
+			list = jdbcTemplate.query(sql, new Object[]{companyId}, 
+					new RowMapperResultSetExtractor<TestInvoiceRecord>(
+							new TestInvoiceRecordMapper()));
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return list;
+	}
+	@Override
+	public boolean deleteTestInvoice(long invoiceId) {
+		String sql = "delete from test_invoice where id = ?";
+		try {
+			int affectedRows = jdbcTemplate.update(sql, invoiceId);
+			logger.debug("deleteTestInvoice result : {}", affectedRows);
+			return affectedRows != 0;
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	@Override
+	public TestInvoiceRecord getInvoiceRecordById(long invoiceId) {
+		TestInvoiceRecord record = null;
+		try {
+			String sql = "select i.id as invoice_id, i.company_id as company_id, group_concat(a.type separator ', ') as type, sum(a.amount) as amount, i.created_time as created_time, i.is_fixed_assets as is_fixed_assets, i.bill_date as bill_date, a.supplier_name as supplier_name , i.file_name as file_name, i.status as status from test_invoice_artifact a  right join test_invoice i on i.item_id = a.item_id where  i.id=? limit 1";
+			record = jdbcTemplate.queryForObject(sql,
+					new Object[] { invoiceId }, new TestInvoiceRecordMapper());
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return record;
+	}
+	
+	
+	@Override
+	public List<TestInvoiceRecord> getAllCompanyInvoicesByCompanyId(long companyId) {
+		List<TestInvoiceRecord> list = null;
+		try {
+			String sql = "select * from test_invoice where company_id=? and cost_center is null";
+			list = jdbcTemplate.query(sql, new Object[]{companyId}, 
+					new RowMapperResultSetExtractor<TestInvoiceRecord>(
+							new TestInvoiceRecordMapper()));
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return list;
+	}
+	@Override
+	public List<TestInvoice> getUngeneratedInvoices(Integer limit) {
+		List<TestInvoice> list = null;
+		try{
+			String sql = "select * from test_invoice where generated = 0 and type = 'wechat' order by created_time asc limit ?";
+			list = jdbcTemplate.query(sql,  new Object[]{limit},
+					new RowMapperResultSetExtractor<TestInvoice>(
+							new TestInvoiceMapper()));
+		}catch(Exception e){
+			logger.error(e.toString());
+		}
+		return list;
+	}
+	@Override
+	public boolean setInvoiceToGenerated(long invoiceId) {
+		String sql = "update test_invoice set generated = 1 where id = ?";
+		try{
+			int affectedRows = jdbcTemplate.update(sql, invoiceId);
+			return affectedRows != 0;
+		}catch(DataAccessException e){
+			e.printStackTrace();
+		}
+		return false;
+	}
+	@Override
+	public boolean setInvoiceToInvalid(long invoiceId) {
+		String sql = "update test_invoice set generated = -1 where id = ?";
+		try{
+			int affectedRows = jdbcTemplate.update(sql, invoiceId);
+			return affectedRows != 0;
+		}catch(DataAccessException e){
+			e.printStackTrace();
+		}
+		return false;
+	}
+	@Override
+	public boolean setInvoiceComment(long invoiceId, String comment) {
+		String sql = "update test_invoice set comment = ? where id = ?";
+		try{
+			int affectedRows = jdbcTemplate.update(sql, comment, invoiceId);
+			return affectedRows != 0;
+		}catch(DataAccessException e){
 			e.printStackTrace();
 		}
 		return false;

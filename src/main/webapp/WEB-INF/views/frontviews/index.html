@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <meta name="description" content="">
   <link href="style/css/screen.css" rel="stylesheet" type="text/css" media="screen, projection" />
   <link rel="stylesheet" type="text/css" href="../../css/webcss/youngwisdom.css">
     <link rel="stylesheet" type="text/css" href="../../css/webcss/bootstrap.css">
@@ -203,7 +204,26 @@ nav a:hover:after {
   width: 100%;
 }
   
+  ::-webkit-scrollbar-thumb{  
+   background-color:#FB4446;  
+   height:50px;  
+   outline-offset:-2px;  
+   outline:2px solid #fff;  
+   -webkit-border-radius:4px;  
+   border: 2px solid #fff;  
+}  
+
     </style>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?854ba56143ecfad6d4dafde971f96770";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
 </head>
 <body class="new-home video-bg">
 <header id = "index-header" class="header-new js-header-new" >
@@ -283,8 +303,8 @@ nav a:hover:after {
     <div id="account-form_container" class="home-video-form hide-for-small signup-form_container ">
       <div id="home-introduction">
         <h1 style="color:white">元升专业服务</h1>
-        <p>元升是一家在线财务咨询公司
-          旗下的帮帮账产品为您提供线上专业会计记账和报税服务</p>
+        <p>元升是一家互联网+科技创新公司
+        旗下的帮帮账产品是为您提供财务和税务解决方案的线上服务平台</p>
         <p><strong>现在注册即可免费试用一个月</strong></p>
         <div class="play-btn hide-for-small" id="movieclick">
           <div class="play-btn-arrow"></div>
@@ -368,7 +388,8 @@ nav a:hover:after {
 </div>
 <div class="new-home__section new-home__section--no-top-padding">
   <h2>通过帮帮账</h2>
-  <p>您可以获得专业的线上会计和税务人员为您准备财务和税务报表，您可以通过简洁易用的软件直接审阅报表。 </p>
+  <p style="font-size:120%;">您可以获得专业的线上与线下的会计和税务人员为您准备财务和税务报表。</p>
+  <p style="font-size:120%;">您可以通过简洁易用的软件直接审阅报表。 </p>
   <div class="new-home__section__background"></div>
   
   <div id="screen-intro">
@@ -430,7 +451,7 @@ nav a:hover:after {
     </div>
     <div class="columns large-4 padding-middle">
       <p><img src="style/image/person-genderless-red-(1).png" style="height:16px; width:16px;"  class="iconic iconic-sm icon-blue" /><strong>财务专家</strong></p>
-      <p>无论你是对报税、最新的会计准则，或是对投资者的尽职调查与审计有疑问于困惑，帮帮账有最专业的人士为您提供帮助与辅导。</p>
+      <p>无论你是对报税、最新的会计准则，或是对投资者的尽职调查与审计有疑问与困惑，帮帮账有最专业的人士为您提供帮助与辅导。</p>
     </div>
     <div class="columns large-4 padding-end">
       <p><img src="style/image/timer.png" style="height:16px; width:16px;"  class="iconic iconic-sm icon-brown" /><strong>税务专家</strong></p>
@@ -442,7 +463,7 @@ nav a:hover:after {
   <h2>我们的客户都这样说</h2>
   <div class="new-home__clients__container">
     <div class="new-home__clients__container__half new-home__clients__container__half--left">
-      <div class="new-home__clients__client">
+      <!--<div class="new-home__clients__client">
         <div class="new-home__clients__client__bubble">
           <span>没有帮帮账的帮助，不像在运营我自己的公司。</span>
         </div>
@@ -452,7 +473,7 @@ nav a:hover:after {
           <span class="new-home__clients__client__info__company">闪蝶科技</span>
           
         </div>
-      </div>
+      </div>-->
       <div class="new-home__clients__client">
         <div class="new-home__clients__client__bubble">
           <span>我从来没有遇到一个团队对记账报税服务如此热情，帮帮账轻松为我们解决了大问题。</span>
@@ -467,10 +488,10 @@ nav a:hover:after {
         <div class="new-home__clients__client__bubble">
           <span>没有帮帮账的帮助，不像在运营我自己的公司。</span>
         </div>
-        <img class="new-home__clients__client__head" src="style/images/customer3.jpg" />
+        <img class="new-home__clients__client__head" src="style/images/customer4.jpg" />
         <div class="new-home__clients__client__info">
-          <span class="new-home__clients__client__info__name"><a target="_blank" class="customer" href="http://woyoli.com">Piano Chen</a></span>
-          <span class="new-home__clients__client__info__company">我有礼</span>
+          <span class="new-home__clients__client__info__name"><a class="customer">邓佳慰</a></span>
+          <span class="new-home__clients__client__info__company">上海波启餐饮管理有限公司</span>
         </div>
       </div>
     </div>
@@ -658,6 +679,7 @@ nav a:hover:after {
       <embed  height=480 width=640 src="../../img/webimg/qz.swf" style="margin-left: 5%;">
 
   </div>
+  <div id="bao" style="position:fixed; bottom:0px; right:0px; width:252px; height:252px; z-index:1000;"><a href="javascript:shut()" style="float:right; display:block; z-index:10000000;border:1px solid #40C5ED;" class="gb_all">关闭</a><a href="http://api.renrenbx.com/mobile/pcGeneraliInfo.html"><img src="style/image/donghua.gif"></a></div>
           <!--      <script type="text/javascript" src="../../js/webjs/main.page.utils.js"></script>
                 <script type="text/javascript" src="../../js/webjs/jquery-1.11.1.js"></script> 
                <script type="text/javascript" src="../../js/webjs/jquery-1.8.1.min.js"></script>-->
@@ -704,6 +726,12 @@ nav a:hover:after {
  $("#movieshow").dialog("close");
   //  movieV.pause();
   }*/
+  var code = window.location.search.substring(1);
+  if(code){
+  	$.post("/recommend/addRecomendInfo", {"code": code}, function(data){
+		  console.log(code);
+  	});
+  }
  function signUp(email, pwd, errorMsgObj){
 	 
 	 var type = 2;
@@ -723,6 +751,14 @@ nav a:hover:after {
 				} else if(data.error_code == '0') {
 					if(type == 2) {
 						errorMsgObj.hide();
+						//Add recommender information
+						var code = window.location.search.substring(1);
+						if (code != ""){
+							$.post("/recommend/addRecommendRecord", {"email":email, "code": code},function(data){
+								var info = data;
+							
+							});
+						}
 						window.location.href = "/views/frontviews/signup-steps.html";
 					} else if(type == 1) {
 						errorMsgObj.html("<p style='color: #419088;'>注册成功！3秒后系统将自动转向登陆界面......</p>");
@@ -1009,7 +1045,9 @@ $("#mobile-signup-btn-bottom").click(function(){
         var t = $(".header-mobile-new");
         t.toggleClass("menu-open");
     });
-
+	$(".gb_all").click(function(event){
+		$("#bao").hide();
+	})
 </script>
 </body>
 </html>

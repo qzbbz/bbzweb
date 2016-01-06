@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link href="/css/weixincss/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="/css/weixincss/mui.picker.min.css" />
+		<style>
+			.upload-file {
+				position: fixed;
+				z-index: 998;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				left: 0;
+				background-color: rgba(0, 0, 0, .8);
+			}
+			
+			.dialog {
+				position: fixed;
+				z-index: 998;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				left: 0;
+				background-color: rgba(0, 0, 0, .4);
+			}
+			
+			table {
+				overflow: hidden;
+				border: 1px solid #d3d3d3;
+				background: #fefefe;
+				width:100%;
+				margin: 10px 0px;
+				-moz-border-radius: 5px;
+				/* FF1+ */
+				-webkit-border-radius: 5px;
+				/* Saf3-4 */
+				border-radius: 5px;
+				-moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+				-webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+			}
+			
+			th,
+			td {
+				padding: 2px 4px 2px;
+				text-align: center;
+			}
+			
+			th {
+				padding-top: 5px;
+				text-shadow: 1px 1px 1px #fff;
+				background: #e8eaeb;
+				font-size: 15px;
+				color:#838B8B;
+			}
+			
+			td {
+				border-top: 1px solid #e0e0e0;
+				border-right: 1px solid #e0e0e0;
+				font-size: 15px;
+				color:#838B8B;
+			}
+			
+			tr.odd-row td {
+				background: #f6f6f6;
+			}
+			
+			td.first,
+			th.first {
+				text-align: left
+			}
+			
+			td.last {
+				border-right: none;
+			}
+			
+			td {
+				background: -moz-linear-gradient(100% 25% 90deg, #fefefe, #f9f9f9);
+				background: -webkit-gradient(linear, 0% 0%, 0% 25%, from(#f9f9f9), to(#fefefe));
+			}
+			
+			tr.odd-row td {
+				background: -moz-linear-gradient(100% 25% 90deg, #f6f6f6, #f1f1f1);
+				background: -webkit-gradient(linear, 0% 0%, 0% 25%, from(#f1f1f1), to(#f6f6f6));
+			}
+			
+			th {
+				background: -moz-linear-gradient(100% 20% 90deg, #e8eaeb, #ededed);
+				background: -webkit-gradient(linear, 0% 0%, 0% 20%, from(#ededed), to(#e8eaeb));
+			}
+			
+			tr:first-child th.first {
+				-moz-border-radius-topleft: 5px;
+				-webkit-border-top-left-radius: 5px;
+				/* Saf3-4 */
+			}
+			
+			tr:first-child th.last {
+				-moz-border-radius-topright: 5px;
+				-webkit-border-top-right-radius: 5px;
+				/* Saf3-4 */
+			}
+			
+			tr:last-child td.first {
+				-moz-border-radius-bottomleft: 5px;
+				-webkit-border-bottom-left-radius: 5px;
+				/* Saf3-4 */
+			}
+			
+			tr:last-child td.last {
+				-moz-border-radius-bottomright: 5px;
+				-webkit-border-bottom-right-radius: 5px;
+				/* Saf3-4 */
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="mui-navbar-inner mui-bar mui-bar-nav">
+			<h1 class="mui-title" style='text-align: center;'>资产负债表</h1>
+		</div>
+		<div class="mui-page-content">
+			<div id="data_loading" class="mui-loading" style="margin-top:50%;">
+				<div class="mui-spinner"></div>
+				<div style="text-align: center;">正在加载数据</div>
+			</div>
+			<div id="tips_info" style="display:none;margin-top:50%;">
+				<div style="text-align: center;" id="tips_info_detail">服务器暂时无法处理请求，请稍后重试！</div>
+			</div>
+			<div class="mui-scroll-wrapper" id="mui_main_page1" style="display:none;">
+				<div class="mui-scroll">
+					<div class="mui-card" style="margin-top:55px;margin-left:5px;margin-right:5px;">
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell">
+								<h5>当前选择的月份为：<span id="current_select_date">2015-12</span></h5>
+								<button data-options='{"type":"month"}' class="mui-btn mui-btn-primary">月份选择</button>
+							</li>
+						</ul>
+					</div>
+					<div style="margin-left:5px;margin-right: 5px;">
+						<table cellspacing="0">
+							<tr>
+								<th>资产</th>
+								<th nowrap="nowrap">期末余额</th>
+								<th nowrap="nowrap">年初余额</th>
+							</tr>
+							<tr>
+								<td style="color:#7D9EC0;font-weight:bold;">流动资产：</td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>货币资金</td>
+								<td id="monetary_resources_ending_balance"></td>
+								<td id="monetary_resources_beginning_balance" ></td>
+							</tr>
+							<tr>
+								<td>短期投资</td>
+								<td id="short_term_investments_ending_balance"></td>
+								<td id="short_term_investments_beginning_balance" ></td>
+							</tr>
+							<tr>
+								<td>应收票据</td>
+								<td id="bill_receivable_ending_balance"></td>
+								<td id="bill_receivable_beginning_balance" ></td>
+							</tr>
+							<tr>
+								<td>应收账款</td>
+								<td id="accounts_receivable_ending_balance"></td>
+								<td id="accounts_receivable_beginning_balance" ></td>
+							</tr>
+                            	<tr>
+								<td>预付账款</td>
+								<td id="prepayment_ending_balance"></td>
+								<td id="prepayment_beginning_balance" ></td>
+							</tr>
+                            	<tr>
+								<td>应收股利</td>
+								<td id="dividends_receivable_ending_balance"></td>
+								<td id="dividends_receivable_beginning_balance" ></td>
+							</tr>
+                            	<tr>
+								<td>应收利息</td>
+								<td id="interest_receivable_ending_balance"></td>
+								<td id="interest_receivable_beginning_balance" ></td>
+							</tr>
+                            	<tr>
+								<td>其他应收款</td>
+								<td id="other_receivables_ending_balance"></td>
+								<td id="other_receivables_beginning_balance" ></td>
+							</tr>
+                            	<tr>
+								<td>存货</td>
+								<td id="stock_ending_balance"></td>
+								<td id="stock_beginning_balance" ></td>
+							</tr>
+                            	<tr>
+								<td>其中:原材料</td>
+								<td id="stock_raw_materials_ending_balance"></td>
+								<td id="stock_raw_materials_beginning_balance" ></td>
+							</tr>
+                            	<tr>
+								<td>在产品</td>
+								<td id="stock_product_ending_balance"></td>
+								<td id="stock_product_beginning_balance" ></td>
+							</tr>
+                            	<tr>
+								<td>库存商品</td>
+								<td id="stock_merchandise_inventory_ending_balance"></td>
+								<td id="stock_merchandise_inventory_beginning_balance" ></td>
+							</tr>
+                            	<tr>
+								<td>周转材料</td>
+								<td id="stock_revolving_materials_ending_balance"></td>
+								<td id="stock_revolving_materials_beginning_balance" ></td>
+							</tr>
+                            	<tr>
+								<td>其他流动资产</td>
+								<td id="other_current_assets_ending_balance"></td>
+								<td id="other_current_assets_beginning_balance" ></td>
+							</tr>
+                            	<tr>
+								<td  style="color:#7D9EC0;font-weight:bold;">流动资产合计</td>
+								<td id="total_current_assets_ending_balance"></td>
+								<td id="total_current_assets_beginning_balance" ></td>
+							</tr>
+
+							<tr>
+								<td style="color:#7D9EC0;font-weight:bold;">非流动资产：</td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>长期债券投资</td>
+								<td id="long_term_investments_in_bonds_ending_balance"></td>
+								<td id="long_term_investments_in_bonds_beginning_balance" ></td>
+							</tr>
+							<tr>
+								<td>长期股权投资</td>
+								<td id="long_term_investment_on_stocks_ending_balance"></td>
+								<td id="long_term_investment_on_stocks_beginning_balance" ></td>
+							</tr>
+							<tr>
+								<td>固定资产原价</td>
+								<td id="fixed_assets_original_cost_ending_balance"></td>
+								<td id="fixed_assets_original_cost_beginning_balance" ></td>
+							</tr>
+							<tr>
+								<td>减：累计折旧</td>
+								<td id="accumulated_depreciation_ending_balance"></td>
+								<td id="accumulated_depreciation_beginning_balance" ></td>
+							</tr>
+                            	<tr>
+								<td>固定资产账面价值</td>
+								<td id="book_value_of_fixed_assets_ending_balance"></td>
+								<td id="book_value_of_fixed_assets_beginning_balance" ></td>
+							</tr>
+                            	<tr>
+								<td>在建工程</td>
+								<td id="construction_in_process_ending_balance"></td>
+								<td id="construction_in_process_beginning_balance" ></td>
+							</tr>
+                            	<tr>
+								<td>工程物资</td>
+								<td id="construction_materials_ending_balance"></td>
+								<td id="construction_materials_beginning_balance" ></td>
+							</tr>
+                            	<tr>
+								<td>固定资产清理</td>
+								<td id="removal_of_fixed_assets_ending_balance"></td>
+								<td id="removal_of_fixed_assets_beginning_balance" ></td>
+							</tr>
+                            	<tr>
+								<td>生产性生物资产</td>
+								<td id="biological_assets_ending_balance"></td>
+								<td id="biological_assets_beginning_balance" ></td>
+							</tr>
+                            	<tr>
+								<td>无形资产</td>
+								<td id="intangible_assets_ending_balance"></td>
+								<td id="intangible_assets_beginning_balance" ></td>
+							</tr>
+                            	<tr>
+								<td>开发支出</td>
+								<td id="development_expenditure_ending_balance"></td>
+								<td id="development_expenditure_beginning_balance" ></td>
+							</tr>
+                            	<tr>
+								<td>长期待摊费用</td>
+								<td id="long_term_prepaid_expenses_ending_balance"></td>
+								<td id="long_term_prepaid_expenses_beginning_balance" ></td>
+							</tr>
+                            	<tr>
+								<td>其他非流动资产</td>
+								<td id="other_non_current_assets_ending_balance"></td>
+								<td id="other_non_current_assets_beginning_balance" ></td>
+							</tr>
+                            	<tr>
+								<td style="color:#7D9EC0;font-weight:bold;">非流动资产合计</td>
+								<td id="total_non_current_assets_ending_balance"></td>
+								<td id="total_non_current_assets_beginning_balance" ></td>
+							</tr>
+                            	<tr>
+								<td style="color:#7D9EC0;font-weight:bold;">资产总计</td>
+								<td id="total_assets_ending_balance"></td>
+								<td id="total_assets_beginning_balance" ></td>
+							</tr>							
+						</table>
+						<table cellspacing="0">
+							<tr>
+								<th>负债和所有者权益</th>
+								<th nowrap="nowrap">期末余额</th>
+								<th nowrap="nowrap">年初余额</th>
+							</tr>
+							<tr>
+								<td style="color:#7D9EC0;font-weight:bold;">流动负债：</td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>短期借款</td>
+								<td id="short_loan_ending_balance"></td>
+								<td id="short_loan_beginning_balance" ></td>
+							</tr>
+							<tr>
+								<td>应付票据</td>
+								<td id="notes_payable_ending_balance"></td>
+								<td id="notes_payable_beginning_balance" ></td>
+							</tr>
+							<tr>
+								<td>应付账款</td>
+								<td id="monetary_resources_ending_balance"></td>
+								<td id="monetary_resources_beginning_balance" ></td>
+							</tr>
+							<tr>
+								<td>预收账款</td>
+								<td id="payable_account_ending_balance"></td>
+								<td id="payable_account_beginning_balance" ></td>
+							</tr>
+							<tr>
+								<td>应付职工薪酬</td>
+								<td id="employee_benefits_payable_ending_balance"></td>
+								<td id="employee_benefits_payable_beginning_balance" ></td>
+							</tr>
+							<tr>
+								<td>应交税费</td>
+								<td id="taxes_payable_ending_balance"></td>
+								<td id="taxes_payable_beginning_balance" ></td>
+							</tr>
+							<tr>
+								<td>应付利息</td>
+								<td id="interest_payable_ending_balance"></td>
+								<td id="interest_payable_beginning_balance" ></td>
+							</tr>
+							<tr>
+								<td>应付利润</td>
+								<td id="profit_payable_ending_balance"></td>
+								<td id="profit_payable_beginning_balance" ></td>
+							</tr>
+							<tr>
+								<td>其他应付款</td>
+								<td id="accounts_payable_others_ending_balance"></td>
+								<td id="accounts_payable_others_beginning_balance" ></td>
+							</tr>
+							<tr>
+								<td>其他流动负债</td>
+								<td id="other_current_liabilities_ending_balance"></td>
+								<td id="other_current_liabilities_beginning_balance" ></td>
+							</tr>
+							<tr>
+								<td style="color:#7D9EC0;font-weight:bold;">流动负债合计</td>
+								<td id="total_current_liabilities_ending_balance"></td>
+								<td id="total_current_liabilities_beginning_balance" ></td>
+							</tr>
+                            
+							<tr>
+								<td style="color:#7D9EC0;font-weight:bold;">非流动负债：</td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>长期借款</td>
+								<td id="long_loan_ending_balance"></td>
+								<td id="long_loan_beginning_balance" ></td>
+							</tr>
+							<tr>
+								<td>长期应付款</td>
+								<td id="long_term_payables_ending_balance"></td>
+								<td id="long_term_payables_beginning_balance" ></td>
+							</tr>
+							<tr>
+								<td>递延收益</td>
+								<td id="deferred_income_ending_balance"></td>
+								<td id="deferred_income_beginning_balance" ></td>
+							</tr>
+							<tr>
+								<td>其他非流动负债</td>
+								<td id="other_non_current_liabilities_ending_balance"></td>
+								<td id="other_non_current_liabilities_beginning_balance" ></td>
+							</tr>
+							<tr>
+								<td>非流动负债合计/td>
+								<td id="total_non_current_liabilities_ending_balance"></td>
+								<td id="total_non_current_liabilities_beginning_balance" ></td>
+							</tr>
+							<tr>
+								<td>负债合计</td>
+								<td id="total_liabilities_ending_balance"></td>
+								<td id="total_liabilities_beginning_balance" ></td>
+							</tr>
+                            
+                            
+							<tr>
+								<td style="color:#7D9EC0;font-weight:bold;">所有者权益（或股东权益）：</td>
+								<td></td>
+                                <td></td>
+                                
+							</tr>
+							<tr>
+								<td>实收资本（或股本）</td>
+								<td id="paid_in_capital_ending_balance"></td>
+								<td id="paid_in_capital_beginning_balance" ></td>
+							</tr>
+							<tr>
+								<td>资本公积</td>
+								<td id="capital_reserve_ending_balance"></td>
+								<td id="capital_reserve_beginning_balance" ></td>
+							</tr>
+							<tr>
+								<td>盈余公积</td>
+								<td id="earned_surplus_ending_balance"></td>
+								<td id="earned_surplus_beginning_balance" ></td>
+							</tr>
+							<tr>
+								<td>未分配利润</td>
+								<td id="undistributed_profit_ending_balance"></td>
+								<td id="undistributed_profit_beginning_balance" ></td>
+							</tr>
+							<tr>
+								<td>所有者权益（或股东权益）合计</td>
+								<td id="total_equities_ending_balance"></td>
+								<td id="total_equities_beginning_balance" ></td>
+							</tr>
+							<tr>
+								<td>负债和所有者权益（或股东权益）总计</td>
+								<td id="total_liabilities_and_owner_equity_ending_balance"></td>
+								<td id="total_liabilities_and_owner_equity_beginning_balance" ></td>
+							</tr>						
+						</table>
+					</div>
+					<div style="margin-left:5px;margin-right: 5px;margin-bottom:30px;">
+							<h5 >制表人：<span id="tabulator"></span></h5>
+							<h5 >编制单位：<span id="preparedby1"></span></h5>
+							<h5 >财务负责人：<span id="finance_chief"></span></h5>
+							<h5 >企业负责人：<span id="company_controller"></span></h5>
+							<h5 >表中数字截止日期：<span id="expiry_date" ></span></h5>
+							<h5 >表中数字单位：<span>元</span></h5>
+					</div>
+				</div>
+			</div>
+			<div id="scrollToTop" style="position:fixed;bottom: 75px;right:5px;z-index:9999999999;"><img class="scroll_to_top" style="width:25px;" src="/img/weixinimg/scroll_top.png"></div>
+			<div id="scrollToBottom" style="position:fixed;bottom: 50px;right:5px;z-index:9999999999;"><img class="scroll_to_bottom" style="width:25px;" src="/img/weixinimg/scroll_bottom.png"></div>
+		</div>
+	</body>
+	<script src="/js/weixinjs/mui.min.js"></script>
+	<script src="/js/weixinjs/jquery-1.11.1.min.js"></script>
+	<script src="/js/weixinjs/mui.picker.min.js"></script>
+	<script src="/js/weixinjs/asset_sheet.js"></script>
+	<script>
+		(function($) {
+			$.init();
+			var result = $('#current_select_date')[0];
+			var btns = $('.mui-btn');
+			btns.each(function(i, btn) {
+				btn.addEventListener('tap', function() {
+					var optionsJson = this.getAttribute('data-options') || '{}';
+					var options = JSON.parse(optionsJson);
+					var id = this.getAttribute('id');
+					var picker = new $.DtPicker(options);
+					picker.show(function(rs) {
+						result.innerText = rs.text;
+						picker.dispose();
+						getAssetSheetData(result.innerText);
+					});
+				}, false);
+			});
+		})(mui);
+		$(function() {
+			$("table tr:nth-child(odd)").addClass("odd-row");
+			$("table td:first-child, table th:first-child").addClass("first");
+			$("table td:last-child, table th:last-child").addClass("last");
+		});
+		mui("#scrollToTop").on("tap", ".scroll_to_top", function(){
+			mui('#mui_main_page1').scroll().scrollTo(0, 0);
+		});
+		mui("#scrollToBottom").on("tap", ".scroll_to_bottom", function(){			
+			mui('#mui_main_page1').scroll().scrollToBottom();
+		})
+	</script>
+
+</html>

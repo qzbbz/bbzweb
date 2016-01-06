@@ -6,9 +6,11 @@ import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -29,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.wisdom.accounter.service.IAccounterService;
 import com.wisdom.common.model.Accounter;
 import com.wisdom.common.model.SalarySocialSecurity;
+import com.wisdom.invoice.service.IInvoiceService;
 import com.wisdom.user.service.IUserService;
 import com.wisdom.web.api.ICompanyBillApi;
 import com.wisdom.web.utils.Base64Converter;
@@ -49,6 +52,9 @@ public class AccounterController {
 	
 	@Autowired
 	private IUserService userService;
+	
+	@Autowired
+	private IInvoiceService invoiceService;
 
 	@RequestMapping("/getAllAccounterCareer")
 	@ResponseBody
@@ -244,9 +250,10 @@ public class AccounterController {
 	public Map<String, List<Map<String, String>>> getAllCompanyExpenseByCondition(HttpServletRequest request) {
 		String userId = (String) request.getSession().getAttribute(
 				SessionConstant.SESSION_USER_ID);
-		String conditionType = request.getParameter("conditionType");
-		String conditionValue = request.getParameter("conditionValue");
-		return accounterService.getAllCompanyExpenseByCondition(userId, conditionType, conditionValue);
+		Map conditions = request.getParameterMap();
+
+		
+		return accounterService.getAllCompanyExpenseByCondition(userId, conditions);
 	}
 	
 	@RequestMapping("/accounter/getTakeBillWay")
@@ -324,10 +331,24 @@ public class AccounterController {
 		String type = (String)request.getParameter("type");
 		String supplyName = (String)request.getParameter("supplyName");
 		String isFixedAssets = (String)request.getParameter("isFixedAssets");
-		if(companyBillApi.modifyCompanyBill(id, amount, type, supplyName, isFixedAssets)) {
+		Long invoiceId = Long.parseLong(id);
+		List<Map<String, String>> contentList = new ArrayList<>();
+		Map<String, String> content = new HashMap<>();
+		content.put("description", type);
+		content.put("amount", amount);
+		content.put("supplier", supplyName);
+		contentList.add(content);
+		Boolean fA = false;
+		if (isFixedAssets.equals("1")){
+			fA = true;
+		}
+		String itemId = UUID.randomUUID().toString();
+		try {
+			invoiceService.addInvoiceArtifact(invoiceId, contentList, itemId);
+			invoiceService.setIsFAOfInvoice(invoiceId, fA, itemId);
 			retMap.put("error_code", "0");
-		} else {
-			 retMap.put("error_code", "1");
+		}catch(Exception e){
+			retMap.put("error_code", "1");
 		}
 		return retMap;
 	}

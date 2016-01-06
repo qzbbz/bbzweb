@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<title></title>
+		<link href="../../css/weixincss/mui.min.css" rel="stylesheet" />
+		<link href="../../css/weixincss/iconfont.css" rel="stylesheet" />
+		<link href="../../css/weixincss/circle-progress.css" rel="stylesheet" />
+		<style>
+			.mui-preview-image.mui-fullscreen {
+				position: fixed;
+				z-index: 20;
+				background-color: #000;
+			}
+			.mui-preview-header,
+			.mui-preview-footer {
+				position: absolute;
+				width: 100%;
+				left: 0;
+				z-index: 10;
+			}
+			.mui-preview-header {
+				height: 44px;
+				top: 0;
+			}
+			.mui-preview-footer {
+				height: 50px;
+				bottom: 0px;
+			}
+			.mui-preview-header .mui-preview-indicator {
+				display: block;
+				line-height: 25px;
+				color: #fff;
+				text-align: center;
+				margin: 15px auto 4;
+				width: 70px;
+				background-color: rgba(0, 0, 0, 0.4);
+				border-radius: 12px;
+				font-size: 16px;
+			}
+			.mui-preview-image {
+				display: none;
+				-webkit-animation-duration: 0.5s;
+				animation-duration: 0.5s;
+				-webkit-animation-fill-mode: both;
+				animation-fill-mode: both;
+			}
+			.mui-preview-image.mui-preview-in {
+				-webkit-animation-name: fadeIn;
+				animation-name: fadeIn;
+			}
+			.mui-preview-image.mui-preview-out {
+				background: none;
+				-webkit-animation-name: fadeOut;
+				animation-name: fadeOut;
+			}
+			.mui-preview-image.mui-preview-out .mui-preview-header,
+			.mui-preview-image.mui-preview-out .mui-preview-footer {
+				display: none;
+			}
+			.mui-zoom-scroller {
+				position: absolute;
+				display: -webkit-box;
+				display: -webkit-flex;
+				display: flex;
+				-webkit-box-align: center;
+				-webkit-align-items: center;
+				align-items: center;
+				-webkit-box-pack: center;
+				-webkit-justify-content: center;
+				justify-content: center;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				top: 0;
+				width: 100%;
+				height: 100%;
+				margin: 0;
+				-webkit-backface-visibility: hidden;
+			}
+			.mui-zoom {
+				-webkit-transform-style: preserve-3d;
+				transform-style: preserve-3d;
+			}
+			.mui-slider .mui-slider-group .mui-slider-item img {
+				width: auto;
+				height: auto;
+				max-width: 100%;
+				max-height: 100%;
+			}
+			.mui-android-4-1 .mui-slider .mui-slider-group .mui-slider-item img {
+				width: 100%;
+			}
+			.mui-android-4-1 .mui-slider.mui-preview-image .mui-slider-group .mui-slider-item {
+				display: inline-table;
+			}
+			.mui-android-4-1 .mui-slider.mui-preview-image .mui-zoom-scroller img {
+				display: table-cell;
+				vertical-align: middle;
+			}
+			.mui-preview-loading {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				top: 0;
+				left: 0;
+				display: none;
+			}
+			.mui-preview-loading.mui-active {
+				display: block;
+			}
+			.mui-preview-loading .mui-spinner-white {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				margin-left: -25px;
+				margin-top: -25px;
+				height: 50px;
+				width: 50px;
+			}
+			.mui-preview-image img.mui-transitioning {
+				-webkit-transition: -webkit-transform 0.5s ease, opacity 0.5s ease;
+				transition: transform 0.5s ease, opacity 0.5s ease;
+			}
+			@-webkit-keyframes fadeIn {
+				0% {
+					opacity: 0;
+				}
+				100% {
+					opacity: 1;
+				}
+			}
+			@keyframes fadeIn {
+				0% {
+					opacity: 0;
+				}
+				100% {
+					opacity: 1;
+				}
+			}
+			@-webkit-keyframes fadeOut {
+				0% {
+					opacity: 1;
+				}
+				100% {
+					opacity: 0;
+				}
+			}
+			@keyframes fadeOut {
+				0% {
+					opacity: 1;
+				}
+				100% {
+					opacity: 0;
+				}
+			}
+			p img {
+				max-width: 100%;
+				height: auto;
+			}
+			.upload-file {
+				position: fixed;
+				z-index: 998;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				left: 0;
+				background-color: rgba(0, 0, 0, .8);
+			}
+			.dialog {
+				position: fixed;
+				z-index: 998;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				left: 0;
+				background-color: rgba(0, 0, 0, .4);
+			}
+			.mui-bar~.mui-content .mui-fullscreen {
+				top: 44px;
+				height: auto;
+			}
+			.mui-pull-top-tips {
+				position: absolute;
+				top: -20px;
+				left: 50%;
+				margin-left: -25px;
+				width: 40px;
+				height: 40px;
+				border-radius: 100%;
+				z-index: 999;
+				margin-top: 60px;
+			}
+			
+			.mui-table-view.mui-grid-view .mui-table-view-cell{
+				display:inline !important;
+			}
+			
+			.info {
+				width:inherit !important;
+			}
+			
+			.mui-pull-left{
+				width: 180px;
+				height: 120px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<h1 class="mui-title">个人发票上传</h1>
+		</header>
+		<div class="mui-content">
+			<div id="data_loading" class="mui-loading" style="margin-top:50%;">
+				<div class="mui-spinner"></div>
+				<div style="text-align: center;">正在加载数据</div>
+			</div>
+			<div id="tips_info" style="display:none;margin-top:50%;">
+				<div style="text-align: center;" id="tips_info_detail">服务器暂时无法处理请求，请稍后重试！</div>
+			</div>		
+			<div class="mui-card" id="add_invoice_page" style="display:none;margin:10px 5px;height:80px;line-height: 80px;">
+				<div style="background-color: white;height:70px;margin-top:5px;margin-left: 5px;" class="mui-pull-left">
+					<div style="background-color: white;height:70px;">
+						<p style="margin-top: -5px;margin-left: 10px;">添加发票图像</p>
+					</div>
+				</div>
+				<div class="mui-pull-right" style="margin-top:5px;">
+					<input id="fapiaoluru_addInvoiceImage" type="file" capture="camera" accept="image/*" multiple hidefocus='true' style="position: absolute;float:right;width:50px;height:50px;opacity: 0;">
+					<span class="mui-icon iconfont icon-tianjia" style="font-size: 70px;color:#C3C3C6;margin-top:-10px;margin-right:5px;"></span>
+				</div>
+			</div>
+			<div id="tips_image" class="mui-control-content mui-active" style="display:none;height:260px;">
+				<ul class="mui-table-view mui-grid-view">
+					<li class="mui-table-view-cell mui-media mui-col-xs-12">
+						<img class="mui-media-object" src="../../img/weixinimg/empty_invoice.png">
+					</li>
+				</ul>
+			</div>
+			<div id="invoice_img_list_root_div" class="mui-control-content mui-active" style="display:none;height:200px;display:none;">
+				<div id="scroll" class="mui-scroll-wrapper">
+					<div class="mui-scroll">
+						<ul class="mui-table-view mui-grid-view" id="invoice_img_list_ul"></ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<footer id="fapiaoluru_submit" class="mui-bar mui-bar-footer" style="display:none;"><h1 class="mui-title">上传发票</h1></footer>
+	</body>
+	<script src="../../js/weixinjs/mui.min.js"></script>
+	<script src="../../js/weixinjs/mui.previewimage.js"></script>
+	<script src="../../js/weixinjs/mui.zoom.min.js"></script>
+	<script src="../../js/weixinjs/jquery-1.11.1.min.js"></script>
+	<script src="../../js/weixinjs/circle-progress.js"></script>
+	<script src="../../js/weixinjs/person_upload_invoice.js"></script>
+</html>

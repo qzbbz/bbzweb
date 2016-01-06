@@ -1,10 +1,12 @@
 package com.wisdom.company.dao.impl;
 
 import java.sql.Connection;
+
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -12,17 +14,25 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import com.wisdom.common.model.CompanyAndPayModel;
+import com.wisdom.common.model.CompanyBankSta;
 import com.wisdom.common.model.CompanyBill;
 import com.wisdom.common.model.CompanyPay;
+import com.wisdom.common.model.Recommender;
 import com.wisdom.company.dao.ICompanyBillDao;
 import com.wisdom.company.dao.ICompanyPayDao;
+import com.wisdom.company.mapper.CompanyAndPayModelMapper;
+import com.wisdom.company.mapper.CompanyBankStaMapper;
 import com.wisdom.company.mapper.CompanyBillMapper;
 import com.wisdom.company.mapper.CompanyPayMapper;
+import com.wisdom.recommender.mapper.RecommenderMapper;
 
 @Repository("companyPayDao")
 public class CompanyPayDaoImpl implements ICompanyPayDao {
@@ -86,9 +96,9 @@ public class CompanyPayDaoImpl implements ICompanyPayDao {
 	}
 
 	@Override
-	public boolean updateCompanyPayStatusAndTimeByOrderNo(String orderNo, int status, Timestamp time, String contractFile) {
-		String sql = "update company_pay set pay_status=?, create_time=?, contract_file=? where order_no=?";
-		int affectedRows = jdbcTemplate.update(sql, status, time, contractFile, orderNo);
+	public boolean updateCompanyPayStatusAndTimeByOrderNo(String orderNo, int status, Timestamp time, String contractFile, Timestamp expiredTime) {
+		String sql = "update company_pay set pay_status=?, create_time=?, contract_file=?, expired_time=? where order_no=?";
+		int affectedRows = jdbcTemplate.update(sql, status, time, contractFile, expiredTime, orderNo);
 		logger.debug("updateCompanyPay result : {}", affectedRows);
 		return affectedRows != 0;
 	}
@@ -107,9 +117,9 @@ public class CompanyPayDaoImpl implements ICompanyPayDao {
 	}
 
 	@Override
-	public boolean updateCompanyPayByCompanyId(Long companyId, Double amount, String orderNo, int serviceTime) {
-		String sql = "update company_pay set pay_amount=?, service_time=?, order_no=? where company_id=?";
-		int affectedRows = jdbcTemplate.update(sql, amount, serviceTime, orderNo, companyId);
+	public boolean updateCompanyPayByCompanyId(Long companyId, Integer payStatus, Double amount, String orderNo, int serviceTime, Timestamp expiredTime) {
+		String sql = "update company_pay set pay_status=?, pay_amount=?, service_time=?, order_no=?, create_time=NOW(), expired_time=? where company_id=?";
+		int affectedRows = jdbcTemplate.update(sql, payStatus, amount, serviceTime, orderNo, expiredTime, companyId);
 		logger.debug("updateCompanyPay result : {}", affectedRows);
 		return affectedRows != 0;
 	}
@@ -134,4 +144,62 @@ public class CompanyPayDaoImpl implements ICompanyPayDao {
 		}
 		return companyPay;
 	}
+
+	@Override
+	public boolean updateCompanyPayStatusToTrial(Long companyId) {
+		String sql = "update company_pay set trial = 1 where company_id =?";
+		try{
+			int affectedRows = jdbcTemplate.update(sql, companyId);
+			logger.debug("updateCompanyPay result : {}", affectedRows);
+			return affectedRows != 0;
+		}catch(Exception e){
+			return false;
+		}
+	}
+
+	@Override
+	public List<CompanyPay> getExpiredCompanyPay() {
+		String sql = "select * from company_pay where expired_time  < NOW()";
+		List<CompanyPay> list = new ArrayList<>();
+		try{
+			list = jdbcTemplate.query(sql, 
+					new RowMapperResultSetExtractor<CompanyPay>(
+							new CompanyPayMapper()));	
+		} catch(Exception e){
+			logger.debug(e.toString());
+		}
+
+		return list;
+	}
+
+	@Override
+	public List<CompanyAndPayModel> getCompanyAndPayModel() {
+		String sql = "select a.id, a.name, b.pay_amount, b.service_time, b.create_time, b.expired_time from company a left join company_pay b on a.id = b.company_id where a.parent_id = -1";
+		List<CompanyAndPayModel> list = new ArrayList<>();
+		try{
+			list = jdbcTemplate.query(sql, 
+					new RowMapperResultSetExtractor<CompanyAndPayModel>(
+							new CompanyAndPayModelMapper()));	
+		} catch(Exception e){
+			logger.debug(e.toString());
+		}
+
+		return list;
+	}
+
+	@Override
+	public List<CompanyAndPayModel> getCompanyAndPayModelByCompanyName(String companyName) {
+		String sql = "select a.id, a.name, b.pay_amount, b.service_time, b.create_time, b.expired_time from company a left join company_pay b on a.id = b.company_id where a.parent_id = -1 and a.name like '%"+companyName+"%'";
+		List<CompanyAndPayModel> list = new ArrayList<>();
+		try{
+			list = jdbcTemplate.query(sql, 
+					new RowMapperResultSetExtractor<CompanyAndPayModel>(
+							new CompanyAndPayModelMapper()));	
+		} catch(Exception e){
+			logger.debug(e.toString());
+		}
+
+		return list;
+	}
+
 }

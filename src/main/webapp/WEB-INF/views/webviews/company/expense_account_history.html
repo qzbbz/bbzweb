@@ -233,7 +233,7 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 					data : {deleteIdList:deleteIdList.join(",")},
 					success : function(data) {
 						$.ajax({
-							url : '/company/getAllCompanyBill',
+							url : '/company/getAllInvoices',
 							type : "POST",
 							data : {},
 							success : function(data) {
@@ -297,7 +297,7 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 				data : {id:id, amount:amount, type:type, supplyName:supplyName, isFixedAssets:flag},
 				success : function(data) {
 					$.ajax({
-						url : '/company/getAllCompanyBill',
+						url : '/company/getAllInvoices',
 						type : "POST",
 						data : {},
 						success : function(data) {
@@ -323,6 +323,8 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 			    var tdNode3 = $("<td></td>");
 			    var operateNode1 = $("<p>识别中<img style='height:20px;width:60px;' src='/img/webimg/progress2.gif'></p>");
 			    var operateNode2 = $("<p>识别已完成</p>");
+			    var operateNode3 = $("<p>无法识别</p>");
+			    
 			    var imgsrc = '/files/company/' + data[i].file_name;
 			    aNode.attr("img-src", imgsrc);
 			    aNode.click(function(event) {
@@ -332,7 +334,10 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 			    	//openBillImage("/img/webimg/emily.jpg");
 			    });
 			    aNode.appendTo(tdNode2);
-			    if(data[i].expense_type == null || data[i].expense_type == "") {
+			    if(data[i].status == "INVALID"){
+			    	operateNode3.appendTo(tdNode3);
+			    }
+			    else if(data[i].expense_type == null || data[i].expense_type == "") {
 			    	globalRefresh = true;
 			    	operateNode1.appendTo(tdNode3);
 			    } else {
@@ -347,7 +352,7 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 			bindCheck();
 		};
 		$.ajax({
-			url : '/company/getAllCompanyBill',
+			url : '/company/getAllInvoices',
 			type : "POST",
 			data : {},
 			success : function(data) {
@@ -355,18 +360,7 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 			}
 		});
 		
-		setInterval(function() {
-			if(globalRefresh == true) {
-				$.ajax({
-					url : '/company/getAllCompanyBill',
-					type : "POST",
-					data : {},
-					success : function(data) {
-						createDataList(data);
-					}
-				});
-			}
-		},5000);
+
 		
 		$('#searchData').click(function(){
 			var conditionType = $('#condition option:selected').val();
@@ -376,10 +370,12 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 				return;
 			}
 			$.ajax({
-				url : '/company/getAllCompanyBill',
+				//url : '/company/getAllCompanyBill',
+				url: '/company/getAllInvoicesByCondition',
 				type : "POST",
 				data : {conditionType : conditionType, conditionValue : conditionValue},
 				success : function(data) {
+					console.log(data);
 					createDataList(data);
 				}
 			});

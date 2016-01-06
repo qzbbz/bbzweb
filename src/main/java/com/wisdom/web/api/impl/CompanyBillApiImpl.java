@@ -21,8 +21,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.wisdom.common.model.Company;
 import com.wisdom.common.model.CompanyBill;
+import com.wisdom.common.model.TestInvoiceRecord;
 import com.wisdom.company.service.ICompanyBillService;
 import com.wisdom.company.service.ICompanyService;
+import com.wisdom.invoice.service.IInvoiceService;
 import com.wisdom.user.service.IUserService;
 import com.wisdom.web.api.ICompanyBillApi;
 
@@ -40,6 +42,9 @@ public class CompanyBillApiImpl implements ICompanyBillApi {
 	
 	@Autowired
 	private ICompanyBillService companyBillService;
+	
+	@Autowired
+	private IInvoiceService invoiceService;
 	
 	@Override
 	public Map<String, String> uploadCompanyBill(Map<String, String> params, MultipartFile file) {
@@ -62,8 +67,16 @@ public class CompanyBillApiImpl implements ICompanyBillApi {
 			cb.setIsFixedAssets(fixedAssetFlag);*/
 			cb.setCreateTime(new Timestamp(System.currentTimeMillis()));
 			companyBillService.addCompanyBill(cb);
+			
+			
+			//Create invoice
+			long invoiceId = invoiceService.addInvoice(companyId, fileName, date, 0, "company");
+			Company company = companyService.getCompanyByCompanyId(companyId);
+			//Send to queue
+			invoiceService.publishUnrecognizedInvoive(invoiceId, companyId, fileName, company.getName());
+			
 			retMap.put("error_code", "0");
-		} catch (IOException e) {
+		} catch (Exception e) {
 			logger.debug("uploadCompanyBill exception : {}", e.toString());
 			retMap.put("error_code", "1");
 			retMap.put("error_message", "上传发票失败，请稍后重试！");
@@ -83,13 +96,14 @@ public class CompanyBillApiImpl implements ICompanyBillApi {
 		extraParams.put("company_name", companyName);
 		if(params.get("conditionType") == null || params.get("conditionType").isEmpty() ||
 				("0").equals(params.get("conditionType")) ||
-				params.get("conditionValue") == null || params.get("conditionValue").isEmpty()) {
-			List<CompanyBill> list = companyBillService.getAllCompanyBill(companyId);
-			return createCompanyBillList(list, extraParams); 
+				params.get("conditionValue") == null || params.get("conditionValue").isEmpty()) {			
+			List<TestInvoiceRecord> list = invoiceService.getAllInvoicesByCompanyId(companyId);
+			return createInvoiceList(list, extraParams);
+
 		}
 		if(("1").equals(params.get("conditionType")) && params.get("conditionValue") != null) {
-			List<CompanyBill> list = companyBillService.getAllCompanyBillByDate(companyId, params.get("conditionValue"));
-			return createCompanyBillList(list, extraParams);
+			List<TestInvoiceRecord> list = invoiceService.getInvoicesByDate(params.get("conditionValue"), companyId);
+			return createInvoiceList(list, extraParams);
 		}
 		return null;
 	}
@@ -163,10 +177,89 @@ public class CompanyBillApiImpl implements ICompanyBillApi {
 			String companyName = companyService.getCompanyName(companyId);
 			Map<String, String> extraParams = new HashMap<>();
 			extraParams.put("company_name", companyName);
-			List<CompanyBill> list = companyBillService.getAllCompanyBill(companyId);
-			resultList.addAll(createCompanyBillList(list, extraParams));
+			List<TestInvoiceRecord> list = invoiceService.getAllInvoicesByCompanyId(companyId);
+			if(list == null || list.size() == 0) continue;
+			resultList.addAll(createInvoiceList(list, extraParams));
 		}
 		return resultList;
 	}
+
+	@Override
+	public List<Map<String, String>> getAllInvoicesByUserId(String userId) {
+
+		if(userId == null || userId.isEmpty()) return null;
+		long companyId = userService.getCompanyIdByUserId(userId);
+		if(companyId <= 0) return null;
+		String companyName = companyService.getCompanyName(companyId);
+		Map<String, String> extraParams = new HashMap<>();
+		extraParams.put("company_name", companyName);
+		List<TestInvoiceRecord> list = invoiceService.getAllInvoicesByCompanyId(companyId);
+		return createInvoiceList(list, extraParams);
+
+	}
+	
+	
+	@Override
+	public List<Map<String, String>> getAllInvoicesByCondition(Map<String, String> params, String userId) {
+		if(userId == null || userId.isEmpty()) return null;
+		long companyId = userService.getCompanyIdByUserId(userId);
+		if(companyId <= 0) return null;
+		String companyName = companyService.getCompanyName(companyId);
+		Map<String, String> extraParams = new HashMap<>();
+		extraParams.put("company_name", companyName);
+		if(params.get("conditionType") == null || params.get("conditionType").isEmpty() ||
+				("0").equals(params.get("conditionType")) ||
+				params.get("conditionValue") == null || params.get("conditionValue").isEmpty()) {
+			List<TestInvoiceRecord> list = invoiceService.getAllInvoicesByCompanyId(companyId);
+			return createInvoiceList(list, extraParams); 
+		}
+		if(("1").equals(params.get("conditionType")) && params.get("conditionValue") != null) {
+			List<TestInvoiceRecord> list = invoiceService.getInvoicesByDate(params.get("conditionValue"), companyId);
+			return createInvoiceList(list, extraParams);
+		}
+		return null;
+	}
+	
+	private List<Map<String, String>> createInvoiceList(List<TestInvoiceRecord> list, Map<String, String> extraParams) {
+		List<Map<String, String>> retList = new ArrayList<>();
+		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		if(list == null) return null;
+		for(TestInvoiceRecord invoiceRecord : list) {
+			Map<String, String> map = new HashMap<>();
+			Timestamp stamp = invoiceRecord.getCreatedTime();
+			map.put("id", String.valueOf(invoiceRecord.getInvoiceId()));
+			map.put("date", sdf.format(stamp));
+			Double amount = invoiceRecord.getAmount();
+			DecimalFormat format = new DecimalFormat("#0.000");
+			map.put("amount", format.format(amount));
+			map.put("expense_type", invoiceRecord.getType());
+			map.put("file_name", invoiceRecord.getFileName() == null ? "" : invoiceRecord.getFileName());
+			map.put("supplyName", invoiceRecord.getSupplierName());
+			map.put("isFixedAssets", String.valueOf(invoiceRecord.getIsFa()));
+			map.put("status", invoiceRecord.getStatus());
+			map.putAll(extraParams);
+			retList.add(map);
+		}
+		return retList.size() > 0 ? retList : null;
+	}
+
+	@Override
+	public boolean deleteInvoice(String idList, String realPath) {
+		String[] ids = idList.split(",");
+		for (String id : ids) {
+			// delete from cb
+			/*CompanyBill cb = companyBillService.getCompanyBillById(Long.valueOf(id));
+			if(cb == null) continue;
+			File file = new File(realPath + "/" + cb.getFileName());
+			FileUtils.deleteQuietly(file);
+			companyBillService.deleteCompanyBillById(Long.valueOf(id));*/
+			// delete from invoice
+			invoiceService.deleteTestInvoice(Long.valueOf(id));
+		}
+		return true;
+	}
+
+
+	
 	
 }

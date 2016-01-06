@@ -9,7 +9,7 @@
 	<link rel="stylesheet" type="text/css" href="/css/webcss/layout.css">
 </head>
 <body>
-	<div class="wrap">
+	<div class="wrap"  id="mask">
 		<div class="side-bar">
 			<div class="side-bar-top">
 				<img src="/img/webimg/bss-logo.png" >
@@ -49,9 +49,12 @@
                     </div>
                 </div>
 			</div>
-			
-			<div class="tips tips-warning mt20" id="tipInfo" style="display:none;"></div>
-			
+			<div>
+
+			<div class="tips tips-warning mt20" id="tipInfo" style="display:none;">
+							
+			</div>
+			</div>
 			<div class="tips tips-success mt20" id="tipInfoSearch">请选择条件，然后点击查询会计师！</div>
 			
 			<div class="member-wrap" style="margin-bottom:30px;">
@@ -102,22 +105,33 @@
 				<label class="control-label">请选择时间：</label>
 				<div class="controls" style="margin-top:10px;">
 					<select id="alipay_time" name="alipay_time" style="width:200px;">
+						<option value="1">1个月</option>
 						<option value ="6">6个月</option>
 						<option value="12">12个月</option>
 					</select>
 				</div>
 		</div>
 		<div style="margin-top:10px;margin-bottom:10px;">
-			<h4>您总共需要支付人民币：<span id="alipay_sum" name="alipay_sum" style="color:red;">768</span>元，合同范文如下：</h4>
+			<h4>您总共需要支付人民币：<span id="alipay_sum" name="alipay_sum" style="color:red;">99</span>元，合同范文如下：<span style="color:red;">(注意：默认您已经同意我们的合同范文)</span></h4>
 		</div>
 		<div style="margin-top:10px;margin-bottom:10px;">
 			<a id="contract" class="media {width:800, height:200}" href="/img/webimg/contract.pdf" target="_blank"></a>
 		</div>
 		<div>
-			<h4><span style="color:red;">默认您已经同意我们的合同范文</span></h4>		
+			<h4>您也可以选择给我们汇款，汇款信息如下：</h4>
+			<div style="height:20px;line-height:20px;">
+				<img src="/img/webimg/jiansheyinhang.gif" style="float:left;">
+				<div style="float:left;height:20px;">
+					<strong>银行账户：</strong>31001669701052514387
+					<strong>开户名：</strong>上海元升财务咨询有限公司
+					<strong>开户行：</strong>上海市建行国定路支行
+				</div>
+			</div>
 		</div>
 		<div class="control-group control-btn">
-				<div class="layer-wrap-footer1"><a href="javascript:void(0);" id="alipay_button" class="button button-success">确定购买</a></div>
+				<div class="layer-wrap-footer1">
+				<a id="trial_button" class="button button-success">免费试用</a>
+				<a  id="alipay_button" class="button button-success">确定购买</a></div>
 		</div>
 	</div>
 	<div style="position:fixed; bottom: 0; right: 0;"><a target="_blank" href="http://sighttp.qq.com/authd?IDKEY=a1a51fb184a88bbb4c1756a211f1ff1fbc9d47079f63eb30"><img border="0" src="http://wpa.qq.com/imgd?IDKEY=a1a51fb184a88bbb4c1756a211f1ff1fbc9d47079f63eb30&pic=41" alt="点我联系我" title="点我联系我"/></a></div>
@@ -132,21 +146,31 @@
     (function(){
     	$('a.media').media();
     })()
-    $.ajax({
+
+	$.ajax({
 		url : '/company/checkSelectAccounter',
 		type : "POST",
 		async:false,
 		data : {},
 		success : function(data) {
 			if(data.selected == 'true') {
-				$('#tipInfo').html(data.info);
+				$('#tipInfo').html(data.info + '<a href="javascript:void(0)" id="renew" class="button button-success" style="margin-left:15px">续费</a>');
 				$('#tipInfo').show();
 				$('#tipInfoSearch').hide();
 				$('#searchAccounter').attr('disabled',"true");
 				$('#dispalyAllAccounter').attr('disabled',"true");
+				if(data.alert){
+				    BUI.use('bui/overlay',function(overlay){
+						BUI.Message.Alert(data.alert,function(){
+						},'warning');
+				    });
+				}	
 			} else if(data.error == "companyinfo"){
-				$('#tipInfoSearch').html("请您先在组织架构菜单下面的基本信息设置中，完善您公司的基本信息！");
-				$('#tipInfoSearch').show();
+				$('#tipInfo').html("请您先在组织架构菜单下面的基本信息设置中，完善您公司的基本信息！");
+				$('#tipInfo').show();
+				$('#tipInfoSearch').hide();
+				$('#searchAccounter').attr('disabled',"true");
+				$('#dispalyAllAccounter').attr('disabled',"true");
 			} else {
 				$('#tipInfoSearch').show();
 			}
@@ -156,13 +180,14 @@
 			$('#tipInfoSearch').show();
 		}
 	});
+
     var globalAlipayForm;
     var globalSelectedAccounterId;
     BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 		var alipayForm = new Overlay.Dialog({
             title:'支付页面',
             width:820,
-            height:500,
+            height:520,
             contentId:'alipayForm',
             success:function () {
               	this.close();
@@ -170,18 +195,103 @@
             buttons : []
         });
 		globalAlipayForm = alipayForm;
+		$.get('/recommend/isRecommended', function(data){
+			if(data['message'] == "yes"){
+				var time = $('#alipay_time option:selected').val();
+				if(time == '1') $('#alipay_sum').html('99');
+				if(time == '6') {
+					$('#alipay_sum').html('594');
+				}
+				if(time == '12') $('#alipay_sum').html('1089');
+				
+			}
+			else {
+				if(time == '1') $('#alipay_sum').html('99');
+				if(time == '6') $('#alipay_sum').html('594');
+				if(time == '12') $('#alipay_sum').html('1188');
+			}
+		});
 		$('#alipay_time').change(function(){
 			var time = $('#alipay_time option:selected').val();
-			if(time == '6') $('#alipay_sum').html('768');
-			if(time == '12') $('#alipay_sum').html('1188');
+
+			$.get('/recommend/isRecommended', function(data){
+
+				if(data['message'] == "yes"){
+					if(time == '1') $('#alipay_sum').html('99');
+					if(time == '6') {
+						$('#alipay_sum').html('594');
+					}
+					if(time == '12') $('#alipay_sum').html('1089');
+					
+				}
+				else {
+					if(time == '1') $('#alipay_sum').html('99');
+					if(time == '6') $('#alipay_sum').html('594');
+					if(time == '12') $('#alipay_sum').html('1188');
+				}
+			});
+
 		});
 		$('#alipay_button').click(function(){
+			var time = $('#alipay_time option:selected').val();
+			var realTime = parseInt(time);
+			if(globalSelectedAccounterId === undefined){
+				globalSelectedAccounterId = "";
+			}
+			$.get('/recommend/isRecommended', function(data){
+				
+				if(data["message"] == "yes"){
+					realTime += 1;
+				}
+
+
+				$.ajax({
+					url : '/company/selectOneAccounter',
+					type : "POST",
+					data : {accounterId:globalSelectedAccounterId, alipayMonth:realTime, alipayAmount:$('#alipay_sum').html(), type:'normal'},
+					success : function(data) {
+						if (data == ""){
+							BUI.Message.Alert('请先在左侧的组织架构内完善公司信息！',function(){
+							},'warning');
+							
+						}else {
+							$('#payHtml').html(data);
+						}
+					},
+					error : function() {
+						BUI.use('bui/overlay',function(overlay){
+							function show () {
+								BUI.Message.Alert('选择会计师失败，请稍后重试！',function(){
+								},'warning');
+							}
+							show();	      
+						});	
+					}
+				});
+			});
+		});
+		
+		$('#trial_button').click(function(){
+			if(globalSelectedAccounterId === undefined){
+				globalSelectedAccounterId = "";
+			}
 			$.ajax({
 				url : '/company/selectOneAccounter',
 				type : "POST",
-				data : {accounterId:globalSelectedAccounterId, alipayMonth:$('#alipay_time option:selected').val(), alipayAmount:$('#alipay_sum').html()},
+				data : {accounterId:globalSelectedAccounterId, alipayMonth:$('#alipay_time option:selected').val(), alipayAmount:$('#alipay_sum').html(),type:'trial'},
 				success : function(data) {
-					$('#payHtml').html(data);
+					if (data == ""){
+						BUI.Message.Alert('请先在左侧的组织架构内完善公司信息！',function(){
+						},'warning');
+						
+					}else {
+						BUI.Message.Alert(data, function(){
+							alipayForm.close();
+							window.location.reload();
+						},'warning');
+
+
+					}
 				},
 				error : function() {
 					BUI.use('bui/overlay',function(overlay){
@@ -195,6 +305,9 @@
 			});
 		});
 	});
+    
+
+
     
     BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 		var modifyPwdForm = new Overlay.Dialog({
@@ -341,11 +454,19 @@
 		}
 		
 		$('#dispalyAllAccounter').click(function(){
+			BUI.use(['bui/imgview', 'bui/overlay', 'bui/mask'], function(Imgview, Overlay, Mask) {
+				var loadMask = new Mask.LoadMask({
+					el : '#mask',
+					msg : 'loading ....'
+				});
+				$("#mask").css("z-index", 99);
+				loadMask.show();
 			$.ajax({
 				url : '/getAllAccounter',
 				type : "POST",
 				data : {},
 				success : function(data) {
+					loadMask.hide();
 					if(data==null || data=='') {
 						$('#retData').html('');
 						$('#tipInfo').html('当前系统中还没有任何会计师信息，请稍后重试！');
@@ -358,13 +479,36 @@
 						var li = $('<li style="padding 0 20px;margin-bottom:20px;" ></li>');
 						var img = $('<div class="member-photo"><img src="/files/image/'+data.image+'" width="200px" height="200px">');
 						var detail = $('<div class="member-text"><p><label for="">姓名：</label>'+data.userName+'</p><p><label for="">职业经历：</label>'+data.career+'</p><p><label for="">职业证书：</label>'+data.certificate+'</p><p><label for="">行业：</label>'+data.industry+'</p><p><label for="">地区：</label>'+data.province+data.city+data.area+'</p></div>');
-						var a = $('<a href="javascript:void(0)" class="button button-success" style="width:180px;">点选当前会计</a>');
+						var a = $('<a href="javascript:void(0)" class="button button-success" style="width:180px;">选择并付费</a>');
 						li.append(img);
 						li.append(detail);
 						a.attr("accounter_user_id", data.user_id);
 					    a.click(function(event) {
 					    	globalSelectedAccounterId = $(this).attr("accounter_user_id");
 					    	globalAlipayForm.show();
+					    	//TODO the additional one month will be added to the drop down list
+					    	setInterval(function (){
+					        	$.ajax({
+					        		url : '/company/checkTimeAndAmountInfo',
+					        		type : "POST",
+					        		success : function(data) {
+					        			if(data.resultCode == '1') {
+					        				var existed = false;
+					        				$("select[id=alipay_time] option").each(function(){
+					        					if($(this).val() == data.serviceTime){
+					        						existed = true;
+					        						return false;
+					        					}
+					        				});
+					        				if(!existed) {
+					        					$("#alipay_time").append("<option value='"+data.serviceTime+"'>"+data.serviceTime+"个月</option>");
+					        					$("#alipay_time").find("option[value='"+data.serviceTime+"']").attr("selected",true);
+					        					$("#alipay_sum").html(data.payAmount);
+					        				}
+					        			}
+					        		}
+					        	});
+					        }, 5000);
 					    	/* $.ajax({
 								url : '/company/selectOneAccounter',
 								type : "POST",
@@ -397,10 +541,39 @@
 					$('#retData').html('');
 					$('#tipInfo').html('服务器暂时无法响应您的请求，请稍后重试！');
 					$('#tipInfo').show();
+					loadMask.hide();
 				}
 			});
 		});
+		});
 		
+	    $("#renew").on("click", function(){
+	    	globalAlipayForm.show();
+	    	setInterval(function (){
+	        	$.ajax({
+	        		url : '/company/checkTimeAndAmountInfo',
+	        		type : "POST",
+	        		success : function(data) {
+	        			if(data.resultCode == '1') {
+	        				var existed = false;
+	        				$("select[id=alipay_time] option").each(function(){
+	        					if($(this).val() == data.serviceTime){
+	        						existed = true;
+	        						return false;
+	        					}
+	        				});
+	        				if(!existed) {
+	        					$("#alipay_time").append("<option value='"+data.serviceTime+"'>"+data.serviceTime+"个月</option>");
+	        					$("#alipay_time").find("option[value='"+data.serviceTime+"']").attr("selected",true);
+	        					$("#alipay_sum").html(data.payAmount);
+	        				}
+	        			}
+	        		}
+	        	});
+	        }, 5000);
+	    	
+	    });
+	    
 		$('#searchAccounter').click(function(){
 			$('#tipInfo').hide();
 			$('#tipInfoSearch').hide();
@@ -440,7 +613,7 @@
 						var li = $('<li style="padding 0 10px;margin-bottom:20px;"></li>');
 						var img = $('<div class="member-photo"><img src="'+data.image+'" width="200px" height="200px">');
 						var detail = $('<div class="member-text"><p><label for="">姓名：</label>'+data.userName+'</p><p><label for="">职业经历：</label>'+data.career+'</p><p><label for="">职业证书：</label>'+data.certificate+'</p><p><label for="">行业：</label>'+data.industry+'</p><p><label for="">地区：</label>'+data.province+data.city+data.area+'</p></div>');
-						var a = $('<a href="javascript:void(0)" class="button button-success" style="width:180px;">点选当前会计</a>');
+						var a = $('<a href="javascript:void(0)" class="button button-success" style="width:180px;">选择并付费</a>');
 						li.append(img);
 						li.append(detail);
 						a.attr("accounter_user_id", data.user_id);
@@ -448,7 +621,7 @@
 					    	$.ajax({
 								url : '/company/selectOneAccounter',
 								type : "POST",
-								data : {accounterId:$(this).attr("accounter_user_id")},
+								data : {accounterId:$(this).attr("accounter_user_id"), type:'normal'},
 								success : function() {
 									BUI.use('bui/overlay',function(overlay){
 										function show () {
