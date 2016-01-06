@@ -21,6 +21,7 @@ public class InvoiceApproval implements java.io.Serializable {
 	private Integer approvalStatus;
 	private Timestamp updateTime;
 	private Timestamp createTime;
+	private long oldInvoiceId;
 
 	// Constructors
 

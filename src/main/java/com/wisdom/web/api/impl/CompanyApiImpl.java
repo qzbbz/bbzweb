@@ -421,7 +421,6 @@ public class CompanyApiImpl implements ICompanyApi {
 				cbs.setCreateTime(new Timestamp(System.currentTimeMillis()));
 			} else {
 				cbs.setCompanyId(companyId);
-				cbs.setDate("");
 				cbs.setFileName(fileName);
 				cbs.setIdentifyStatus(0);
 				cbs.setCreateTime(new Timestamp(System.currentTimeMillis()));

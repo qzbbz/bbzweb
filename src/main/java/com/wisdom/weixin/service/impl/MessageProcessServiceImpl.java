@@ -44,6 +44,7 @@ public class MessageProcessServiceImpl implements IMessageProcessService {
 			for (int n; (n = in.read(b)) != -1;) {
 				xmlMsg.append(new String(b, 0, n, "UTF-8"));
 			}
+			logger.info(xmlMsg.toString());
 			InputMessage inputMsg = (InputMessage) xs
 					.fromXML(xmlMsg.toString());
 			String msgType = inputMsg.getMsgType();
@@ -84,15 +85,14 @@ public class MessageProcessServiceImpl implements IMessageProcessService {
 						logger.debug(e.toString());
 					}
 					xstream.alias("xml", outputMsg.getClass());
-					result = new String(xstream.toXML(outputMsg).getBytes(),
-							"UTF-8");
+					result = new String(xstream.toXML(outputMsg).getBytes());
 					logger.debug("xml result : {}", result);
 				}
 			}
 		} catch (IOException e) {
-			logger.debug(e.toString());
+			logger.info(e.toString());
 		} catch (Exception e) {
-			logger.debug(e.toString());
+			logger.info(e.toString());
 		}
 		logger.debug("finish in processing weixin message.");
 		return result;

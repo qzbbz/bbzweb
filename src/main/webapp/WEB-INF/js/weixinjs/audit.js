@@ -974,7 +974,7 @@ $(function(){
 		return false;
 	}
 	
-	$.ajax({ 
+/*	$.ajax({ 
         type : "POST", 
         url  : "/getUserOpenId",  
         cache : false,
@@ -983,7 +983,7 @@ $(function(){
         success : onGetUserOpenIdSuccess, 
         error : onGetUserOpenIdError 
     });
-	
+	*/
 	function onGetUserOpenIdSuccess(data,status) {
 		if (data.openId == "") {
 			alert("无法获取您的微信Openid,请稍后重试！");

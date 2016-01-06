@@ -8,8 +8,6 @@ public interface ICompanyBillService {
 	
 	public CompanyBill getCompanyBillById(long id);
 	
-	public List<CompanyBill> getAllCompanyBill(long companyId);
-	
 	public List<CompanyBill> getAllCompanyBillByDate(long companyId, String date);
 	
 	public long addCompanyBill(CompanyBill companyBill);

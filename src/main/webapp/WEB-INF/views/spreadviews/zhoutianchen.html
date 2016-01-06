@@ -1,0 +1,166 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>帮帮账99元/月财税一站式服务
+</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<meta name="description" content="99元/月财税一站式服务 6PLUS：①免费注册+ ②拍照记账+③移动报销+④银行级安全+⑤四大级专业+⑥免费财税务筹划+">
+<script src="/js/weixinjs/jweixin-1.0.0.js"></script>
+<script src="/js/weixinjs/jquery-1.11.1.min.js"></script>
+<script>
+$.ajax({ 
+    type : "POST", 
+    url  : "/getJsConfigInfo?url=" + encodeURIComponent(location.href.split('#')[0]),  
+    cache : false,
+    async: false,
+    success : getJsConfigInfoSuccess 
+});
+function getJsConfigInfoSuccess(data,status) {
+	wx.config({
+		appId: 'wx333ea15ba860f932',
+		timestamp: data.timestamp,
+		nonceStr: data.nonceStr,
+		signature: data.signature,
+		jsApiList: [
+			'onMenuShareQQ',
+			'onMenuShareTimeline',
+			'onMenuShareAppMessage'
+		]
+	});
+}
+wx.ready(function(){
+	var imgUrl = "http://bangbangzhang.com/img/webimg/weixintuiguang.jpg";
+	var lineLink = window.location.href;
+	var descContent = "99元/月财税一站式服务 6PLUS：①免费注册+ ②拍照记账+③移动报销+④银行级安全+⑤四大级专业+⑥免费财税务筹划+";
+	var shareTitle = document.title;
+	var appid = 'wx333ea15ba860f932';
+	setTimeout(function(){
+		wx.onMenuShareTimeline({
+		    title: shareTitle, // 分享标题
+		    link: lineLink, // 分享链接
+		    imgUrl: imgUrl, // 分享图标
+		    success: function () { 
+		        // 用户确认分享后执行的回调函数
+		    },
+		    cancel: function () { 
+		        // 用户取消分享后执行的回调函数
+		    }
+		});
+		wx.onMenuShareAppMessage({
+		    title: shareTitle, // 分享标题
+		    desc: descContent, // 分享描述
+		    link: lineLink, // 分享链接
+		    imgUrl: imgUrl, // 分享图标
+		    type: '', // 分享类型,music、video或link，不填默认为link
+		    dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+		    success: function () { 
+		        // 用户确认分享后执行的回调函数
+		    },
+		    cancel: function () { 
+		        // 用户取消分享后执行的回调函数
+		    }
+		});
+		wx.onMenuShareQQ({
+		    title: shareTitle, // 分享标题
+		    desc: descContent, // 分享描述
+		    link: lineLink, // 分享链接
+		    imgUrl: imgUrl, // 分享图标
+		    success: function () { 
+		       // 用户确认分享后执行的回调函数
+		    },
+		    cancel: function () { 
+		       // 用户取消分享后执行的回调函数
+		    }
+		});
+	}, 500);
+});
+</script>
+<style>
+@charset "UTF-8";
+html, body, div, h1, h2, h3, h4, h5, h6, ul, ol, li, dl, dt, dd, p, blockquote, pre, form, input, textarea, fieldset, table, th, td {
+	margin: 0;
+	padding: 0
+}
+body, button, input, select, textarea {
+	font: normal 16px/2em "Microsoft YaHei";
+}
+body {
+	color: #b3b3b3;
+	background-color: #fff;
+}
+ul, ol {
+	list-style: none
+}
+img {
+	border: 0;
+	vertical-align: top;
+}
+:focus {
+	outline: 0
+}
+.clear {
+	clear: both;
+	height: 0;
+	font-size: 0;
+	overflow: hidden
+}
+.clearfix:after {
+	content: "\0020";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden
+}
+.clearfix {
+	clear: both;
+	zoom: 1
+}
+.v-a-m {
+	vertical-align: middle
+}
+h1 {
+	font-size: 18px
+}
+h2 {
+	font-size: 16px
+}
+h3 {
+	font-size: 14px
+}
+h4, h5, h6 {
+	font-size: 100%
+}
+a {
+	color: #121111;
+	text-decoration: none
+}
+a:hover {
+	color: #484848;
+}
+ul {
+	list-style: none;
+}
+div {
+	width: 100%;
+	height: auto;
+	position: relative
+}
+div ul li img {
+	width: 100%;
+	height: 50%;
+}
+div .bottom{position:fixed; bottom:0px; width:100%; height:70px;background:#2e90a9;}
+div .bottom .in{ width:60%; left:10%; right:10%; height:50px; margin: 10px auto;  font-size:18px; position:absolute; color:#fff; background:#c5323c; border-radius:0.5em; font-size:24px;border-style:solid;border-width:0px;}
+</style>
+</head>
+
+<body>
+<div>
+  <img style="width:100%;" src="/img/webimg/zhoutianchen.jpg">
+  <div class="bottom"> <a href="http://bangbangzhang.com/views/frontviews/index.html?ad7e8b985d410ee369d53d224a1c9a4d">
+    <input type="button" value="注册帮帮账" class="in">
+    </a> </div>
+</div>
+</body>
+</html>

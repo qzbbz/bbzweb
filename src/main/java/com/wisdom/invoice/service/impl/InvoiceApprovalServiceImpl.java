@@ -1,6 +1,7 @@
 package com.wisdom.invoice.service.impl;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -49,4 +50,17 @@ public class InvoiceApprovalServiceImpl implements IInvoiceApprovalService {
 		invoiceApproval.setUpdateTime(time);
 		return invoiceApprovalDao.addInvoiceApproval(invoiceApproval);
 	}
+
+	@Override
+	public List<InvoiceApproval> getInvoiceApprovalListByInvoiceIds(String invoiceIds) {
+		String[] invoiceIdList = invoiceIds.split(",");
+		List<InvoiceApproval> retList = new ArrayList<>();
+		for(String invoiceId : invoiceIdList){
+			InvoiceApproval approval = invoiceApprovalDao.getInvoiceApprovalByInvoiceId(Long.parseLong(invoiceId));
+			retList.add(approval);
+		}
+		return retList;
+	}
+
+
 }

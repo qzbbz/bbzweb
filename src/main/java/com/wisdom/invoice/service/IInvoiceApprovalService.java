@@ -10,4 +10,5 @@ public interface IInvoiceApprovalService {
 	public boolean addInvoiceAppovalRecord(InvoiceApproval invoiceApproval);
 	public boolean addInvoiceApprovalRecord(long invoiceId, String approvalId,
 			int status) ;
+	public List<InvoiceApproval> getInvoiceApprovalListByInvoiceIds(String invoiceIds);
 }

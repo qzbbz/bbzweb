@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link href="../../css/weixincss/mui.min.css" rel="stylesheet" />
+		<link href="../../css/weixincss/iconfont.css" rel="stylesheet" />
+		<style>
+			.upload-file {
+				position: fixed;
+				z-index: 998;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				left: 0;
+				background-color: rgba(0, 0, 0, .8);
+			}
+			.dialog {
+				position: fixed;
+				z-index: 998;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				left: 0;
+				background-color: rgba(0, 0, 0, .4);
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="mui-navbar-inner mui-bar mui-bar-nav">
+			<h1 class="mui-title" style='text-align: center;'>账户设置</h1>
+		</div>
+		<div class="mui-page-content">
+			<div class="mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<div id="data_loading" class="mui-loading" style="margin-top:50%;">
+						<div class="mui-spinner"></div>
+						<div style="text-align: center;">正在加载数据</div>
+					</div>
+					<div id="tips_info" style="display:none;margin-top:50%;">
+						<div style="text-align: center;" id="tips_info_detail">服务器暂时无法处理请求，请稍后重试！</div>
+					</div>
+					<div id="bind_company_page" style="display:none;margin-top: 65px;margin-left:5px;margin-right:5px;">
+						<h5>邀请码（<span style="color:red;">必填</span>）：</h5>
+						<form class="mui-input-group">
+							<div class="mui-input-row">
+								<input id="invite_code" name="invite_code" type="text">
+							</div>
+						</form>
+						<h5>姓名：</h5>
+						<form class="mui-input-group">
+							<div class="mui-input-row">
+								<input id="user_name" name="user_name" type="text">
+							</div>
+						</form>
+						<h5>邮箱：</h5>
+						<form class="mui-input-group">
+							<div class="mui-input-row">
+								<input id="user_email" name="user_email" type="text">
+							</div>
+						</form>
+						<h5>消息设置：</h5>
+						<div class="mui-card" style="margin-top:20px;margin:0 0px;">
+							<form class="mui-input-group">
+								<div class="mui-input-row mui-checkbox mui-left">
+									<label><p>接收邮件消息</p></label>
+									<input name="accept_msg" id="accept_msg" value="Item 1" type="checkbox" checked>
+								</div>
+							</form>
+						</div>
+						<div style="margin:20px 1px;">
+							<button type="button" class="mui-btn mui-btn-primary" style="width:100%;height:45px;" onclick="bindCompany()">绑定公司</button>
+						</div>
+					</div>
+					
+					<div id="has_bind_company_page" style="display:none;margin-top: 65px;margin-left:5px;margin-right:5px;">
+						<h5>公司名称：</h5>
+						<span style="color:black;font-size:15px;margin-left:15px;" id="comapny_name"></span>
+						<h5 style="margin-top:20px;">所属部门：</h5>
+						<span style="color:black;font-size:15px;margin-left:15px;" id="company_department"></span>
+						<h5 style="margin-top:20px;">姓名：</h5>
+						<form class="mui-input-group">
+							<div class="mui-input-row">
+								<input id="modify_user_name" name="modify_user_name" type="text" >
+							</div>
+						</form>
+						<h5 style="margin-top:20px;">邮箱：</h5>
+						<form class="mui-input-group">
+							<div class="mui-input-row">
+								<input id="modify_user_email" name="modify_user_email" type="text">
+							</div>
+						</form>
+						<h5 style="margin-top:20px;">消息设置：</h5>
+						<div class="mui-card" style="margin-top:20px;margin:0 0px;">
+							<form class="mui-input-group">
+								<div class="mui-input-row mui-checkbox mui-left">
+									<label><p>接收邮件消息</p></label>
+									<input name="modify_accept_msg" id="modify_accept_msg" value="" type="checkbox" checked>
+								</div>
+							</form>
+						</div>
+						<div style="margin:20px 1px;">
+							<button type="button" class="mui-btn mui-btn-primary mui-pull-right" style="height:40px;" onclick="saveInfo()">保存信息</button>
+							<button type="button" class="mui-btn mui-btn-danger mui-pull-right" style="height:40px;margin-right:10px;" onclick="unBindCompany()">解除绑定</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script src="../../js/weixinjs/mui.min.js"></script>
+	<script src="../../js/weixinjs/account_settings.js?201512231512"></script>
+
+</html>

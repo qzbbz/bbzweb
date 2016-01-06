@@ -150,7 +150,7 @@ public class InvoiceUpdateController {
 		int num = 0;
 		for(Map a : (List<Map<String,Object>>) list){
 			String img = (String)a.get("img");
-			Map map = invoiceService.createInvoiceProcess(userId, img, "0", "1", null);
+			Map map = invoiceService.createInvoiceProcess(userId, img, "0", "1", null, "company");
 			if(null != map && ((Boolean)map.get("success")).booleanValue()){
 				num++;
 			}else{
