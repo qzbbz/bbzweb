@@ -460,6 +460,7 @@ public class CompanyController {
 		String userId = (String) request.getSession().getAttribute("userId");
 		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/files/company");
 		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
+//		realPath =  "/files/company";
 		companyApi.uploadCompanySalary(userId, realPath, file,date);
 		Map<String, String> retMap = new HashMap<>();
 		retMap.put("url", "url");
@@ -488,6 +489,7 @@ public class CompanyController {
 		
 		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/files/company");
 		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
+//		realPath = "/files/company";
 		String date = request.getParameter("date");
 		Map<String, String> params = new HashMap<>();
 		params.put("userId", userId);
@@ -515,6 +517,7 @@ public class CompanyController {
 		String date=request.getParameter("sales_date");
 		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/files/company");
 		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
+//		realPath =  "/files/company";
 		Map<String, String> params = new HashMap<>();
 		params.put("userId", userId);
 		params.put("realPath", realPath);

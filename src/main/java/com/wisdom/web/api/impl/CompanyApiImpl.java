@@ -201,7 +201,7 @@ public class CompanyApiImpl implements ICompanyApi {
 	private String getGernarateFileName(MultipartFile file, String userId) {
 		Random rdm = new Random(System.currentTimeMillis());
 		String extendName = file.getOriginalFilename().substring(
-				file.getOriginalFilename().indexOf(".") + 1);
+				file.getOriginalFilename().lastIndexOf(".") + 1);
 		return userId + System.currentTimeMillis() + Math.abs(rdm.nextInt())
 				% 1000 + (extendName == null ? ".unknown" : "." + extendName);
 	}
