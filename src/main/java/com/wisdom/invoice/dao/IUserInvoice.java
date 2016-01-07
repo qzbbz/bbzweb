@@ -14,4 +14,5 @@ public interface IUserInvoice {
 	
 	public boolean updateUserInvoice(UserInvoice userInvoice);
 	
+
 }

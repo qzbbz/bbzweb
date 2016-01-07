@@ -19,4 +19,9 @@ public interface IUserInvoiceService {
 	
 	public List<InvoiceInfo> getInvoiceInfoByCondition(String userId,
 			String date, String submitter, Double amount, Integer expenseType,Integer page,Integer pageSize);
+	
+	public boolean updateUserInvoiceReason(long invoiceId, String reason);
+	
+	public List<UserInvoice> getUserInvoiceByApprovalIdAndStatus(String approvalId, int status);
+
 }
