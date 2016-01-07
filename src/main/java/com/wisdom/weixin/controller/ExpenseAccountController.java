@@ -289,9 +289,12 @@ public class ExpenseAccountController {
 		String id_list_string = "";
 		for(Map<String, Object> result: results){
 			Map<String, Object> element = new HashMap<>();
+			if((Double)result.get("invoice_total_amount") == 0){
+				continue;
+			}
 			element.put("invoice_total_amount", result.get("invoice_total_amount"));
 			element.put("user_name", result.get("user_name"));
-			element.put("inovice_count", result.get("invoice_count"));
+			element.put("invoice_count", result.get("invoice_count"));
 			List<Map<String, Object>> list = (List<Map<String, Object>>) result.get("list");
 			for(Map<String, Object> detail: list){
 				id_list_string += detail.get("invoice_id")+",";
@@ -299,7 +302,6 @@ public class ExpenseAccountController {
 			id_list_string = id_list_string.substring(0, id_list_string.length()-1);
 			element.put("person_invoice_count", list.size());
 			element.put("invoice_id_list_string", id_list_string);
-			
 			retList.add(element);
 		}
 		logger.debug("newGetNeedAuditBillsSummary result : {}", retList.toString());
@@ -409,34 +411,43 @@ public class ExpenseAccountController {
 	@ResponseBody
 	public Map<String, Object> getInovicesByIds(
 			HttpServletRequest request) {
+		 Map<String, Object> retMap = new HashMap<>();
 		String invoiceIds = (String) request.getSession().getAttribute("requestInvoiceIds");
+		if(invoiceIds == null || invoiceIds.isEmpty()){
+			return retMap;
+		}
 		String openId = request.getParameter("open_id");
 		String approvalId = userService.getUserIdByOpenId(openId);
-		List<InvoiceApproval> invoiceApprovalList = invoiceApprovalService.getInvoiceApprovalListByInvoiceIds(invoiceIds);
+		//List<InvoiceApproval> invoiceApprovalList = invoiceApprovalService.getInvoiceApprovalListByInvoiceIds(invoiceIds);
+		List<UserInvoice> userInvoiceList = new ArrayList<>();
+		String[] invoiceIdList = invoiceIds.split(",");
+		for(String invoiceId: invoiceIdList){
+			UserInvoice userInvoice = userInvoiceService.getUserInvoiceByInvoiceId(Long.parseLong(invoiceId));
+			userInvoiceList.add(userInvoice);
+		}
 		List<Map<String, Object>> resultList = new ArrayList<>();
 		String submitUserName = "";
-		 Map<String, Object> retMap = new HashMap<>();
 		 Map<String, Map<String, Object>> abstractInfoMap = new HashMap<>();
 			Map<String, List<Map<String, Object>>> detailInfoMap = new HashMap<>();
 			Double invoiceTotalAmount = (double) 0;
-			for (InvoiceApproval invoiceApproval : invoiceApprovalList) {
-				if (invoiceApproval.getStatus() != 0)
+			for (UserInvoice userInvoice : userInvoiceList) {
+				if (userInvoice.getStatus() != 0)
 					continue;
-				logger.debug("invoiceApproval, invoice_id :{}", invoiceApproval.getInvoiceId());
-				Dispatcher dispatch = dispatcherService.getDispatcherByInvoiceId(invoiceApproval.getInvoiceId());
+				logger.debug("invoiceApproval, invoice_id :{}", userInvoice.getInvoiceId());
+				Dispatcher dispatch = dispatcherService.getDispatcherByInvoiceId(userInvoice.getInvoiceId());
 				if (dispatch != null && -1 == dispatch.getStatus()) {
 					continue;
 				}
 				Map<String, Object> map = new HashMap<String, Object>();
-				map.put("processStatus", invoiceApproval.getStatus());
-				map.put("invoice_id", invoiceApproval.getInvoiceId());
-				map.put("approval_status", invoiceApproval.getApprovalStatus() == 0 ? true : false);
+				map.put("processStatus", userInvoice.getStatus());
+				map.put("invoice_id", userInvoice.getInvoiceId());
+				map.put("approval_status", userInvoice.getApprovalStatus() == 0 ? true : false);
 				map.put("approval_id", approvalId);
 				DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-				Timestamp stamp = invoiceApproval.getUpdateTime();
+				Timestamp stamp = userInvoice.getUpdateTime();
 				map.put("submit_time", sdf.format(stamp));
-				UserInvoice userInvoice = userInvoiceService.getUserInvoiceByInvoiceId(invoiceApproval.getInvoiceId());
-				if (null != userInvoice) {
+				//UserInvoice userInvoice = userInvoiceService.getUserInvoiceByInvoiceId(invoiceApproval.getInvoiceId());
+				//if (null != userInvoice) {
 					map.put("user_id", userInvoice.getUserId());
 					stamp = userInvoice.getCreateTime();
 					map.put("bill_date", sdf.format(stamp));
@@ -448,14 +459,14 @@ public class ExpenseAccountController {
 					map.put("approval_name", approvalName);
 					map.put("reasons", userInvoice.getReasons() == null || userInvoice.getReasons().isEmpty() ? "无"
 							: userInvoice.getReasons());
-				}
+				//}
 				map.put("approval_id", approvalId);
 
 				// Invoice invoice =
 				// singleInvoiceService.getSingleInvoiceInfo(invoiceApproval.getInvoiceId());
-				TestInvoiceRecord invoiceRecord = invoiceDao.getInvoiceRecordById(invoiceApproval.getInvoiceId());
+				TestInvoiceRecord invoiceRecord = invoiceDao.getInvoiceRecordById(userInvoice.getInvoiceId());
 				if (null == invoiceRecord) {
-					logger.debug("invoice  record not exsisted, invoice_id : {}", invoiceApproval.getInvoiceId());
+					logger.debug("invoice  record not exsisted, invoice_id : {}", userInvoice.getInvoiceId());
 					// return map;
 					continue;
 				}
@@ -492,8 +503,20 @@ public class ExpenseAccountController {
 		String invoiceId = request.getParameter("invoice_id");
 		String comment = request.getParameter("comment");
 		Map<String, String> retMap = new HashMap<>();
-		invoiceService.setInvoiceComment(Long.parseLong(invoiceId), comment);
+		userInvoiceService.updateUserInvoiceReason(Long.parseLong(invoiceId), comment);
 		retMap.put("status", "ok");
 		return retMap;
+	}
+	
+	@RequestMapping("/getAllExpenseTypes")
+	@ResponseBody
+	public List<String> getAllExpenseTypes(HttpServletRequest request){
+		List<String> retList = new ArrayList<>();
+		List<Map<String, String>> expenseTypes = expenseAccounterService.getAllExpenseType();
+		for(Map<String, String> expenseType: expenseTypes){
+			retList.add(expenseType.get("name"));
+		}
+		//System.out.println(expenseTypes);
+		return retList;
 	}
 }

@@ -185,7 +185,7 @@ mui.previewImage({
 });
 
 var userOpenId = "";
-userOpenId = "oJO1gt9aNUjXB6r-0_T1savrox6E";
+userOpenId = "oJO1gtyaaLM2QMHFNBSPLkZy1Pmk";
 
 function getImageDataURL(img) {
 	var canvas = document.createElement('canvas');
@@ -201,7 +201,22 @@ function fillInInformation(){
 	console.log(this);
 	mui.createFillInfoDialog("hola", null).show();
 }
+expenseTypes = [];
 
+getAllExpenseTypes();
+function getAllExpenseTypes(){
+	mui.ajax({
+		type: "POST",
+		url: "/getAllExpenseTypes",
+		data: {},
+		success : function(data){
+			expenseTypes = data;
+		}
+		
+	});
+}
+
+var totalCount = 0;
 document.getElementById("fapiaoluru_addInvoiceImage").onchange = function(event) {
 
 	
@@ -245,9 +260,23 @@ document.getElementById("fapiaoluru_addInvoiceImage").onchange = function(event)
 	inputNode.setAttribute("class", "expense_amount");
 	var brNode = document.createElement("br");
 	divNode.appendChild(brNode);
-	input2Node.setAttribute("placeholder", "请填入费用类型");
-	input2Node.setAttribute("class", "expense_type");
-	divNode.appendChild(input2Node);
+	
+	if(expenseTypes == []){
+		getAllExpenseTypes();
+	}
+	var selectNode = document.createElement("select");
+	selectNode.setAttribute("class", "expense_type");
+	for(var key in expenseTypes){
+		var optionNode = document.createElement("option");
+		optionNode.innerHTML = expenseTypes[key];
+		optionNode.setAttribute("value", expenseTypes[key]);
+		optionNode.setAttribute("class", "expense-type"+totalCount);
+		selectNode.appendChild(optionNode);
+	}
+	totalCount += 1;
+	//input2Node.setAttribute("placeholder", "请填入费用类型");
+	//input2Node.setAttribute("class", "expense_type");
+	divNode.appendChild(selectNode);
 	aNode.appendChild(divNode);
 	liNode.appendChild(aNode);
 	
@@ -327,16 +356,26 @@ document.getElementById('fapiaoluru_submit').addEventListener('tap', function(ev
 	mask.show();
 	$('#upload_progress').find('strong').html(0 + '<i>%</i>');
 	amounts = document.getElementsByClassName('expense_amount');
-	types = document.getElementsByClassName('expense_type');
-	var amountsStr = "";
+	var typeSelects = document.getElementsByClassName('expense_type');
+	console.log(typeSelects);
 	var typesStr = "";
+	console.log("mark");
+	for(var i = 0; i < typeSelects.length; i++){
+		console.log(typeSelects);
+		console.log(i);
+		var options = document.getElementsByClassName('expense-type' + i);
+		console.log(typeSelects[i].selectedIndex);
+		console.log(options);
+		typesStr += options[typeSelects[i].selectedIndex].value + ";";
+		console.log("in for loop")
+	}
+	var amountsStr = "";
+	
 	for (var i = 0; i < amounts.length; i++){
 		amountsStr += amounts[i].value + ";";
 	}
-	for(var i = 0; i < types.length; i++){
-		typesStr += types[i].value + ";";
-	}
-	console.log(amountsStr);
+
+	console.log(typesStr);
 	var formData = {openId:userOpenId, expense_amount:amountsStr, expense_type:typesStr};
 	var xhr = new XMLHttpRequest();
 	var fd = new FormData();
@@ -378,6 +417,9 @@ document.getElementById("data_loading").style.display = "none";
 document.getElementById("add_invoice_page").style.display = "";
 document.getElementById("tips_image").style.display = "";
 document.getElementById("fapiaoluru_submit").style.display = "";
+
+
+
 /*mui.ajax({ 
     type : "POST", 
     url  : "/getUserOpenIdAndCheckBindCompany",

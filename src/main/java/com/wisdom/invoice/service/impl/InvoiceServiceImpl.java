@@ -32,6 +32,7 @@ import com.wisdom.common.model.TestInvoiceArtifact;
 import com.wisdom.common.model.TestInvoiceRecord;
 import com.wisdom.common.model.UserInvoice;
 import com.wisdom.company.service.ICompanyService;
+import com.wisdom.company.service.IDeptService;
 import com.wisdom.company.service.IExpenseTypeService;
 import com.wisdom.dispatch.service.IDispatcherService;
 import com.wisdom.invoice.dao.IInvoiceDao;
@@ -45,6 +46,7 @@ import com.wisdom.invoice.service.IInvoiceApprovalService;
 import com.wisdom.invoice.service.IInvoiceService;
 import com.wisdom.invoice.service.ISingleInvoiceService;
 import com.wisdom.invoice.service.IUserInvoiceService;
+import com.wisdom.user.service.IUserDeptService;
 import com.wisdom.user.service.IUserService;
 import com.wisdom.web.utils.RedisSetting;
 
@@ -85,6 +87,11 @@ public class InvoiceServiceImpl implements IInvoiceService {
 	private ISingleInvoiceService singleInvoiceService;
 	@Autowired
 	private ICompanyService companyService;
+	@Autowired
+	private IUserDeptService userDeptService;
+	@Autowired
+	private IDeptService deptService;
+	
 
 	@Transactional
 	@Override
@@ -97,6 +104,10 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			log.error("null pointor error");
 			return retMap;
 		}
+		
+
+		long deptId = userDeptService.getDeptIdByUserId(userId);
+		String costCenterCode = deptService.getCostCenterCodeById(deptId);
 
 		/*if (null == params || null == (Integer) params.get("expenseTypeId")) {
 			log.error("expenseTypeId not exsited");
@@ -115,7 +126,6 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		}*/
 		int expenseTypeId = 1;
 		double amount = 0.0;
-		String costCenterCode = "";
 		Invoice invoice = new Invoice();
 		invoice.setExpenseTypeId(expenseTypeId);
 		invoice.setAmount(amount);
@@ -151,7 +161,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			String itemId = UUID.randomUUID().toString();
 			invoiceDao.addInvoiceArtifact(newInvoiceId, Double.parseDouble(params.get("amount").toString()), params.get("type").toString(), params.get("type").toString(), itemId);
 			invoiceDao.setIsFAOfInvoice(newInvoiceId, false, itemId);
-			dispatcherService.updateDispatcherStatus(invoiceId, 0);
+			
 		}
 		
 		String companyName = companyService.getCompanyName(companyId);
@@ -197,6 +207,9 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		log.debug("getUserNameByUserId:" + userName);
 		// 生成一条dispatcher日志。
 		blRet = dispatcherService.addDispatcherRecord(userId, userName, newInvoiceId, -1, 0, receiver, openId, 1); // TODO
+		if(type.equals("wechat")){
+			dispatcherService.updateDispatcherStatus(newInvoiceId, 0);
+		}
 		if (!blRet) {
 			log.error("add dispatcher log error!" + "userId:" + userId + ",reciever:" + receiver + ",InvoiceId:"
 					+ newInvoiceId);
@@ -657,33 +670,34 @@ public class InvoiceServiceImpl implements IInvoiceService {
 	public List<Map<String, Object>> newGetNeededAuditBillList(String approvalId) {
 		List<Map<String, Object>> ret = new ArrayList<>();
 		logger.debug("getNeededAuditBillList approvalId : {}", approvalId);
-		List<InvoiceApproval> invoiceApprovalList = invoiceApprovalService.getInvoiceApprovalListByUserId(approvalId);
-		if (null == invoiceApprovalList) {
+		List<UserInvoice> userInvoiceList = userInvoiceService.getUserInvoiceByApprovalIdAndStatus(approvalId, 0);
+		//List<InvoiceApproval> invoiceApprovalList = invoiceApprovalService.getInvoiceApprovalListByUserId(approvalId);
+		if (null == userInvoiceList) {
 			log.error("null invoiceApprovalList error:" + approvalId);
 			return null;
 		}
-		logger.debug("invoiceApprovalList length : {}", invoiceApprovalList.size());
+		logger.debug("invoiceApprovalList length : {}", userInvoiceList.size());
 
 		Map<String, Map<String, Object>> abstractInfoMap = new HashMap<>();
 		Map<String, List<Map<String, Object>>> detailInfoMap = new HashMap<>();
-		for (InvoiceApproval invoiceApproval : invoiceApprovalList) {
-			if (invoiceApproval.getStatus() != 0)
+		for (UserInvoice userInvoice : userInvoiceList) {
+			if (userInvoice.getStatus() != 0)
 				continue;
-			logger.debug("invoiceApproval, invoice_id :{}", invoiceApproval.getInvoiceId());
-			Dispatcher dispatch = dispatcherService.getDispatcherByInvoiceId(invoiceApproval.getInvoiceId());
+			logger.debug("invoiceApproval, invoice_id :{}", userInvoice.getInvoiceId());
+			Dispatcher dispatch = dispatcherService.getDispatcherByInvoiceId(userInvoice.getInvoiceId());
 			if (dispatch != null && -1 == dispatch.getStatus()) {
 				continue;
 			}
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("processStatus", invoiceApproval.getStatus());
-			map.put("invoice_id", invoiceApproval.getInvoiceId());
-			map.put("approval_status", invoiceApproval.getApprovalStatus() == 0 ? true : false);
+			map.put("processStatus", userInvoice.getStatus());
+			map.put("invoice_id", userInvoice.getInvoiceId());
+			map.put("approval_status", userInvoice.getApprovalStatus() == 0 ? true : false);
 			map.put("approval_id", approvalId);
 			DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			Timestamp stamp = invoiceApproval.getUpdateTime();
+			Timestamp stamp = userInvoice.getUpdateTime();
 			map.put("submit_time", sdf.format(stamp));
-			UserInvoice userInvoice = userInvoiceService.getUserInvoiceByInvoiceId(invoiceApproval.getInvoiceId());
-			if (null != userInvoice) {
+			//UserInvoice userInvoice = userInvoiceService.getUserInvoiceByInvoiceId(invoiceApproval.getInvoiceId());
+			//if (null != userInvoice) {
 				map.put("user_id", userInvoice.getUserId());
 				stamp = userInvoice.getCreateTime();
 				map.put("bill_date", sdf.format(stamp));
@@ -694,14 +708,14 @@ public class InvoiceServiceImpl implements IInvoiceService {
 				map.put("approval_name", approvalName);
 				map.put("reasons", userInvoice.getReasons() == null || userInvoice.getReasons().isEmpty() ? "无"
 						: userInvoice.getReasons());
-			}
+			//}
 			map.put("approval_id", approvalId);
 
 			// Invoice invoice =
 			// singleInvoiceService.getSingleInvoiceInfo(invoiceApproval.getInvoiceId());
-			TestInvoiceRecord invoiceRecord = invoiceDao.getInvoiceRecordById(invoiceApproval.getInvoiceId());
+			TestInvoiceRecord invoiceRecord = invoiceDao.getInvoiceRecordById(userInvoice.getInvoiceId());
 			if (null == invoiceRecord) {
-				logger.debug("invoice  record not exsisted, invoice_id : {}", invoiceApproval.getInvoiceId());
+				logger.debug("invoice  record not exsisted, invoice_id : {}", userInvoice.getInvoiceId());
 				// return map;
 				continue;
 			}

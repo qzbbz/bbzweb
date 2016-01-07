@@ -244,6 +244,7 @@ function createDataList(data) {
 	for (var i in data) {
 		var invoice_id_list_string = "";
 		var person_invoice_count = 0;
+		console.log(data[i].invoice_count);
 		all_invoice_count = all_invoice_count + parseInt(data[i].invoice_count);
 		all_invoice_total_amount = all_invoice_total_amount + parseFloat(data[i].invoice_total_amount);
 		var rootNode = document.createElement('div');
