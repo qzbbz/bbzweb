@@ -199,7 +199,8 @@ function addCommentToInvoice(invoice_id){
 			type: "POST",
 			data: {'invoice_id': invoice_id, 'comment': comment},
 			success: function(data) {
-				window.location = "/views/weixinviews/invoice_audit_detail.html";
+				console.log(data);
+				console.log("comment updated");
 				if (ajaxCallBack) ajaxCallBack();
 			},
 			error: function(status, error) {
@@ -319,6 +320,9 @@ function createDataList(data) {
 		img_group = img_group + 1;
 		var detailDataList = data.list;
 		for (var j in detailDataList) {
+			if(detailDataList[j].bill_amount == 0){
+				continue;
+			}
 			if(invoice_id_list_string != "") {invoice_id_list_string = invoice_id_list_string + ","}
 			var liNode = document.createElement('li');
 			liNode.setAttribute('class', 'mui-table-view-cell');
@@ -336,28 +340,6 @@ function createDataList(data) {
 		//rootNode.setAttribute('user_name', data[i].user_name);
 		rootNode.setAttribute('person_invoice_count', person_invoice_count);
 		rootNode.setAttribute('invoice_id_list_string', invoice_id_list_string);
-		rootNode.addEventListener("tap", function(){
-			var id_list = this.getAttribute("invoice_id_list_string");
-
-			mui.ajax({
-				url: '/storeRequestInvoiceIds',
-				type: "POST",
-				data: {},
-				success: function(data) {
-					window.location = "/views/weixinviews/invoice_audit_detail.html";
-					if (ajaxCallBack) ajaxCallBack();
-				},
-				error: function(status, error) {
-					mui.createTipDialog('请求服务器数据出错，请稍后下拉刷新重试！', null).show();
-					document.getElementById('data_loading').style.display = 'none';
-					document.getElementById('no_data_tips').style.display = '';
-					document.getElementById('data_abstract').style.display = "none";
-					document.getElementById('data_details').style.display = "none";
-					if (ajaxCallBack) ajaxCallBack();
-				}
-			});
-
-		});
 		dataDetailsNode.appendChild(rootNode);
 	
 	bindLeftAndRightSliderEvent();

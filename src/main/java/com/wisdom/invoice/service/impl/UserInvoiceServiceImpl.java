@@ -80,4 +80,14 @@ public class UserInvoiceServiceImpl implements IUserInvoiceService {
 			String userId, int status, int approvalStatus) {
 		return userInvoiceDao.getUserInvoiceByUserIdAndStatusAndApprovalStatus(userId, status, approvalStatus);
 	}
+
+	@Override
+	public boolean updateUserInvoiceReason(long invoiceId, String reason) {
+		return userInvoiceDao.updateUserInvoiceReason(invoiceId, reason);
+	}
+
+	@Override
+	public List<UserInvoice> getUserInvoiceByApprovalIdAndStatus(String approvalId, int status) {
+		return userInvoiceDao.getUserInvoiceByApprovalIdAndStatus(approvalId, status);
+	}
 }
