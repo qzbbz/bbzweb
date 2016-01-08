@@ -419,10 +419,6 @@ document.getElementById('fapiaoluru_submit').addEventListener('tap', function(ev
 	xhr.open("POST", "/uploadPersonInvoice");
 	xhr.send(fd);
 }, false);
-document.getElementById("data_loading").style.display = "none";
-document.getElementById("add_invoice_page").style.display = "";
-document.getElementById("tips_image").style.display = "";
-document.getElementById("fapiaoluru_submit").style.display = "";
 
 
 

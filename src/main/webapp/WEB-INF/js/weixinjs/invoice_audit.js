@@ -360,7 +360,7 @@ mui(mui('#pull_refresh')[0]).pullToRefresh({
 	}
 });
 
-getNeedAuditInvoice(null);
+
 
 mui.ajax({
 	url: '/getUserOpenId',
