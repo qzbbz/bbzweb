@@ -260,38 +260,7 @@ function bindLeftAndRightSliderEvent() {
 	});
 }
 
-function bindAllPassButtonEvent() {
-	mui('.mui-pull-right').on('tap', '.mui-btn-success', function(event) {
-		var elem = this;
-		var rootNode = elem.parentNode.parentNode.parentNode.parentNode.parentNode;
-		var invoice_id_list_string = rootNode.getAttribute('invoice_id_list_string');
-		var person_invoice_count = parseInt(rootNode.getAttribute('person_invoice_count'));
-		var person_invoice_total_amount = parseFloat(rootNode.getAttribute('person_invoice_total_amount'));
-		var mask = mui.createProcessingMask(null);
-		mask.show();
-		alert(invoice_id_list_string);
-		console.log(invoice_id_list_string);
-		auditInvoice(invoice_id_list_string, 0, function() {
-			var dataDetailNode = rootNode.parentNode;
-			dataDetailNode.removeChild(rootNode);
-			document.getElementById('need_audit_invoice_count').innerHTML = parseInt(document.getElementById('need_audit_invoice_count').innerHTML) - person_invoice_count;
-			document.getElementById('need_audit_invoice_total_amount').innerHTML = (parseFloat(document.getElementById('need_audit_invoice_total_amount').innerHTML) - person_invoice_total_amount).toFixed(2);
-			if (dataDetailNode.firstChild == null) {
-				document.getElementById('data_abstract').style.display = "none";
-				document.getElementById('data_details').style.display = "none";
-				document.getElementById('no_data_tips').style.display = '';
-			}
-			mask.close();
-		}, function(msg) {
-			mask.close();
-			if(msg == null) {
-				mui.createTipDialog('服务器处理请求失败，请稍后重试!', null).show();
-			} else {
-				mui.createTipDialog(msg, null).show();
-			}
-		});
-	});
-}
+
 
 function createDataList(data) {
 	document.getElementById('data_loading').style.display = "none";
@@ -312,7 +281,7 @@ function createDataList(data) {
 		var abstractNode = document.createElement('div');
 		abstractNode.style.backgroundColor = "white";
 		abstractNode.style.border = "1px solid #ddd";
-		abstractNode.innerHTML = "<div style='background-color: white;border:1px solid #ddd;'><div style='height:60px;'><div class='mui-pull-left' style='margin-left:10px;margin-top:8px;'><div style='font-size:11px;color:#7D9EC0;'>发票提交人：" + data.user_name + "</div><div style='font-size:11px;color:#7D9EC0;'>发票总金额：&#65509;<span class='person_total_amount' style='font-size:11px;'>" + data.invoice_total_amount + "</span></div></div><div class='mui-pull-right' style='margin-right:10px;margin-top:10px;'><button class='mui-btn mui-btn-block mui-btn-success' style='height:40px;width:120px;padding:0px 0px;'><span style='font-size: 15px;'>全部通过</span></button></div></div></div>";
+		abstractNode.innerHTML = "<div style='background-color: white;border:1px solid #ddd;'><div style='height:60px;'><div class='mui-pull-left' style='margin-left:10px;margin-top:8px;'><div style='font-size:11px;color:#7D9EC0;'>发票提交人：" + data.user_name + "</div><div style='font-size:11px;color:#7D9EC0;'>发票总金额：&#65509;<span class='person_total_amount' style='font-size:11px;'>" + data.invoice_total_amount + "</span></div></div><div class='mui-pull-right' style='margin-right:10px;margin-top:10px;'></div></div></div>";
 		rootNode.appendChild(abstractNode);
 		var ulNode = document.createElement('div');
 		ulNode.setAttribute("class", "mui-table-view");
@@ -342,7 +311,6 @@ function createDataList(data) {
 		dataDetailsNode.appendChild(rootNode);
 	
 	bindLeftAndRightSliderEvent();
-	bindAllPassButtonEvent();
 	document.getElementById('need_audit_invoice_count').innerHTML = all_invoice_count;
 	document.getElementById('need_audit_invoice_total_amount').innerHTML = all_invoice_total_amount.toFixed(2);
 	document.getElementById('data_abstract').style.display = "";

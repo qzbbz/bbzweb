@@ -361,7 +361,6 @@ mui(mui('#pull_refresh')[0]).pullToRefresh({
 });
 
 
-
 mui.ajax({
 	url: '/getUserOpenId',
 	type: "POST",
