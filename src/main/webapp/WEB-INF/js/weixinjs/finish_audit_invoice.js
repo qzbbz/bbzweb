@@ -116,9 +116,12 @@ function createDataList(data) {
 			var liNode = document.createElement('li');
 			liNode.setAttribute('class', 'mui-table-view-cell');
 			if(detailDataList[j].approval_status == true || detailDataList[j].approval_status == "true") {
-				liNode.innerHTML = "<img class='mui-media-object mui-pull-left' style='width:60px;height:60px;max-width:60px;border-radius: 5px;' data-preview-group='" + img_group + "' data-preview-src='' src='"+detailDataList[j].bill_img+"'><div class='mui-media-body mui-pull-left'><div><p>&#65509;"+detailDataList[j].bill_amount+"</p><h5>"+detailDataList[j].bill_title+"</h5><p class='mui-ellipsis'>审核人：<span>"+detailDataList[j].approval_name+"</span></p></div></div><span class='mui-pull-right mui-icon iconfont icon-Through-audit' style='width:60px;height:50px;max-width:60px;font-size:50px;margin-top:15px;margin-right:5px;color: green;'>";
+				liNode.innerHTML = "<img class='mui-media-object mui-pull-left' style='width:60px;height:60px;max-width:60px;border-radius: 5px;' data-preview-group='" + img_group + "' data-preview-src='' src='"+detailDataList[j].bill_img+"'><div class='mui-media-body mui-pull-left'><div><p>&#65509;"+detailDataList[j].bill_amount+"</p><h5>"+detailDataList[j].bill_title+"</h5><p class='mui-ellipsis'>审核人：<span>"+detailDataList[j].approval_name+"</span></p><p class='mui-ellipsis'><span>"+detailDataList[j].reasons+"</span></p></div></div><span class='mui-pull-right mui-icon iconfont icon-Through-audit' style='width:60px;height:50px;max-width:60px;font-size:50px;margin-top:15px;margin-right:5px;color: green;'>";
 			} else {
-				liNode.innerHTML = "<img class='mui-media-object mui-pull-left' style='width:60px;height:60px;max-width:60px;border-radius: 5px;' data-preview-group='" + img_group + "' data-preview-src='' src='"+detailDataList[j].bill_img+"'><div class='mui-media-body mui-pull-left'><div><p>&#65509;"+detailDataList[j].bill_amount+"</p><h5>"+detailDataList[j].bill_title+"</h5><p class='mui-ellipsis'>审核人：<span>"+detailDataList[j].approval_name+"</span></p></div></div><span class='mui-pull-right mui-icon iconfont icon-Audit-failure' style='width:60px;height:50px;max-width:60px;font-size:50px;margin-top:15px;margin-right:5px;color: red;'>";
+				liNode.innerHTML = "<img class='mui-media-object mui-pull-left' style='width:60px;height:60px;max-width:60px;border-radius: 5px;' data-preview-group='" + img_group + "' data-preview-src='' src='"+detailDataList[j].bill_img+"'><div class='mui-media-body mui-pull-left'><div><p>&#65509;"+detailDataList[j].bill_amount+"</p><h5>"+detailDataList[j].bill_title+"</h5><p class='mui-ellipsis'>审核人：<span>"+detailDataList[j].approval_name+"</span></p><p class='mui-ellipsis'><span>"+detailDataList[j].reasons+"</span></p></div></div><span class='mui-pull-right mui-icon iconfont icon-Audit-failure' style='width:60px;height:50px;max-width:60px;font-size:50px;margin-top:15px;margin-right:5px;color: red;'>";
+				liNode.addEventListener('tap', function(){
+					window.location = "/views/weixinviews/person_upload_invoice.html";
+				});
 			}
 			timeBlockContentULNode.appendChild(liNode);
 		}
@@ -176,6 +179,8 @@ mui(mui('#pull_refresh')[0]).pullToRefresh({
 		}
 	}
 });
+getFinishAuditInvoice(null);
+
 mui.ajax({
 	url: '/getUserOpenId',
 	type: "POST",

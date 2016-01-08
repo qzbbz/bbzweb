@@ -203,10 +203,7 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 					BUI.Message.Alert('请输入服务费用！','warning');
 					return;
 				}
-				if(serviceExpiredTime == null || serviceExpiredTime == ""){
-					BUI.Message.Alert('请输入服务到期时间', 'warning');
-					return;
-				}
+
 				$.ajax({
 					url : '/admin/modifyCompanyPayInfo',
 					type : "POST",

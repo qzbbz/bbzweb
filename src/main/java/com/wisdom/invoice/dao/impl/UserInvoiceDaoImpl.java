@@ -217,4 +217,32 @@ public class UserInvoiceDaoImpl implements IUserInvoiceDao {
 		return list;
 	}
 
+	@Override
+	public boolean updateUserInvoiceReason(long invoiceId, String reason) {
+		String sql = "update user_invoice set reasons = ? where invoice_id = ?";
+		try {
+			int affectedRows = jdbcTemplate
+					.update(sql, reason, invoiceId);
+			logger.debug("updateUserInvoiceReason result : {}", affectedRows);
+			return affectedRows != 0;
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	@Override
+	public List<UserInvoice> getUserInvoiceByApprovalIdAndStatus(String approvalId, int status) {
+		List<UserInvoice> list = null;
+		try {
+			String sql = "select * from user_invoice where approval_id = ? and status = ?";
+			list = jdbcTemplate.query(sql, new Object[] { approvalId, status},
+					new RowMapperResultSetExtractor<UserInvoice>(
+							new UserInvoiceMapper()));
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return list;
+	}
+
 }

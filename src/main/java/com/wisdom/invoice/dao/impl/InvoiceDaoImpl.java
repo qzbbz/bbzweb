@@ -447,4 +447,15 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 		}
 		return false;
 	}
+	@Override
+	public boolean setInvoiceComment(long invoiceId, String comment) {
+		String sql = "update test_invoice set comment = ? where id = ?";
+		try{
+			int affectedRows = jdbcTemplate.update(sql, comment, invoiceId);
+			return affectedRows != 0;
+		}catch(DataAccessException e){
+			e.printStackTrace();
+		}
+		return false;
+	}
 }

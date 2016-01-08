@@ -138,7 +138,7 @@ public class ExpenseAccountServiceImpl implements IExpenseAccountService {
 				// params.put("expenseTypeId", Double.valueOf());
 				Map<String, Object> retMap = invoiceService
 						.createInvoiceProcess(userId, base64ImageStr, "0", "1",
-								new HashMap());
+								new HashMap(), "wechat");
 				if (!retMap.containsKey("success")
 						|| !(boolean) retMap.get("success")) {
 					base64ImageStr = "";
@@ -172,7 +172,7 @@ public class ExpenseAccountServiceImpl implements IExpenseAccountService {
 			if (userId != null && !userId.isEmpty()) {
 				Map<String, Object> retMap = invoiceService
 						.createInvoiceProcess(userId, base64ImageStr, "0", "1",
-								new HashMap());
+								new HashMap(), "wechat");
 				if (!retMap.containsKey("success")
 						|| !(boolean) retMap.get("success")) {
 					base64ImageStr = "";
@@ -221,7 +221,7 @@ public class ExpenseAccountServiceImpl implements IExpenseAccountService {
 		if (userId == null || userId.isEmpty())
 			return false;
 		Map<String, Object> retMap = invoiceService.createInvoiceProcess(
-				userId, image, "0", "1", new HashMap());
+				userId, image, "0", "1", new HashMap(), "wechat");
 		if (retMap.containsKey("success") && (boolean) retMap.get("success")) {
 			return true;
 		} else {
@@ -266,7 +266,7 @@ public class ExpenseAccountServiceImpl implements IExpenseAccountService {
 			if (userId != null && !userId.isEmpty()) {
 				Map<String, Object> retMap = invoiceService
 						.createInvoiceProcess(userId, base64ImageStr, "0", "1",
-								params);
+								params, "wechat");
 				if (!retMap.containsKey("success")
 						|| !(boolean) retMap.get("success")) {
 					base64ImageStr = "";

@@ -25,4 +25,9 @@ public interface IUserInvoiceDao {
 	public List<InvoiceInfo> getInvoiceInfoByCondition(String userId,String date,
 					String submitter,Double amout,Integer expenseType,Integer page,Integer pageSize);
 	/*我的收件箱 end*/
+	
+	public boolean updateUserInvoiceReason(long invoiceId, String reason);
+	
+	public List<UserInvoice> getUserInvoiceByApprovalIdAndStatus(String approvalId, int status);
+
 }
