@@ -185,7 +185,6 @@ mui.previewImage({
 });
 
 var userOpenId = "";
-userOpenId = "oJO1gtyaaLM2QMHFNBSPLkZy1Pmk";
 
 function getImageDataURL(img) {
 	var canvas = document.createElement('canvas');
@@ -353,7 +352,7 @@ document.getElementById('fapiaoluru_submit').addEventListener('tap', function(ev
 		return;
 	}
 	var mask = mui.createUploadMask(false);
-	mask.show();
+
 	$('#upload_progress').find('strong').html(0 + '<i>%</i>');
 	amounts = document.getElementsByClassName('expense_amount');
 	var typeSelects = document.getElementsByClassName('expense_type');
@@ -372,10 +371,16 @@ document.getElementById('fapiaoluru_submit').addEventListener('tap', function(ev
 	var amountsStr = "";
 	
 	for (var i = 0; i < amounts.length; i++){
+		var regex = /[0-9]|\./;
+		  if( !regex.test(amounts[i].value) ) {
+			  mui.createTipDialog('请输入正确的金额!',null).show();
+			  return;
+		  }
 		amountsStr += amounts[i].value + ";";
 	}
 
 	console.log(typesStr);
+	mask.show();
 	var formData = {openId:userOpenId, expense_amount:amountsStr, expense_type:typesStr};
 	var xhr = new XMLHttpRequest();
 	var fd = new FormData();
@@ -397,6 +402,7 @@ document.getElementById('fapiaoluru_submit').addEventListener('tap', function(ev
 		if (res.error_code == "0") {
 			mui.createTipDialog('发票上传成功!',null).show();
 			invoiceList = {};
+			totalCount = 0;
 			document.getElementById('tips_image').style.display = "";
 			document.getElementById('invoice_img_list_ul').innerText = "";
 			document.getElementById('invoice_img_list_root_div').style.display = "none";
@@ -420,7 +426,7 @@ document.getElementById("fapiaoluru_submit").style.display = "";
 
 
 
-/*mui.ajax({ 
+mui.ajax({ 
     type : "POST", 
     url  : "/getUserOpenIdAndCheckBindCompany",
     data : {}, 
@@ -450,4 +456,4 @@ document.getElementById("fapiaoluru_submit").style.display = "";
     	document.getElementById("tips_info_detail").innerHTML = "服务器暂时无法响应请求，请稍后重试！";
     	document.getElementById("tips_info").style.display = "";
     } 
-});*/
+});

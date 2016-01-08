@@ -1,5 +1,4 @@
 var userOpenId = "";
-userOpenId = "oJO1gtyVvLuWxm6N4T1JuYMzgysw";
 
 function checkJsonIsEmpty(json) {
 	var isEmpty = true;
@@ -362,7 +361,7 @@ mui(mui('#pull_refresh')[0]).pullToRefresh({
 });
 
 getNeedAuditInvoice(null);
-/*
+
 mui.ajax({
 	url: '/getUserOpenId',
 	type: "POST",
@@ -384,7 +383,7 @@ mui.ajax({
 		document.getElementById('no_data_tips').style.innerHTML = "请求服务器数据出错，请稍后下拉刷新重试！";
 		document.getElementById('no_data_tips').style.display = '';
 	}
-});*/
+});
 var testData = [{
 	"user_name": "小明",
 	"invoice_count": "2",

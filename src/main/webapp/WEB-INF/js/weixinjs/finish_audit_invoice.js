@@ -1,7 +1,6 @@
 var currentPage = 1;
 var displayCountPerPage = 6;
 var userOpenId = "";
-userOpenId = "oJO1gtyaaLM2QMHFNBSPLkZy1Pmk";
 function checkJsonIsEmpty(json) {
 	var isEmpty = true;
 	if (json == null) return true;
@@ -120,6 +119,9 @@ function createDataList(data) {
 				liNode.innerHTML = "<img class='mui-media-object mui-pull-left' style='width:60px;height:60px;max-width:60px;border-radius: 5px;' data-preview-group='" + img_group + "' data-preview-src='' src='"+detailDataList[j].bill_img+"'><div class='mui-media-body mui-pull-left'><div><p>&#65509;"+detailDataList[j].bill_amount+"</p><h5>"+detailDataList[j].bill_title+"</h5><p class='mui-ellipsis'>审核人：<span>"+detailDataList[j].approval_name+"</span></p><p class='mui-ellipsis'><span>"+detailDataList[j].reasons+"</span></p></div></div><span class='mui-pull-right mui-icon iconfont icon-Through-audit' style='width:60px;height:50px;max-width:60px;font-size:50px;margin-top:15px;margin-right:5px;color: green;'>";
 			} else {
 				liNode.innerHTML = "<img class='mui-media-object mui-pull-left' style='width:60px;height:60px;max-width:60px;border-radius: 5px;' data-preview-group='" + img_group + "' data-preview-src='' src='"+detailDataList[j].bill_img+"'><div class='mui-media-body mui-pull-left'><div><p>&#65509;"+detailDataList[j].bill_amount+"</p><h5>"+detailDataList[j].bill_title+"</h5><p class='mui-ellipsis'>审核人：<span>"+detailDataList[j].approval_name+"</span></p><p class='mui-ellipsis'><span>"+detailDataList[j].reasons+"</span></p></div></div><span class='mui-pull-right mui-icon iconfont icon-Audit-failure' style='width:60px;height:50px;max-width:60px;font-size:50px;margin-top:15px;margin-right:5px;color: red;'>";
+				liNode.addEventListener('tap', function(){
+					window.location = "/views/weixinviews/person_upload_invoice.html";
+				});
 			}
 			timeBlockContentULNode.appendChild(liNode);
 		}
@@ -178,7 +180,7 @@ mui(mui('#pull_refresh')[0]).pullToRefresh({
 	}
 });
 getFinishAuditInvoice(null);
-/*
+
 mui.ajax({
 	url: '/getUserOpenId',
 	type: "POST",
@@ -200,7 +202,7 @@ mui.ajax({
 		document.getElementById('no_data_tips').style.innerHTML = "请求服务器数据出错，请稍后下拉刷新重试！";
 		document.getElementById('no_data_tips').style.display = '';
 	}
-});*/
+});
 var testData = [{"submit_time":"2015-12-22","list":[{"bill_img": "images/shuijiao.jpg",
 	"invoice_id": "11",
 	"bill_amount": "258.79",

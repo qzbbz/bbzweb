@@ -294,11 +294,17 @@ public class ExpenseAccountController {
 			}
 			element.put("invoice_total_amount", result.get("invoice_total_amount"));
 			element.put("user_name", result.get("user_name"));
-			element.put("invoice_count", result.get("invoice_count"));
+			Integer count = 0;
 			List<Map<String, Object>> list = (List<Map<String, Object>>) result.get("list");
 			for(Map<String, Object> detail: list){
-				id_list_string += detail.get("invoice_id")+",";
+				System.out.println(detail);
+				if((Double)detail.get("bill_amount") != 0){
+					count += 1;
+					id_list_string += detail.get("invoice_id")+",";
+				}
+
 			}
+			element.put("invoice_count", count);
 			id_list_string = id_list_string.substring(0, id_list_string.length()-1);
 			element.put("person_invoice_count", list.size());
 			element.put("invoice_id_list_string", id_list_string);

@@ -1,5 +1,4 @@
 var userOpenId = "";
-userOpenId = "oJO1gtyVvLuWxm6N4T1JuYMzgysw";
 
 function checkJsonIsEmpty(json) {
 	var isEmpty = true;
@@ -131,7 +130,7 @@ mui.createConfirmDialog = function(info, cancelCallBack, acceptCallBack) {
 	return mask;
 };
 
-mui.createCommentDialog = function(info, cancelCallBack, acceptCallBack) {
+mui.createCommentDialog = function(info, cancelCallBack, acceptCallBack, invoice_id) {
 	var template = "<div style='width:80%;margin:50% 10%;border:1px solid #ddd;background-color: white;border-radius: 5px;'><div style='margin-top:20px;margin-left:20px;'>审核信息</div><hr/><div style='margin-top:20px;margin-left:20px;margin-bottom:20px;margin-right:20px;height:60px;'><textarea id='comment' placeholder='输入审核'></textarea></div><div style='text-align:right;margin-bottom:20px;margin-right:20px;'><a id='createCommentDialog_accept' href='javascript:void(0);' style='text-decoration:none;'>确定</a></div></div>";
 	var element = document.createElement('div');
 	element.classList.add('dialog');
@@ -144,7 +143,7 @@ mui.createCommentDialog = function(info, cancelCallBack, acceptCallBack) {
 		element.setAttribute('style', 'opacity:1');
 		document.body.appendChild(element);
 		document.getElementById('createCommentDialog_accept').addEventListener('tap', function() {
-			if (acceptCallBack) acceptCallBack();
+			if (acceptCallBack) acceptCallBack(invoice_id);
 			mask.close();
 		});
 		return mask;
@@ -201,7 +200,7 @@ function addCommentToInvoice(invoice_id){
 			success: function(data) {
 				console.log(data);
 				console.log("comment updated");
-				if (ajaxCallBack) ajaxCallBack();
+				//if (ajaxCallBack) ajaxCallBack();
 			},
 			error: function(status, error) {
 				mui.createTipDialog('请求服务器数据出错，请稍后下拉刷新重试！', null).show();
@@ -220,7 +219,7 @@ function leftAndRightSliderEventCallback(element, approvalStatus) {
 	var invoice_id = elem.getAttribute('invoice_id');
 	var invoice_amount = parseFloat(elem.getAttribute('invoice_amount'));
 	//var mask = mui.createProcessingMask(null);
-	mui.createCommentDialog("hola", null, addCommentToInvoice(invoice_id)).show();
+	mui.createCommentDialog("hola", null, addCommentToInvoice, invoice_id).show();
 	//mask.show();
 	auditInvoice(invoice_id, approvalStatus, function() {
 		var ulNode = elem.parentNode;
@@ -402,7 +401,7 @@ mui(mui('#pull_refresh')[0]).pullToRefresh({
 });
 
 getNeedAuditInvoice(null);
-/*
+
 mui.ajax({
 	url: '/getUserOpenId',
 	type: "POST",
@@ -424,7 +423,7 @@ mui.ajax({
 		document.getElementById('no_data_tips').style.innerHTML = "请求服务器数据出错，请稍后下拉刷新重试！";
 		document.getElementById('no_data_tips').style.display = '';
 	}
-});*/
+});
 var testData = [{
 	"user_name": "小明",
 	"invoice_count": "2",
