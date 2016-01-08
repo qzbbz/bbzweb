@@ -179,7 +179,7 @@ mui(mui('#pull_refresh')[0]).pullToRefresh({
 		}
 	}
 });
-getFinishAuditInvoice(null);
+
 
 mui.ajax({
 	url: '/getUserOpenId',
