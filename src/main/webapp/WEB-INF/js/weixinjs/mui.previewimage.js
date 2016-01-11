@@ -1,4 +1,5 @@
 var invoiceList = {};
+var loadedImg;
 (function($, window) {
 
 	var template = '<div id="{{id}}" class="mui-slider mui-preview-image mui-fullscreen"><div class="mui-preview-header">{{header}}</div><div class="mui-slider-group"></div><div class="mui-preview-footer mui-hidden">{{footer}}</div><div class="mui-preview-loading"><span class="mui-spinner mui-spinner-white"></span></div></div>';
@@ -49,18 +50,24 @@ var invoiceList = {};
 		});
 		if(isUpload) {
 			document.getElementById('trashImage').addEventListener('tap', function(event){
-				var imgList = $('#invoice_img_list_ul img');
-				var imgEle = self.element.querySelector('.mui-active img');
+				var imgList = $('#invoice_img_list_ul li');
+				console.log(imgList);
+				//var imgEle = self.element.querySelector('img');
+				console.log(loadedImg);
 				for(var i=0; i<imgList.length; i++) {
-					if(imgList[i].src == imgEle.src) {
+					var img = imgList[i].childNodes[0].childNodes[0];
+					console.log(img);
+					if(img.src == loadedImg.src) {
 						mui.createConfirmDialog('您确定要删除当前发票图像吗？',
 							function(){
 								self.close();
 							},
 							function(){
-								document.getElementById('invoice_img_list_ul').removeChild(imgList[i].parentNode);
+								console.log(document.getElementById('invoice_img_list_ul'));
+								//console.log()
+								document.getElementById('invoice_img_list_ul').removeChild(imgList[i]);
 								for(var jsonKey in invoiceList) {
-									if(jsonKey == imgEle.src) {
+									if(jsonKey == loadedImg.src) {
 										delete invoiceList[jsonKey];
 										break;
 									}
@@ -217,12 +224,15 @@ var invoiceList = {};
 		var itemEl = this.scroller.querySelector($.classSelector('.slider-item:nth-child(' + (index + 1) + ')'));
 		var itemData = this.currentGroup[index];
 		var imgEl = itemEl.querySelector('img');
+		loadedImg = imgEl;
+		console.log(imgEl);
 		this._initImgData(itemData, imgEl);
 		if (isOpening) {
 			var posi = this._getPosition(itemData);
 			imgEl.style.webkitTransitionDuration = '0ms';
 			imgEl.style.webkitTransform = 'translate3d(' + posi.x + 'px,' + posi.y + 'px,0) scale(' + itemData.sScale + ')';
 			imgEl.offsetHeight;
+			//imgEl.setAttribute("class", "loaded zoom");
 		}
 		if (!itemData.loaded && imgEl.getAttribute('data-preview-lazyload')) {
 			var self = this;
