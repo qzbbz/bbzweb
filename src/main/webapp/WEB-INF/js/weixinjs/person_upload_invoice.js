@@ -185,6 +185,7 @@ mui.previewImage({
 });
 
 var userOpenId = "";
+userOpenId = 'oJO1gtyaaLM2QMHFNBSPLkZy1Pmk';
 
 function getImageDataURL(img) {
 	var canvas = document.createElement('canvas');
@@ -215,7 +216,7 @@ function getAllExpenseTypes(){
 	});
 }
 
-var totalCount = 0;
+totalCount = 0;
 document.getElementById("fapiaoluru_addInvoiceImage").onchange = function(event) {
 
 	
@@ -265,6 +266,8 @@ document.getElementById("fapiaoluru_addInvoiceImage").onchange = function(event)
 	}
 	var selectNode = document.createElement("select");
 	selectNode.setAttribute("class", "expense_type");
+	selectNode.id = "expense-type"+totalCount;
+
 	for(var key in expenseTypes){
 		var optionNode = document.createElement("option");
 		optionNode.innerHTML = expenseTypes[key];
@@ -357,12 +360,15 @@ document.getElementById('fapiaoluru_submit').addEventListener('tap', function(ev
 	amounts = document.getElementsByClassName('expense_amount');
 	var typeSelects = document.getElementsByClassName('expense_type');
 	console.log(typeSelects);
+	console.log(typeSelects.length);
 	var typesStr = "";
 	console.log("mark");
 	for(var i = 0; i < typeSelects.length; i++){
-		console.log(typeSelects);
+		console.log(typeSelects[i]);
 		console.log(i);
-		var options = document.getElementsByClassName('expense-type' + i);
+		console.log(typeSelects[i].id);
+		var options = document.getElementsByClassName(typeSelects[i].id);
+		console.log(options);
 		console.log(typeSelects[i].selectedIndex);
 		console.log(options);
 		typesStr += options[typeSelects[i].selectedIndex].value + ";";
@@ -421,7 +427,12 @@ document.getElementById('fapiaoluru_submit').addEventListener('tap', function(ev
 }, false);
 
 
+document.getElementById("data_loading").style.display = "none";
+document.getElementById("add_invoice_page").style.display = "";
+document.getElementById("tips_image").style.display = "";
+document.getElementById("fapiaoluru_submit").style.display = "";
 
+/*
 mui.ajax({ 
     type : "POST", 
     url  : "/getUserOpenIdAndCheckBindCompany",
@@ -452,4 +463,4 @@ mui.ajax({
     	document.getElementById("tips_info_detail").innerHTML = "服务器暂时无法响应请求，请稍后重试！";
     	document.getElementById("tips_info").style.display = "";
     } 
-});
+});*/
