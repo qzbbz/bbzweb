@@ -185,7 +185,6 @@ mui.previewImage({
 });
 
 var userOpenId = "";
-userOpenId = 'oJO1gtyaaLM2QMHFNBSPLkZy1Pmk';
 
 function getImageDataURL(img) {
 	var canvas = document.createElement('canvas');
@@ -427,12 +426,7 @@ document.getElementById('fapiaoluru_submit').addEventListener('tap', function(ev
 }, false);
 
 
-document.getElementById("data_loading").style.display = "none";
-document.getElementById("add_invoice_page").style.display = "";
-document.getElementById("tips_image").style.display = "";
-document.getElementById("fapiaoluru_submit").style.display = "";
 
-/*
 mui.ajax({ 
     type : "POST", 
     url  : "/getUserOpenIdAndCheckBindCompany",
@@ -463,4 +457,4 @@ mui.ajax({
     	document.getElementById("tips_info_detail").innerHTML = "服务器暂时无法响应请求，请稍后重试！";
     	document.getElementById("tips_info").style.display = "";
     } 
-});*/
+});
