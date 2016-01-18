@@ -48,6 +48,10 @@ public class UserValidateController {
 					retMap.put("error_message", "服务器系统出错了，请您稍后重试！");
 				} else if (userTypeId == 2
 						&& !userValidateApi.companyHasFinishRegister(userId)) {
+				    httpSession.setAttribute(SessionConstant.SESSION_USER_EMAIL,
+                            userId);
+                    httpSession.setAttribute(SessionConstant.SESSION_USER_PASSWORD,
+                            userPwd);
 					retMap.put("error_code", "4");
 				} else if((userTypeId == 1 || userTypeId == 2) && userValidateApi.getUserAuditStatusByUserId(userId) == 0) {
 					retMap.put("error_code", "100");
