@@ -71,10 +71,8 @@ public class DefaultMessageDelegate implements MessageDelegate {
         = new TypeReference<List<HashMap<String,Object>>>() {};
         String contentStr = (String) data.get("data");
         List<Map<String,String>> content = mapper2.readValue(contentStr, typeRef); 
-        System.out.println(content);
         String requestId = UUID.randomUUID().toString();
         invoiceService.setIsFAOfInvoice(invoiceId, fA, requestId);
-
 	    invoiceService.addInvoiceArtifact(invoiceId, content, requestId);
 	    dispatcherService.updateDispatcherStatus(invoiceId, 0);
 

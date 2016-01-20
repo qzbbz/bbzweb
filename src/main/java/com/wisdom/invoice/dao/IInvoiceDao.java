@@ -29,7 +29,7 @@ public interface IInvoiceDao {
 	
 	public boolean setIsFAOfInvoice(long invoiceId, boolean isFA, String itemId);
 	
-	public boolean addInvoiceArtifact(long invoiceId, double amount, String type, String supplierName, String itemId);
+	public boolean addInvoiceArtifact(long invoiceId, double amount, String type, String supplierName, double tax, String itemId);
 	
 	public boolean deleteInvoiceArtifactByInvoiceId(long invoiceId);
 	
