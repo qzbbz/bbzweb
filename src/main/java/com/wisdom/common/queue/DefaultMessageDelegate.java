@@ -74,7 +74,7 @@ public class DefaultMessageDelegate implements MessageDelegate {
         System.out.println(content);
         String requestId = UUID.randomUUID().toString();
         invoiceService.setIsFAOfInvoice(invoiceId, fA, requestId);
-
+        System.out.println(content);
 	    invoiceService.addInvoiceArtifact(invoiceId, content, requestId);
 	    dispatcherService.updateDispatcherStatus(invoiceId, 0);
 
