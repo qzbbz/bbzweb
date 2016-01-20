@@ -35,11 +35,12 @@
 			</div> -->
 			<table class="table center">
 	    		<colgroup>
-	    			<col style="width:8%;">
-	    			<col style="width:10%;">
-	    			<col style="width:10%;">
-	    			<col style="width:15%;">
-	    			<col style="width:8%;">
+	    			<col style="width:7%;">
+	    			<col style="width:9%;">
+	    			<col style="width:9%;">
+	    			<col style="width:5%;">
+	    			<col style="width:14%;">
+	    			<col style="width:7%;">
 	    			<col style="width:20%;">
 	    			<col style="width:13%;">
 	    			<col style="width:13%;">
@@ -49,6 +50,7 @@
 	    				<th>发票上传日期</th>
 	    				<th>公司名称</th>
 	    				<th>发票金额</th>
+	    				<th>税额</th>
 	    				<th>供应商名称</th>
 	    				<th>固定资产</th>
 	    				<th>费用类型</th>
@@ -72,6 +74,13 @@
 						data-rules="{required : true}" style="width:250px;">
 				</div>
 			</div>
+			<div class="control-group">
+				<label class="control-label">发票税额：</label>
+				<div class="controls">
+					<input id="tax" type="text" class="input-large"
+						data-rules="{required : true}" style="width:250px;">
+				</div>
+			</div>			
 			<div class="control-group">
 				<label class="control-label">供应商名称：</label>
 				<div class="controls control-row-auto">
@@ -272,6 +281,7 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 			var amount=$('#modify_amount').val();
 			var type=$("#modify_type").val();
 			var supplyName=$('#supplyName').val();
+			var tax = $("#tax").val();
 			var flag=$("#isFixedAssets").prop('checked') ? 1 : 0;
 			if(!isNumber(amount)) {
 				BUI.Message.Alert('金额必须为数字，请检查！','warning');
@@ -288,7 +298,7 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 			$.ajax({
 				url : '/accounter/modifyCompanyBill',
 				type : "POST",
-				data : {id:id, amount:amount, type:type, supplyName:supplyName, isFixedAssets:flag},
+				data : {id:id, amount:amount, type:type, supplyName:supplyName, tax:tax, isFixedAssets:flag},
 				success : function(data) {
 					$.ajax({
 						url : '/accounter/getAllCompanyBill',
@@ -310,7 +320,7 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 			for(var i=0; i<data.length; i++) {
 				var container = $('#retData');
 				var trNode = $("<tr></tr>");
-			    var tdNode1 = $("<td>"+data[i].date+"</td><td>"+data[i].company_name+"</td><td>"+(data[i].amount == null || data[i].amount == "" ? "0" : data[i].amount)+"</td><td>"+(data[i].supplyName == null || data[i].supplyName == "" ? "未设定" : data[i].supplyName)+"</td><td>"+(data[i].isFixedAssets == null || data[i].isFixedAssets == "0" ? "否" : "是")+"</td><td>"+(data[i].expense_type == null || data[i].expense_type == "" ? "未设定" : data[i].expense_type)+"</td>");
+			    var tdNode1 = $("<td>"+data[i].date+"</td><td>"+data[i].company_name+"</td><td>"+(data[i].amount == null || data[i].amount == "" ? "0" : data[i].amount)+"</td><td>"+(data[i].tax == null || data[i].tax == "" ? "0" : data[i].tax)+"</td><td>"+(data[i].supplyName == null || data[i].supplyName == "" ? "未设定" : data[i].supplyName)+"</td><td>"+(data[i].isFixedAssets == null || data[i].isFixedAssets == "0" ? "否" : "是")+"</td><td>"+(data[i].expense_type == null || data[i].expense_type == "" ? "未设定" : data[i].expense_type)+"</td>");
 			    var tdNode2 = $("<td></td>");
 			    var aNode = $("<a href='javascript:void(0)'>点击查看发票图片</a>");
 			    var tdNode3 = $("<td></td>");
@@ -333,6 +343,7 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 						$('#modify_type').val(tmpData.expense_type);
 						$('#modify_amount').val(tmpData.amount);
 						$('#supplyName').val(tmpData.supplyName);
+						$('#tax').val(tmpData.tax);
 						tmpData.isFixedAssets == null || tmpData.isFixedAssets == '0' ? $("#isFixedAssets").prop('checked', false) : $("#isFixedAssets").prop('checked', true);
 						modifyInfoForm.show();
 					});				

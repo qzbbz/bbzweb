@@ -231,6 +231,8 @@ public class CompanyBillApiImpl implements ICompanyBillApi {
 			map.put("date", sdf.format(stamp));
 			Double amount = invoiceRecord.getAmount();
 			DecimalFormat format = new DecimalFormat("#0.000");
+			Double tax = invoiceRecord.getTax();
+			map.put("tax", format.format(tax));
 			map.put("amount", format.format(amount));
 			map.put("expense_type", invoiceRecord.getType());
 			map.put("file_name", invoiceRecord.getFileName() == null ? "" : invoiceRecord.getFileName());
