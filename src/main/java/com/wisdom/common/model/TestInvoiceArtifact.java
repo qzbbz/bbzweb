@@ -14,6 +14,7 @@ import java.sql.Timestamp;
 		private String supplierName;
 		private String itemId;
 		private Timestamp createdTime;
+		private double tax;
 
 		// Constructors
 
@@ -28,11 +29,12 @@ import java.sql.Timestamp;
 		}
 
 		public TestInvoiceArtifact(long id, long invoiceId,
-				double amount, String type, String supplierName, String itemId, Timestamp createdTime) {
+				double amount, double tax, String type, String supplierName, String itemId, Timestamp createdTime) {
 			super();
 			this.id = id;
 			this.invoiceId = invoiceId;
 			this.amount = amount;
+			this.tax = tax;
 			this.type = type;
 			this.supplierName = supplierName;
 			this.itemId = itemId;
@@ -92,6 +94,14 @@ import java.sql.Timestamp;
 
 		public void setCreatedTime(Timestamp createdTime) {
 			this.createdTime = createdTime;
+		}
+
+		public double getTax() {
+			return tax;
+		}
+
+		public void setTax(double tax) {
+			this.tax = tax;
 		}
 		
 		
