@@ -1,7 +1,7 @@
 function checkJsonIsEmpty(json) {
 	var isEmpty = true;
 	if(json == null) return true;
-	for (var jsonKey in invoiceList) {
+	for (var jsonKey in json) {
 		isEmpty = false;
 		break;
 	}
@@ -184,7 +184,7 @@ mui.previewImage({
 	isUpload: true
 });
 
-var userOpenId = "";
+var userOpenId = "oJO1gtyVvLuWxm6N4T1JuYMzgysw";
 
 function getImageDataURL(img) {
 	var canvas = document.createElement('canvas');
@@ -200,67 +200,63 @@ function fillInInformation(){
 	console.log(this);
 	mui.createFillInfoDialog("hola", null).show();
 }
-expenseTypes = [];
-
-getAllExpenseTypes();
-function getAllExpenseTypes(){
-	mui.ajax({
-		type: "POST",
-		url: "/getAllExpenseTypes",
-		data: {},
-		success : function(data){
-			expenseTypes = data;
+var invoiceTypePicker = new mui.PopPicker();
+mui.ajax({
+	type: "POST",
+	url: "/getAllExpenseTypes",
+	data: {},
+	success : function(data){
+		if(!checkJsonIsEmpty(data)) {
+			var expenseType = [];
+			for(var key in data) {
+				//var
+				expenseType.push(data[i]);
+			}
+			invoiceTypePicker.setData([data]);
 		}
-		
-	});
-}
+	}		
+});
 
-totalCount = 0;
+var inputIndex = 0;
+var currentClickInputIndex = 0;
 document.getElementById("fapiaoluru_addInvoiceImage").onchange = function(event) {
-
-	
-	
+	inputIndex = inputIndex + 1;
 	document.getElementById('tips_image').style.display = 'none';
 	document.getElementById('invoice_img_list_root_div').style.display = '';
 	document.getElementById('invoice_img_list_root_div').style.height = window.screen.availHeight - 198 + "px";
-	var imageRootNode = document.getElementById('invoice_img_list_ul');
-	/*var liNode = document.createElement('li');
-	liNode.setAttribute("class", "mui-table-view-cell mui-hidden");
-	var divNode = document.createElement('div')
-	divNode.setAttribute('id', "M_Toggle");
-	divNode.setAttribute('class', "mui-switch mui-active");
-	var divNode2 = document.createElement('div');
-	divNode2.setAttribute('class', 'mui-switch-handle');
-	divNode.appendChild(divNode2);
-	liNode.appendChild(divNode);*/
-	
+	var imageRootNode = document.getElementById('invoice_img_list_ul');	
 	var liNode = document.createElement('li');
 	liNode.setAttribute("class", "mui-media mui-table-view-cell");
-	var aNode = document.createElement('a');
 	var imgNode = document.createElement('img');
 	imgNode.setAttribute('class', 'mui-pull-left');
 	imgNode.setAttribute('data-preview-group', '1');
 	imgNode.setAttribute('data-preview-src', '');
-	imgNode.style.width = '180px !important';
-	imgNode.style.height = '120px !important';
-	aNode.appendChild(imgNode);
-	var divNode = document.createElement('div');
-	divNode.setAttribute('class', 'info');
-	/*divNode.innerHTML = "费用金额:";
-	var pNode = document.createElement('p');
-	pNode.innerHTML = "费用类型";
-	pNode.setAttribute('class', 'mui-ellipsis');
-	divNode.appendChild(pNode);*/
-	
-	var inputNode = document.createElement('input');
-	var input2Node = document.createElement('input');
-	divNode.appendChild(inputNode);
-	inputNode.setAttribute("placeholder", "请填入金额");
-	inputNode.setAttribute("class", "expense_amount");
-	var brNode = document.createElement("br");
-	divNode.appendChild(brNode);
-	
-	if(expenseTypes == []){
+	imgNode.style.width = '100px';
+	imgNode.style.height = '60px';
+	imgNode.style.maxWidth = '100px';
+	liNode.appendChild(imgNode);
+	var inputRootNode = document.createElement('div');
+	inputRootNode.setAttribute('class', 'mui-media-body');
+	var inputAmountNode = document.createElement('div');
+	inputAmountNode.style.marginTop = "5px";
+	inputAmountNode.style.marginLeft = "5px";
+	inputAmountNode.style.color = "#8f8f94";
+	inputAmountNode.innerHTML = "发票金额:<span class='mui-pull-right' ><span id='fapiaoluru_amount_"+inputIndex+"'>0</span><span class='mui-icon mui-icon-arrowright' style='font-size: 20px;margin-top:0px;display:inline-block'></span></span>";
+	var inputTypeNode = document.createElement('div');
+	inputTypeNode.style.marginTop = "10px";
+	inputTypeNode.style.marginLeft = "5px";
+	inputTypeNode.style.color = "#8f8f94";
+	inputTypeNode.innerHTML = "发票类型:<span class='mui-pull-right' ><span id='fapiaoluru_type_"+inputIndex+"'>选择</span><span class='mui-icon mui-icon-arrowright' style='font-size: 20px;margin-top:0px;display:inline-block'></span></span>";
+	inputRootNode.appendChild(inputAmountNode);
+	inputRootNode.appendChild(inputTypeNode);
+	liNode.appendChild(inputRootNode);
+	inputTypeNode.addEventListener('tap', function(event) {
+		currentClickInputIndex = inputIndex;
+		invoiceTypePicker.show(function(items) {
+			document.getElementById('fapiaoluru_type_'+currentClickInputIndex).innerText = items[0].text;
+		});
+	}, false);
+	/*if(expenseTypes == []){
 		getAllExpenseTypes();
 	}
 	var selectNode = document.createElement("select");
@@ -275,45 +271,11 @@ document.getElementById("fapiaoluru_addInvoiceImage").onchange = function(event)
 		selectNode.appendChild(optionNode);
 	}
 	totalCount += 1;
-	//input2Node.setAttribute("placeholder", "请填入费用类型");
-	//input2Node.setAttribute("class", "expense_type");
 	divNode.appendChild(selectNode);
 	aNode.appendChild(divNode);
-	liNode.appendChild(aNode);
+	liNode.appendChild(aNode);*/
 	
-	/*
-	var imgNode = document.createElement('img');
-	imgNode.setAttribute("class", "mui-media-object");
-	imgNode.style.width = '180px';
-	imgNode.style.height = '120px';
-	imgNode.setAttribute('data-preview-group', '1');
-	imgNode.setAttribute('data-preview-src', '');
-	var tableNode = document.createElement('table');
-	var trNode = document.createElement('tr');
-	var tdNode = document.createElement('td');
-	tdNode.innerHTML = "费用类型";
-	trNode.appendChild(tdNode);
-	tdNode = document.createElement('td');
-	tdNode.innerHTML = "";
-	trNode.appendChild(tdNode);
-	tableNode.appendChild(trNode);
-	trNode = document.createElement('tr');
-	tdNode = document.createElement('td');
-	tdNode.innerHTML = "费用金额";
-	trNode.appendChild(tdNode);
-	tdNode = document.createElement('td');
-	tdNode.innerHTML = "";
-	trNode.appendChild(tdNode);
-	tableNode.appendChild(trNode);
-	tableNode.style.float = "right";
-	liNode.appendChild(imgNode);
-	liNode.appendChild(tableNode);*/
-	//liNode.addEventListener("tap", fillInInformation, false);
 	imageRootNode.appendChild(liNode);
-	
-
-
-
 	var files = event.target.files,
 		file;
 	if (files && files.length > 0) {
@@ -425,9 +387,12 @@ document.getElementById('fapiaoluru_submit').addEventListener('tap', function(ev
 	xhr.send(fd);
 }, false);
 
+document.getElementById("data_loading").style.display = "none";
+document.getElementById("add_invoice_page").style.display = "";
+document.getElementById("tips_image").style.display = "";
+document.getElementById("fapiaoluru_submit").style.display = "";
 
-
-mui.ajax({ 
+/*mui.ajax({ 
     type : "POST", 
     url  : "/getUserOpenIdAndCheckBindCompany",
     data : {}, 
@@ -457,4 +422,4 @@ mui.ajax({
     	document.getElementById("tips_info_detail").innerHTML = "服务器暂时无法响应请求，请稍后重试！";
     	document.getElementById("tips_info").style.display = "";
     } 
-});
+});*/
