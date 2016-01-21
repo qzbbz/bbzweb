@@ -42,6 +42,12 @@ public class SettingController {
             Map<String, String> ret = settingService.userBindCompany(openId, inviteCode);
             settingService.updateUserInfo(openId, name, email);
             result.putAll(ret);
+            if(result.get("userName") == null || result.get("userName").isEmpty()) {
+            	result.put("userName", name);
+            }
+            if(result.get("userMsgEmail") == null || result.get("userMsgEmail").isEmpty()) {
+            	result.put("userMsgEmail", email);
+            }
         }
         logger.debug("finishUserBindCompany");
         logger.debug("resultMap :{}", result.toString());

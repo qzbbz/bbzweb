@@ -50,8 +50,8 @@ mui.createUploadMask = function(callback) {
 	mask.show = function() {
 		mask._show = true;
 		element.setAttribute('style', 'opacity:1');
-		progressNode.style.marginLeft = window.screen.availWidth/2-50 + "px";
-		progressNode.style.marginTop = window.screen.availHeight/2-50 + "px";
+		progressNode.style.marginLeft = document.body.clientWidth/2-50 + "px";
+		progressNode.style.marginTop = document.documentElement.clientHeight /2 -50 + "px";
 		document.body.appendChild(element);
 		$('#upload_progress').circleProgress({
 	    	value: 0,
