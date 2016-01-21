@@ -87,6 +87,9 @@ mui.createTipDialog = function(info, callBack) {
 			callBack();
 		}
 		mask._remove();
+		setTimeout(function() {
+			mui.swipeoutClose(elem);
+		}, 0);
 	};
 	return mask;
 };
@@ -130,8 +133,8 @@ mui.createConfirmDialog = function(info, cancelCallBack, acceptCallBack) {
 	return mask;
 };
 
-mui.createCommentDialog = function(info, cancelCallBack, acceptCallBack, invoice_id) {
-	var template = "<div style='width:80%;margin:50% 10%;border:1px solid #ddd;background-color: white;border-radius: 5px;'><div style='margin-top:20px;margin-left:20px;'>审核信息</div><hr/><div style='margin-top:20px;margin-left:20px;margin-bottom:20px;margin-right:20px;height:60px;'><textarea id='comment' placeholder='输入审核'></textarea></div><div style='text-align:right;margin-bottom:20px;margin-right:20px;'><a id='createCommentDialog_accept' href='javascript:void(0);' style='text-decoration:none;'>确定</a></div></div>";
+mui.createCommentDialog = function(info, cancelCallBack, acceptCallBack, invoice_id, eleargs, approvalStatus) {
+	var template = "<div style='width:80%;margin:50% 10%;border:1px solid #ddd;background-color: white;border-radius: 5px;'><div style='margin-top:20px;margin-left:20px;'>审核信息</div><hr/><div style='margin-top:20px;margin-left:20px;margin-bottom:20px;margin-right:20px;height:60px;'><textarea id='comment' placeholder='输入审核信息'></textarea></div><div style='text-align:right;margin-bottom:20px;margin-right:20px;'><a id='createCommentDialog_accept' href='javascript:void(0);' style='text-decoration:none;'>确定</a></div></div>";
 	var element = document.createElement('div');
 	element.classList.add('dialog');
 	element.innerHTML = template.replace('{{info}}', info);
@@ -143,7 +146,7 @@ mui.createCommentDialog = function(info, cancelCallBack, acceptCallBack, invoice
 		element.setAttribute('style', 'opacity:1');
 		document.body.appendChild(element);
 		document.getElementById('createCommentDialog_accept').addEventListener('tap', function() {
-			if (acceptCallBack) acceptCallBack(invoice_id);
+			if (acceptCallBack) acceptCallBack(invoice_id, eleargs, approvalStatus);
 			mask.close();
 		});
 		return mask;
@@ -167,14 +170,15 @@ mui.createCommentDialog = function(info, cancelCallBack, acceptCallBack, invoice
 
 //invoiceIdString:12,23,32
 //approvalStatus:0-pass,1-reject
-function auditInvoice(invoiceId, approvalStatus, successCallback, failCallback) {
+function auditInvoice(reasons, invoiceId, mask, eleargs, approvalStatus, successCallback, failCallback) {
 	mui.ajax({
 		url: '/newApprovalBill',
 		type: "POST",
 		data: {
 			openId : userOpenId,
 			invoiceId : invoiceId,
-			approvalStatus : approvalStatus
+			approvalStatus : approvalStatus,
+			reasons:reasons
 		},
 		success: function(data) {
 			if (data.error_code == "0") {
@@ -188,58 +192,26 @@ function auditInvoice(invoiceId, approvalStatus, successCallback, failCallback) 
 		}
 	});
 }
-function addCommentToInvoice(invoice_id){
+function addCommentToInvoice(invoice_id, eleargs, approvalStatus){
 	var commentNode = document.getElementById("comment");
-	console.log(commentNode);
-	if(commentNode !== null){
-		var comment = commentNode.value;
-		mui.ajax({
-			url: '/addCommentToInvoice',
-			type: "POST",
-			data: {'invoice_id': invoice_id, 'comment': comment},
-			success: function(data) {
-				console.log(data);
-				console.log("comment updated");
-				//if (ajaxCallBack) ajaxCallBack();
-			},
-			error: function(status, error) {
-				mui.createTipDialog('请求服务器数据出错，请稍后下拉刷新重试！', null).show();
-				document.getElementById('data_loading').style.display = 'none';
-				document.getElementById('no_data_tips').style.display = '';
-				document.getElementById('data_abstract').style.display = "none";
-				document.getElementById('data_details').style.display = "none";
-				if (ajaxCallBack) ajaxCallBack();
-			}
-		});
-	}
-	
-}
-function leftAndRightSliderEventCallback(element, approvalStatus) {
-	var elem = element;
-	var invoice_id = elem.getAttribute('invoice_id');
-	var invoice_amount = parseFloat(elem.getAttribute('invoice_amount'));
-	//var mask = mui.createProcessingMask(null);
-	mui.createCommentDialog("hola", null, addCommentToInvoice, invoice_id).show();
-	//mask.show();
-	auditInvoice(invoice_id, approvalStatus, function() {
-		var ulNode = elem.parentNode;
+	var mask = mui.createProcessingMask(null);
+	mask.show();
+	var comment = commentNode.value;
+	auditInvoice(comment, invoice_id, mask, eleargs, approvalStatus, function() {
+		var ulNode = eleargs.parentNode;
 		var personDataNode = ulNode.parentNode;
 		var dataDetailNode = ulNode.parentNode.parentNode;
-		ulNode.removeChild(elem);
-		document.getElementById('need_audit_invoice_count').innerHTML = parseInt(document.getElementById('need_audit_invoice_count').innerHTML) - 1;
-		document.getElementById('need_audit_invoice_total_amount').innerHTML = (parseFloat(document.getElementById('need_audit_invoice_total_amount').innerHTML) - invoice_amount).toFixed(2);
-		ulNode.parentNode.childNodes[0].childNodes[0].childNodes[0].childNodes[0].childNodes[1].innerHTML = (parseFloat(ulNode.parentNode.childNodes[0].childNodes[0].childNodes[0].childNodes[0].childNodes[1].innerHTML) - invoice_amount).toFixed(2);
+		ulNode.removeChild(eleargs);
 		if (ulNode.firstChild == null) {
 			dataDetailNode.removeChild(personDataNode);
 			if (dataDetailNode.firstChild == null) {
-				document.getElementById('data_abstract').style.display = "none";
 				document.getElementById('data_details').style.display = "none";
 				document.getElementById('no_data_tips').style.display = '';
 			}
 		}
-		//mask.close();
+		mask.close();
 	}, function(msg) {
-		//mask.close();
+		mask.close();
 		setTimeout(function() {
 			mui.swipeoutClose(elem);
 		}, 0);
@@ -249,6 +221,11 @@ function leftAndRightSliderEventCallback(element, approvalStatus) {
 			mui.createTipDialog(msg, null).show();
 		}
 	});
+}
+function leftAndRightSliderEventCallback(element, approvalStatus) {
+	var elem = element;
+	var invoice_id = elem.getAttribute('invoice_id');
+	mui.createCommentDialog("hola", null, addCommentToInvoice, invoice_id, elem, approvalStatus).show();
 }
 
 function bindLeftAndRightSliderEvent() {
@@ -260,60 +237,27 @@ function bindLeftAndRightSliderEvent() {
 	});
 }
 
-
-
 function createDataList(data) {
 	document.getElementById('data_loading').style.display = "none";
 	document.getElementById('no_data_tips').style.display = "none";
 	document.getElementById('data_details').innerHTML = "";
 	var dataDetailsNode = document.getElementById('data_details');
-	var all_invoice_count = 0;
-	var all_invoice_total_amount = 0.0;
 	var img_group = 0;
-		var invoice_id_list_string = "";
-		var person_invoice_count = 0;
-		all_invoice_count = all_invoice_count + parseInt(data.invoice_count);
-		all_invoice_total_amount = all_invoice_total_amount + parseFloat(data.invoice_total_amount);
 		var rootNode = document.createElement('div');
-		rootNode.setAttribute('person_invoice_count', data.invoice_count);
-		rootNode.setAttribute('person_invoice_total_amount', data.invoice_total_amount);
 		rootNode.style.marginBottom = '20px';
-		var abstractNode = document.createElement('div');
-		abstractNode.style.backgroundColor = "white";
-		abstractNode.style.border = "1px solid #ddd";
-		abstractNode.innerHTML = "<div style='background-color: white;border:1px solid #ddd;'><div style='height:60px;'><div class='mui-pull-left' style='margin-left:10px;margin-top:8px;'><div style='font-size:11px;color:#7D9EC0;'>发票提交人：" + data.user_name + "</div><div style='font-size:11px;color:#7D9EC0;'>发票总金额：&#65509;<span class='person_total_amount' style='font-size:11px;'>" + data.invoice_total_amount + "</span></div></div><div class='mui-pull-right' style='margin-right:10px;margin-top:10px;'></div></div></div>";
-		rootNode.appendChild(abstractNode);
 		var ulNode = document.createElement('div');
 		ulNode.setAttribute("class", "mui-table-view");
 		img_group = img_group + 1;
-		var detailDataList = data.list;
-		for (var j in detailDataList) {
-			if(detailDataList[j].bill_amount == 0){
-				continue;
-			}
-			if(invoice_id_list_string != "") {invoice_id_list_string = invoice_id_list_string + ","}
+		for (var i in data) {
 			var liNode = document.createElement('li');
 			liNode.setAttribute('class', 'mui-table-view-cell');
-			liNode.setAttribute('invoice_id', detailDataList[j].invoice_id);
-			liNode.setAttribute('invoice_amount', detailDataList[j].bill_amount);
-			liNode.innerHTML = "<div class='mui-slider-left mui-disabled'><a class='mui-btn mui-btn-green'>通过</a></div><div class='mui-slider-right mui-disabled'><a class='mui-btn mui-btn-red'>驳回</a></div><div class='mui-slider-handle'><img class='mui-media-object mui-pull-left' data-preview-group='" + img_group + "' data-preview-src='' style='width:60px;height:60px;max-width:60px;border-radius: 5px;' src='" + detailDataList[j].bill_img + "'><div class='mui-media-body'><div class='mui-pull-left' style='margin-top:15px;'><p>" + detailDataList[j].bill_title + "</p><p class='mui-ellipsis'>提交日期：<span>" + detailDataList[j].submit_time + "</span></p></div><div class='mui-pull-right' style='margin-top:35px;'><p>&#65509;" + detailDataList[j].bill_amount + "</p></div></div></div>";
+			liNode.setAttribute('invoice_id', data[i].invoice_id);
+			liNode.innerHTML = "<div class='mui-slider-left mui-disabled'><a class='mui-btn mui-btn-green'>通过</a></div><div class='mui-slider-right mui-disabled'><a class='mui-btn mui-btn-red'>驳回</a></div><div class='mui-slider-handle'><img class='mui-media-object mui-pull-left' data-preview-group='" + img_group + "' data-preview-src='' style='width:60px;height:60px;max-width:60px;border-radius: 5px;' src='" + data[i].bill_img + "'><div class='mui-media-body'><div class='mui-pull-left' style='margin-top:15px;'><p>" + data[i].bill_type + "</p><p class='mui-ellipsis'>提交日期：<span>" + data[i].submit_time + "</span></p></div><div class='mui-pull-right' style='margin-top:35px;'><p>&#65509;" + data[i].bill_amount + "</p></div></div></div>";
 			ulNode.appendChild(liNode);
-			invoice_id_list_string = invoice_id_list_string + detailDataList[j].invoice_id;
-			person_invoice_count = person_invoice_count + 1;
 		}
-		rootNode.setAttribute('invoice_id_list_string', invoice_id_list_string);
 		rootNode.appendChild(ulNode);
-		invoice_id_list_string = data.invoice_id_list_string;
-		person_invoice_count = data.person_invoice_count;
-		//rootNode.setAttribute('user_name', data[i].user_name);
-		rootNode.setAttribute('person_invoice_count', person_invoice_count);
-		rootNode.setAttribute('invoice_id_list_string', invoice_id_list_string);
 		dataDetailsNode.appendChild(rootNode);
-	
 	bindLeftAndRightSliderEvent();
-	document.getElementById('need_audit_invoice_count').innerHTML = all_invoice_count;
-	document.getElementById('need_audit_invoice_total_amount').innerHTML = all_invoice_total_amount.toFixed(2);
-	document.getElementById('data_abstract').style.display = "";
 	document.getElementById('data_details').style.display = "";
 }
 
@@ -336,7 +280,6 @@ function getNeedAuditInvoice(ajaxCallBack) {
 			mui.createTipDialog('请求服务器数据出错，请稍后下拉刷新重试！', null).show();
 			document.getElementById('data_loading').style.display = 'none';
 			document.getElementById('no_data_tips').style.display = '';
-			document.getElementById('data_abstract').style.display = "none";
 			document.getElementById('data_details').style.display = "none";
 			if (ajaxCallBack) ajaxCallBack();
 		}
@@ -368,8 +311,6 @@ mui(mui('#pull_refresh')[0]).pullToRefresh({
 	}
 });
 
-
-
 mui.ajax({
 	url: '/getUserOpenId',
 	type: "POST",
@@ -378,7 +319,7 @@ mui.ajax({
 		if (data.openId == "") {
 			mui.createTipDialog('无法获取您的微信Openid,请稍后重试！', null).show();
 			document.getElementById('data_loading').style.display = 'none';
-			document.getElementById('no_data_tips').style.innerHTML = "无法获取您的微信Openid,请稍后重试！";
+			document.getElementById('no_data_tips').style.innerHTML = "无法获取您的微信Openid,<br/>请稍后重试！";
 			document.getElementById('no_data_tips').style.display = '';
 		} else {
 			userOpenId = data.openId;
@@ -388,7 +329,7 @@ mui.ajax({
 	error: function(status, error) {
 		mui.createTipDialog('请求服务器数据出错，请稍后下拉刷新重试！', null).show();
 		document.getElementById('data_loading').style.display = 'none';
-		document.getElementById('no_data_tips').style.innerHTML = "请求服务器数据出错，请稍后下拉刷新重试！";
+		document.getElementById('no_data_tips').style.innerHTML = "请求服务器数据出错，<br/>请稍后下拉刷新重试！";
 		document.getElementById('no_data_tips').style.display = '';
 	}
 });

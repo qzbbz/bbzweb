@@ -7,10 +7,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 		<title></title>
 		<link href="../../css/weixincss/mui.min.css" rel="stylesheet" />
-		<link href="../../css/weixincss/iconfont.css" rel="stylesheet" />
-		<link href="../../css/weixincss/circle-progress.css" rel="stylesheet" />
-		<link href="/css/weixincss/mui.picker.min.css" rel="stylesheet" />
-		<link href="/css/weixincss/mui.poppicker.css" rel="stylesheet" />
+		<link href="../../css/weixincss//iconfont.css" rel="stylesheet" />
 		<style>
 			.mui-preview-image.mui-fullscreen {
 				position: fixed;
@@ -196,61 +193,106 @@
 				z-index: 999;
 				margin-top: 60px;
 			}
+			.mui-bar~.mui-content .mui-fullscreen {
+				top: 44px;
+				height: auto;
+			}
+			.mui-pull-top-tips {
+				position: absolute;
+				top: -20px;
+				left: 50%;
+				margin-left: -25px;
+				width: 40px;
+				height: 40px;
+				border-radius: 100%;
+				z-index: 999;
+				margin-top: 60px;
+			}
+			.mui-bar~.mui-pull-top-tips {
+				top: 24px;
+			}
+			.mui-pull-top-wrapper {
+				width: 42px;
+				height: 42px;
+				display: block;
+				text-align: center;
+				background-color: #efeff4;
+				border: 1px solid #ddd;
+				border-radius: 25px;
+				background-clip: padding-box;
+				box-shadow: 0 4px 10px #bbb;
+				overflow: hidden;
+			}
+			.mui-pull-top-tips.mui-transitioning {
+				-webkit-transition-duration: 200ms;
+				transition-duration: 200ms;
+			}
+			.mui-pull-top-tips .mui-pull-loading {
+				/*-webkit-backface-visibility: hidden;
+				-webkit-transition-duration: 400ms;
+				transition-duration: 400ms;*/
+				
+				margin: 0;
+			}
+			.mui-pull-top-wrapper .mui-icon,
+			.mui-pull-top-wrapper .mui-spinner {
+				margin-top: 7px;
+			}
+			.mui-pull-top-wrapper .mui-icon.mui-reverse {
+				/*-webkit-transform: rotate(180deg) translateZ(0);*/
+			}
+			.mui-pull-bottom-tips {
+				text-align: center;
+				background-color: #efeff4;
+				font-size: 15px;
+				line-height: 40px;
+				color: #777;
+			}
+			.mui-pull-top-canvas {
+				overflow: hidden;
+				background-color: #fafafa;
+				border-radius: 40px;
+				box-shadow: 0 4px 10px #bbb;
+				width: 40px;
+				height: 40px;
+				margin: 0 auto;
+			}
+			.mui-pull-top-canvas canvas {
+				width: 40px;
+			}
 		</style>
 	</head>
 
 	<body>
 		<header class="mui-bar mui-bar-nav">
-			<h1 class="mui-title">公司发票上传</h1>
+			<h1 class="mui-title">审核发票</h1>
 		</header>
-		<div class="mui-content">
-			<div id="data_loading" class="mui-loading" style="margin-top:50%;">
-				<div class="mui-spinner"></div>
-				<div style="text-align: center;">正在加载数据</div>
-			</div>
-			<div id="tips_info" style="display:none;margin-top:50%;">
-				<div style="text-align: center;" id="tips_info_detail">服务器暂时无法处理请求，<br/>请稍后重试！</div>
-			</div>		
-			<div class="mui-card" id="select_date" style="display:none;margin:10px 5px;height:40px;line-height:40px;">
-				<div class="mui-pull-left"><p style="margin-left: 15px;">发票日期</p></div>
-				<div class="mui-pull-right">
-					<span id="invoice_date" style="color:#8f8f94;">选择</span><span class="mui-icon mui-icon-arrowright" style="font-size: 20px;margin-top:0px;color:#8f8f94;display:inline-block"></span>
-				</div>
-			</div>
-			<div class="mui-card" id="add_invoice_page" style="display:none;margin:10px 5px;height:80px;line-height: 80px;">
-				<div style="background-color: white;height:70px;margin-top:5px;margin-left: 5px;" class="mui-pull-left">
-					<div style="background-color: white;height:70px;">
-						<p style="margin-top: -5px;margin-left: 10px;">添加发票图像</p>
-					</div>
-				</div>
-				<div class="mui-pull-right" style="margin-top:5px;">
-					<input id="fapiaoluru_addInvoiceImage" type="file" capture="camera" accept="image/*" multiple hidefocus='true' style="position: absolute;float:right;width:50px;height:50px;opacity: 0;">
-					<span class="mui-icon iconfont icon-tianjia" style="font-size: 70px;color:#C3C3C6;margin-top:-10px;margin-right:5px;"></span>
-				</div>
-			</div>
-			<div id="tips_image" class="mui-control-content mui-active" style="display:none;height:260px;">
-				<ul class="mui-table-view mui-grid-view">
-					<li class="mui-table-view-cell mui-media mui-col-xs-12">
-						<img class="mui-media-object" src="../../img/weixinimg/empty_invoice.png">
-					</li>
-				</ul>
-			</div>
-			<div id="invoice_img_list_root_div" class="mui-control-content mui-active" style="display:none;height:200px;display:none;">
-				<div id="scroll" class="mui-scroll-wrapper">
-					<div class="mui-scroll">
-						<ul class="mui-table-view mui-grid-view" id="invoice_img_list_ul"></ul>
+		<div>
+			<div class="mui-page-content">
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll" id="pull_refresh">
+						<div id="no_data_tips" style="display:none;width:100%;height:45px;line-height: 45px;margin-top:50%;margin-bottom:10px;text-align: center;">
+							暂时没有需要您审批的数据，<br/>下拉刷新试试...
+						</div>
+						<div id="data_loading" class="mui-loading" style="margin-top:50%;">
+							<div class="mui-spinner"></div>
+							<div style="text-align: center;">正在加载数据</div>
+						</div>
+						<div id="data_abstract" style="display:none;width:100%;height:45px;margin-top:60px;">
+							<div class="title mui-pull-left" style="margin-top:10px;margin-left: 10px;font-size:15px;">待审批(<span id="need_audit_invoice_count"></span>)</div>
+							<div class="title mui-pull-right" style="margin-top:10px;margin-right: 10px;font-size:15px;">合计：&#65509;<span id="need_audit_invoice_total_amount"></span></div>
+						</div>
+						<div id="data_details"></div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<footer id="fapiaoluru_submit" class="mui-bar mui-bar-footer" style="display:none;"><h1 class="mui-title">上传发票</h1></footer>
 	</body>
 	<script src="../../js/weixinjs/mui.min.js"></script>
-	<script src="../../js/weixinjs/mui.previewimage.js"></script>
-	<script src="../../js/weixinjs/mui.zoom.min.js"></script>
-	<script src="../../js/weixinjs/jquery-1.11.1.min.js"></script>
-	<script src="../../js/weixinjs/circle-progress.js"></script>
-	<script src="/js/weixinjs/mui.picker.min.js"></script>
-	<script src="/js/weixinjs/mui.poppicker.min.js"></script>
-	<script src="../../js/weixinjs/company_upload_invoice.js"></script>
+	<script src="../../js/weixinjs//mui.pullToRefresh.min.js"></script>
+	<script src="../../js/weixinjs//mui.pullToRefresh.material.min.js"></script>
+	<script src="../../js/weixinjs//mui.previewimage.js"></script>
+	<script src="../../js/weixinjs//mui.zoom.min.js"></script>
+	<script src="../../js/weixinjs//invoice_audit_detail.js"></script>
+
 </html>

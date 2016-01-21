@@ -243,7 +243,7 @@ mui.ajax({
     	if (data == null || data.openId == null || data.openId == "") {
 			mui.createTipDialog('无法获取您的微信Openid,请稍后重试！',null).show();
 			document.getElementById("data_loading").style.display = "none";
-			document.getElementById("tips_info_detail").innerHTML = "无法获取您的微信Openid,请稍后重试！";
+			document.getElementById("tips_info_detail").innerHTML = "无法获取您的微信Openid,<br/>请稍后重试！";
 	    	document.getElementById("tips_info").style.display = "";
 		} else {
 			userOpenId = data.openId;
@@ -252,6 +252,9 @@ mui.ajax({
 				userEmail = data.userMsgEmail;
 				companyName = data.companyName;
 				companyDepartmentName = data.deptName;
+				if(data.type_id == "2") {
+					companyDepartmentName = "公司系统管理员(不属于任何部门)";
+				}
 				document.getElementById("data_loading").style.display = "none";
 				document.getElementById("comapny_name").innerHTML = companyName;
 				document.getElementById("company_department").innerHTML = companyDepartmentName;
@@ -267,7 +270,7 @@ mui.ajax({
     error : function() {
     	mui.createTipDialog('服务器暂时无法响应请求，请稍后重试！',null).show();
     	document.getElementById("data_loading").style.display = "none";
-    	document.getElementById("tips_info_detail").innerHTML = "服务器暂时无法响应请求，请稍后重试！";
+    	document.getElementById("tips_info_detail").innerHTML = "服务器暂时无法响应请求，<br/>请稍后重试！";
     	document.getElementById("tips_info").style.display = "";
     } 
 });

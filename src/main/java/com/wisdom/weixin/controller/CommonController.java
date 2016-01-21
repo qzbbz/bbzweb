@@ -42,6 +42,9 @@ public class CommonController {
 	private ISettingService settingService;
 	
 	@Autowired
+	private IUserService userService;
+	
+	@Autowired
 	private IContactUsDao contactUsDao;
 
 	@RequestMapping("/weixinRequest")
@@ -146,8 +149,11 @@ public class CommonController {
 				result.put("error_code", String.valueOf(WeixinJsonCode.NO_OPENID_ERROR_CODE));
 				result.put("error_message", WeixinJsonCode.NO_OPENID_ERROR_MESSAGE);
 			} else {
+				String userId = userService.getUserIdByOpenId(openId);
+				int typeId = userService.getUserTypeIdByUserId(userId);
 				result.put("error_code", String.valueOf(WeixinJsonCode.NO_ERROR_CODE));
 				result.put("error_message", WeixinJsonCode.NO_ERROR_MESSAGE);
+				result.put("type_id", String.valueOf(typeId));
 				Map<String, String> ret = settingService.checkCompanyBind(openId);
 				result.putAll(ret);
 			}

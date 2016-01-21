@@ -1,3 +1,28 @@
+Date.prototype.Format = function(formatStr) {
+	var str = formatStr;
+	var Week = ['日', '一', '二', '三', '四', '五', '六'];
+
+	str = str.replace(/yyyy|YYYY/, this.getFullYear());
+	str = str.replace(/yy|YY/, (this.getYear() % 100) > 9 ? (this.getYear() % 100).toString() : '0' + (this.getYear() % 100));
+
+	str = str.replace(/MM/, (this.getMonth() + 1) > 9 ? (this.getMonth() + 1).toString() : '0' + (this.getMonth()+1));
+	str = str.replace(/M/g, this.getMonth());
+
+	str = str.replace(/w|W/g, Week[this.getDay()]);
+
+	str = str.replace(/dd|DD/, this.getDate() > 9 ? this.getDate().toString() : '0' + this.getDate());
+	str = str.replace(/d|D/g, this.getDate());
+
+	str = str.replace(/hh|HH/, this.getHours() > 9 ? this.getHours().toString() : '0' + this.getHours());
+	str = str.replace(/h|H/g, this.getHours());
+	str = str.replace(/mm/, this.getMinutes() > 9 ? this.getMinutes().toString() : '0' + this.getMinutes());
+	str = str.replace(/m/g, this.getMinutes());
+
+	str = str.replace(/ss|SS/, this.getSeconds() > 9 ? this.getSeconds().toString() : '0' + this.getSeconds());
+	str = str.replace(/s|S/g, this.getSeconds());
+
+	return str;
+}
 function checkJsonIsEmpty(json) {
 	var isEmpty = true;
 	if(json == null) return true;
@@ -146,6 +171,19 @@ mui.previewImage({
 });
 
 var userOpenId = "";
+var currentDate = new Date();
+currentDate = currentDate.Format("yyyy-MM");
+document.getElementById('invoice_date').innerText = currentDate;
+var options = {
+	'type': 'month',
+	'value': currentDate
+};
+var datePicker = new mui.DtPicker(options);
+document.getElementById('select_date').addEventListener('tap', function() {
+	datePicker.show(function(rs) {
+		document.getElementById('invoice_date').innerText = rs.text;
+	});
+}, false);
 
 function getImageDataURL(img) {
 	var canvas = document.createElement('canvas');
@@ -209,7 +247,7 @@ document.getElementById('fapiaoluru_submit').addEventListener('tap', function(ev
 	var mask = mui.createUploadMask(false);
 	mask.show();
 	$('#upload_progress').find('strong').html(0 + '<i>%</i>');
-	var formData = {openId:userOpenId};
+	var formData = {openId:userOpenId,date:document.getElementById('invoice_date').innerText};
 	var xhr = new XMLHttpRequest();
 	var fd = new FormData();
 	for (var jsonKey in formData) {
@@ -243,11 +281,11 @@ document.getElementById('fapiaoluru_submit').addEventListener('tap', function(ev
 		mask.close();
 	}, false);
 	xhr.addEventListener("abort", null, false);
-	xhr.open("POST", "/uploadPersonInvoice");
+	xhr.open("POST", "/uploadCompanyInvoice");
 	xhr.send(fd);
 }, false);
 
-/*mui.ajax({ 
+mui.ajax({ 
     type : "POST", 
     url  : "/getUserOpenIdAndCheckBindCompany",
     data : {}, 
@@ -255,15 +293,22 @@ document.getElementById('fapiaoluru_submit').addEventListener('tap', function(ev
     	if (data == null || data.openId == null || data.openId == "") {
 			mui.createTipDialog('无法获取您的微信Openid,请稍后重试！',null).show();
 			document.getElementById("data_loading").style.display = "none";
-			document.getElementById("tips_info_detail").innerHTML = "无法获取您的微信Openid,请稍后重试！";
+			document.getElementById("tips_info_detail").innerHTML = "无法获取您的微信Openid,<br/>请稍后重试！";
 	    	document.getElementById("tips_info").style.display = "";
 		} else {
 			userOpenId = data.openId;
 			if(data.bind_status == "has_bind") {
-				document.getElementById("data_loading").style.display = "none";
-				document.getElementById("add_invoice_page").style.display = "";
-				document.getElementById("tips_image").style.display = "";
-				document.getElementById("fapiaoluru_submit").style.display = "";
+				if(data.type_id != "2") {
+					document.getElementById("data_loading").style.display = "none";
+					document.getElementById("tips_info_detail").innerHTML = "您没有权限上传公司发票，<br/>请联系管理员！";
+			    	document.getElementById("tips_info").style.display = "";
+				} else {
+					document.getElementById("data_loading").style.display = "none";
+					document.getElementById("select_date").style.display = "";
+					document.getElementById("add_invoice_page").style.display = "";
+					document.getElementById("tips_image").style.display = "";
+					document.getElementById("fapiaoluru_submit").style.display = "";
+				}
 			} else {
 				document.getElementById("data_loading").style.display = "none";
 				document.getElementById("tips_info_detail").innerHTML = "您还没有绑定公司，<br/>请先在账号设置中绑定您的公司！";
@@ -274,10 +319,10 @@ document.getElementById('fapiaoluru_submit').addEventListener('tap', function(ev
     error : function() {
     	mui.createTipDialog('服务器暂时无法响应请求，请稍后重试！',null).show();
     	document.getElementById("data_loading").style.display = "none";
-    	document.getElementById("tips_info_detail").innerHTML = "服务器暂时无法响应请求，请稍后重试！";
+    	document.getElementById("tips_info_detail").innerHTML = "服务器暂时无法响应请求，<br/>请稍后重试！";
     	document.getElementById("tips_info").style.display = "";
     } 
-});*/
-document.getElementById("data_loading").style.display = "none";
+});
+/*document.getElementById("data_loading").style.display = "none";
 document.getElementById("tips_info_detail").innerHTML = "尚未开放，敬请期待...";
-document.getElementById("tips_info").style.display = "";
+document.getElementById("tips_info").style.display = "";*/
