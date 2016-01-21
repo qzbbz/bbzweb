@@ -1,6 +1,7 @@
 package com.wisdom.weixin.controller;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -13,6 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -44,6 +46,7 @@ import com.wisdom.user.service.IUserService;
 import com.wisdom.web.api.ICompanyBillApi;
 import com.wisdom.weixin.service.IExpenseAccountService;
 import com.wisdom.weixin.service.IWeixinPushService;
+import com.wisdom.weixin.utils.ImageSnapshot;
 import com.wisdom.weixin.utils.SubmitAuditBillResultEntity;
 import com.wisdom.weixin.utils.SubmitAuditBillResultEntityWrapper;
 import com.wisdom.weixin.utils.SubmitBillEntity;
@@ -167,10 +170,20 @@ public class ExpenseAccountController {
 			Integer count = 0;
 			for(MultipartFile file:files) {
 				String fileName = openId
-						+ String.valueOf(System.currentTimeMillis()) + ".jpg";
+						+ String.valueOf(System.currentTimeMillis());
+				String extendName = ".jpg";
 				try {
 					FileUtils.copyInputStreamToFile(file.getInputStream(),
-							new File(realPath, fileName));
+							new File(realPath, fileName + extendName));
+					File originalImage = new File(realPath, fileName + extendName);
+				    byte[] bytes = ImageSnapshot.resize(ImageIO.read(originalImage), 60, 0.1f, true);
+				    FileOutputStream out = new FileOutputStream(new File(realPath, fileName + "_small" + extendName));
+				    out.write(bytes);
+				    out.close();
+				    bytes = ImageSnapshot.resize(ImageIO.read(originalImage), 200, 0.1f, true);
+				    out = new FileOutputStream(new File(realPath, fileName + "_middle" + extendName));
+				    out.write(bytes);
+				    out.close();
 					Map<String, Object> param = new HashMap<>();
 					param.put("amount", expenseAmounts[count]);
 					param.put("type", expenseTypes[count]);
@@ -409,7 +422,12 @@ public class ExpenseAccountController {
 		for(WeixinWaitAuditInvoiceModel wwaim : retList) {
 			Map<String,Object> map = new HashMap<>();
 			map.put("bill_amount", wwaim.getAmount());
-			map.put("bill_img", wwaim.getFile_name());
+			String imgTmp = wwaim.getFile_name();
+			if(imgTmp != null && !imgTmp.isEmpty() && imgTmp.lastIndexOf(".") != -1) {
+				map.put("bill_img", wwaim.getFile_name().substring(0, wwaim.getFile_name().lastIndexOf(".")));
+			} else {
+				map.put("bill_img", wwaim.getFile_name());
+			}
 			map.put("bill_type", wwaim.getType());
 			map.put("approval_name", wwaim.getUser_name());
 			DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -454,7 +472,12 @@ public class ExpenseAccountController {
 		for(WeixinWaitAuditInvoiceModel wwaim : retList) {
 			Map<String,Object> map = new HashMap<>();
 			map.put("bill_amount", wwaim.getAmount());
-			map.put("bill_img", wwaim.getFile_name());
+			String imgTmp = wwaim.getFile_name();
+			if(imgTmp != null && !imgTmp.isEmpty() && imgTmp.lastIndexOf(".") != -1) {
+				map.put("bill_img", wwaim.getFile_name().substring(0, wwaim.getFile_name().lastIndexOf(".")));
+			} else {
+				map.put("bill_img", wwaim.getFile_name());
+			}
 			map.put("bill_type", wwaim.getType());
 			map.put("approval_name", wwaim.getUser_name());
 			map.put("approval_status", wwaim.getApproval_status());
@@ -565,7 +588,12 @@ public class ExpenseAccountController {
 		}
 		for(WeixinWaitAuditInvoiceModel wwaim : retList) {
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("bill_img", wwaim.getFile_name());
+			String imgTmp = wwaim.getFile_name();
+			if(imgTmp != null && !imgTmp.isEmpty() && imgTmp.lastIndexOf(".") != -1) {
+				map.put("bill_img", wwaim.getFile_name().substring(0, wwaim.getFile_name().lastIndexOf(".")));
+			} else {
+				map.put("bill_img", wwaim.getFile_name());
+			}
 			map.put("invoice_id", wwaim.getInvoice_id());
 			map.put("bill_type", wwaim.getType());
 			map.put("bill_amount", wwaim.getAmount());
