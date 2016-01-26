@@ -18,9 +18,10 @@ public class TestInvoiceRecord  implements java.io.Serializable {
 	private String supplierName;
 	private String fileName;
 	private String status;
+	private Integer number;
 	
 	
-	public TestInvoiceRecord(long invoiceId, long companyId, String type, double amount, double tax, Timestamp createdTime, Integer isFa, String billDate, String supplierName, String fileName, String status){
+	public TestInvoiceRecord(long invoiceId, long companyId, String type, double amount, double tax, Timestamp createdTime, Integer isFa, String billDate, String supplierName, String fileName, String status, Integer number){
 		super();
 		this.invoiceId = invoiceId;
 		this.companyId = companyId;
@@ -33,6 +34,7 @@ public class TestInvoiceRecord  implements java.io.Serializable {
 		this.supplierName = supplierName;
 		this.fileName = fileName;
 		this.status = status;
+		this.number = number;
 	}
 	
 	public long getInvoiceId() {
@@ -108,6 +110,14 @@ public class TestInvoiceRecord  implements java.io.Serializable {
 
 	public void setTax(double tax) {
 		this.tax = tax;
+	}
+
+	public Integer getNumber() {
+		return number;
+	}
+
+	public void setNumber(Integer number) {
+		this.number = number;
 	}
 	
 	
