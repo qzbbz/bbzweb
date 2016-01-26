@@ -60,7 +60,11 @@ public class SheetCash {
 
 	// Constructors
 
-	
+
+    public SheetCash() {
+        super();
+    }
+
 
 	// Property accessors
 
@@ -70,7 +74,9 @@ public class SheetCash {
 
 	
 
-	public Long getCompanyId() {
+
+
+    public Long getCompanyId() {
 		return companyId;
 	}
 

@@ -80,6 +80,9 @@ public class SheetIncome {
 
 	// Constructors
 
+    public SheetIncome() {
+        super();
+    }
 	
 
 	// Property accessors
@@ -90,7 +93,10 @@ public class SheetIncome {
 
 	
 
-	public Long getCompanyId() {
+
+
+
+    public Long getCompanyId() {
 		return companyId;
 	}
 

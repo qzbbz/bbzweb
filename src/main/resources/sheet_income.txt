@@ -1,0 +1,35 @@
+  一、营业收入 1 operating_receipt_year operating_receipt_month
+ 减：营业成本 2 cost_in_business_year cost_in_business_month
+ 营业税金及附加 3 sales_tax_year sales_tax_month
+ 其中：消费税 4 excise_tax_year excise_tax_month
+ 营业税 5
+ 城市维护建设税 6 urban_maintenance_and_construction_tax_year urban_maintenance_and_construction_month
+ 资源税 7 resource_tax_year resource_tax_month
+ 土地增值税 8 land_value_increment_tax_year land_value_increment_tax_month
+ 城镇土地使用税、房产税、车船税、印花税 9 land_house_tax_year land_house_tax_month
+ 教育费附加、矿产资源补偿费、排污费 10 education_year education_month
+ 销售费用 11 sales_year sales_month
+ 其中：商品维修费 12 maintenance_year maintenance_month
+ 广告费和业务宣传费 13 advertise_year advertise_month
+ 管理费用 14 manage_year manage_month
+ 其中：开办费 15 establishment_charges_year establishment_charges_month
+ 业务招待费 16 business_entertainment_year business_entertainment_month
+ 研究费用 17 research_year research_month
+ 财务费用 18 finance_year finance_month
+ 其中：利息费用（收入以“-”号填列） 19 interest_year interest_month
+ 加：投资收益（损失以“-”号填列） 20 equity_earnings_year equity_earnings_month
+ 二、营业利润（亏损以“-”号填列） 21 operating_profit_year operating_profit_month
+ 加：营业外收入 22 nonbusiness_income_year nonbusiness_income_month
+ 其中：政府补助 23 government_grants_year government_grants_month
+ 减：营业外支出 24 non_business_expenditure_year non_business_expenditure_month
+ 其中：坏账损失 25 loss_on_bad_debt_year loss_on_bad_debt_month
+ 无法收回的长期债券投资损失 26 loss_on_long_term_bonds_year loss_on_long_term_bonds_month
+ 无法收回的长期股权投资损失 27 loss_on_long_term_stock_year loss_on_long_term_stock_month
+ 自然灾害等不可抗力因素造成的损失 28 loss_on_long_term_natural_calamities_year loss_on_long_term_natural_calamities_month
+ 税收滞纳金 29 tax_delay_charge_year tax_delay_charge_month
+ 三、利润总额（亏损总额以“-”号填列） 30 total_profit_year total_profit_month
+ 减：所得税费用 31 income_tax_expense_year income_tax_expense_month
+ 四、净利润（净亏损以“-”号填列） 32 net_margin_year net_margin_month
+ 企业负责人：0 company_controller
+ 财务负责人：0 finance_chief
+ 制表人：0 tabulator
