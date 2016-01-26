@@ -256,8 +256,8 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 		return false;
 	}
 	@Override
-	public boolean addInvoiceArtifact(long invoiceId, double amount, String type, String supplierName, double tax, String itemId) {
-		String sql = "insert into test_invoice_artifact (invoice_id, amount, tax, type, supplier_name, item_id, created_time) values (?, ?, ?, ?, ?, ?, NOW())";
+	public boolean addInvoiceArtifact(long invoiceId, double amount, String type, String supplierName, double tax, String itemId, Integer number) {
+		String sql = "insert into test_invoice_artifact (invoice_id, amount, tax, type, supplier_name, item_id, created_time, number) values (?, ?, ?, ?, ?, ?, NOW(), ?)";
 		try {
 			int affectedRows = jdbcTemplate
 					.update(sql,
@@ -266,7 +266,8 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 							tax,
 							type,
 							supplierName,
-							itemId);
+							itemId,
+							number);
 			logger.debug("addInvoiceArtifact result : {}", affectedRows);
 			return affectedRows != 0;
 		} catch (Exception e) {
@@ -339,7 +340,7 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 
 			List<TestInvoiceRecord> list = null;
 			try {
-				String sql = "select i.id as invoice_id, i.company_id as company_id, group_concat(a.type separator ', ') as type, sum(a.amount) as amount, sum(a.tax) as tax, i.created_time as created_time, i.is_fixed_assets as is_fixed_assets, i.bill_date as bill_date, a.supplier_name as supplier_name , i.file_name as file_name, i.status as status from test_invoice_artifact a  right join test_invoice i on i.item_id = a.item_id where  i.company_id = ? group by i.id";
+				String sql = "select i.id as invoice_id, i.company_id as company_id, group_concat(a.type separator ', ') as type, sum(a.amount) as amount, sum(a.tax) as tax, i.created_time as created_time, i.is_fixed_assets as is_fixed_assets, i.bill_date as bill_date, a.supplier_name as supplier_name , i.file_name as file_name, i.status as status, a.number as number from test_invoice_artifact a  right join test_invoice i on i.item_id = a.item_id where  i.company_id = ? group by i.id";
 				list = jdbcTemplate.query(sql, new Object[]{companyId}, 
 						new RowMapperResultSetExtractor<TestInvoiceRecord>(
 								new TestInvoiceRecordMapper()));
@@ -364,7 +365,7 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 	public List<TestInvoiceRecord> getInvoicesByDate(String date, long companyId) {
 		List<TestInvoiceRecord> list = null;
 		try {
-			String sql = "select i.id as invoice_id, i.company_id as company_id, group_concat(a.type separator ', ') as type, sum(a.amount) as amount, sum(a.tax) as tax, i.created_time as created_time, i.is_fixed_assets as is_fixed_assets, i.bill_date as bill_date, a.supplier_name as supplier_name , i.file_name as file_name, i.status as status from test_invoice_artifact a  right join test_invoice i on i.item_id = a.item_id where  i.company_id = ?";
+			String sql = "select i.id as invoice_id, i.company_id as company_id, group_concat(a.type separator ', ') as type, sum(a.amount) as amount, sum(a.tax) as tax, i.created_time as created_time, i.is_fixed_assets as is_fixed_assets, i.bill_date as bill_date, a.supplier_name as supplier_name , i.file_name as file_name, i.status as status, a.number as number from test_invoice_artifact a  right join test_invoice i on i.item_id = a.item_id where  i.company_id = ?";
 			sql += " and i.created_time like '%" + date + "%' group by i.id";
 			list = jdbcTemplate.query(sql, new Object[]{companyId}, 
 					new RowMapperResultSetExtractor<TestInvoiceRecord>(
@@ -390,7 +391,7 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 	public TestInvoiceRecord getInvoiceRecordById(long invoiceId) {
 		TestInvoiceRecord record = null;
 		try {
-			String sql = "select i.id as invoice_id, i.company_id as company_id, group_concat(a.type separator ', ') as type, sum(a.amount) as amount, sum(a.tax) as tax, i.created_time as created_time, i.is_fixed_assets as is_fixed_assets, i.bill_date as bill_date, a.supplier_name as supplier_name , i.file_name as file_name, i.status as status from test_invoice_artifact a  right join test_invoice i on i.item_id = a.item_id where  i.id=? limit 1";
+			String sql = "select i.id as invoice_id, i.company_id as company_id, group_concat(a.type separator ', ') as type, sum(a.amount) as amount, sum(a.tax) as tax, i.created_time as created_time, i.is_fixed_assets as is_fixed_assets, i.bill_date as bill_date, a.supplier_name as supplier_name , i.file_name as file_name, i.status as status, a.number as number from test_invoice_artifact a  right join test_invoice i on i.item_id = a.item_id where  i.id=? limit 1";
 			record = jdbcTemplate.queryForObject(sql,
 					new Object[] { invoiceId }, new TestInvoiceRecordMapper());
 		} catch (Exception e) {
