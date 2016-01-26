@@ -26,8 +26,8 @@ import com.wisdom.common.model.SheetIncome;
 
 public class GenerateExcel {
    private  HSSFWorkbook workbook = null;
-   private final static String PTAH ="/home";
-   private final static String EXCEL_PATH="/home/Excel_Temple_download.xls";
+   private final static String PTAH ="/home/excelfile";
+   private final static String EXCEL_PATH="/home/excelfile/Excel_Temple_download.xls";
    private SheetBalance sheetBalance ;
    private SheetIncome sheetIncome;
    private SheetCash sheetCash;
@@ -75,8 +75,10 @@ public class GenerateExcel {
             e.printStackTrace();
         } finally {
             try {
-                workbook.close();
-                out.close();
+                if(workbook != null) {
+                    workbook.close();
+                    out.close();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
