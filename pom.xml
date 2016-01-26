@@ -201,9 +201,14 @@
 		    <artifactId>httpclient</artifactId>
 		    <version>4.5.1</version>
 		</dependency>
+        <!-- export Excel -->
+       <dependency>
+		    <groupId>org.apache.poi</groupId>
+		    <artifactId>poi</artifactId>
+		    <version>3.14-beta1</version>
+        </dependency>
 
-		
-
+        
 	</dependencies>
 
 	<build>

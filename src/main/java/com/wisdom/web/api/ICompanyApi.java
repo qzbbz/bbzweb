@@ -51,5 +51,12 @@ public interface ICompanyApi {
 	public boolean deleteCompanySalary(String idList, String realPath);
 	
 	public boolean setTakeType(long companyId, String takeType);
+	// invoke exist file
+	public ResponseEntity<byte[]> invokeExcelFile(String realPath, String excelName);
+	// exportExcel control class
+	public ResponseEntity<byte[]> exportExcel(Map<String, Object> map, String excelName);
+	
+	public Map<String, Object> getModelDetails(long companyId, String date);
 		
+    public Map<String, String> judgeDate(long companyId, String date);
 }
