@@ -221,9 +221,9 @@ document.getElementById("fapiaoluru_addInvoiceImage").onchange = function(event)
 	inputIndex = inputIndex + 1;
 	document.getElementById('tips_image').style.display = 'none';
 	document.getElementById('invoice_img_list_root_div').style.display = '';
-	document.getElementById('invoice_img_list_root_div').style.height = window.screen.availHeight - 198 + "px";
+	/*document.getElementById('invoice_img_list_root_div').style.height = window.screen.availHeight - 198 + "px";*/
 	var imageRootNode = document.getElementById('invoice_img_list_ul');	
-	var liNode = document.createElement('li');
+	/*var liNode = document.createElement('li');
 	liNode.setAttribute("class", "mui-media mui-table-view-cell");
 	var imgNode = document.createElement('img');
 	imgNode.setAttribute('class', 'mui-pull-left');
@@ -256,27 +256,63 @@ document.getElementById("fapiaoluru_addInvoiceImage").onchange = function(event)
 			ele.innerText = items[0].text;
 		});
 	}, false);
-	imageRootNode.appendChild(liNode);
+	imageRootNode.appendChild(liNode);*/
 	var files = event.target.files,
 		file;
 	if (files && files.length > 0) {
-		file = files[0];
-		try {
-			var URL = window.URL || window.webkitURL;
-			imgURL = URL.createObjectURL(file);
-			imgNode.src = imgURL;
-			invoiceList[imgURL] = document.getElementById('fapiaoluru_addInvoiceImage').files[0];
-			//URL.revokeObjectURL(imgURL);
-		} catch (e) {
+		for(var i=0; i<files.length; i++) {
+			var liNode = document.createElement('li');
+			liNode.setAttribute("class", "mui-media mui-table-view-cell");
+			var imgNode = document.createElement('img');
+			imgNode.setAttribute('class', 'mui-pull-left');
+			imgNode.setAttribute('data-preview-group', '1');
+			imgNode.setAttribute('data-preview-src', '');
+			imgNode.style.width = '100px';
+			imgNode.style.height = '80px';
+			imgNode.style.maxWidth = '100px';
+			liNode.appendChild(imgNode);
+			var inputRootNode = document.createElement('div');
+			inputRootNode.setAttribute('class', 'mui-media-body');
+			var inputAmountNode = document.createElement('div');
+			inputAmountNode.style.marginTop = "0px";
+			inputAmountNode.style.marginLeft = "5px";
+			inputAmountNode.style.height = "45px";
+			inputAmountNode.style.color = "#8f8f94";
+			//inputAmountNode.innerHTML = "发票金额:<span class='mui-pull-right' ><span class='fapiaoluru_amount' id='fapiaoluru_amount_"+inputIndex+"'>0</span><span class='mui-icon mui-icon-arrowright' style='font-size: 20px;margin-top:0px;display:inline-block'></span></span>";
+			inputAmountNode.innerHTML = "<span>发票金额:</span><span class='mui-pull-right' style='height:20px;'><input class='fapiaoluru_amount' type='text' style='width:100px;height:20px;padding-top:0px;padding-bottom:0px;'/></span>";
+			var inputTypeNode = document.createElement('div');
+			inputTypeNode.style.marginTop = "5px";
+			inputTypeNode.style.marginLeft = "5px";
+			inputTypeNode.style.color = "#8f8f94";
+			inputTypeNode.innerHTML = "发票类型:<span class='mui-pull-right' ><span class='fapiaoluru_type' id='fapiaoluru_type_"+inputIndex+"'>选择</span><span class='mui-icon mui-icon-arrowright' style='font-size: 20px;margin-top:0px;display:inline-block'></span></span>";
+			inputRootNode.appendChild(inputAmountNode);
+			inputRootNode.appendChild(inputTypeNode);
+			liNode.appendChild(inputRootNode);
+			inputTypeNode.addEventListener('tap', function(event) {
+				var ele = this.childNodes[1].childNodes[0];
+				invoiceTypePicker.show(function(items) {
+					ele.innerText = items[0].text;
+				});
+			}, false);
+			imageRootNode.appendChild(liNode);
+			file = files[i];
 			try {
-				var fileReader = new FileReader();
-				fileReader.onload = function(event) {
-					imgNode.src = event.target.result;
-					invoiceList[imgNode.src] = document.getElementById('fapiaoluru_addInvoiceImage').files[0];
-				};
-				fileReader.readAsDataURL(file);
+				var URL = window.URL || window.webkitURL;
+				imgURL = URL.createObjectURL(file);
+				imgNode.src = imgURL;
+				invoiceList[imgURL] = document.getElementById('fapiaoluru_addInvoiceImage').files[0];
+				//URL.revokeObjectURL(imgURL);
 			} catch (e) {
-				alert("Neither createObjectURL or FileReader are supported");
+				try {
+					var fileReader = new FileReader();
+					fileReader.onload = function(event) {
+						imgNode.src = event.target.result;
+						invoiceList[imgNode.src] = document.getElementById('fapiaoluru_addInvoiceImage').files[0];
+					};
+					fileReader.readAsDataURL(file);
+				} catch (e) {
+					alert("Neither createObjectURL or FileReader are supported");
+				}
 			}
 		}
 	}

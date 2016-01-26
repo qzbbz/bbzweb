@@ -200,7 +200,7 @@ document.getElementById("fapiaoluru_addInvoiceImage").onchange = function(event)
 	document.getElementById('invoice_img_list_root_div').style.display = '';
 	document.getElementById('invoice_img_list_root_div').style.height = window.screen.availHeight - 198 + "px";
 	var imageRootNode = document.getElementById('invoice_img_list_ul');
-	var liNode = document.createElement('li');
+	/*var liNode = document.createElement('li');
 	liNode.setAttribute("class", "mui-table-view-cell mui-media mui-col-xs-6");
 	var imgNode = document.createElement('img');
 	imgNode.setAttribute("class", "mui-media-object");
@@ -209,27 +209,39 @@ document.getElementById("fapiaoluru_addInvoiceImage").onchange = function(event)
 	imgNode.setAttribute('data-preview-group', '1');
 	imgNode.setAttribute('data-preview-src', '');
 	liNode.appendChild(imgNode);
-	imageRootNode.appendChild(liNode);
+	imageRootNode.appendChild(liNode);*/
 	var files = event.target.files,
 		file;
 	if (files && files.length > 0) {
-		file = files[0];
-		try {
-			var URL = window.URL || window.webkitURL;
-			imgURL = URL.createObjectURL(file);
-			imgNode.src = imgURL;
-			invoiceList[imgURL] = document.getElementById('fapiaoluru_addInvoiceImage').files[0];
-			//URL.revokeObjectURL(imgURL);
-		} catch (e) {
+		for(var i=0; i<files.length; i++) {
+			var liNode = document.createElement('li');
+			liNode.setAttribute("class", "mui-table-view-cell mui-media mui-col-xs-6");
+			var imgNode = document.createElement('img');
+			imgNode.setAttribute("class", "mui-media-object");
+			imgNode.style.width = '300px';
+			imgNode.style.height = '200px';
+			imgNode.setAttribute('data-preview-group', '1');
+			imgNode.setAttribute('data-preview-src', '');
+			liNode.appendChild(imgNode);
+			imageRootNode.appendChild(liNode);
+			file = files[i];
 			try {
-				var fileReader = new FileReader();
-				fileReader.onload = function(event) {
-					imgNode.src = event.target.result;
-					invoiceList[imgNode.src] = document.getElementById('fapiaoluru_addInvoiceImage').files[0];
-				};
-				fileReader.readAsDataURL(file);
+				var URL = window.URL || window.webkitURL;
+				imgURL = URL.createObjectURL(file);
+				imgNode.src = imgURL;
+				invoiceList[imgURL] = document.getElementById('fapiaoluru_addInvoiceImage').files[0];
+				//URL.revokeObjectURL(imgURL);
 			} catch (e) {
-				alert("Neither createObjectURL or FileReader are supported");
+				try {
+					var fileReader = new FileReader();
+					fileReader.onload = function(event) {
+						imgNode.src = event.target.result;
+						invoiceList[imgNode.src] = document.getElementById('fapiaoluru_addInvoiceImage').files[0];
+					};
+					fileReader.readAsDataURL(file);
+				} catch (e) {
+					alert("Neither createObjectURL or FileReader are supported");
+				}
 			}
 		}
 	}
@@ -284,7 +296,11 @@ document.getElementById('fapiaoluru_submit').addEventListener('tap', function(ev
 	xhr.open("POST", "/uploadCompanyInvoice");
 	xhr.send(fd);
 }, false);
-
+/*document.getElementById("data_loading").style.display = "none";
+document.getElementById("select_date").style.display = "";
+document.getElementById("add_invoice_page").style.display = "";
+document.getElementById("tips_image").style.display = "";
+document.getElementById("fapiaoluru_submit").style.display = "";*/
 mui.ajax({ 
     type : "POST", 
     url  : "/getUserOpenIdAndCheckBindCompany",
@@ -323,6 +339,3 @@ mui.ajax({
     	document.getElementById("tips_info").style.display = "";
     } 
 });
-/*document.getElementById("data_loading").style.display = "none";
-document.getElementById("tips_info_detail").innerHTML = "尚未开放，敬请期待...";
-document.getElementById("tips_info").style.display = "";*/
