@@ -89,13 +89,12 @@ public class WeixinCampaignDaoImpl implements IWeixinCampaignDao {
 
 	@Override
 	public boolean updateRecord(WeixinCampaignUserModel wcum) {
-		String sql = "update weixin_campaign_user set finish_count=?, right_count=?, update_time=?, answer_rate=?, has_answer=?"
-				+ " values (?, ?, ?, ?, ?)";
+		String sql = "update weixin_campaign_user set finish_count=?, right_count=?, update_time=?, answer_rate=?, has_answer=? where user_id=?";
 		int affectedRows = 0;
 		try {
 			affectedRows = jdbcTemplate.update(sql, wcum.getFinishCount(), 
 					wcum.getRightCount(), wcum.getUpdateTime(), wcum.getAnswerRate(),
-					wcum.getHasAnswer());
+					wcum.getHasAnswer(), wcum.getUserId());
 		} catch(Exception ex) {
 			logger.error(ex.toString());
 		}
