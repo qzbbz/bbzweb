@@ -9,11 +9,12 @@ public class WeixinCampaignSubjectModel {
 	private String selectThree;
 	private Integer subjectStatus;
 	private Integer rightSelect;
+	private String subjectDate;
 	
 	public WeixinCampaignSubjectModel() {}
 	
 	public WeixinCampaignSubjectModel(Integer id, String subject, String selectOne, String selectTwo,
-			String selectThree, Integer subjectStatus, Integer rightSelect) {
+			String selectThree, Integer subjectStatus, Integer rightSelect, String subjectDate) {
 		super();
 		this.id = id;
 		this.subject = subject;
@@ -22,6 +23,7 @@ public class WeixinCampaignSubjectModel {
 		this.selectThree = selectThree;
 		this.subjectStatus = subjectStatus;
 		this.rightSelect = rightSelect;
+		this.subjectDate = subjectDate;
 	}
 
 	public Integer getId() {
@@ -80,11 +82,19 @@ public class WeixinCampaignSubjectModel {
 		this.rightSelect = rightSelect;
 	}
 
+	public String getSubjectDate() {
+		return subjectDate;
+	}
+
+	public void setSubjectDate(String subjectDate) {
+		this.subjectDate = subjectDate;
+	}
+
 	@Override
 	public String toString() {
 		return "WeixinCampaignSubjectModel [id=" + id + ", subject=" + subject + ", selectOne=" + selectOne
 				+ ", selectTwo=" + selectTwo + ", selectThree=" + selectThree + ", subjectStatus=" + subjectStatus
-				+ ", rightSelect=" + rightSelect + "]";
+				+ ", rightSelect=" + rightSelect + ", subjectDate=" + subjectDate + "]";
 	}
 		
 }

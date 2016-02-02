@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<head>
+	<html>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<title>与您相约“一站到底“~帮帮账</title>
+</head>
+
+<body style="margin:0px;background-color:#eedcce;">
+	<div id="begin_count_div" style="position: fixed;z-index: 10;top: 0;right: 0;bottom: 0;left: 0;background-color: rgba(0, 0, 0, 0.5);">
+		<div style="margin-top:50%;margin-left:50%;">
+			<div id="countDown" style="display:none;margin-left:-50px;background-color:#db5a3a;border-width: 1px;border-style: solid;border-radius:50%;color:#db5a3a;width:100px;height:100px;text-align:center;line-height:100px;"><span id="begin_count_info" style="font-size:40px;color:white;font-weight:800;">5</span></div>
+			<div id="loadingTips" style="margin-left:-100px;background-color:#db5a3a;border-width: 1px;border-style: solid;color:#db5a3a;width:200px;border-radius:10px;height:50px;line-height:50px;text-align:center;"><span id="begin_count_info" style="font-size:20px;color:white;font-weight:800;">正在加载数据...</span></div>
+			<div id="submitTips" style="display:none;margin-left:-100px;background-color:#db5a3a;border-width: 1px;border-style: solid;color:#db5a3a;width:200px;border-radius:10px;height:50px;line-height:50px;text-align:center;"><span id="begin_count_info" style="font-size:20px;color:white;font-weight:800;">正在提交数据...</span></div>
+		</div>
+	</div>
+	<div id="subject_top" style="margin-left:0px;height:230px;width:100%;">
+		<img src="/img/weixinimg/subject_top.jpg" height="100%" width="100%" />
+	</div>
+	<div id="subject_indicator" style="position:absolute;top:20px;left:50%;margin-left:-135px;height:55px;">
+		<div id="step_1" style="width:100%;">
+			<div style="float:left;background-color:yellow;border-width: 1px;border-style: solid;border-radius:50%;color:yellow;width:50px;height:50px;text-align:center;line-height:50px;"><span style="font-size:25px;color:black;">1</span></div>			
+			<div style="float:left;margin-top:22px;width:60px;height:4px;border-top:solid white 4px;"></div>
+			<div style="float:left;background-color:white;border-width: 1px;border-style: solid;border-radius:50%;color:white;width:50px;height:50px;text-align:center;line-height:50px;"><span style="font-size:25px;color:black;">2</span></div>
+			<div style="float:left;margin-top:22px;width:60px;height:4px;border-top:solid white 4px;"></div>
+			<div style="float:left;background-color:white;border-width: 1px;border-style: solid;border-radius:50%;color:white;width:50px;height:50px;text-align:center;line-height:50px;"><span style="font-size:25px;color:black;">3</span></div>
+		</div>
+		<div id="step_2" style="display:none;width:100%;">
+			<div style="float:left;background-color:#2ab888;border-width: 1px;border-style: solid;border-radius:50%;color:#2ab888;width:50px;height:50px;text-align:center;line-height:50px;"><span style="font-size:25px;color:black;">1</span></div>
+			<div style="float:left;margin-top:22px;width:60px;height:4px;border-top:solid red 4px;"></div>
+			<div style="float:left;background-color:yellow;border-width: 1px;border-style: solid;border-radius:50%;color:yellow;width:50px;height:50px;text-align:center;line-height:50px;"><span style="font-size:25px;color:black;">2</span></div>
+			<div style="float:left;margin-top:22px;width:60px;height:4px;border-top:solid white 4px;"></div>
+			<div style="float:left;background-color:white;border-width: 1px;border-style: solid;border-radius:50%;color:white;width:50px;height:50px;text-align:center;line-height:50px;"><span style="font-size:25px;color:black;">3</span></div>
+		</div>
+		<div id="step_3" style="display:none;width:100%;">
+			<div style="float:left;background-color:#2ab888;border-width: 1px;border-style: solid;border-radius:50%;color:#2ab888;width:50px;height:50px;text-align:center;line-height:50px;"><span style="font-size:25px;color:black;">1</span></div>
+			<div style="float:left;margin-top:22px;width:60px;height:4px;border-top:solid red 4px;"></div>
+			<div style="float:left;background-color:#2ab888;border-width: 1px;border-style: solid;border-radius:50%;color:#2ab888;width:50px;height:50px;text-align:center;line-height:50px;"><span style="font-size:25px;color:black;">2</span></div>
+			<div style="float:left;margin-top:22px;width:60px;height:4px;border-top:solid red 4px;"></div>
+			<div style="float:left;background-color:white;border-width: 1px;border-style: solid;border-radius:50%;color:white;width:50px;height:50px;text-align:center;line-height:50px;"><span style="font-size:25px;color:black;">3</span></div>
+		</div>
+		<div id="step_4" style="display:none;width:100%;">
+			<div style="float:left;background-color:#2ab888;border-width: 1px;border-style: solid;border-radius:50%;color:#2ab888;width:50px;height:50px;text-align:center;line-height:50px;"><span style="font-size:25px;color:black;">1</span></div>
+			<div style="float:left;margin-top:22px;width:60px;height:4px;border-top:solid red 4px;"></div>
+			<div style="float:left;background-color:#2ab888;border-width: 1px;border-style: solid;border-radius:50%;color:#2ab888;width:50px;height:50px;text-align:center;line-height:50px;"><span style="font-size:25px;color:black;">2</span></div>
+			<div style="float:left;margin-top:22px;width:60px;height:4px;border-top:solid red 4px;"></div>
+			<div style="float:left;background-color:#2ab888;border-width: 1px;border-style: solid;border-radius:50%;color:#2ab888;width:50px;height:50px;text-align:center;line-height:50px;"><span style="font-size:25px;color:black;">3</span></div>
+		</div>
+	</div>
+	<div id="" style="position:absolute;top:95px;left:5px;height:125px;">
+		<div style="width:100%;">
+			<span id="subject_content" style="font-size:17px;color:white;font-weight:400; line-height: 1.5;"></span>
+		</div>
+	</div>
+	<div id="" style="background-color:#eedcce;">
+		<div style="padding:20px 10px;">
+			<a href="javascript:selectAnswer('1');">
+			<div style="border:1px solid #db5a3a;border-radius: 20px;background-color:#db5a3a;">
+				<img src="/img/weixinimg/subject_white_a.png">
+				<span id="subject_one" style="position:absolute;padding:10px 10px;font-size:17px;color:white;font-weight:400;word-wrap: break-word;word-break: normal;"></span>
+			</div>
+			</a>
+		</div>
+		<div style="padding:20px 10px;">
+			<a href="javascript:selectAnswer('2');">
+			<div style="border:1px solid #db5a3a;border-radius: 20px;background-color:#db5a3a;">	
+				<img src="/img/weixinimg/subject_white_b.png">
+				<span id="subject_two" style="position:absolute;padding:10px 10px;font-size:17px;color:white;font-weight:400;word-wrap: break-word;word-break: normal;"></span>
+			</div>
+			</a>
+		</div>
+		<div style="padding:20px 10px;">
+			<a href="javascript:selectAnswer('3');">
+			<div style="border:1px solid #db5a3a;border-radius: 20px;background-color:#db5a3a;">	
+				<img src="/img/weixinimg/subject_white_c.png">
+				<span id="subject_three" style="position:absolute;padding:10px 10px;font-size:17px;color:white;font-weight:400;word-wrap: break-word;word-break: normal;"></span>
+			</div>
+			</a>
+		</div>
+	</div>
+</body>
+<script src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script src="/js/weixinjs/jquery-1.11.1.min.js"></script>
+<script>
+var initValue = 5;
+var answerBeginTime = null;
+var globalData = null;
+var index = 0;
+var rightCount = 0;
+function fillSubjectContent() {
+	$("#subject_content").html(globalData[index].subject);
+	$("#subject_one").html(globalData[index].selectOne);
+	$("#subject_two").html(globalData[index].selectTwo);
+	$("#subject_three").html(globalData[index].selectThree);
+}
+$.ajax({ 
+    type : "POST", 
+    url  : "/weixinCampaign/getSubjects",
+    success : function(data) {
+    	if(data == null) {
+    		alert("无法获取到您的身份信息，请从主页面重新进入！");
+    		window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxb11ddcf3a43c859b&redirect_uri=http%3a%2f%2fwww.bangbangzhang.com%2fweixinCampaign%2fweixinLogin&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect";
+    	} else {
+    		globalData = data;
+    		$("#loadingTips").hide();
+    		$("#countDown").show();
+    		var timer = setInterval(function(){
+    			initValue -= 1;
+    			if(initValue == 0) {
+    				$('#begin_count_info').html("Go!");
+    			} else if(initValue > 0) {
+    				$('#begin_count_info').html(initValue);
+    			} else {
+    				clearInterval(timer);
+    				$('#begin_count_div').hide();
+					fillSubjectContent();
+					answerBeginTime = new Date();
+    			}
+    		}, 1000);
+    	}
+    },
+    error : function(status, error) {
+    	alert("服务器暂时繁忙，请稍后重试！");
+    }
+});
+function selectAnswer(select) {
+	if(globalData[index].rightSelect == select) {
+		rightCount++;
+	}
+	if(index == 0) {
+		$("#step_1").hide();
+		$("#step_2").show();
+		index++;
+		fillSubjectContent();
+		return;
+	}
+	if(index == 1) {
+		$("#step_2").hide();
+		$("#step_3").show();
+		index++;
+		fillSubjectContent();
+		return;
+	}
+	if(index == 2) {
+		$("#step_3").hide();
+		$("#step_4").show();
+		$('#countDown').hide();
+		$('#begin_count_div').show();
+		$('#submitTips').show();
+		var answerFinishTime = new Date();
+		var spendTime = answerFinishTime.getTime() - answerBeginTime.getTime();
+		$.ajax({ 
+		    type : "POST", 
+		    url  : "/weixinCampaign/submitAnswers",
+		    data : {rightCount:rightCount, spendTime:spendTime},
+		    success : function(data) {
+		    	if(data.status == "1") {
+		    		alert("提交数据成功！");
+		    	} else {
+		    		alert("提交数据失败，请稍后重试！");
+		    	}
+		    	window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxb11ddcf3a43c859b&redirect_uri=http%3a%2f%2fwww.bangbangzhang.com%2fweixinCampaign%2fweixinLogin&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect";
+		    },
+		    error : function(status, error) {
+		    	alert("提交数据失败，请稍后重试！");
+		    	window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxb11ddcf3a43c859b&redirect_uri=http%3a%2f%2fwww.bangbangzhang.com%2fweixinCampaign%2fweixinLogin&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect";
+		    }
+		});
+	}
+}
+var imgUrl = "http://www.bangbangzhang.com/img/weixinimg/main_top.png";
+var lineLink = window.location.href;
+var descContent = "关注 帮帮账“bbzhang88”公众号，参与“一站到底”游戏，抢500元红包大礼。";
+var shareTitle = "帮帮账与您相约“一站到底”";
+function getJsConfigInfoSuccess(data,status) {
+	wx.config({
+		appId: 'wxb11ddcf3a43c859b',
+		timestamp: data.timestamp,
+		nonceStr: data.nonceStr,
+		signature: data.signature,
+		jsApiList: [
+			'onMenuShareQQ',
+			'onMenuShareTimeline',
+			'onMenuShareAppMessage'
+		]
+	});
+}
+$.ajax({ 
+    type : "POST", 
+    url  : "/getJsConfigInfo?url=" + encodeURIComponent(location.href.split('#')[0]),
+    success : getJsConfigInfoSuccess 
+});
+wx.ready(function(){
+	var appid = 'wxb11ddcf3a43c859b';
+	setTimeout(function(){
+		wx.onMenuShareTimeline({
+		    title: shareTitle,
+		    link: lineLink,
+		    imgUrl: imgUrl,
+		    success: function () {},
+		    cancel: function () {}
+		});
+		wx.onMenuShareAppMessage({
+		    title: shareTitle,
+		    desc: descContent,
+		    link: lineLink,
+		    imgUrl: imgUrl,
+		    type: '',
+		    dataUrl: '',
+		    success: function () {},
+		    cancel: function () {}
+		});
+		wx.onMenuShareQQ({
+		    title: shareTitle,
+		    desc: descContent,
+		    link: lineLink,
+		    imgUrl: imgUrl,
+		    success: function () {},
+		    cancel: function () {}
+		});
+	}, 500);
+});
+</script>
+
+</html>

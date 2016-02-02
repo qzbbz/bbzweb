@@ -9,7 +9,7 @@ public class WeixinCampaignSubjectMapper implements RowMapper<WeixinCampaignSubj
 	public WeixinCampaignSubjectModel mapRow(ResultSet rs, int index) throws SQLException {
 		WeixinCampaignSubjectModel u = new WeixinCampaignSubjectModel(rs.getInt("id"), rs.getString("subject"),
 				rs.getString("select_one"), rs.getString("select_two"), rs.getString("select_three"), 
-				rs.getInt("subject_status"), rs.getInt("right_select"));
+				rs.getInt("subject_status"), rs.getInt("right_select"), rs.getString("subject_date"));
 		return u;
 	}
 }

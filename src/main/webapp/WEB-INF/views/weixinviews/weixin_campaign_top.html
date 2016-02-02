@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<head>
+	<html>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<title>与您相约“一站到底“~帮帮账</title>
+</head>
+
+<body>
+	<div id="main_background" style="position:absolute;height:100%; z-index:-1;left:0px;top:-1px;">
+		<img src="/img/weixinimg/top_background.jpg" height="100%" width="100%" />
+	</div>
+	<div id="main_top" style="">
+		<img src="/img/weixinimg/top_top.png" height="100%" width="100%" />
+	</div>
+	<div id="main_tips" style="">
+		<img src="/img/weixinimg/top_tips.png" height="100%" width="100%" />
+	</div>
+	<div style="margin-left:10px;margin-right:10px;min-height:200px;border-width: 1px;border-style: solid;color:#e08978;border-radius:10px;background-color:#e08978;">
+		<div style="padding:10px 20px;text-align:center;"><span style="color:white;">10强排行榜</span></div>
+		<div id="list_data">
+		</div>
+	</div>
+</body>
+<script src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script src="/js/weixinjs/zepto.min.js"></script>
+<script>
+$.ajax({ 
+    type : "POST", 
+    url  : "/weixinCampaign/getAllUsers",
+    success : function(data) {
+    	if(data == null) {
+    		alert("暂时没有获取到数据，请稍后重试！");
+    	} else {
+    		var content = "";
+    		var count = 1;
+    		for(var index in data) {
+    			if(index >= 10) break;
+    			content += "<div style='padding:1px 20px;'><span style='color:white;'>"+data[index].userName+"</span><span style='float:right;color:white;margin-right:20px;'>"+(count)+"</span></div>";
+    			count++;
+    		}
+    		$("#list_data").html(content);
+    	}
+    },
+    error : function(status, error) {
+    	alert("服务器暂时繁忙，请稍后重试！");
+    }
+});
+var imgUrl = "http://www.bangbangzhang.com/img/weixinimg/main_top.png";
+var lineLink = window.location.href;
+var descContent = "关注 帮帮账“bbzhang88”公众号，参与“一站到底”游戏，抢500元红包大礼。";
+var shareTitle = "帮帮账与您相约“一站到底”";
+function getJsConfigInfoSuccess(data,status) {
+	wx.config({
+		appId: 'wxb11ddcf3a43c859b',
+		timestamp: data.timestamp,
+		nonceStr: data.nonceStr,
+		signature: data.signature,
+		jsApiList: [
+			'onMenuShareQQ',
+			'onMenuShareTimeline',
+			'onMenuShareAppMessage'
+		]
+	});
+}
+$.ajax({ 
+    type : "POST", 
+    url  : "/getJsConfigInfo?url=" + encodeURIComponent(location.href.split('#')[0]),
+    async: false,
+    success : getJsConfigInfoSuccess 
+});
+wx.ready(function(){
+	var appid = 'wxb11ddcf3a43c859b';
+	setTimeout(function(){
+		wx.onMenuShareTimeline({
+		    title: shareTitle,
+		    link: lineLink,
+		    imgUrl: imgUrl,
+		    success: function () {},
+		    cancel: function () {}
+		});
+		wx.onMenuShareAppMessage({
+		    title: shareTitle,
+		    desc: descContent,
+		    link: lineLink,
+		    imgUrl: imgUrl,
+		    type: '',
+		    dataUrl: '',
+		    success: function () {},
+		    cancel: function () {}
+		});
+		wx.onMenuShareQQ({
+		    title: shareTitle,
+		    desc: descContent,
+		    link: lineLink,
+		    imgUrl: imgUrl,
+		    success: function () {},
+		    cancel: function () {}
+		});
+	}, 500);
+});
+</script>
+
+</html>
