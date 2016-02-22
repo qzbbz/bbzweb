@@ -315,79 +315,83 @@
 		        $("#"+id).parent().addClass("bui-menu-item-selected")
 		    }
 	       
-		BUI.use('bui/uploader', function(Uploader) {
-			/**
-			 * 返回数据的格式
-			 *
-			 *  默认是 {url : 'url'},否则认为上传失败
-			 *  可以通过isSuccess 更改判定成功失败的结构
-			 */
-			var form = $("#expense-form").html();
+		    BUI.use(['bui/mask', 'bui/uploader'] ,function(Mask, Uploader) {
+	            /**
+	             * 返回数据的格式
+	             *
+	             *  默认是 {url : 'url'},否则认为上传失败
+	             *  可以通过isSuccess 更改判定成功失败的结构
+	             */
+	            var form = $("#expense-form").html();
+	            var fileConuter = 0;
+	             var fileNums = 0; 
+	            var myloadMask = new Mask.LoadMask({
+	                 el : '#mask',
+	                 msg : 'loading ....'
+	             });
+	             //$("#mask").css("z-index", 99); 
+	            var uploader = new Uploader.Uploader({
+	                render : '#J_Uploader',
+	                url : '/company/uploadCompanyBill',
+	                autoUpload : false,
+	                success : function(result) {
 
-			var uploader = new Uploader.Uploader({
-				render : '#J_Uploader',
-				url : '/company/uploadCompanyBill',
-				autoUpload : false,
-				success : function(result) {
+	                },
+	                error : function(result) {
+	                    myloadMask.hide();
+	                    $("#mask").css("z-index", -99); 
+	                    var items = uploader.get("queue").getItems();
+	                    uploader.get("queue").removeItems(items);
+	                    BUI.Message.Alert('上传失败！', 'warning');
+	                }
+	            }).render();
+	            uploader.on('success', function(ev) {
+	                fileConuter ++;
+	                if (fileConuter == fileNums) {
+	                    myloadMask.hide();
+	                    $("#mask").css("z-index", -99);
+	                    var items = uploader.get("queue").getItems();
+	                    while(items.length != 0) {
+	                    	uploader.get("queue").removeItem(items[0]);
+	                    }
+	                    BUI.Message.Alert('上传成功！', 'info');
+	                }
+	                /* BUI.use([ 'bui/mask' ], function(Mask) {
+	                    loadMask.hide();
+	                    if (fileConuter == fileNums) {
+	                        loadMask.hide();
+	                        BUI.Message.Alert('上传成功！', 'info');
+	                    }
+	                    
+	                    var temp = uploader.get("queue");
+	                    var items = uploader.get("queue").getItems();
+	                    uploader.get("queue").removeItems(items);
+	                    uploader.get("queue").addItems(items); 
+	                    
+	                });  */
+	            });
 
-				},
-				error : function(result) {
-					BUI.use([ 'bui/mask' ], function(Mask) {
-						var loadMask = new Mask.LoadMask({
-							el : '#mask',
-							msg : 'loading ....'
-						});
-						$("#mask").css("z-index", -1);
-						loadMask.hide();
-						var items = uploader.get("queue").getItems();
-						uploader.get("queue").removeItems(items);
-						BUI.Message.Alert('上传失败！', 'warning');
-					});
-				}
-			}).render();
-			uploader.on('success', function(ev) {
-
-				BUI.use([ 'bui/mask' ], function(Mask) {
-					var loadMask = new Mask.LoadMask({
-						el : '#mask',
-						msg : 'loading ....'
-					});
-					$("#mask").css("z-index", -1);
-					loadMask.hide();
-					var items = uploader.get("queue").getItems();
-					uploader.get("queue").removeItems(items);
-					uploader.get("queue").addItems(items);
-					BUI.Message.Alert('上传成功！', 'info');
-				});
-			});
-
-			$('#uplaodFiles').click(
-					function() {
-						console.log(uploader.get("queue").getItems());
-						var flag = $("#isFixedAssets").prop('checked') ? 1 : 0;
-						if ($('#bill_date').val() == null
-								|| $('#bill_date').val() == '') {
-							BUI.Message.Alert('发票日期不能为空，请检查！', 'warning');
-						}else if(uploader.get("queue").getItems().length == 0){
-							BUI.Message.Alert('上传照片不能为空，请检查！', 'warning');
-						} 
-						else {
-							BUI.use([ 'bui/mask' ], function(Mask) {
-
-								var loadMask = new Mask.LoadMask({
-									el : '#mask',
-									msg : 'loading ....'
-								});
-								$("#mask").css("z-index", 99);
-								loadMask.show();
-							});
-							uploader.set('data', {
-								bill_date : $('#bill_date').val()
-							});
-							uploader.upload();
-						}
-					});
-		});
+	            $('#uplaodFiles').click(
+	                    function() {
+	                        console.log(uploader.get("queue").getItems());
+	                        var flag = $("#isFixedAssets").prop('checked') ? 1 : 0;
+	                        if ($('#bill_date').val() == null
+	                                || $('#bill_date').val() == '') {
+	                            BUI.Message.Alert('发票日期不能为空，请检查！', 'warning');
+	                        }else if(uploader.get("queue").getItems().length == 0){
+	                            BUI.Message.Alert('上传文件不能为空，请检查！', 'warning');
+	                        } 
+	                        else {
+	                            myloadMask.show();
+	                            $("#mask").css("z-index", 99); 
+	                            uploader.set('data', {
+	                                bill_date : $('#bill_date').val()
+	                            });
+	                            fileNums = uploader.get("queue").getItems().length;
+	                            uploader.upload();
+	                        }
+	                    });
+	        });
 	</script>
 </body>
 </html>
