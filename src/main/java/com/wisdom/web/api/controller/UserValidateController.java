@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-
->>>>>>> 4a4fd90c3d2427e18c19b64ce65a9843d7412f96
 package com.wisdom.web.api.controller;
 
 import java.util.HashMap;
@@ -189,8 +185,4 @@ public class UserValidateController {
 
 		return retMap;
 	}
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 4a4fd90c3d2427e18c19b64ce65a9843d7412f96
