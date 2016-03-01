@@ -53,8 +53,8 @@
 	<div id="edit-sales-dialog" style="display:none;">
 		<input id="edit-comment" type="textfield" placeholder="添加新备注，没有请留空"/>
 		<input id="edit-updated_time" type="textfield" placeholder="联系时间" />
-		<input id="edit-status" type="textfield" placeholder="状态" />
-		<input id="edit-accountant" type="textfield" placeholder="会计"/>
+		<input id="edit-status" type="textfield" placeholder="状态" /><br />
+		<select id="edit-accountant" ></select>
 	</div>
 	<div id="comment-dialog" style="display:none">
 	<table id="comment-list" >
@@ -64,6 +64,7 @@
 <script>
 
 $( "#updated-time" ).datepicker();
+$("#edit-updated_time").datepicker();
 //Get sales' name
 
 $.get("/getUserFromSession", function(data){
@@ -76,10 +77,10 @@ $.get("/getUserFromSession", function(data){
 });
 
 //Get accountants
-
+var accountants = [];
 $.get("/getAllAccounter", function(data){
 	$("#accountant").append("<option class='accountant' value='random'>随机</option>");
-	
+	accountants = data;
 	for(var i = 0; i < data.length; i++){
 
 		$("#accountant").append("<option class='accountant' value='" + data[i]["user_id"] + "'>" + data[i]["userName"] + "</option>");
@@ -122,9 +123,26 @@ $.get("/sales/getSales", function(dataSet){
 		//$("#edit-comment").val(comment);
 		$("#edit-updated_time").val(updatedTime);
 		$("#edit-status").val(status);
-		$("#edit-accountant").val(accountant);
-		$("#accountant_id").val($("#accountant").val());
+		//$("#edit-accountant").val(accountant);
+		//$("#accountant_id").val($("#accountant").val());
+		$("#edit-accountant").html("");
+
+		var index = 0;
+		for(var i = 0; i < accountants.length; i++){
+			if(accountants[i]['userName'] == accountant){
+			  $("#edit-accountant").append("<option class='accountant' value='" + accountants[i]["user_id"] + "'>" + accountants[i]["userName"] + "</option>");
+			  index = i;
+			  break;
+			}
+		}
+		$("#edit-accountant").append("<option class='accountant' value='random'>随机</option>");
+		for(var i = 0; i < accountants.length; i++){
+			if(accountants[i]['userName'] != accountant){
+				  $("#edit-accountant").append("<option class='accountant' value='" + accountants[i]["user_id"] + "'>" + accountants[i]["userName"] + "</option>");
+			}
+		}
 		var id = $(this).attr("id").replace("edit-", "");
+		
 		$("#edit-sales-dialog").dialog({
 			buttons:[
     		            {
@@ -134,8 +152,20 @@ $.get("/sales/getSales", function(dataSet){
 	    		              },
 	    		              click: function() {
 	    		         		//post modify
-	    		         		$.post("/sales/updateSales", {id:id, comment:$("#edit-comment").val(), accountant:$("#edit-accountant").val(), status: $("#edit-status").val(), updated_time: $("#edit-updated_time").val(), accountant_id:$("#accountant_id").val()}, function(){
-	    		         			alert('hello');
+	    		         		var editDialog = $(this);
+	    		         		var accountant = $("#edit-accountant option:selected").text();
+	    		         		var accountantId = $("#editaccountant option:selected").val();
+	    		         		
+	    		         		if(accountant == "随机"){
+	    		         			var accounants = $("option.accountant");
+	    		         			var index = Math.floor(Math.random() * accounants.length);
+
+	    		         			accountant = accounants[index].innerHTML;
+	    		         			accountantId = accounants[index].getAttribute("value");
+	    		         		}
+	    		         		$.post("/sales/updateSales", {id:id, comment:$("#edit-comment").val(), accountant:accountant, status: $("#edit-status").val(), updated_time: $("#edit-updated_time").val(), accountant_id:accountantId}, function(){
+	    		         			editDialog.dialog("close");
+	    		         			window.location.href = "/views/salesviews/record.html";
 	    		         		})
 	    		              }
 	    		         },
@@ -178,7 +208,7 @@ $("#submit").on("click", function(){
 	console.log(accountant);
 	var comment = $("#comment").val();
 	$.post("/sales/addSales", {"saller_account": saller, "user_name": userName, "user_company": userCompany, "user_phone": userPhone, "accountant": accountant, "updated_time": updatedTime, "comment": comment, accountant_id:accountantId}, function(){
-		alert("ok");
+		window.location.href = "/views/salesviews/record.html";
 	})
 });
 
