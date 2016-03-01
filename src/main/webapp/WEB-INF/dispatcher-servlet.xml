@@ -128,7 +128,7 @@ class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 	<!-- database config begin -->
-	
+	<!-- test safe -->
 	<task:executor id="executor" pool-size="1" />  
     <task:scheduler id="scheduler" pool-size="1" />  
     <task:annotation-driven executor="executor" scheduler="scheduler" />
