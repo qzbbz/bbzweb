@@ -8,6 +8,8 @@ public interface ISalesDao {
 
 	public List<Sales> getAllSalesRecords();
 	
+	public Sales getSalesById(Integer id);
+	
 	public long addSalesRecord(Sales sales);
 	
 	public Boolean updateSalesRecordStatus(String userPhone, String status);
@@ -18,6 +20,6 @@ public interface ISalesDao {
 	
 	public Boolean updateSalesRecordLatestComment(Integer id, String comment);
 	
-	
+	public Boolean updateSalesSendEmailStatus(Integer id, Integer status);
 	
 }

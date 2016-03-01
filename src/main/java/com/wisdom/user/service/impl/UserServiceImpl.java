@@ -308,5 +308,10 @@ public class UserServiceImpl implements IUserService {
 	public boolean setUserPhone(String userId, String userPhone) {
 		return userOperationDao.setUserPhone(userId, userPhone);
 	}
+
+	@Override
+	public User getCompanyAdminUserByCompanyId(long companyId) {
+		return userQueryDao.getCompanyAdminUserByCompanyId(companyId);
+	}
 }
 

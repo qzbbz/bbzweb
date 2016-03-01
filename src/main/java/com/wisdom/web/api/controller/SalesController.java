@@ -2,6 +2,7 @@ package com.wisdom.web.api.controller;
 
 
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,16 +17,26 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-
+import com.wisdom.common.model.Company;
 import com.wisdom.common.model.Sales;
 import com.wisdom.common.model.SalesComment;
+import com.wisdom.common.model.User;
+import com.wisdom.company.service.ICompanyService;
 import com.wisdom.sales.service.ISalesService;
+import com.wisdom.user.service.IUserModifyService;
+import com.wisdom.user.service.IUserService;
+import com.wisdom.web.utils.UserPwdMD5Encrypt;
 
 @Controller
 public class SalesController {
 
 	@Autowired ISalesService salesService;
 	
+	@Autowired IUserService userService;
+	
+	@Autowired ICompanyService companyService;
+	
+	@Autowired IUserModifyService userModifyService;
 
 	
 	private static final Logger logger = LoggerFactory
@@ -45,11 +56,34 @@ public class SalesController {
 		sales.setAccountant(request.getParameter("accountant"));
 		sales.setSallerAccount(request.getParameter("saller_account"));
 		sales.setUpdatedTime(request.getParameter("updated_time"));
+		sales.setAccountantId(request.getParameter("accountant_id"));
 		Integer salesId = salesService.addSalesRecord(sales);
 		if(salesId == -1){
 			retMap.put("status", "nok");
 		}else{
 			//Add comments
+			User user = new User();
+			user.setUserId(sales.getUserPhone() + "@bangbangzhang.com");
+			user.setTypeId(2);
+			user.setCompanyId((long) -1);
+			user.setCreateTime(new Timestamp(System.currentTimeMillis()));
+			if (userService.addUser(user)
+					&& userService.setUserPwdByUserId(
+							UserPwdMD5Encrypt.getPasswordByMD5Encrypt("123456"),
+							user.getUserId())) {
+				Company company = new Company();
+				company.setName(sales.getUserCompany());
+				company.setMonthExpense("0-10K");
+				company.setParentId((long) -1);
+				company.setPerfectMoment("工作日上午9:00~10:00");
+				company.setCreateTime(new Timestamp(System.currentTimeMillis()));
+				long companyId = companyService.addCompany(company);
+				logger.debug("add company id : {}", companyId);
+				userModifyService.modifyUserCompanyIdByUserId(user.getUserId(), companyId);
+				userService.addUserPhone(user.getUserId(), sales.getUserPhone(), 1);
+			} else {
+				retMap.put("status", "nok");
+			}
 		}
 			
 		return retMap;
@@ -91,6 +125,10 @@ public class SalesController {
 		String comment = request.getParameter("comment");
 		String updatedTime = request.getParameter("updated_time");
 		Integer id = Integer.valueOf(request.getParameter("id"));
+		Sales sales = salesService.getSalesRecordById(id);
+		if(sales != null && !sales.getUpdatedTime().equals(updatedTime)) {
+			salesService.updateSalesSendEmailStatus(id, 0);
+		}
 		if(salesService.updateSales(id, comment, accountant, updatedTime, status)){
 			retMap.put("status", "ok");
 		}else{
