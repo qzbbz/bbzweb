@@ -39,7 +39,9 @@ import com.wisdom.common.model.SheetBalance;
 import com.wisdom.common.model.SheetCash;
 import com.wisdom.common.model.SheetIncome;
 import com.wisdom.common.model.SheetSalaryTax;
+import com.wisdom.common.model.User;
 import com.wisdom.common.model.UserOpenid;
+import com.wisdom.common.model.UserPhone;
 import com.wisdom.company.dao.ISheetBalanceDao;
 import com.wisdom.company.dao.ISheetCashDao;
 import com.wisdom.company.dao.ISheetIncomeDao;
@@ -58,6 +60,7 @@ import com.wisdom.web.utils.ExportExcelFile;
 import com.wisdom.web.utils.PdfProcess;
 import com.wisdom.web.utils.SessionConstant;
 import com.wisdom.recommender.service.IRecommendService;
+import com.wisdom.sales.service.ISalesService;
 
 
 @Controller
@@ -83,6 +86,9 @@ public class CompanyController {
 	
 	@Autowired
 	private ICompanyApi companyApi;
+	
+	@Autowired
+	private ISalesService salesService;
 	
 	@Autowired
 	private IUserModifyService userModifyService;
@@ -256,6 +262,9 @@ public class CompanyController {
 				//如果有做过处理，不执行商户的业务程序
 				logger.info("alipayFinish : TRADE_FINISHED || TRADE_SUCCESS");
 				CompanyPay companyPay = companyPayService.getCompanyPayByOrderNo(out_trade_no);
+				User user = userService.getCompanyAdminUserByCompanyId(companyPay.getCompanyId());
+				UserPhone up = userService.getUserPhone(user.getUserId());
+				salesService.updateSalesStatus(up.getPhone(), "已付款");
 				logger.info(companyPay.toString());
 				String contractFileName = "";
 				try {

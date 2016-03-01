@@ -12,6 +12,8 @@ public interface IUserService {
 	
 	public User getUserByUserId(String userId);
 	
+	public User getCompanyAdminUserByCompanyId(long companyId);
+	
 	public List<User> getUserListByCompanyId(long companyId);
 	
 	public boolean updateUserInfo(String userId,String userName,int status, int typeId,String userCode,String userLevel,String msgMail);

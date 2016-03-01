@@ -76,4 +76,16 @@ public class SalesServiceImpl implements ISalesService {
 		return salesDao.updateSalesRecordStatus(userPhone, status);
 	}
 
+	@Override
+	public Boolean updateSalesSendEmailStatus(int id, int status) {
+		// TODO Auto-generated method stub
+		return salesDao.updateSalesSendEmailStatus(id, status);
+	}
+
+	@Override
+	public Sales getSalesRecordById(Integer id) {
+		// TODO Auto-generated method stub
+		return salesDao.getSalesById(id);
+	}
+
 }

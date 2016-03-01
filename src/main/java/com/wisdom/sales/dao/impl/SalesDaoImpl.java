@@ -55,8 +55,8 @@ public class SalesDaoImpl implements ISalesDao {
 			int id = jdbcTemplate.update(new PreparedStatementCreator() {
 				public PreparedStatement createPreparedStatement(
 						Connection connection) throws SQLException {
-					String sql = "insert into sales (saller_account,user_name,user_company,user_phone,latest_comment,accountant,updated_time,status)"
-							+ " values (?, ?, ?, ?, ?, ?, ?, ?)";
+					String sql = "insert into sales (saller_account,user_name,user_company,user_phone,latest_comment,accountant,updated_time,status,accountant_id)"
+							+ " values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 					PreparedStatement ps = connection.prepareStatement(sql,
 							Statement.RETURN_GENERATED_KEYS);
 					ps.setString(1, sales.getSallerAccount() == null? "": sales.getSallerAccount());
@@ -67,6 +67,7 @@ public class SalesDaoImpl implements ISalesDao {
 					ps.setString(6,sales.getAccountant() == null ? "" : sales.getAccountant());
 					ps.setString(7, sales.getUpdatedTime()  == null ? "" : sales.getUpdatedTime());
 					ps.setString(8,sales.getStatus() == null ? "": sales.getStatus());
+					ps.setString(9,sales.getAccountantId() == null ? "": sales.getAccountantId());
 					return ps;
 				}
 			}, keyHolder);
@@ -117,6 +118,26 @@ public class SalesDaoImpl implements ISalesDao {
 		int affectedRows = jdbcTemplate.update(sql, comment, id);
 		logger.debug("updateSalesRecordLatestComment result : {}", affectedRows);
 		return affectedRows != 0;	
+	}
+
+	@Override
+	public Boolean updateSalesSendEmailStatus(Integer id, Integer status) {
+		String sql = "update sales set has_send_email = ? where id = ?";
+		int affectedRows = jdbcTemplate.update(sql, status, id);
+		logger.debug("updateSalesSendEmailStatus result : {}", affectedRows);
+		return affectedRows != 0;	
+	}
+
+	@Override
+	public Sales getSalesById(Integer id) {
+		Sales sale = null;
+		try {
+			String sql = "select * from sales where id = ?";
+			sale = jdbcTemplate.queryForObject(sql, new Object[]{id}, new SalesMapper());
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return sale;
 	}
 	
 

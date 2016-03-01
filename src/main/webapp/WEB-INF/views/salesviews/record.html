@@ -14,12 +14,12 @@
 </head>
 <body>
 <div id="add-form">
-	<input type="text" placeholder="销售名字" id="saller"/>
-	<input type="text" placeholder="客户名字" id="user-name"/>
-	<input type="text" placeholder="公司名称" id="user-company"/>
-	<input type="text" placeholder="联系方式" id="user-phone"/>
+	<input type="text" placeholder="销售名字(必填)" id="saller"/>
+	<input type="text" placeholder="客户名字(必填)" id="user-name"/>
+	<input type="text" placeholder="公司名称(必填)" id="user-company"/>
+	<input type="text" placeholder="联系方式(必填)" id="user-phone"/>
 	<select id="accountant"></select>
-	<input type="text" placeholder="联系时间" id="updated-time"/>
+	<input type="text" placeholder="联系时间(必填)" id="updated-time"/>
 	<input type="text" placeholder="备注" id="comment"/>
 	<input type="button" value="提交" id="submit"/>
 </div>
@@ -71,7 +71,7 @@ $.get("/getAllAccounter", function(data){
 	
 	for(var i = 0; i < data.length; i++){
 
-		$("#accountant").append("<option class='accountant' value='" + data[i]["userName"] + "'>" + data[i]["userName"] + "</option>");
+		$("#accountant").append("<option class='accountant' value='" + data[i]["user_id"] + "'>" + data[i]["userName"] + "</option>");
 	}
 	
 });
@@ -102,6 +102,7 @@ $.get("/sales/getSales", function(dataSet){
 		$("#edit-updated_time").val(updatedTime);
 		$("#edit-status").val(status);
 		$("#edit-accountant").val(accountant);
+		$("#accountant_id").val($("#accountant").val());
 		var id = $(this).attr("id").replace("edit-", "");
 		$("#edit-sales-dialog").dialog({
 			buttons:[
@@ -112,7 +113,7 @@ $.get("/sales/getSales", function(dataSet){
 	    		              },
 	    		              click: function() {
 	    		         		//post modify
-	    		         		$.post("/sales/updateSales", {id:id, comment:$("#edit-comment").val(), accountant:$("#edit-accountant").val(), status: $("#edit-status").val(), updated_time: $("#edit-updated_time").val()}, function(){
+	    		         		$.post("/sales/updateSales", {id:id, comment:$("#edit-comment").val(), accountant:$("#edit-accountant").val(), status: $("#edit-status").val(), updated_time: $("#edit-updated_time").val(), accountant_id:$("#accountant_id").val()}, function(){
 	    		         			alert('hello');
 	    		         		})
 	    		              }
@@ -139,17 +140,23 @@ $("#submit").on("click", function(){
 	var userName = $("#user-name").val();
 	var userCompany = $("#user-company").val();
 	var userPhone = $("#user-phone").val();
-	var accountant = $("#accountant").val();
-	if(accountant == "random"){
+	var accountant = $("#accountant option:selected").text();
+	var accountantId = $("#accountant option:selected").val();
+	var updatedTime = $("#updated-time").val();
+	if(saller == "" || userName == "" || userCompany=="" || userPhone=="" || updatedTime == "") {
+		alert("必填字段还有未填写的，请检查！");
+		return;
+	}
+	if(accountant == "随机"){
 		var accounants = $("option.accountant");
 		var index = Math.floor(Math.random() * accounants.length);
 		console.log(index);
 		accountant = accounants[index].innerHTML;
+		accountantId = accounants[index].getAttribute("value");
 	}
 	console.log(accountant);
-	var updatedTime = $("#updated-time").val();
 	var comment = $("#comment").val();
-	$.post("/sales/addSales", {"saller_account": saller, "user_name": userName, "user_company": userCompany, "user_phone": userPhone, "accountant": accountant, "updated_time": updatedTime, "comment": comment}, function(){
+	$.post("/sales/addSales", {"saller_account": saller, "user_name": userName, "user_company": userCompany, "user_phone": userPhone, "accountant": accountant, "updated_time": updatedTime, "comment": comment, accountant_id:accountantId}, function(){
 		alert("ok");
 	})
 });
