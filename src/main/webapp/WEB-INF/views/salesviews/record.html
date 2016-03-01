@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.10/css/jquery.dataTables.min.css">
+<script type="text/javascript" language="javascript" src="http://code.jquery.com/jquery-1.11.3.min.js">
+	</script>
+<link rel="stylesheet" type="text/css" href="https://datatables.net/media/css/site-examples.css?_=5caac04f688d89b2c49bcb280190366b">
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/css/webcss/jquery-ui.css" />
+<link rel="stylesheet" href="/css/webcss/jquery-ui.theme.css"/>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<div id="add-form">
+	<input type="text" placeholder="销售名字" id="saller"/>
+	<input type="text" placeholder="客户名字" id="user-name"/>
+	<input type="text" placeholder="公司名称" id="user-company"/>
+	<input type="text" placeholder="联系方式" id="user-phone"/>
+	<select id="accountant"></select>
+	<input type="text" placeholder="联系时间" id="updated-time"/>
+	<input type="text" placeholder="备注" id="comment"/>
+	<input type="button" value="提交" id="submit"/>
+</div>
+<table id="table" class="display" cellspacing="0" width="100%">
+	<thead>
+            <tr>
+                <th>销售</th>
+                <th>公司名称</th>
+                <th>客户</th>
+                <th>电话</th>
+                <th>备注</th>
+                <th>联系时间</th>
+                <th>状态</th>
+                <th>会计</th>
+                <th>记录编号</th>
+                <th></th>
+            </tr>
+        </thead>
+</table>
+	<div id="edit-sales-dialog" style="display:none;">
+		<input id="edit-comment" type="textfield" placeholder="添加新备注，没有请留空"/>
+		<input id="edit-updated_time" type="textfield" placeholder="联系时间" />
+		<input id="edit-status" type="textfield" placeholder="状态" />
+		<input id="edit-accountant" type="textfield" placeholder="会计"/>
+	</div>
+	<div id="comment-dialog" style="display:none">
+	<table id="comment-list" >
+	</table>
+	</div>
+</body>
+<script>
+
+$( "#updated-time" ).datepicker();
+//Get sales' name
+
+$.get("/getUserFromSession", function(data){
+	console.log(data);
+	if(data['name'] == ''){
+		window.location.href = "/views/frontviews/index.html"
+	} else{
+		$("#saller").val(data['name']);
+	}
+});
+
+//Get accountants
+
+$.get("/getAllAccounter", function(data){
+	$("#accountant").append("<option class='accountant' value='random'>随机</option>");
+	
+	for(var i = 0; i < data.length; i++){
+
+		$("#accountant").append("<option class='accountant' value='" + data[i]["userName"] + "'>" + data[i]["userName"] + "</option>");
+	}
+	
+});
+$.get("/sales/getSales", function(dataSet){
+	$('#table').DataTable( {
+    data: dataSet['data']
+} );
+	
+	$('#table tbody').on('dblclick', 'tr', function(){
+		var id = $(this).children().eq(8)[0].innerHTML;
+		console.log( $(this).children().eq(8));
+		$.post("/sales/getAllComments", {id: id}, function(data){
+			$("#comment-list").html("");
+			for(var i = 0; i < data.length; i++){
+				$("#comment-list").append("<tr><td>" + data[i]["comment"] + "</td><td>" + data[i]["updated_time"] + "</td></tr>");
+			}
+			$("#comment-dialog").dialog();
+		});
+		
+	});
+	
+	$('#table tbody').on('click', '.edit-btn', function () {
+		//var comment = $(this).parents('tr').children().eq(4)[0].innerHTML;
+		var updatedTime = $(this).parents('tr').children().eq(5)[0].innerHTML;
+		var status = $(this).parents('tr').children().eq(6)[0].innerHTML;
+		var accountant = $(this).parents('tr').children().eq(7)[0].innerHTML;
+		//$("#edit-comment").val(comment);
+		$("#edit-updated_time").val(updatedTime);
+		$("#edit-status").val(status);
+		$("#edit-accountant").val(accountant);
+		var id = $(this).attr("id").replace("edit-", "");
+		$("#edit-sales-dialog").dialog({
+			buttons:[
+    		            {
+	    		              text: "提交",
+	    		              icons: {
+	    		                primary: "ui-icon-heart"
+	    		              },
+	    		              click: function() {
+	    		         		//post modify
+	    		         		$.post("/sales/updateSales", {id:id, comment:$("#edit-comment").val(), accountant:$("#edit-accountant").val(), status: $("#edit-status").val(), updated_time: $("#edit-updated_time").val()}, function(){
+	    		         			alert('hello');
+	    		         		})
+	    		              }
+	    		         },
+	    		            {
+	    		              text: "取消",
+	    		              icons: {
+	    		                primary: "ui-icon-heart"
+	    		              },
+	    		              click: function() {
+	    		            	  
+	    		            	  $(this).dialog("close");
+	    		            	  }
+	    		         }
+    		        ]
+		});
+	});
+});
+
+
+
+$("#submit").on("click", function(){
+	var saller = $("#saller").val();
+	var userName = $("#user-name").val();
+	var userCompany = $("#user-company").val();
+	var userPhone = $("#user-phone").val();
+	var accountant = $("#accountant").val();
+	if(accountant == "random"){
+		var accounants = $("option.accountant");
+		var index = Math.floor(Math.random() * accounants.length);
+		console.log(index);
+		accountant = accounants[index].innerHTML;
+	}
+	console.log(accountant);
+	var updatedTime = $("#updated-time").val();
+	var comment = $("#comment").val();
+	$.post("/sales/addSales", {"saller_account": saller, "user_name": userName, "user_company": userCompany, "user_phone": userPhone, "accountant": accountant, "updated_time": updatedTime, "comment": comment}, function(){
+		alert("ok");
+	})
+});
+
+</script>
+</html>
