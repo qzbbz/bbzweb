@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.wisdom.common.model.User;
 import com.wisdom.user.service.IUserService;
 import com.wisdom.web.api.IUserValidateApi;
 import com.wisdom.web.utils.SessionConstant;
@@ -167,5 +168,21 @@ public class UserValidateController {
 	@RequestMapping("/admin/admin")
 	public String getAdminAdminHtml(HttpSession httpSession) {
 		return "redirect:/views/webviews/admin/admin.html";
+	}
+	
+	@RequestMapping("/getUserFromSession")
+	@ResponseBody
+	public Map<String, String> getUserFromSession(HttpServletRequest request){
+		String userId = (String) request.getSession().getAttribute(SessionConstant.SESSION_USER_ID);
+		Map<String, String> retMap = new HashMap<>();
+		if(userId == null){
+			retMap.put("name","");
+		}else{
+			User user = userService.getUserByUserId(userId);
+
+			retMap.put("name", user.getUserName());
+		}
+
+		return retMap;
 	}
 }
