@@ -44,16 +44,16 @@ public class SalesServiceImpl implements ISalesService {
 	
 
 	@Override
-	public Boolean updateSales(Integer id, String comment, String accountant, String updatedTime, String status) {
+	public Boolean updateSales(Integer id, String comment, String accountant, String updatedTime, String status, String accountantId) {
 		if(comment.equals("") || comment.isEmpty()){
-			return salesDao.updateSalesRecordInformation(id, accountant, updatedTime, status);
+			return salesDao.updateSalesRecordInformation(id, accountant, updatedTime, status, accountantId);
 		}else{
 			SalesComment saleComment = new SalesComment();
 			saleComment.setSalesId(id);
 			saleComment.setComment(comment);
 			salesCommentDao.addSalesComment(saleComment);
 			salesDao.updateSalesRecordLatestComment(id, comment);
-			return salesDao.updateSalesRecordInformation(id, accountant, updatedTime, status);
+			return salesDao.updateSalesRecordInformation(id, accountant, updatedTime, status, accountantId);
 		}
 
 	}

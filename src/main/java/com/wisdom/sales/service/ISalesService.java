@@ -13,7 +13,7 @@ public interface ISalesService {
 	
 	Sales getSalesRecordById(Integer id);
 	
-	Boolean updateSales(Integer id, String comment, String accountant, String updatedTime, String status);
+	Boolean updateSales(Integer id, String comment, String accountant, String updatedTime, String status, String accountantId);
 	
 	List<Sales> getSalesRecordsByUpdatedTime(String time);
 	
