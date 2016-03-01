@@ -110,6 +110,7 @@ public class NotifyScheduleImpl implements NotifySchedule {
 		SimpleDateFormat sFormat = new SimpleDateFormat("MM/dd/yyyy");
 		String updateTime = sFormat.format(date);
 		List<Sales> list = salesService.getSalesRecordsByUpdatedTime(updateTime);
+		if(list == null ) return;
 		for(Sales sale : list) {
 			if(sale.getHasSendEmail() == 0) {
 				String mailBody = "您有一个客户需要今天联系，客户公司名称：" + sale.getUserCompany() + ",联系电话：" + sale.getUserPhone() + ",联系人姓名：" + sale.getUserName();
