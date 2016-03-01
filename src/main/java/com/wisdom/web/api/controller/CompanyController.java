@@ -385,8 +385,7 @@ public class CompanyController {
 	public String orgInfoSettings(@RequestParam("files") MultipartFile[] files , HttpServletRequest request) {
 		Map<String, String> params = new HashMap<>();
 		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/files/company");
-		//realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
-		realPath = "/home/files";
+		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
 		params.put("realPath", realPath);
 		params.put("userId", (String) request.getSession().getAttribute("userId"));
 		params.put("companyName", request.getParameter("companyName"));
