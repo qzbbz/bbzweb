@@ -15,7 +15,7 @@ mui.createProcessingMask = function(callback) {
 		mask._show = true;
 		element.setAttribute('style', 'opacity:1');
 		//processingNode.style.marginLeft = window.screen.availWidth/2 + "px";
-		processingNode.style.marginTop = window.screen.availHeight / 2 - 30 + "px";
+		processingNode.style.marginTop = document.documentElement.clientHeight /2 - 30 + "px";
 		document.body.appendChild(element);
 		return mask;
 	};
@@ -169,7 +169,7 @@ mui.ajax({
     	if (data == null || data.openId == null || data.openId == "") {
 			mui.createTipDialog('无法获取您的微信Openid,请稍后重试！',null).show();
 			document.getElementById("data_loading").style.display = "none";
-			document.getElementById("tips_info_detail").innerHTML = "无法获取您的微信Openid,请稍后重试！";
+			document.getElementById("tips_info_detail").innerHTML = "无法获取您的微信Openid,<br/>请稍后重试！";
 	    	document.getElementById("tips_info").style.display = "";
 		} else {
 			userOpenId = data.openId;
@@ -186,7 +186,7 @@ mui.ajax({
     error : function() {
     	mui.createTipDialog('服务器暂时无法响应请求，请稍后重试！',null).show();
     	document.getElementById("data_loading").style.display = "none";
-    	document.getElementById("tips_info_detail").innerHTML = "服务器暂时无法响应请求，请稍后重试！";
+    	document.getElementById("tips_info_detail").innerHTML = "服务器暂时无法响应请求，<br/>请稍后重试！";
     	document.getElementById("tips_info").style.display = "";
     } 
 });

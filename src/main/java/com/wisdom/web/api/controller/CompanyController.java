@@ -54,6 +54,7 @@ import com.wisdom.user.service.IUserService;
 import com.wisdom.web.api.ICompanyApi;
 import com.wisdom.web.utils.CompanyOrgStructure;
 import com.wisdom.web.utils.ErrorCode;
+import com.wisdom.web.utils.ExportExcelFile;
 import com.wisdom.web.utils.PdfProcess;
 import com.wisdom.web.utils.SessionConstant;
 import com.wisdom.recommender.service.IRecommendService;
@@ -460,6 +461,7 @@ public class CompanyController {
 		String userId = (String) request.getSession().getAttribute("userId");
 		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/files/company");
 		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
+//		realPath =  "/files/company";
 		companyApi.uploadCompanySalary(userId, realPath, file,date);
 		Map<String, String> retMap = new HashMap<>();
 		retMap.put("url", "url");
@@ -488,6 +490,7 @@ public class CompanyController {
 		
 		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/files/company");
 		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
+//		realPath = "/files/company";
 		String date = request.getParameter("date");
 		Map<String, String> params = new HashMap<>();
 		params.put("userId", userId);
@@ -515,6 +518,7 @@ public class CompanyController {
 		String date=request.getParameter("sales_date");
 		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/files/company");
 		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
+//		realPath =  "/files/company";
 		Map<String, String> params = new HashMap<>();
 		params.put("userId", userId);
 		params.put("realPath", realPath);
@@ -573,12 +577,39 @@ public class CompanyController {
 	@RequestMapping("/company/downloadSalarySocialSecurityTemplate")
 	public ResponseEntity<byte[]> downloadSalarySocialSecurityTemplate(HttpServletRequest request) {
 		String userId = (String) request.getSession().getAttribute("userId");
-		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/files/company");
-		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
+//		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/files/company");
+		String realPath = "/home";
+//		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
 		ResponseEntity<byte[]> re = companyApi.downloadSalarySocialSecurityTemplate(userId, realPath);
 		return re;
 	}
-	
+	/**
+	 * This is generateExcel controller
+	 * @param request
+	 * @return ResponseEntity<byte[]>
+	 * @author Xiaoming
+	 * @date 2016年1月21日 下午1:12:52
+	 */
+	@RequestMapping("/company/generateExcel")
+    @ResponseBody
+    public ResponseEntity<byte[]> generateExcel(HttpServletRequest request) {
+            String userId = (String) request.getSession().getAttribute("userId");
+            long companyId = userService.getCompanyIdByUserId(userId);
+            String date = request.getParameter("exportDate");
+            String excelName = ExportExcelFile.generateExcelName(companyId, date);
+             Map<String, Object> map = companyApi.getModelDetails(companyId, date);
+//          String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/files/company");
+//          realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
+            return  companyApi.exportExcel(map, excelName);
+    }
+    @RequestMapping("/company/judgeModelDetail")
+    @ResponseBody
+    public  Map<String, String> judgeModelDetail(HttpServletRequest request) {
+        String userId = (String) request.getSession().getAttribute("userId");
+        long companyId = userService.getCompanyIdByUserId(userId);
+        String date = request.getParameter("dateString");
+        return companyApi.judgeDate(companyId, date);
+    }
 	@RequestMapping("/company/getOrgStructureData")
 	@ResponseBody
 	public List<CompanyOrgStructure> getOrgStructureData(HttpServletRequest request) {

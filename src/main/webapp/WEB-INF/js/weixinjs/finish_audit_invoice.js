@@ -110,15 +110,14 @@ function createDataList(data) {
 		timeBlockContentULNode.setAttribute('class', 'mui-table-view');
 		timeBlockContentNode.appendChild(timeBlockContentULNode);
 		timeBlockNode.appendChild(timeBlockContentNode);
-		
 		var detailDataList = data[i].list;
 		for(var j in detailDataList) {
 			var liNode = document.createElement('li');
 			liNode.setAttribute('class', 'mui-table-view-cell');
-			if(detailDataList[j].approval_status == true || detailDataList[j].approval_status == "true") {
-				liNode.innerHTML = "<img class='mui-media-object mui-pull-left' style='width:60px;height:60px;max-width:60px;border-radius: 5px;' data-preview-group='" + img_group + "' data-preview-src='' src='"+detailDataList[j].bill_img+"'><div class='mui-media-body mui-pull-left'><div><p>&#65509;"+detailDataList[j].bill_amount+"</p><h5>"+detailDataList[j].bill_title+"</h5><p class='mui-ellipsis'>审核人：<span>"+detailDataList[j].approval_name+"</span></p><p class='mui-ellipsis'><span>"+detailDataList[j].reasons+"</span></p></div></div><span class='mui-pull-right mui-icon iconfont icon-Through-audit' style='width:60px;height:50px;max-width:60px;font-size:50px;margin-top:15px;margin-right:5px;color: green;'>";
+			if(detailDataList[j].approval_status == "0") {
+				liNode.innerHTML = "<div style='height:70px;'><img class='mui-media-object mui-pull-left' style='width:60px;height:60px;max-width:60px;border-radius: 5px;' data-preview-group='" + img_group + "' data-preview-src='/files/company/"+detailDataList[j].bill_img+"_middle.jpg' src='/files/company/"+detailDataList[j].bill_img+"_small.jpg'><div class='mui-media-body mui-pull-left'><div><p>&#65509;"+detailDataList[j].bill_amount+"</p><h5>"+detailDataList[j].bill_type+"</h5><p class='mui-ellipsis'>审核人：<span>"+detailDataList[j].approval_name+"</span></p></div></div><span class='mui-pull-right mui-icon iconfont icon-Through-audit' style='width:60px;height:50px;max-width:60px;font-size:50px;margin-top:15px;margin-right:5px;color: green;position: fixed;position: absolute;left:70%;'></span></div><div style='float:left;padding-left:5px;'><p class='mui-ellipsis-2'>审核理由：<span>"+detailDataList[j].reasons+"</span></p></div>";
 			} else {
-				liNode.innerHTML = "<img class='mui-media-object mui-pull-left' style='width:60px;height:60px;max-width:60px;border-radius: 5px;' data-preview-group='" + img_group + "' data-preview-src='' src='"+detailDataList[j].bill_img+"'><div class='mui-media-body mui-pull-left'><div><p>&#65509;"+detailDataList[j].bill_amount+"</p><h5>"+detailDataList[j].bill_title+"</h5><p class='mui-ellipsis'>审核人：<span>"+detailDataList[j].approval_name+"</span></p><p class='mui-ellipsis'><span>"+detailDataList[j].reasons+"</span></p></div></div><span class='mui-pull-right mui-icon iconfont icon-Audit-failure' style='width:60px;height:50px;max-width:60px;font-size:50px;margin-top:15px;margin-right:5px;color: red;'>";
+				liNode.innerHTML = "<div style='height:70px;'><img class='mui-media-object mui-pull-left' style='width:60px;height:60px;max-width:60px;border-radius: 5px;' data-preview-group='" + img_group + "' data-preview-src='/files/company/"+detailDataList[j].bill_img+"_middle.jpg' src='/files/company/"+detailDataList[j].bill_img+"_small.jpg'><div class='mui-media-body mui-pull-left'><div><p>&#65509;"+detailDataList[j].bill_amount+"</p><h5>"+detailDataList[j].bill_type+"</h5><p class='mui-ellipsis'>审核人：<span>"+detailDataList[j].approval_name+"</span></p></div></div><span class='mui-pull-right mui-icon iconfont icon-Audit-failure' style='width:60px;height:50px;max-width:60px;font-size:50px;margin-top:15px;margin-right:5px;color: red;position: fixed;position: absolute;left:70%;'></span></div><div style='float:left;padding-left:5px;'><p class='mui-ellipsis-2'>审核理由：<span>"+detailDataList[j].reasons+"</span></p></div>";
 				liNode.addEventListener('tap', function(){
 					window.location = "/views/weixinviews/person_upload_invoice.html";
 				});
@@ -179,8 +178,8 @@ mui(mui('#pull_refresh')[0]).pullToRefresh({
 		}
 	}
 });
-
-
+/*userOpenId = "oJO1gtyVvLuWxm6N4T1JuYMzgysw";
+getFinishAuditInvoice(null);*/
 mui.ajax({
 	url: '/getUserOpenId',
 	type: "POST",
@@ -189,7 +188,7 @@ mui.ajax({
 		if (data.openId == "") {
 			mui.createTipDialog('无法获取您的微信Openid,请稍后重试！', null).show();
 			document.getElementById('data_loading').style.display = 'none';
-			document.getElementById('no_data_tips').style.innerHTML = "无法获取您的微信Openid,请稍后重试！";
+			document.getElementById('no_data_tips').style.innerHTML = "无法获取您的微信Openid,<br/>请稍后重试！";
 			document.getElementById('no_data_tips').style.display = '';
 		} else {
 			userOpenId = data.openId;
@@ -199,7 +198,7 @@ mui.ajax({
 	error: function(status, error) {
 		mui.createTipDialog('请求服务器数据出错，请稍后下拉刷新重试！', null).show();
 		document.getElementById('data_loading').style.display = 'none';
-		document.getElementById('no_data_tips').style.innerHTML = "请求服务器数据出错，请稍后下拉刷新重试！";
+		document.getElementById('no_data_tips').style.innerHTML = "请求服务器数据出错，<br/>请稍后下拉刷新重试！";
 		document.getElementById('no_data_tips').style.display = '';
 	}
 });

@@ -1572,7 +1572,8 @@
 											text : '薪酬及税费表',
 											id : '74',
 											href : "/views/webviews/company/sheet_salary.html"
-										} ]
+										},{text : '下载Excel模板',id : '75', href:"/views/webviews/company/base_statement_template_download.html"}
+										 ]
 							},
 							{
 								text : '会计点将',

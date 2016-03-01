@@ -1,5 +1,4 @@
 var invoiceList = {};
-var loadedImg;
 (function($, window) {
 
 	var template = '<div id="{{id}}" class="mui-slider mui-preview-image mui-fullscreen"><div class="mui-preview-header">{{header}}</div><div class="mui-slider-group"></div><div class="mui-preview-footer mui-hidden">{{footer}}</div><div class="mui-preview-loading"><span class="mui-spinner mui-spinner-white"></span></div></div>';
@@ -51,23 +50,18 @@ var loadedImg;
 		if(isUpload) {
 			document.getElementById('trashImage').addEventListener('tap', function(event){
 				var imgList = $('#invoice_img_list_ul li');
-				console.log(imgList);
-				//var imgEle = self.element.querySelector('img');
-				console.log(loadedImg);
+				var imgEle = self.element.querySelector('img');
 				for(var i=0; i<imgList.length; i++) {
-					var img = imgList[i].childNodes[0].childNodes[0];
-					console.log(img);
-					if(img.src == loadedImg.src) {
+					var img = imgList[i].childNodes[0];
+					if(img.src == imgEle.src) {
 						mui.createConfirmDialog('您确定要删除当前发票图像吗？',
 							function(){
 								self.close();
 							},
 							function(){
-								console.log(document.getElementById('invoice_img_list_ul'));
-								//console.log()
 								document.getElementById('invoice_img_list_ul').removeChild(imgList[i]);
 								for(var jsonKey in invoiceList) {
-									if(jsonKey == loadedImg.src) {
+									if(jsonKey == imgEle.src) {
 										delete invoiceList[jsonKey];
 										break;
 									}

@@ -15,6 +15,18 @@
 
   
   <style>
+  .deks u:hover {
+	color: #ED555F;
+}
+.deksa {
+	width: 220px;
+	height: 140px;
+	background-image: url(style/image/taili.png);
+	background-repeat: no-repeat;
+	float: right;
+	margin-right: 20%;
+	display: none;
+}
   .customer{
   color:rgb(50,50,50);
   text-decoration:none;
@@ -305,7 +317,8 @@ var _hmt = _hmt || [];
         <h1 style="color:white">元升专业服务</h1>
         <p>元升是一家互联网+科技创新公司
         旗下的帮帮账产品是为您提供财务和税务解决方案的线上服务平台</p>
-        <p><strong>现在注册即可免费试用一个月</strong></p>
+        <p class="deks"><strong><u>注册成功即送台历一份</u></strong></p>
+		<div class="deksa"></div>
         <div class="play-btn hide-for-small" id="movieclick">
           <div class="play-btn-arrow"></div>
         </div>
@@ -726,6 +739,12 @@ var _hmt = _hmt || [];
  $("#movieshow").dialog("close");
   //  movieV.pause();
   }*/
+  $(document).ready(function() {
+		$(".deks").hover(function(){
+			$(".deksa").toggle();
+			
+			} );
+  });
   var code = window.location.search.substring(1);
   if(code){
   	$.post("/recommend/addRecomendInfo", {"code": code}, function(data){

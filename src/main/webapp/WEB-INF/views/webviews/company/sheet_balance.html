@@ -1161,6 +1161,7 @@
       	});
       	monthpicker.show();
 	});
+	   var dateString = "";
 		BUI.use([ 'bui/imgview', 'bui/overlay', 'bui/form' ], function(Imgview, Overlay, Form) {
 			$('#searchData').click(
 					function() {
@@ -1179,6 +1180,7 @@
 										BUI.Message.Alert('没有查询到数据，请更换日期后重试！',
 												'warning');
 									} else {
+										dateString = data;
 										fillData(data);
 									}
 								},
@@ -1189,6 +1191,7 @@
 							});
 						}
 					});
+		
 			function fillData(data) {
 				$('#create_time').html(data.create_time);
 				$('#expiry_date').html(data.expiry_date);
@@ -1559,7 +1562,13 @@
 											text : '薪酬及税费表',
 											id : '74',
 											href : "/views/webviews/company/sheet_salary.html"
-										} ]
+										},
+										{
+											text : '下载Excel模板',
+											id : '75',
+											href:"/views/webviews/company/base_statement_template_download.html"
+											}
+										]
 							},
 							{
 								text : '会计点将',

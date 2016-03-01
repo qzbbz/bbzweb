@@ -1,15 +1,14 @@
 package com.wisdom.web.api.impl;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -18,6 +17,7 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,14 +27,20 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.wisdom.common.model.Company;
 import com.wisdom.common.model.CompanyBankSta;
-import com.wisdom.common.model.CompanyBill;
 import com.wisdom.common.model.CompanyDetail;
 import com.wisdom.common.model.CompanySalary;
 import com.wisdom.common.model.CompanySales;
 import com.wisdom.common.model.CostCenter;
 import com.wisdom.common.model.Dept;
 import com.wisdom.common.model.SalarySocialSecurity;
+import com.wisdom.common.model.SheetBalance;
+import com.wisdom.common.model.SheetCash;
+import com.wisdom.common.model.SheetIncome;
 import com.wisdom.common.model.User;
+import com.wisdom.company.dao.ISheetBalanceDao;
+import com.wisdom.company.dao.ISheetCashDao;
+import com.wisdom.company.dao.ISheetIncomeDao;
+import com.wisdom.company.dao.ISheetSalaryTaxDao;
 import com.wisdom.company.service.ICompanyBankStaService;
 import com.wisdom.company.service.ICompanyDetailService;
 import com.wisdom.company.service.ICompanySalaryService;
@@ -47,6 +53,8 @@ import com.wisdom.user.service.IUserModifyService;
 import com.wisdom.user.service.IUserService;
 import com.wisdom.web.api.ICompanyApi;
 import com.wisdom.web.utils.CompanyOrgStructure;
+import com.wisdom.web.utils.ExportExcelFile;
+import com.wisdom.web.utils.GenerateExcel;
 import com.wisdom.web.utils.UserPwdMD5Encrypt;
 
 @Service("companyDetailRegisterApiService")
@@ -84,11 +92,22 @@ public class CompanyApiImpl implements ICompanyApi {
 	
 	@Autowired
 	private ICompanySalesService companySalesService;
-
+	
+	@Autowired
+    private ISheetBalanceDao sheetBalanceDao;
+    
+    @Autowired
+    private ISheetCashDao sheetCashDao;
+    
+    @Autowired
+    private ISheetIncomeDao sheetIncomeDao;
+    
+    @Autowired
+    private ISheetSalaryTaxDao sheetSalaryTaxDao;
 	@Override
 	public Map<String, String> companyDetailRegister(Map<String, String> params) {
 		Map<String, String> retMap = new HashMap<>();
-/* TODO add user's email and password into session*/
+		/* TODO add user's email and password into session*/
 		String userPwd = params.get("userPwd");
 		String userId = params.get("userEmail");
 		logger.debug("params : {}", params.toString());
@@ -201,7 +220,7 @@ public class CompanyApiImpl implements ICompanyApi {
 	private String getGernarateFileName(MultipartFile file, String userId) {
 		Random rdm = new Random(System.currentTimeMillis());
 		String extendName = file.getOriginalFilename().substring(
-				file.getOriginalFilename().indexOf(".") + 1);
+				file.getOriginalFilename().lastIndexOf(".") + 1);
 		return userId + System.currentTimeMillis() + Math.abs(rdm.nextInt())
 				% 1000 + (extendName == null ? ".unknown" : "." + extendName);
 	}
@@ -814,4 +833,96 @@ public class CompanyApiImpl implements ICompanyApi {
 		}
 		return retList;
 	}
+
+    /* This is a judge Excel file whether exist
+     * @see com.wisdom.web.api.ICompanyApi#judgeFileExist(java.lang.String)
+     */
+    @Override
+    public ResponseEntity<byte[]> invokeExcelFile(String realPath, String excelName) {
+        // TODO Auto-generated method stub
+        ResponseEntity<byte[]> re = null;
+        File file = new File(realPath);
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentDispositionFormData("attachment", new String(excelName.getBytes("UTF-8"), "iso-8859-1"));
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            re = new ResponseEntity<byte[]>(
+                    FileUtils.readFileToByteArray(file), headers,
+                    HttpStatus.CREATED);
+        } catch (IOException e) {
+            logger.debug("invokeExcelFile exception : {}", e.toString());
+        }
+        return re;
+    }
+
+
+    /**
+     * This generate expore excel control
+     * @param realPath
+     * @param excelName
+     * @param type
+     * @return ResponseEntity<byte[]>
+     * @author Xiaoming
+     * @date 2016年1月21日 下午1:22:49
+     */
+    @Override
+    public ResponseEntity<byte[]> exportExcel(Map<String, Object> map, String excelName) {
+        // TODO Auto-generated method stub
+        ResponseEntity<byte[]> re = null;
+        String path = ExportExcelFile.getFilePath(excelName);
+        if (ExportExcelFile.judgeFileExist(path)) {
+            //true
+            ExportExcelFile.removeFile(path);
+        } 
+          //  false
+            GenerateExcel generateExcel = new GenerateExcel();
+            generateExcel.instantiation(map);// generateExcel Obj
+            String filePath = generateExcel.generateSheetBalanceExcel();
+            File file = new File(filePath);
+            try {
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentDispositionFormData("attachment",excelName);
+                headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+                re = new ResponseEntity<byte[]>(
+                        FileUtils.readFileToByteArray(file), headers,
+                        HttpStatus.CREATED);
+            } catch (IOException e) {
+                logger.debug("download exception : {}", e.toString());
+            }
+        
+        return re;
+    }
+
+    @Override
+    public Map<String, Object> getModelDetails(long companyId, String date) {
+        // TODO Auto-generated method stub
+        SheetBalance sheetBalance = sheetBalanceDao.getSheetBalanceDateByCompanyIdAndDate(companyId, date);
+        SheetCash sheetCash = sheetCashDao.getSheetCashDateByCompanyIdAndDate(companyId, date);
+        SheetIncome sheetIncome = sheetIncomeDao.getSheetIncomeDateByCompanyIdAndDate(companyId, date);
+        System.out.println(sheetBalance.getAccountsPayableOthersBeginningBalance());
+        Map<String, Object> map = new HashMap<>();
+        map.put("sheetBalance", sheetBalance);
+        map.put("sheetCash", sheetCash);
+        map.put("sheetIncome", sheetIncome);
+        logger.debug("Map<String,Object> size : {} ",map.size());
+        return map;
+    }
+
+    @Override
+    public Map<String, String> judgeDate(long companyId, String date) {
+        // TODO Auto-generated method stub
+        Map<String, String> map = new HashMap<>();
+        SheetBalance sheetBalance = sheetBalanceDao.getSheetBalanceDateByCompanyIdAndDate(companyId, date);
+        if (sheetBalance != null) {
+            logger.debug("sheetBalance : {}", sheetBalance.toString());
+            map.put("error_code", "0");
+        } else {
+            map.put("error_code", "1");
+        }
+        return map;
+    }
+
+   
+
+  
 }

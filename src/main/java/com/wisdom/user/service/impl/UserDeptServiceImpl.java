@@ -45,7 +45,12 @@ public class UserDeptServiceImpl implements IUserDeptService {
 	
 	@Override
 	public long getDeptIdByUserId(String userId) {
-		return userDeptDao.getUserDeptByUserId(userId).getDeptId();
+		UserDept ud = userDeptDao.getUserDeptByUserId(userId);
+		if(ud != null) {
+			return ud.getDeptId();
+		} else {
+			return -1;
+		}
 	}
 	
 	@Override

@@ -1,0 +1,29 @@
+1．职工工资 salery_end salery_begin
+2．奖金、津贴和补贴 bonus_end bonus_begin
+3．职工福利费 welfare_end welfare_begin
+4．社会保险费 insurance_end insurance_begin
+5．住房公积金 funds_end funds_begin
+6．工会经费 sociaty_end sociaty_begin
+7．职工教育经费 education_end education_begin
+8．非货币性福利 no_cash_welfare_end no_cash_welfare_begin
+9．辞退福利 dismiss_end dismiss_begin
+10．其他 other_end other_begin
+合      计 salary_total_end salary_total_begin
+ 企业负责人:company_controller2
+ 财务负责人:finance_chief2
+ 制表人:tabulator2
+1．增值税 value_added_tax_end value_added_tax_begin
+2．消费税 excise_tax_end excise_tax_begin
+3．营业税 business_tax_end business_tax_begin
+4．城市维护建设税 urban_maintenance_and_construction_tax_end urban_maintenance_and_construction_tax_begin
+5．企业所得税 business_income_taxes_end business_income_taxes_begin
+6．资源税 resource_tax_end resource_tax_begin
+7．土地增值税 land_value_increment_tax_end land_value_increment_tax_begin
+8．城镇土地使用税 urban_land_use_tax_end urban_land_use_tax_begin
+9．房产税 building_taxes_end building_taxes_begin
+10．车船税 vehicle_and_vessel_tax_end vehicle_and_vessel_tax_begin
+11．教育费附加 attach_education_end attach_education_begin
+12．矿产资源补偿费 mineral_resources_end mineral_resources_begin
+13．排污费 sewage_charge_end sewage_charge_begin
+14．代扣代缴的个人所得税 income_tax_for_individuals_end income_tax_for_individuals_begin
+合      计 tax_total_end tax_total_begin

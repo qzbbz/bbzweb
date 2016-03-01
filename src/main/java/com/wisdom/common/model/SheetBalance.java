@@ -120,12 +120,18 @@ public class SheetBalance {
 	private Double totalLiabilitiesAndOwnerEquityEndingBalance;
 	private Double totalLiabilitiesAndOwnerEquityBeginningBalance;
 	private String createTime;
-
+	
 	// Constructors
 
 	// Property accessors
 
-	public Long getId() {
+	public SheetBalance() {
+        super();
+    }
+
+
+
+    public Long getId() {
 		return this.id;
 	}
 

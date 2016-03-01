@@ -1,15 +1,20 @@
 package com.wisdom.weixin.controller;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -25,6 +30,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.weixin.dao.IWeixinDao;
+import com.weixin.model.WeixinWaitAuditInvoiceModel;
 import com.wisdom.common.model.Dispatcher;
 import com.wisdom.common.model.InvoiceApproval;
 import com.wisdom.common.model.TestInvoiceRecord;
@@ -36,8 +43,10 @@ import com.wisdom.invoice.service.IInvoiceService;
 import com.wisdom.invoice.service.IUserInvoiceService;
 import com.wisdom.invoice.service.impl.InvoiceApprovalServiceImpl;
 import com.wisdom.user.service.IUserService;
+import com.wisdom.web.api.ICompanyBillApi;
 import com.wisdom.weixin.service.IExpenseAccountService;
 import com.wisdom.weixin.service.IWeixinPushService;
+import com.wisdom.weixin.utils.ImageSnapshot;
 import com.wisdom.weixin.utils.SubmitAuditBillResultEntity;
 import com.wisdom.weixin.utils.SubmitAuditBillResultEntityWrapper;
 import com.wisdom.weixin.utils.SubmitBillEntity;
@@ -67,6 +76,11 @@ public class ExpenseAccountController {
 	private IUserInvoiceService userInvoiceService;
 	@Autowired
 	private IInvoiceDao invoiceDao;
+	@Autowired
+	private IWeixinDao weixinDao;
+	
+	@Autowired
+	private ICompanyBillApi companyBillApi;
 	
 	@RequestMapping(value="/downloadUserBill", method=RequestMethod.POST, consumes="application/json")
 	@ResponseBody
@@ -156,10 +170,20 @@ public class ExpenseAccountController {
 			Integer count = 0;
 			for(MultipartFile file:files) {
 				String fileName = openId
-						+ String.valueOf(System.currentTimeMillis()) + ".jpg";
+						+ String.valueOf(System.currentTimeMillis());
+				String extendName = ".jpg";
 				try {
 					FileUtils.copyInputStreamToFile(file.getInputStream(),
-							new File(realPath, fileName));
+							new File(realPath, fileName + extendName));
+					File originalImage = new File(realPath, fileName + extendName);
+				    byte[] bytes = ImageSnapshot.resize(ImageIO.read(originalImage), 60, 0.1f, true);
+				    FileOutputStream out = new FileOutputStream(new File(realPath, fileName + "_small" + extendName));
+				    out.write(bytes);
+				    out.close();
+				    bytes = ImageSnapshot.resize(ImageIO.read(originalImage), 200, 0.1f, true);
+				    out = new FileOutputStream(new File(realPath, fileName + "_middle" + extendName));
+				    out.write(bytes);
+				    out.close();
 					Map<String, Object> param = new HashMap<>();
 					param.put("amount", expenseAmounts[count]);
 					param.put("type", expenseTypes[count]);
@@ -168,6 +192,47 @@ public class ExpenseAccountController {
 				} catch (IOException e) {
 					logger.debug(e.toString());
 				}
+			}
+		}
+		retMap.put("error_code", "0");
+		retMap.put("error_message", "");
+		return retMap;
+	}
+	
+	@RequestMapping("/uploadCompanyInvoice")
+	@ResponseBody
+	public Map<String, String> uploadCompanyInvoice(
+			@RequestParam MultipartFile[] files,
+			HttpServletRequest request) {
+		logger.debug("uploadCompanyInvoice");
+		String date = request.getParameter("date");
+		String openId = request.getParameter("openId");
+		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/files/company");
+		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
+		Map<String, String> retMap = new HashMap<>();
+		if(openId == null || openId.isEmpty()) {
+			retMap.put("error_code", "1");
+			retMap.put("error_message", "无法获取您微信的Openid，请稍后重新进入！");
+			return retMap;
+		}
+		String userId = userService.getUserIdByOpenId(openId);
+		if(userId == null || userId.isEmpty()) {
+			retMap.put("error_code", "2");
+			retMap.put("error_message", "无法获取您的用户ID，请稍后重新进入！");
+			return retMap;
+		}
+		if(date == null || date.isEmpty()) {
+			retMap.put("error_code", "3");
+			retMap.put("error_message", "无法获取到发票日期，请稍后重新进入！");
+			return retMap;
+		}
+		if (files != null) {
+			Map<String, String> params = new HashMap<>();
+			params.put("userId", userId);
+			params.put("date", date);
+			params.put("realPath", realPath);
+			for(MultipartFile file:files) {
+				companyBillApi.uploadCompanyBill(params, file);
 			}
 		}
 		retMap.put("error_code", "0");
@@ -236,6 +301,7 @@ public class ExpenseAccountController {
 	public Map<String, String> newApprovalBill(HttpServletRequest request) {
 		Map<String, String> retMap = new HashMap<>();
 		String openId = request.getParameter("openId");
+		String reasons = request.getParameter("reasons");
 		logger.debug("openid : {}", openId);
 		if(openId == null || openId.isEmpty()) {
 			retMap.put("error_code", "1");
@@ -246,7 +312,7 @@ public class ExpenseAccountController {
 		String approvalStatus = request.getParameter("approvalStatus");
 		String[] invoiceIds = invoiceIdString.split(",");
 		for(String invoiceId : invoiceIds) {
-			expenseAccounterService.newApprovalBill(invoiceId, approvalStatus, "");
+			expenseAccounterService.newApprovalBill(invoiceId, approvalStatus, reasons);
 		}
 		retMap.put("error_code", "0");
 		retMap.put("error_message", "");
@@ -278,9 +344,29 @@ public class ExpenseAccountController {
 	
 	@RequestMapping("/newGetNeedAuditBillsSummary")
 	@ResponseBody
-	public List<Map<String, Object>> newGetNeedAuditBillsSummary(
+	public Map<String, Object> newGetNeedAuditBillsSummary(
 			HttpServletRequest request) {
 		String openId = request.getParameter("openId");
+		List<WeixinWaitAuditInvoiceModel> dataList = weixinDao.getWeixinNeededAuditInvoice(openId);
+		Map<String, Object> retMap = new HashMap<>();
+		for(WeixinWaitAuditInvoiceModel wwaim : dataList) {
+			String userId = wwaim.getUser_id();
+			if(retMap.containsKey(userId)) {
+				Map<String, Object> tmpMap = (Map<String, Object>) retMap.get(userId);
+				tmpMap.put("amount", (Double)tmpMap.get("amount") + wwaim.getAmount());
+				tmpMap.put("bill_total", (Integer)tmpMap.get("bill_total") + 1);
+				tmpMap.put("invoice_id_list", (String)tmpMap.get("invoice_id_list") + "," + wwaim.getInvoice_id());
+			} else {
+				Map<String, Object> tmpMap = new HashMap<>();
+				tmpMap.put("user_name", wwaim.getUser_name());
+				tmpMap.put("amount", wwaim.getAmount());
+				tmpMap.put("bill_total", new Integer(1));
+				tmpMap.put("invoice_id_list", String.valueOf(wwaim.getInvoice_id()));
+				retMap.put(userId, tmpMap);
+			}
+		}
+		
+		/*
 		List<Map<String, Object>> results = expenseAccounterService
 				.newGetNeedAuditBillsByOpenId(openId);
 		System.out.println(results);
@@ -309,9 +395,9 @@ public class ExpenseAccountController {
 			element.put("person_invoice_count", list.size());
 			element.put("invoice_id_list_string", id_list_string);
 			retList.add(element);
-		}
-		logger.debug("newGetNeedAuditBillsSummary result : {}", retList.toString());
-		return retList;
+		}*/
+		//logger.debug("newGetNeedAuditBillsSummary result : {}", retMap.toString());
+		return retMap;
 	}
 	
 	@RequestMapping("/getInboxBills")
@@ -330,9 +416,48 @@ public class ExpenseAccountController {
 	public List<Map<String, Object>> getWaitAuditInvoices(
 			HttpServletRequest request) {
 		String openId = request.getParameter("openId");
-		List<Map<String, Object>> ret = expenseAccounterService
-				.getWaitAuditInvoices(openId);
-		logger.debug("getWaitAuditInvoices result : {}", ret.toString());
+		List<Map<String, Object>> ret = new ArrayList<>();
+		List<WeixinWaitAuditInvoiceModel> retList = weixinDao.getWeixinAuditInvoice(openId, 0);
+		Map<String, List<Map<String, Object>>> itemMap = new HashMap<>();
+		for(WeixinWaitAuditInvoiceModel wwaim : retList) {
+			Map<String,Object> map = new HashMap<>();
+			map.put("bill_amount", wwaim.getAmount());
+			String imgTmp = wwaim.getFile_name();
+			if(imgTmp != null && !imgTmp.isEmpty() && imgTmp.lastIndexOf(".") != -1) {
+				map.put("bill_img", wwaim.getFile_name().substring(0, wwaim.getFile_name().lastIndexOf(".")));
+			} else {
+				map.put("bill_img", wwaim.getFile_name());
+			}
+			map.put("bill_type", wwaim.getType());
+			map.put("approval_name", wwaim.getUser_name());
+			DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Timestamp stamp = wwaim.getCreate_time();
+			map.put("submit_time", sdf.format(stamp));
+			if (itemMap.containsKey(sdf.format(stamp))) {
+				((List<Map<String, Object>>) itemMap.get(sdf.format(stamp))).add(map);
+			} else {
+				List<Map<String, Object>> list = new ArrayList<>();
+				list.add(map);
+				itemMap.put(sdf.format(stamp), list);
+			}
+		}
+		List arrayList = new ArrayList(itemMap.entrySet());
+		Collections.sort(arrayList, new Comparator() {
+			public int compare(Object arg1, Object arg2) {
+				Map.Entry obj1 = (Map.Entry) arg1;
+				Map.Entry obj2 = (Map.Entry) arg2;
+				return (obj1.getKey()).toString().compareTo((String)obj2.getKey());
+			}
+		});
+		for (Iterator iter = arrayList.iterator(); iter.hasNext();) {
+			Map.Entry entry = (Map.Entry) iter.next();
+			String key = (String) entry.getKey();
+			Map<String, Object> map = new HashMap<>();
+			map.put("submit_time", entry.getKey());
+			map.put("list", entry.getValue());
+			ret.add(map);
+		}
+		Collections.reverse(ret);
 		return ret;
 	}
 	
@@ -341,9 +466,50 @@ public class ExpenseAccountController {
 	public List<Map<String, Object>> getFinishAuditInvoices(
 			HttpServletRequest request) {
 		String openId = request.getParameter("openId");
-		List<Map<String, Object>> ret = expenseAccounterService
-				.getFinishAuditInvoices(openId);
-		logger.debug("getFinishAuditInvoices result : {}", ret.toString());
+		List<Map<String, Object>> ret = new ArrayList<>();
+		List<WeixinWaitAuditInvoiceModel> retList = weixinDao.getWeixinAuditInvoice(openId, 1);
+		Map<String, List<Map<String, Object>>> itemMap = new HashMap<>();
+		for(WeixinWaitAuditInvoiceModel wwaim : retList) {
+			Map<String,Object> map = new HashMap<>();
+			map.put("bill_amount", wwaim.getAmount());
+			String imgTmp = wwaim.getFile_name();
+			if(imgTmp != null && !imgTmp.isEmpty() && imgTmp.lastIndexOf(".") != -1) {
+				map.put("bill_img", wwaim.getFile_name().substring(0, wwaim.getFile_name().lastIndexOf(".")));
+			} else {
+				map.put("bill_img", wwaim.getFile_name());
+			}
+			map.put("bill_type", wwaim.getType());
+			map.put("approval_name", wwaim.getUser_name());
+			map.put("approval_status", wwaim.getApproval_status());
+			map.put("reasons", wwaim.getReasons() == null ? "无" : wwaim.getReasons());
+			DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Timestamp stamp = wwaim.getCreate_time();
+			map.put("submit_time", sdf.format(stamp));
+			if (itemMap.containsKey(sdf.format(stamp))) {
+				((List<Map<String, Object>>) itemMap.get(sdf.format(stamp))).add(map);
+			} else {
+				List<Map<String, Object>> list = new ArrayList<>();
+				list.add(map);
+				itemMap.put(sdf.format(stamp), list);
+			}
+		}
+		List arrayList = new ArrayList(itemMap.entrySet());
+		Collections.sort(arrayList, new Comparator() {
+			public int compare(Object arg1, Object arg2) {
+				Map.Entry obj1 = (Map.Entry) arg1;
+				Map.Entry obj2 = (Map.Entry) arg2;
+				return (obj1.getKey()).toString().compareTo((String)obj2.getKey());
+			}
+		});
+		for (Iterator iter = arrayList.iterator(); iter.hasNext();) {
+			Map.Entry entry = (Map.Entry) iter.next();
+			String key = (String) entry.getKey();
+			Map<String, Object> map = new HashMap<>();
+			map.put("submit_time", entry.getKey());
+			map.put("list", entry.getValue());
+			ret.add(map);
+		}
+		Collections.reverse(ret);
 		return ret;
 	}
 	
@@ -403,25 +569,40 @@ public class ExpenseAccountController {
 	}
 	
 	@RequestMapping("/storeRequestInvoiceIds")
-	@ResponseBody
-	public Map<String, String> storeRequestInvoiceIds(
+	public String storeRequestInvoiceIds(
 			HttpServletRequest request) {
-		String invoiceIds = request.getParameter("invoice_ids");
-		request.getSession().setAttribute("requestInvoiceIds", invoiceIds);
-		Map<String, String> retMap = new HashMap<>();
-		retMap.put("status", "ok");
-		return retMap;
+		String submit_user_id = request.getParameter("submit_user_id");
+		request.getSession().setAttribute("submit_user_id", submit_user_id);
+		return "redirect:/views/weixinviews/invoice_audit_detail.html";
 	}
 	
 	@RequestMapping("/getInovicesByIds")
 	@ResponseBody
-	public Map<String, Object> getInovicesByIds(
+	public List<Map<String, Object>> getInovicesByIds(
 			HttpServletRequest request) {
-		 Map<String, Object> retMap = new HashMap<>();
-		String invoiceIds = (String) request.getSession().getAttribute("requestInvoiceIds");
-		if(invoiceIds == null || invoiceIds.isEmpty()){
-			return retMap;
+		List<Map<String, Object>> resultList = new ArrayList<>();
+		String submit_user_id = (String) request.getSession().getAttribute("submit_user_id");
+		List<WeixinWaitAuditInvoiceModel> retList = weixinDao.getWeixinSubmitInvoiceByUserId(submit_user_id);
+		if(retList == null || retList.isEmpty()){
+			return resultList;
 		}
+		for(WeixinWaitAuditInvoiceModel wwaim : retList) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			String imgTmp = wwaim.getFile_name();
+			if(imgTmp != null && !imgTmp.isEmpty() && imgTmp.lastIndexOf(".") != -1) {
+				map.put("bill_img", wwaim.getFile_name().substring(0, wwaim.getFile_name().lastIndexOf(".")));
+			} else {
+				map.put("bill_img", wwaim.getFile_name());
+			}
+			map.put("invoice_id", wwaim.getInvoice_id());
+			map.put("bill_type", wwaim.getType());
+			map.put("bill_amount", wwaim.getAmount());
+			DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Timestamp stamp = wwaim.getCreate_time();
+			map.put("submit_time", sdf.format(stamp));
+			resultList.add(map);
+		}
+		/*
 		String openId = request.getParameter("open_id");
 		String approvalId = userService.getUserIdByOpenId(openId);
 		//List<InvoiceApproval> invoiceApprovalList = invoiceApprovalService.getInvoiceApprovalListByInvoiceIds(invoiceIds);
@@ -497,8 +678,8 @@ public class ExpenseAccountController {
 			retMap.put("list", resultList);
 			retMap.put("invoice_count", resultList.size());
 			retMap.put("invoice_total_amount", invoiceTotalAmount);
-			retMap.put("user_name", submitUserName);
-			return retMap;
+			retMap.put("user_name", submitUserName);*/
+			return resultList;
 
 	}
 

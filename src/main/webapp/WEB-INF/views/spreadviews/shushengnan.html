@@ -17,7 +17,7 @@ $.ajax({
 });
 function getJsConfigInfoSuccess(data,status) {
 	wx.config({
-		appId: 'wx333ea15ba860f932',
+		appId: 'wxb11ddcf3a43c859b',
 		timestamp: data.timestamp,
 		nonceStr: data.nonceStr,
 		signature: data.signature,
@@ -33,7 +33,7 @@ wx.ready(function(){
 	var lineLink = window.location.href;
 	var descContent = "99元/月财税一站式服务 6PLUS：①免费注册+ ②拍照记账+③移动报销+④银行级安全+⑤四大级专业+⑥免费财税务筹划+";
 	var shareTitle = document.title;
-	var appid = 'wx333ea15ba860f932';
+	var appid = 'wxb11ddcf3a43c859b';
 	setTimeout(function(){
 		wx.onMenuShareTimeline({
 		    title: shareTitle, // 分享标题

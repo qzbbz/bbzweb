@@ -1,0 +1,28 @@
+##BBZ##一、经营活动产生的现金流量：
+销售产成品、商品、提供劳务收到的现金 1 sales_year sales_month
+收到其他与经营活动有关的现金 2 receive_year receive_month
+购买原材料、商品、接受劳务支付的现金 3 buy_year buy_month
+支付的职工薪酬 4 salary_year salary_month
+支付的税费 5 tax_year tax_month
+支付其他与经营活动有关的现金 6 other_pay_year other_pay_month
+经营活动产生的现金流量净额 7 operating_activities_year operating_activities_month
+##BBZ##二、投资活动产生的现金流量：
+收回短期投资、长期债券投资和长期股权投资收到的现金 8 take_back_year take_back_month
+取得投资收益收到的现金 9 equity_earnings_year equity_earnings_month
+处置固定资产、无形资产和其他非流动资产收回的现金净额 10 handle_year handle_month
+短期投资、长期债券投资和长期股权投资支付的现金 11 investments_pay_year investments_pay_month
+购建固定资产、无形资产和其他非流动资产支付的现金 12 coustruction_year coustruction_month
+投资活动产生的现金流量净额 13 activity_investment_year activity_investment_month
+##BBZ##三、筹资活动产生的现金流量：
+取得借款收到的现金 14 loan_year loan_month
+吸收投资者投资收到的现金 15 investors_to_invest_year investors_to_invest_month
+偿还借款本金支付的现金 16 payment_of_principal_year payment_of_principal_month
+偿还借款利息支付的现金 17 paid_interest_year paid_interest_month
+分配利润支付的现金 18 distribute_profit_year distribute_profit_month
+筹资活动产生的现金流量净额 19 financing_activity_year financing_activity_month
+四、现金净增加额 20 net_increase_in_cash_year net_increase_in_cash_month
+加：期初现金余额 21 cash_at_beginning_of_period_year cash_at_beginning_of_period_month
+五、期末现金余额 22 ending_cash_balance_year ending_cash_balance_month
+ ##BBZ## 企业负责人：0 company_controller
+ ##BBZ## 财务负责人：0 finance_chief
+ ##BBZ## 制表人：0 tabulator

@@ -63,6 +63,7 @@ public class SettingServiceImpl implements ISettingService {
 			return retMap;
 		}
 		String userId = userWeixinService.getUserIdByUserInviteCode(inviteCode);
+		int userTpyeId = userService.getUserTypeIdByUserId(userId);
 		if (userId == null || userId.isEmpty()) {
 			retMap.put("invite_code_error", "invite code is wrong.");
 			logger.info("retMap : {}", retMap.toString());
@@ -74,6 +75,9 @@ public class SettingServiceImpl implements ISettingService {
 		retMap = getCompanyNameAndDeptName(userId);
 		retMap.put("userName", userName);
 		retMap.put("userMsgEmail", userMsgEmail);
+		if(userTpyeId == 2) {
+			retMap.put("deptName", "公司系统管理员(不属于任何部门)");
+		}
 		logger.info("retMap : {}", retMap.toString());
 		return retMap;
 	}
