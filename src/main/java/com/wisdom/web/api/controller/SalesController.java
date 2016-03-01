@@ -66,6 +66,7 @@ public class SalesController {
 			user.setUserId(sales.getUserPhone() + "@bangbangzhang.com");
 			user.setTypeId(2);
 			user.setCompanyId((long) -1);
+			user.setAuditStatus(1);
 			user.setCreateTime(new Timestamp(System.currentTimeMillis()));
 			if (userService.addUser(user)
 					&& userService.setUserPwdByUserId(

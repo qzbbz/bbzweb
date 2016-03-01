@@ -248,7 +248,7 @@
 				$.ajax({
 					url : '/company/selectOneAccounter',
 					type : "POST",
-					data : {accounterId:globalSelectedAccounterId, alipayMonth:realTime, alipayAmount:$('#alipay_sum').html(), type:'normal'},
+					data : {accounterId:globalSelectedAccounterId, alipayMonth:realTime, alipayAmount:"0.01", type:'normal'},
 					success : function(data) {
 						if (data == ""){
 							BUI.Message.Alert('请先在左侧的组织架构内完善公司信息！',function(){
