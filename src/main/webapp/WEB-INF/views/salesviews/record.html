@@ -11,16 +11,27 @@
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style>
+#add-form{
+    margin-left: 30%;
+    margin-top: 10vh;
+    margin-bottom: 5vh;
+}
+
+#add-form input {
+    margin: 1vh 1vh;
+}
+</style>
 </head>
 <body>
 <div id="add-form">
-	<input type="text" placeholder="销售名字(必填)" id="saller"/>
-	<input type="text" placeholder="客户名字(必填)" id="user-name"/>
-	<input type="text" placeholder="公司名称(必填)" id="user-company"/>
-	<input type="text" placeholder="联系方式(必填)" id="user-phone"/>
-	<select id="accountant"></select>
-	<input type="text" placeholder="联系时间(必填)" id="updated-time"/>
-	<input type="text" placeholder="备注" id="comment"/>
+	销售名字：<input type="text" placeholder="销售名字(必填)" id="saller"/><br />
+	客户名字：<input type="text" placeholder="客户名字(必填)" id="user-name"/><br />
+	公司名称：<input type="text" placeholder="公司名称(必填)" id="user-company"/><br />
+	联系方式：<input type="text" placeholder="联系方式(必填)" id="user-phone"/><br />
+	指派会计：<select id="accountant"></select><br />
+	联系时间：<input type="text" placeholder="联系时间(必填)" id="updated-time"/><br />
+	备注信息：<input type="text" placeholder="备注" id="comment"/><br />
 	<input type="button" value="提交" id="submit"/>
 </div>
 <table id="table" class="display" cellspacing="0" width="100%">
@@ -57,7 +68,7 @@ $( "#updated-time" ).datepicker();
 
 $.get("/getUserFromSession", function(data){
 	console.log(data);
-	if(data['name'] == ''){
+	if(data['name'] == ""){
 		window.location.href = "/views/frontviews/index.html"
 	} else{
 		$("#saller").val(data['name']);
@@ -77,7 +88,17 @@ $.get("/getAllAccounter", function(data){
 });
 $.get("/sales/getSales", function(dataSet){
 	$('#table').DataTable( {
-    data: dataSet['data']
+    data: dataSet['data'],
+    "sDom": '<"top" f>rt<"bottom" p><"clear">',
+	"order": [[ 0, "desc" ]],
+	"oLanguage": {
+	    "sSearch": "查找 ",
+	    oPaginate: {
+	    	'sPrevious': "上一页",
+	    	'sNext': "下一页",
+	    }
+	  },
+	  pageLength:10
 } );
 	
 	$('#table tbody').on('dblclick', 'tr', function(){
