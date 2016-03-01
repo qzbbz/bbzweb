@@ -12,6 +12,7 @@ target/
 bbzweb.iml
 /build
 
+important.properties
 important.properties.*
 dispatcher-servlet.xml
 WeixinConstEnum.*
