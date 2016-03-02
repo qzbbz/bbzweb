@@ -31,7 +31,7 @@
 	联系方式：<input type="text" placeholder="联系方式(必填)" id="user-phone"/><br />
 	指派会计：<select id="accountant"></select><br />
 	联系时间：<input type="text" placeholder="联系时间(必填)" id="updated-time"/><br />
-	备注信息：<input type="text" placeholder="备注" id="comment"/><br />
+	备注信息：<textarea type="text" placeholder="备注" rows=4 id="comment"></textarea><br />
 	<input type="button" value="提交" id="submit"/>
 </div>
 <table id="table" class="display" cellspacing="0" width="100%">
@@ -51,7 +51,7 @@
         </thead>
 </table>
 	<div id="edit-sales-dialog" style="display:none;">
-		<input id="edit-comment" type="textfield" placeholder="添加新备注，没有请留空"/>
+		<textarea id="edit-comment" placeholder="添加新备注，没有请留空"></textarea>
 		<input id="edit-updated_time" type="textfield" placeholder="联系时间" />
 		<input id="edit-status" type="textfield" placeholder="状态" /><br />
 		<select id="edit-accountant" ></select>
