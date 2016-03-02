@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.omg.CORBA.Current;
 import org.slf4j.Logger;
@@ -13,12 +14,15 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import com.wisdom.accounter.service.IAccounterService;
 import com.wisdom.common.model.Dispatcher;
 import com.wisdom.common.model.Sales;
+import com.wisdom.common.model.User;
 import com.wisdom.dispatch.schedule.NotifySchedule;
 import com.wisdom.dispatch.service.IDispatcherService;
 import com.wisdom.dispatch.service.impl.JavaMailService;
 import com.wisdom.sales.service.ISalesService;
+import com.wisdom.user.service.IUserService;
 import com.wisdom.weixin.service.IMessageProcessService;
 import com.wisdom.weixin.service.IWeixinPushService;
 
@@ -37,6 +41,9 @@ public class NotifyScheduleImpl implements NotifySchedule {
 	private IDispatcherService dispatcherService;
 	@Autowired
 	private IWeixinPushService weixinPushService;
+	@Autowired
+	private IUserService userService;
+	
 
 	private final String subject = "您有一个新的要审批的报销单据!";
 
@@ -113,9 +120,27 @@ public class NotifyScheduleImpl implements NotifySchedule {
 		if(list == null ) return;
 		for(Sales sale : list) {
 			if(sale.getHasSendEmail() == 0) {
-				String mailBody = "您有一个客户需要今天联系，客户公司名称：" + sale.getUserCompany() + ",联系电话：" + sale.getUserPhone() + ",联系人姓名：" + sale.getUserName();
+				String mailBody = "您有一个客户需要今天联系，客户公司名称：" + sale.getUserCompany() + ",联系电话：" + sale.getUserPhone() + ",联系人姓名：" + sale.getUserName() + ",记录编号:" + sale.getId() ;
 				String mailSubject = "联系客户提醒邮件";
-				boolean blRet = javaMailService.sendMailOut(sale.getAccountantId(), mailSubject, mailBody, "帮帮账");
+				User user = userService.getUserByUserId(sale.getAccountantId());
+				String msgMail = user.getMsgEmail();
+				if(msgMail == null || msgMail == ""){
+					msgMail = sale.getAccountant();
+				}
+
+				//Get supervisor
+				String supervisors = "";
+					List<String> userList = userService.getApprovalUserList(sale.getAccountantId());
+					if (null == userList || !(userList.size() > 0)) {
+						 supervisors = new String("qiuchen@bangbangzhang.com"); // TODO TEST
+					}else{
+						StringBuilder str = new StringBuilder();
+						for (String o : userList) {
+							str.append(o).append(";");
+						}
+						supervisors = str.toString().substring(0, str.length() - 1);
+					}
+					boolean blRet = javaMailService.sendMailOut(supervisors + ";" + msgMail, mailSubject, mailBody, "帮帮账");
 				if (!blRet) {
 					log.error("send mail to User failed");
 				} else {
