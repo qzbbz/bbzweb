@@ -104,9 +104,9 @@ public class SalesDaoImpl implements ISalesDao {
 
 	@Override
 	public Boolean updateSalesRecordInformation(Integer id, String accountant, String updatedTime,
-			String status) {
-		String sql = "update sales set accountant = ?, updated_time = ?, status = ? where id = ?";
-		int affectedRows = jdbcTemplate.update(sql, accountant, updatedTime, status, id);
+			String status, String accountantId) {
+		String sql = "update sales set accountant = ?, updated_time = ?, status = ? , accountant_id=? where id = ?";
+		int affectedRows = jdbcTemplate.update(sql, accountant, updatedTime, status, accountantId, id);
 		logger.debug("updateSalesRecordInfo result : {}", affectedRows);
 		return affectedRows != 0;	
 		

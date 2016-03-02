@@ -11,3 +11,8 @@ target/
 *.DS_Store
 bbzweb.iml
 /build
+
+important.properties
+important.properties.*
+dispatcher-servlet.xml
+WeixinConstEnum.*

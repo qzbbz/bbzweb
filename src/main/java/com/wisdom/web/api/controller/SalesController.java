@@ -66,6 +66,7 @@ public class SalesController {
 			user.setUserId(sales.getUserPhone() + "@bangbangzhang.com");
 			user.setTypeId(2);
 			user.setCompanyId((long) -1);
+			user.setAuditStatus(1);
 			user.setCreateTime(new Timestamp(System.currentTimeMillis()));
 			if (userService.addUser(user)
 					&& userService.setUserPwdByUserId(
@@ -121,6 +122,7 @@ public class SalesController {
 	public Map<String, String> updateSales(HttpServletRequest request){
 		Map<String, String> retMap = new HashMap<>();
 		String accountant = request.getParameter("accountant");
+		String accountantId = request.getParameter("accountant_id");
 		String status = request.getParameter("status");
 		String comment = request.getParameter("comment");
 		String updatedTime = request.getParameter("updated_time");
@@ -129,7 +131,7 @@ public class SalesController {
 		if(sales != null && !sales.getUpdatedTime().equals(updatedTime)) {
 			salesService.updateSalesSendEmailStatus(id, 0);
 		}
-		if(salesService.updateSales(id, comment, accountant, updatedTime, status)){
+		if(salesService.updateSales(id, comment, accountant, updatedTime, status, accountantId)){
 			retMap.put("status", "ok");
 		}else{
 			retMap.put("status", "nok");

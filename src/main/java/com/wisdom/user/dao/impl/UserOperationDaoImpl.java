@@ -37,9 +37,10 @@ public class UserOperationDaoImpl implements IUserOperationDao {
 
 	@Override
 	public boolean addUser(User user) {
-		String sql = "insert into user (user_name, msg_email, user_id, type_id, user_level, company_id, user_encode, create_time)"
-				+ " values (?, ?, ?, ?, ?, ?, ?, ?)";
+		String sql = "insert into user (audit_status, user_name, msg_email, user_id, type_id, user_level, company_id, user_encode, create_time)"
+				+ " values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		int affectedRows = jdbcTemplate.update(sql,
+				user.getAuditStatus() == null ? 0 : user.getAuditStatus(),
 				user.getUserName() == null ? "" : user.getUserName(),
 				user.getMsgEmail() == null ? "" : user.getMsgEmail(),
 				user.getUserId() == null ? "" : user.getUserId(),

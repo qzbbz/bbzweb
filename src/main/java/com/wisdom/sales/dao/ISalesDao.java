@@ -16,7 +16,7 @@ public interface ISalesDao {
 	
 	public List<Sales> getAllSalesRecordsByUpdatedTime(String time);
 	
-	public Boolean updateSalesRecordInformation(Integer id, String accountant, String updatedTime, String status);
+	public Boolean updateSalesRecordInformation(Integer id, String accountant, String updatedTime, String status, String accountantId);
 	
 	public Boolean updateSalesRecordLatestComment(Integer id, String comment);
 	

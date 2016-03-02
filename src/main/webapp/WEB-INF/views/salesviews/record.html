@@ -130,15 +130,15 @@ $.get("/sales/getSales", function(dataSet){
 		var index = 0;
 		for(var i = 0; i < accountants.length; i++){
 			if(accountants[i]['userName'] == accountant){
-			  $("#edit-accountant").append("<option class='accountant' value='" + accountants[i]["user_id"] + "'>" + accountants[i]["userName"] + "</option>");
+			  $("#edit-accountant").append("<option class='edit_accountant' value='" + accountants[i]["user_id"] + "'>" + accountants[i]["userName"] + "</option>");
 			  index = i;
 			  break;
 			}
 		}
-		$("#edit-accountant").append("<option class='accountant' value='random'>随机</option>");
+		$("#edit-accountant").append("<option class='edit_accountant' value='random'>随机</option>");
 		for(var i = 0; i < accountants.length; i++){
 			if(accountants[i]['userName'] != accountant){
-				  $("#edit-accountant").append("<option class='accountant' value='" + accountants[i]["user_id"] + "'>" + accountants[i]["userName"] + "</option>");
+				  $("#edit-accountant").append("<option class='edit_accountant' value='" + accountants[i]["user_id"] + "'>" + accountants[i]["userName"] + "</option>");
 			}
 		}
 		var id = $(this).attr("id").replace("edit-", "");
@@ -154,14 +154,13 @@ $.get("/sales/getSales", function(dataSet){
 	    		         		//post modify
 	    		         		var editDialog = $(this);
 	    		         		var accountant = $("#edit-accountant option:selected").text();
-	    		         		var accountantId = $("#editaccountant option:selected").val();
+	    		         		var accountantId = $("#edit-accountant option:selected").val();
 	    		         		
 	    		         		if(accountant == "随机"){
-	    		         			var accounants = $("option.accountant");
-	    		         			var index = Math.floor(Math.random() * accounants.length);
-
-	    		         			accountant = accounants[index].innerHTML;
-	    		         			accountantId = accounants[index].getAttribute("value");
+	    		         			//var accounants = $("option.edit_accountant");
+	    		         			var index = Math.floor(Math.random() * accountants.length);
+	    		         			accountant = accountants[index].userName;
+	    		         			accountantId = accountants[index].user_id;
 	    		         		}
 	    		         		$.post("/sales/updateSales", {id:id, comment:$("#edit-comment").val(), accountant:accountant, status: $("#edit-status").val(), updated_time: $("#edit-updated_time").val(), accountant_id:accountantId}, function(){
 	    		         			editDialog.dialog("close");
@@ -199,11 +198,11 @@ $("#submit").on("click", function(){
 		return;
 	}
 	if(accountant == "随机"){
-		var accounants = $("option.accountant");
-		var index = Math.floor(Math.random() * accounants.length);
+		//var accounants = $("option.accountant");
+		var index = Math.floor(Math.random() * accountants.length);
 		console.log(index);
-		accountant = accounants[index].innerHTML;
-		accountantId = accounants[index].getAttribute("value");
+		accountant = accountants[index].userName;
+		accountantId = accountants[index].user_id;
 	}
 	console.log(accountant);
 	var comment = $("#comment").val();
