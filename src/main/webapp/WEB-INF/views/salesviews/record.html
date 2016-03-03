@@ -67,12 +67,14 @@ $( "#updated-time" ).datepicker();
 $("#edit-updated_time").datepicker();
 //Get sales' name
 
+var userId = -1;
 $.get("/getUserFromSession", function(data){
 	console.log(data);
 	if(data['name'] == ""){
 		window.location.href = "/views/frontviews/index.html"
 	} else{
 		$("#saller").val(data['name']);
+		userId = data['id'];
 	}
 });
 
@@ -206,7 +208,7 @@ $("#submit").on("click", function(){
 	}
 	console.log(accountant);
 	var comment = $("#comment").val();
-	$.post("/sales/addSales", {"saller_account": saller, "user_name": userName, "user_company": userCompany, "user_phone": userPhone, "accountant": accountant, "updated_time": updatedTime, "comment": comment, accountant_id:accountantId}, function(){
+	$.post("/sales/addSales", {"saller_id":userId, "saller_account": saller, "user_name": userName, "user_company": userCompany, "user_phone": userPhone, "accountant": accountant, "updated_time": updatedTime, "comment": comment, accountant_id:accountantId}, function(){
 		window.location.href = "/views/salesviews/record.html";
 	})
 });

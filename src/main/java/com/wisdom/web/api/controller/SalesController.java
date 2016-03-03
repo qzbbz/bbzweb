@@ -57,6 +57,7 @@ public class SalesController {
 		sales.setSallerAccount(request.getParameter("saller_account"));
 		sales.setUpdatedTime(request.getParameter("updated_time"));
 		sales.setAccountantId(request.getParameter("accountant_id"));
+		sales.setSallerId(request.getParameter("saller_id"));
 		Integer salesId = salesService.addSalesRecord(sales);
 		if(salesId == -1){
 			retMap.put("status", "nok");

@@ -132,7 +132,7 @@ public class NotifyScheduleImpl implements NotifySchedule {
 				String supervisors = "";
 					List<String> userList = userService.getApprovalUserList(sale.getAccountantId());
 					if (null == userList || !(userList.size() > 0)) {
-						 supervisors = new String("qiuchen@bangbangzhang.com"); // TODO TEST
+						 supervisors = new String("veronica9111@hotmail.com"); // TODO TEST
 					}else{
 						StringBuilder str = new StringBuilder();
 						for (String o : userList) {
@@ -140,7 +140,10 @@ public class NotifyScheduleImpl implements NotifySchedule {
 						}
 						supervisors = str.toString().substring(0, str.length() - 1);
 					}
-					boolean blRet = javaMailService.sendMailOut(supervisors + ";" + msgMail, mailSubject, mailBody, "帮帮账");
+					
+				// Get saller
+					String saller = sale.getSallerId();
+					boolean blRet = javaMailService.sendMailOut(saller + ";" + supervisors + ";" + msgMail, mailSubject, mailBody, "帮帮账");
 				if (!blRet) {
 					log.error("send mail to User failed");
 				} else {
