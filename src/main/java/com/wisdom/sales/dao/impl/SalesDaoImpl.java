@@ -55,8 +55,8 @@ public class SalesDaoImpl implements ISalesDao {
 			int id = jdbcTemplate.update(new PreparedStatementCreator() {
 				public PreparedStatement createPreparedStatement(
 						Connection connection) throws SQLException {
-					String sql = "insert into sales (saller_account,user_name,user_company,user_phone,latest_comment,accountant,updated_time,status,accountant_id)"
-							+ " values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+					String sql = "insert into sales (saller_account,user_name,user_company,user_phone,latest_comment,accountant,updated_time,status,accountant_id, saller_id)"
+							+ " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 					PreparedStatement ps = connection.prepareStatement(sql,
 							Statement.RETURN_GENERATED_KEYS);
 					ps.setString(1, sales.getSallerAccount() == null? "": sales.getSallerAccount());
@@ -68,6 +68,7 @@ public class SalesDaoImpl implements ISalesDao {
 					ps.setString(7, sales.getUpdatedTime()  == null ? "" : sales.getUpdatedTime());
 					ps.setString(8,sales.getStatus() == null ? "": sales.getStatus());
 					ps.setString(9,sales.getAccountantId() == null ? "": sales.getAccountantId());
+					ps.setString(10, sales.getSallerId() == null ? "":sales.getSallerId());
 					return ps;
 				}
 			}, keyHolder);

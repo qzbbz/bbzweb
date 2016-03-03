@@ -14,6 +14,7 @@ public class Sales implements java.io.Serializable{
     private String accountant;
     private String accountantId;
     private Integer hasSendEmail;
+    private String sallerId;
 
 
  
@@ -23,7 +24,7 @@ public class Sales implements java.io.Serializable{
  
     public Sales(Integer id, String sallerAccount, String userName, String userCompany, String userPhone, 
     		String latestComment, String status, String updatedTime, String accountant, String accountantId,
-    		Integer hasSendEmail) {
+    		Integer hasSendEmail, String sallerId) {
         super();
         this.id = id;
         this.sallerAccount = sallerAccount;
@@ -36,6 +37,7 @@ public class Sales implements java.io.Serializable{
         this.accountant = accountant;
         this.accountantId = accountantId;
         this.hasSendEmail = hasSendEmail;
+        this.sallerId = sallerId;
     }
 
 	public Integer getId() {
@@ -126,6 +128,14 @@ public class Sales implements java.io.Serializable{
 
 	public void setHasSendEmail(Integer hasSendEmail) {
 		this.hasSendEmail = hasSendEmail;
+	}
+
+	public String getSallerId() {
+		return sallerId;
+	}
+
+	public void setSallerId(String sallerId) {
+		this.sallerId = sallerId;
 	}
  
 
