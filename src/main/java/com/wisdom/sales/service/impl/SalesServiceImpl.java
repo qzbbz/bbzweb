@@ -88,4 +88,11 @@ public class SalesServiceImpl implements ISalesService {
 		return salesDao.getSalesById(id);
 	}
 
+	@Override
+	public List<Sales> getSalesRecordByUserId(String userId) {
+		List<Sales> sales = salesDao.getSalesByAccountantId(userId);
+		sales.addAll(salesDao.getSalesBySallerId(userId));
+		return sales;
+	}
+
 }

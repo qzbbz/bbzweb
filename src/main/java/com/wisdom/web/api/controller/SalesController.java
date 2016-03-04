@@ -25,6 +25,7 @@ import com.wisdom.company.service.ICompanyService;
 import com.wisdom.sales.service.ISalesService;
 import com.wisdom.user.service.IUserModifyService;
 import com.wisdom.user.service.IUserService;
+import com.wisdom.web.utils.SessionConstant;
 import com.wisdom.web.utils.UserPwdMD5Encrypt;
 
 @Controller
@@ -94,9 +95,18 @@ public class SalesController {
 	@RequestMapping("/sales/getSales")
 	@ResponseBody
 	public Map<String, List<List<String>>> getSales(HttpServletRequest request){
-		//logger.debug("enter addPermission");
+		String userId = (String) request.getSession().getAttribute(SessionConstant.SESSION_USER_ID);
+		User user = userService.getUserByUserId(userId);
+		String level = user.getUserLevel();
 		List<List<String>> retList = new ArrayList<>();
-		List<Sales> sales = salesService.getSalesRecords();
+		List<Sales> sales = new ArrayList<>();
+		if(level != null && level.equals("sales admin")){
+			sales = salesService.getSalesRecords();
+			
+		}else{
+			sales = salesService.getSalesRecordByUserId(userId);
+		}
+
 		for(Sales sale: sales){
 			List<String> tmp = new ArrayList<>();
 			tmp.add(sale.getSallerAccount());
@@ -112,6 +122,7 @@ public class SalesController {
 			
 			retList.add(tmp);
 		}
+		
 		Map<String, List<List<String>>> retMap = new HashMap<>();
 		retMap.put("data", retList);
 		return retMap;

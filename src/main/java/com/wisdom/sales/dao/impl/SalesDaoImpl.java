@@ -140,6 +140,34 @@ public class SalesDaoImpl implements ISalesDao {
 		}
 		return sale;
 	}
+
+	@Override
+	public List<Sales> getSalesBySallerId(String sallerId) {
+		List<Sales> list = null;
+		try {
+			String sql = "select * from sales where saller_id = '" + sallerId + "'";
+			list = jdbcTemplate.query(sql, 
+					new RowMapperResultSetExtractor<Sales>(
+							new SalesMapper()));
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return list;
+	}
+
+	@Override
+	public List<Sales> getSalesByAccountantId(String accountantId) {
+		List<Sales> list = null;
+		try {
+			String sql = "select * from sales where accountant_id = '" + accountantId + "'";
+			list = jdbcTemplate.query(sql, 
+					new RowMapperResultSetExtractor<Sales>(
+							new SalesMapper()));
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return list;
+	}
 	
 
 
