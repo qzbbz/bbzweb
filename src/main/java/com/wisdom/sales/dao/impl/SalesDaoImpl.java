@@ -176,6 +176,20 @@ public class SalesDaoImpl implements ISalesDao {
 		logger.debug("deleteSalesRecord result : {}", affectedRows);
 		return affectedRows != 0;	
 	}
+
+	@Override
+	public List<Sales> getUserRelatedSalesRecords(String userId) {
+		List<Sales> list = null;
+		try {
+			String sql = "select * from sales where accountant_id = '" + userId + "' or saller_id = '" + userId + "'";
+			list = jdbcTemplate.query(sql, 
+					new RowMapperResultSetExtractor<Sales>(
+							new SalesMapper()));
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return list;
+	}
 	
 
 

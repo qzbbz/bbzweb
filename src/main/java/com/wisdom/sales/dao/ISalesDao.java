@@ -28,4 +28,6 @@ public interface ISalesDao {
 	
 	public Boolean deleteRecord(Integer id);
 	
+	public List<Sales> getUserRelatedSalesRecords(String userId);
+	
 }
