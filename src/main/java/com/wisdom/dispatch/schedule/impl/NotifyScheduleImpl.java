@@ -132,7 +132,7 @@ public class NotifyScheduleImpl implements NotifySchedule {
 				String supervisors = "";
 					List<String> userList = userService.getApprovalUserList(sale.getAccountantId());
 					if (null == userList || !(userList.size() > 0)) {
-						 supervisors = new String("veronica9111@hotmail.com"); // TODO TEST
+						 supervisors = new String("qiuchen@bangbangzhang.com"); // TODO TEST
 					}else{
 						StringBuilder str = new StringBuilder();
 						for (String o : userList) {
