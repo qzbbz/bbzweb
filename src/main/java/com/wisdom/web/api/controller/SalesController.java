@@ -119,6 +119,7 @@ public class SalesController {
 			tmp.add(sale.getStatus());
 			tmp.add(sale.getId().toString());
 			tmp.add("<input type='button' value='编辑' id='edit-" + sale.getId().toString() + "' class='edit-btn'/>");
+			tmp.add("<input type='button' value='删除' id='delete-" + sale.getId().toString() + "' class='delete-btn'/>");
 			
 			retList.add(tmp);
 		}
@@ -169,6 +170,19 @@ public class SalesController {
 		
 	}
 		
+	@RequestMapping("/sales/deleteSalesRecord")
+	@ResponseBody
+	public Map<String, String> deleteSalesRecord(HttpServletRequest request){
+		Map<String, String> retMap = new HashMap<>();
+		Integer id = Integer.valueOf(request.getParameter("id"));
+		if(salesService.deleteSalesRecordById(id)){
+			retMap.put("status", "ok");
+		}else{
+			retMap.put("status", "nok");
+		}
+		return retMap;
+		
+	}
 	
 	
 	

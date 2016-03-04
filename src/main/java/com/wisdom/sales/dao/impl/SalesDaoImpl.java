@@ -168,6 +168,14 @@ public class SalesDaoImpl implements ISalesDao {
 		}
 		return list;
 	}
+
+	@Override
+	public Boolean deleteRecord(Integer id) {
+		String sql = "delete from sales where id = ?";
+		int affectedRows = jdbcTemplate.update(sql, id);
+		logger.debug("deleteSalesRecord result : {}", affectedRows);
+		return affectedRows != 0;	
+	}
 	
 
 

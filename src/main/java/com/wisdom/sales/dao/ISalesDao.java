@@ -26,4 +26,6 @@ public interface ISalesDao {
 	
 	public List<Sales> getSalesByAccountantId(String accountantId);
 	
+	public Boolean deleteRecord(Integer id);
+	
 }

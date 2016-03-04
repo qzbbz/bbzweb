@@ -95,4 +95,10 @@ public class SalesServiceImpl implements ISalesService {
 		return sales;
 	}
 
+	@Override
+	public Boolean deleteSalesRecordById(Integer id) {
+		// TODO Auto-generated method stub
+		return salesDao.deleteRecord(id);
+	}
+
 }
