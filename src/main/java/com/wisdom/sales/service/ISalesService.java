@@ -22,4 +22,8 @@ public interface ISalesService {
 	Boolean updateSalesStatus(String userPhone, String status);
 	
 	Boolean updateSalesSendEmailStatus(int id, int status);
+	
+	List<Sales> getSalesRecordByUserId(String userId);
+	
+	Boolean deleteSalesRecordById(Integer id);
 }

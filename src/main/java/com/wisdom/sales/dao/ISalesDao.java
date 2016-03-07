@@ -22,4 +22,12 @@ public interface ISalesDao {
 	
 	public Boolean updateSalesSendEmailStatus(Integer id, Integer status);
 	
+	public List<Sales> getSalesBySallerId(String sallerId);
+	
+	public List<Sales> getSalesByAccountantId(String accountantId);
+	
+	public Boolean deleteRecord(Integer id);
+	
+	public List<Sales> getUserRelatedSalesRecords(String userId);
+	
 }

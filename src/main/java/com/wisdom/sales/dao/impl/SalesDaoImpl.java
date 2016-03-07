@@ -55,8 +55,8 @@ public class SalesDaoImpl implements ISalesDao {
 			int id = jdbcTemplate.update(new PreparedStatementCreator() {
 				public PreparedStatement createPreparedStatement(
 						Connection connection) throws SQLException {
-					String sql = "insert into sales (saller_account,user_name,user_company,user_phone,latest_comment,accountant,updated_time,status,accountant_id)"
-							+ " values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+					String sql = "insert into sales (saller_account,user_name,user_company,user_phone,latest_comment,accountant,updated_time,status,accountant_id, saller_id)"
+							+ " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 					PreparedStatement ps = connection.prepareStatement(sql,
 							Statement.RETURN_GENERATED_KEYS);
 					ps.setString(1, sales.getSallerAccount() == null? "": sales.getSallerAccount());
@@ -68,6 +68,7 @@ public class SalesDaoImpl implements ISalesDao {
 					ps.setString(7, sales.getUpdatedTime()  == null ? "" : sales.getUpdatedTime());
 					ps.setString(8,sales.getStatus() == null ? "": sales.getStatus());
 					ps.setString(9,sales.getAccountantId() == null ? "": sales.getAccountantId());
+					ps.setString(10, sales.getSallerId() == null ? "":sales.getSallerId());
 					return ps;
 				}
 			}, keyHolder);
@@ -138,6 +139,56 @@ public class SalesDaoImpl implements ISalesDao {
 			logger.error(e.toString());
 		}
 		return sale;
+	}
+
+	@Override
+	public List<Sales> getSalesBySallerId(String sallerId) {
+		List<Sales> list = null;
+		try {
+			String sql = "select * from sales where saller_id = '" + sallerId + "'";
+			list = jdbcTemplate.query(sql, 
+					new RowMapperResultSetExtractor<Sales>(
+							new SalesMapper()));
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return list;
+	}
+
+	@Override
+	public List<Sales> getSalesByAccountantId(String accountantId) {
+		List<Sales> list = null;
+		try {
+			String sql = "select * from sales where accountant_id = '" + accountantId + "'";
+			list = jdbcTemplate.query(sql, 
+					new RowMapperResultSetExtractor<Sales>(
+							new SalesMapper()));
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return list;
+	}
+
+	@Override
+	public Boolean deleteRecord(Integer id) {
+		String sql = "delete from sales where id = ?";
+		int affectedRows = jdbcTemplate.update(sql, id);
+		logger.debug("deleteSalesRecord result : {}", affectedRows);
+		return affectedRows != 0;	
+	}
+
+	@Override
+	public List<Sales> getUserRelatedSalesRecords(String userId) {
+		List<Sales> list = null;
+		try {
+			String sql = "select * from sales where accountant_id = '" + userId + "' or saller_id = '" + userId + "'";
+			list = jdbcTemplate.query(sql, 
+					new RowMapperResultSetExtractor<Sales>(
+							new SalesMapper()));
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return list;
 	}
 	
 

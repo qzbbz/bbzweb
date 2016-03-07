@@ -88,4 +88,16 @@ public class SalesServiceImpl implements ISalesService {
 		return salesDao.getSalesById(id);
 	}
 
+	@Override
+	public List<Sales> getSalesRecordByUserId(String userId) {
+
+		return salesDao.getUserRelatedSalesRecords(userId);
+	}
+
+	@Override
+	public Boolean deleteSalesRecordById(Integer id) {
+		// TODO Auto-generated method stub
+		return salesDao.deleteRecord(id);
+	}
+
 }

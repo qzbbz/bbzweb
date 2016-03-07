@@ -16,7 +16,7 @@ import com.wisdom.common.model.Sales;
 					rs.getString("user_company"), rs.getString("user_phone"), 
 					rs.getString("latest_comment"), rs.getString("accountant"), 
 					rs.getString("updated_time"), rs.getString("status"), 
-					rs.getString("accountant_id"), rs.getInt("has_send_email"));
+					rs.getString("accountant_id"), rs.getInt("has_send_email"), rs.getString("saller_id"));
 			return u;
 		}
 	}

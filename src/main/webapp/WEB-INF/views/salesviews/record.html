@@ -30,8 +30,8 @@
 	公司名称：<input type="text" placeholder="公司名称(必填)" id="user-company"/><br />
 	联系方式：<input type="text" placeholder="联系方式(必填)" id="user-phone"/><br />
 	指派会计：<select id="accountant"></select><br />
-	联系时间：<input type="text" placeholder="联系时间(必填)" id="updated-time"/><br />
-	备注信息：<input type="text" placeholder="备注" id="comment"/><br />
+	预计跟进时间：<input type="text" placeholder="预计跟进时间(必填)" id="updated-time"/><br />
+	备注信息：<textarea type="text" placeholder="备注" rows=4 id="comment"></textarea><br />
 	<input type="button" value="提交" id="submit"/>
 </div>
 <table id="table" class="display" cellspacing="0" width="100%">
@@ -42,17 +42,18 @@
                 <th>客户</th>
                 <th>电话</th>
                 <th>备注</th>
-                <th>联系时间</th>
+                <th>预计跟进时间</th>
                 <th>状态</th>
                 <th>会计</th>
                 <th>记录编号</th>
+                <th></th>
                 <th></th>
             </tr>
         </thead>
 </table>
 	<div id="edit-sales-dialog" style="display:none;">
-		<input id="edit-comment" type="textfield" placeholder="添加新备注，没有请留空"/>
-		<input id="edit-updated_time" type="textfield" placeholder="联系时间" />
+		<textarea id="edit-comment" placeholder="添加新备注，没有请留空"></textarea>
+		<input id="edit-updated_time" type="textfield" placeholder="预计跟进时间" />
 		<input id="edit-status" type="textfield" placeholder="状态" /><br />
 		<select id="edit-accountant" ></select>
 	</div>
@@ -67,12 +68,14 @@ $( "#updated-time" ).datepicker();
 $("#edit-updated_time").datepicker();
 //Get sales' name
 
+var userId = -1;
 $.get("/getUserFromSession", function(data){
 	console.log(data);
 	if(data['name'] == ""){
 		window.location.href = "/views/frontviews/index.html"
 	} else{
 		$("#saller").val(data['name']);
+		userId = data['id'];
 	}
 });
 
@@ -113,6 +116,18 @@ $.get("/sales/getSales", function(dataSet){
 			$("#comment-dialog").dialog();
 		});
 		
+	});
+	
+	$('#table tbody').on('click', '.delete-btn', function(){
+
+		var id = $(this).attr("id").replace("delete-", "");
+		if(confirm("确认删除记录" + id + "?")){
+			$.post("/sales/deleteSalesRecord", {id:id}, function(){
+				window.location.href = "/views/salesviews/record.html";
+			});
+		}		
+
+
 	});
 	
 	$('#table tbody').on('click', '.edit-btn', function () {
@@ -206,7 +221,7 @@ $("#submit").on("click", function(){
 	}
 	console.log(accountant);
 	var comment = $("#comment").val();
-	$.post("/sales/addSales", {"saller_account": saller, "user_name": userName, "user_company": userCompany, "user_phone": userPhone, "accountant": accountant, "updated_time": updatedTime, "comment": comment, accountant_id:accountantId}, function(){
+	$.post("/sales/addSales", {"saller_id":userId, "saller_account": saller, "user_name": userName, "user_company": userCompany, "user_phone": userPhone, "accountant": accountant, "updated_time": updatedTime, "comment": comment, accountant_id:accountantId}, function(){
 		window.location.href = "/views/salesviews/record.html";
 	})
 });

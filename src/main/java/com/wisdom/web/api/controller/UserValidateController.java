@@ -181,6 +181,7 @@ public class UserValidateController {
 			User user = userService.getUserByUserId(userId);
 
 			retMap.put("name", user.getUserName());
+			retMap.put("id", userId);
 		}
 
 		return retMap;
