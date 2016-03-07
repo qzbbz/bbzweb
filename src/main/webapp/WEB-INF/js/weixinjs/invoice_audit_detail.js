@@ -133,7 +133,7 @@ mui.createConfirmDialog = function(info, cancelCallBack, acceptCallBack) {
 	return mask;
 };
 
-mui.createCommentDialog = function(info, cancelCallBack, acceptCallBack, invoice_id, eleargs, approvalStatus) {
+mui.createCommentDialog = function(info, cancelCallBack, acceptCallBack, type, id, eleargs, approvalStatus) {
 	var template = "<div style='width:80%;margin:50% 10%;border:1px solid #ddd;background-color: white;border-radius: 5px;'><div style='margin-top:20px;margin-left:20px;'>审核信息</div><hr/><div style='margin-top:20px;margin-left:20px;margin-bottom:20px;margin-right:20px;height:60px;'><textarea id='comment' placeholder='输入审核信息'></textarea></div><div style='text-align:right;margin-bottom:20px;margin-right:20px;'><a id='createCommentDialog_accept' href='javascript:void(0);' style='text-decoration:none;'>确定</a></div></div>";
 	var element = document.createElement('div');
 	element.classList.add('dialog');
@@ -146,7 +146,7 @@ mui.createCommentDialog = function(info, cancelCallBack, acceptCallBack, invoice
 		element.setAttribute('style', 'opacity:1');
 		document.body.appendChild(element);
 		document.getElementById('createCommentDialog_accept').addEventListener('tap', function() {
-			if (acceptCallBack) acceptCallBack(invoice_id, eleargs, approvalStatus);
+			if (acceptCallBack) acceptCallBack(type, id, eleargs, approvalStatus);
 			mask.close();
 		});
 		return mask;
@@ -170,34 +170,58 @@ mui.createCommentDialog = function(info, cancelCallBack, acceptCallBack, invoice
 
 //invoiceIdString:12,23,32
 //approvalStatus:0-pass,1-reject
-function auditInvoice(reasons, invoiceId, mask, eleargs, approvalStatus, successCallback, failCallback) {
-	mui.ajax({
-		url: '/newApprovalBill',
-		type: "POST",
-		data: {
-			openId : userOpenId,
-			invoiceId : invoiceId,
-			approvalStatus : approvalStatus,
-			reasons:reasons
-		},
-		success: function(data) {
-			if (data.error_code == "0") {
-				if (successCallback) successCallback();
-			} else {
-				if (failCallback) failCallback(data.error_message);
+function auditInvoice(reasons, type, id, mask, eleargs, approvalStatus, successCallback, failCallback) {
+	if (type == "invoice") {
+		mui.ajax({
+			url: '/newApprovalBill',
+			type: "POST",
+			data: {
+				openId : userOpenId,
+				invoiceId : id,
+				approvalStatus : approvalStatus,
+				reasons:reasons
+			},
+			success: function(data) {
+				if (data.error_code == "0") {
+					if (successCallback) successCallback();
+				} else {
+					if (failCallback) failCallback(data.error_message);
+				}
+			},
+			error: function(status, error) {
+				if (failCallback) failCallback(null);
 			}
-		},
-		error: function(status, error) {
-			if (failCallback) failCallback(null);
-		}
-	});
+		});
+	} else {
+		mui.ajax({
+			url: '/newApprovalWork',
+			type: "POST",
+			data: {
+				openId : userOpenId,
+				workId : id,
+				approvalStatus : approvalStatus,
+				reasons:reasons
+			},
+			success: function(data) {
+				if (data.error_code == "0") {
+					if (successCallback) successCallback();
+				} else {
+					if (failCallback) failCallback(data.error_message);
+				}
+			},
+			error: function(status, error) {
+				if (failCallback) failCallback(null);
+			}
+		});
+	}
+	
 }
-function addCommentToInvoice(invoice_id, eleargs, approvalStatus){
+function addCommentToInvoice(type, id, eleargs, approvalStatus){
 	var commentNode = document.getElementById("comment");
 	var mask = mui.createProcessingMask(null);
 	mask.show();
 	var comment = commentNode.value;
-	auditInvoice(comment, invoice_id, mask, eleargs, approvalStatus, function() {
+	auditInvoice(comment, type, id, mask, eleargs, approvalStatus, function() {
 		var ulNode = eleargs.parentNode;
 		var personDataNode = ulNode.parentNode;
 		var dataDetailNode = ulNode.parentNode.parentNode;
@@ -224,8 +248,19 @@ function addCommentToInvoice(invoice_id, eleargs, approvalStatus){
 }
 function leftAndRightSliderEventCallback(element, approvalStatus) {
 	var elem = element;
+	var id = "";
+	var type = "";
 	var invoice_id = elem.getAttribute('invoice_id');
-	mui.createCommentDialog("hola", null, addCommentToInvoice, invoice_id, elem, approvalStatus).show();
+	var work_id = elem.getAttribute("work_id");
+	if (invoice_id == null || invoice_id == "") {
+		type = "work";
+		id = work_id;
+	} else {
+		type ="invoice";
+		id = invoice_id;
+	}
+	
+	mui.createCommentDialog("hola", null, addCommentToInvoice, type, id, elem, approvalStatus).show();
 }
 
 function bindLeftAndRightSliderEvent() {
@@ -249,11 +284,20 @@ function createDataList(data) {
 		ulNode.setAttribute("class", "mui-table-view");
 		img_group = img_group + 1;
 		for (var i in data) {
-			var liNode = document.createElement('li');
-			liNode.setAttribute('class', 'mui-table-view-cell');
-			liNode.setAttribute('invoice_id', data[i].invoice_id);
-			liNode.innerHTML = "<div class='mui-slider-left mui-disabled'><a class='mui-btn mui-btn-green'>通过</a></div><div class='mui-slider-right mui-disabled'><a class='mui-btn mui-btn-red'>驳回</a></div><div class='mui-slider-handle'><img class='mui-media-object mui-pull-left' data-preview-group='" + img_group + "' data-preview-src='/files/company/" + data[i].bill_img + "_middle.jpg' style='width:60px;height:60px;max-width:60px;border-radius: 5px;' src='/files/company/" + data[i].bill_img + "_small.jpg'><div class='mui-media-body'><div class='mui-pull-left' style='margin-top:15px;'><p>" + data[i].bill_type + "</p><p class='mui-ellipsis'>提交日期：<span>" + data[i].submit_time + "</span></p></div><div class='mui-pull-right' style='margin-top:35px;'><p>&#65509;" + data[i].bill_amount + "</p></div></div></div>";
-			ulNode.appendChild(liNode);
+			if (data[i].upload_type == "invoice") {
+				var liNode = document.createElement('li');
+				liNode.setAttribute('class', 'mui-table-view-cell');
+				liNode.setAttribute('invoice_id', data[i].invoice_id);
+				liNode.innerHTML = "<div class='mui-slider-left mui-disabled'><a class='mui-btn mui-btn-green'>通过</a></div><div class='mui-slider-right mui-disabled'><a class='mui-btn mui-btn-red'>驳回</a></div><div class='mui-slider-handle'><img class='mui-media-object mui-pull-left' data-preview-group='" + img_group + "' data-preview-src='/files/company/" + data[i].bill_img + "_middle.jpg' style='width:60px;height:60px;max-width:60px;border-radius: 5px;' src='/files/company/" + data[i].bill_img + "_small.jpg'><div class='mui-media-body'><div class='mui-pull-left' style='margin-top:15px;'><p>" + data[i].bill_type + "</p><p class='mui-ellipsis'>提交日期：<span>" + data[i].submit_time + "</span></p></div><div class='mui-pull-right' style='margin-top:35px;'><p>&#65509;" + data[i].bill_amount + "</p></div></div></div>";
+				ulNode.appendChild(liNode);
+			} 
+			if (data[i].upload_type == "work_goingout") {
+				var liNode = document.createElement('li');
+				liNode.setAttribute('class', 'mui-table-view-cell');
+				liNode.setAttribute('work_id', data[i].work_id);
+				liNode.innerHTML = "<div class='mui-slider-left mui-disabled'><a class='mui-btn mui-btn-green'>通过</a></div><div class='mui-slider-right mui-disabled'><a class='mui-btn mui-btn-red'>驳回</a></div><div class='mui-slider-handle'><img class='mui-media-object mui-pull-left' data-preview-group='" + img_group + "' data-preview-src='/img/weixinimg/car.png' style='width:60px;height:60px;max-width:60px;border-radius: 5px;' src='/img/weixinimg/car.png'><div class='mui-media-body'><div class='mui-pull-left' style='margin-top:15px;'><p> 公出费:</p><p class='mui-ellipsis'>提交日期：<span>" + data[i].submit_time + "</span></p></div><div class='mui-pull-right' style='margin-top:35px;'><p>&#65509;" + data[i].amount + "</p></div></div></div>";
+				ulNode.appendChild(liNode);
+			}
 		}
 		rootNode.appendChild(ulNode);
 		dataDetailsNode.appendChild(rootNode);
@@ -318,21 +362,23 @@ mui.ajax({
 	success: function(data) {
 		if (data.openId == "") {
 			mui.createTipDialog('无法获取您的微信Openid,请稍后重试！', null).show();
-			document.getElementById('data_loading').style.display = 'none';
+		document.getElementById('data_loading').style.display = 'none';
 			document.getElementById('no_data_tips').style.innerHTML = "无法获取您的微信Openid,<br/>请稍后重试！";
 			document.getElementById('no_data_tips').style.display = '';
-		} else {
+	} else {
 			userOpenId = data.openId;
 			getNeedAuditInvoice(null);
 		}
 	},
-	error: function(status, error) {
+error: function(status, error) {
 		mui.createTipDialog('请求服务器数据出错，请稍后下拉刷新重试！', null).show();
 		document.getElementById('data_loading').style.display = 'none';
 		document.getElementById('no_data_tips').style.innerHTML = "请求服务器数据出错，<br/>请稍后下拉刷新重试！";
 		document.getElementById('no_data_tips').style.display = '';
 	}
 });
+			/*userOpenId = "oSTV_t9z_fYa7AQVYO0y5-OMFavQ";
+			getNeedAuditInvoice(null);*/
 var testData = [{
 	"user_name": "小明",
 	"invoice_count": "2",

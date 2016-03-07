@@ -23,6 +23,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.weixin.dao.IWeixinUserWorkGoingOutDao;
+import com.weixin.dao.IWeixinWorkGoingOutDao;
+import com.weixin.model.WeixinUserWorkGoingOutModel;
+import com.weixin.model.WeixinWorkGoingOutModel;
 import com.wisdom.common.model.Attachment;
 import com.wisdom.common.model.Dispatcher;
 import com.wisdom.common.model.Invoice;
@@ -75,6 +79,10 @@ public class InvoiceServiceImpl implements IInvoiceService {
 	private IUserService userService;
 	@Autowired
 	private IInvoiceDao invoiceDao;
+	@Autowired
+    private IWeixinWorkGoingOutDao workGoingOutDao;
+    @Autowired
+    private IWeixinUserWorkGoingOutDao userWorkGoingOutDao;
 	@Autowired
 	private IAttachmentService attachmentService;
 	@Autowired
@@ -1065,6 +1073,61 @@ public class InvoiceServiceImpl implements IInvoiceService {
 	public boolean setInvoiceComment(long invoiceId, String comment) {
 		return invoiceDao.setInvoiceComment(invoiceId, comment);
 	}
-
+	
+	  @Override
+	    public Map<String, Object> createWorkGoingOutProcess(String userId, String start, String end, String distance,
+	            String amount, String date, String price) {
+	        // TODO Auto-generated method stub
+	        Map<String, Object> retMap = new HashMap<String, Object>();
+	        logger.debug("createWorkGoingOutProcess");
+	        if (StringUtils.isEmpty(userId) && StringUtils.isEmpty(start) && StringUtils.isEmpty(distance) && StringUtils.isEmpty(amount) && StringUtils.isEmpty(price)) {
+	            logger.error("null pointor error");
+	            return retMap;
+	        }
+	        long deptId = userDeptService.getDeptIdByUserId(userId);
+	        String costCenterCode = deptService.getCostCenterCodeById(deptId);
+	        Date newdate = new Date();       
+	        Timestamp nousedate = new Timestamp(newdate.getTime());
+	        WeixinWorkGoingOutModel wgom = new WeixinWorkGoingOutModel();
+	        wgom.setStart(start != null ? start : "");
+	        wgom.setEnd(end != null ? end : "");
+	        wgom.setDistance(distance != null ? distance : "");
+	        wgom.setAmount(amount != null ? amount : "");
+	        wgom.setCostCenter(costCenterCode != null ? costCenterCode : "");
+	        wgom.setDate(Timestamp.valueOf(date));
+	        wgom.setCreateTime(nousedate);
+	        wgom.setPrice(price != null ? price : "");
+	        Long workGoingOutNum = workGoingOutDao.addWorkGoingOut(wgom);
+	        if ( workGoingOutNum == null || workGoingOutNum.longValue() == -1) {
+	            logger.error("addWorkGoingOutfailed");
+	            return retMap;
+	        }
+	        WeixinUserWorkGoingOutModel uwgom = new WeixinUserWorkGoingOutModel();
+	           // TODO 获取当前用户的审批信息。
+            String receiver = new String("");
+            receiver = getApprovalUserList(userId);
+            if (StringUtils.isEmpty(receiver)) {
+                log.error("get approval user error");
+                retMap.put("message", "获取审批人信息失败!");
+                return retMap;
+            }
+	            uwgom.setUserId(userId != null ? userId : "");
+	            uwgom.setUserWorkGoingOutId(workGoingOutNum);
+	            uwgom.setApprovalStatus(0);
+	            uwgom.setStatus(ProcessStatus.PROCESSING);
+	            uwgom.setApprovalId(receiver);
+	            uwgom.setCreateTime(nousedate);
+	            Long uwgomId = userWorkGoingOutDao.addUserWorkGoingOut(uwgom);
+	            if ( uwgomId == null || uwgomId.longValue() == -1) {
+	                logger.error("adduserWorkGoingOutfailed");
+	                return retMap;
+	            }
+	        // 成功后put相关信息
+	        retMap.put("workId", wgom.getId());
+	        retMap.put("receiver", receiver);
+	        retMap.put("success", true);
+	        retMap.put("message", "提交审批流程成功!");
+	        return retMap;
+	    }
 
 }

@@ -20,6 +20,8 @@ public interface IExpenseAccountService {
 	boolean approvalBill(String approvalId, String invoiceId, String userId, int status, String reasons);
 	boolean newApprovalBill(String invoiceId, String status, String reasons);
 	
+	boolean newApprovalWork(String workId, String approval_status, String reasons);
+	
 	public boolean submitExpenseAccount(String openId,String image);
 	
 	public String downloadFromUrl(String mediaId, String openId);
@@ -27,5 +29,5 @@ public interface IExpenseAccountService {
 	public String downloadFromUrl(Map<String, Object> params);
 	
 	public boolean submitBillAudit(String openId, String invoiceId, Map<String, String> params);
-	
+
 }

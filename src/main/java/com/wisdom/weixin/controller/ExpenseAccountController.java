@@ -32,6 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.weixin.dao.IWeixinDao;
 import com.weixin.model.WeixinWaitAuditInvoiceModel;
+import com.weixin.model.WeixinWaitWorkGoingOutModel;
 import com.wisdom.common.model.Dispatcher;
 import com.wisdom.common.model.InvoiceApproval;
 import com.wisdom.common.model.TestInvoiceRecord;
@@ -137,7 +138,36 @@ public class ExpenseAccountController {
 		logger.debug("retMap : {}", retMap.toString());
 		return retMap;
 	}
-	
+	//XiaoMing add uploadDistance
+	@RequestMapping("/uploadDistance")
+	@ResponseBody
+	public Map<String, String> uploadDistance(HttpSession session, HttpServletRequest request) {
+//	    String openId = (String) session.getAttribute("openId");
+	    String openId = "oSTV_tz3b146iVNfFExMHVsa6CFc";
+	    String date = request.getParameter("date");
+	    String start = request.getParameter("start");
+	    String end = request.getParameter("end");
+	    String amount = request.getParameter("amounts");
+	    String distance = request.getParameter("journey");
+	    String price = request.getParameter("price");
+	    logger.debug("uploadDistance openid : {}", openId);
+	    Map<String, String> retMap = new HashMap<>();
+        if(openId == null || openId.isEmpty()) {
+            retMap.put("error_code", "3");
+            retMap.put("error_message", "无法获取您微信的Openid，请稍后重新进入！");
+            return retMap;
+        }
+        String userId = userService.getUserIdByOpenId(openId);
+        if(userId == null || userId.isEmpty()) {
+            retMap.put("error_code", "30");
+            retMap.put("error_message", "无法获取您的用户ID，请稍后重新进入！");
+            return retMap;
+        }
+       invoiceService.createWorkGoingOutProcess(userId, start, end, distance, amount, date, price);
+       retMap.put("error_code", "0");
+       retMap.put("error_message", "");
+       return retMap;
+	}
 	@RequestMapping("/uploadPersonInvoice")
 	@ResponseBody
 	public Map<String, String> uploadPersonInvoice(
@@ -319,7 +349,38 @@ public class ExpenseAccountController {
 		logger.debug("newApprovalBill result : {}", retMap.toString());
 		return retMap;
 	}
-
+	
+	   /**
+	 * XiaoMing add approvalWorkOut 
+	 * @param request
+	 * @return
+	 * @author Xiaoming
+	 * @date 2016年3月7日 下午1:01:56
+	 */
+	@RequestMapping(value="/newApprovalWork")
+	    @ResponseBody
+	    public Map<String, String> newApprovalWork(HttpServletRequest request) {
+	        Map<String, String> retMap = new HashMap<>();
+	        String openId = request.getParameter("openId");
+	        String reasons = request.getParameter("reasons");
+	        logger.debug("openid : {}", openId);
+	        if(openId == null || openId.isEmpty()) {
+	            retMap.put("error_code", "1");
+	            retMap.put("error_message", "无法获取您微信的Openid，请稍后重新进入！");
+	            return retMap;
+	        }
+	        String workIdString = request.getParameter("workId");
+	        String approvalStatus = request.getParameter("approvalStatus");
+	        String[] workIds = workIdString.split(",");
+	        for(String workId : workIds) {
+	            workId = workId.substring(workId.indexOf("#workout#") + 9);
+	            expenseAccounterService.newApprovalWork(workId, approvalStatus, reasons);
+	        }
+	        retMap.put("error_code", "0");
+	        retMap.put("error_message", "");
+	        logger.debug("newApprovalWork result : {}", retMap.toString());
+	        return retMap;
+	    }
 	@RequestMapping("/getNeedAuditBills")
 	@ResponseBody
 	public Map<String, List<Map<String, Object>>> getMyBills(
@@ -348,6 +409,7 @@ public class ExpenseAccountController {
 			HttpServletRequest request) {
 		String openId = request.getParameter("openId");
 		List<WeixinWaitAuditInvoiceModel> dataList = weixinDao.getWeixinNeededAuditInvoice(openId);
+		List<WeixinWaitWorkGoingOutModel> workList = weixinDao.getAuditingWorkGoingOut(openId, 0);
 		Map<String, Object> retMap = new HashMap<>();
 		for(WeixinWaitAuditInvoiceModel wwaim : dataList) {
 			String userId = wwaim.getUser_id();
@@ -358,6 +420,7 @@ public class ExpenseAccountController {
 				tmpMap.put("invoice_id_list", (String)tmpMap.get("invoice_id_list") + "," + wwaim.getInvoice_id());
 			} else {
 				Map<String, Object> tmpMap = new HashMap<>();
+				tmpMap.put("upload_type", "invoice");
 				tmpMap.put("user_name", wwaim.getUser_name());
 				tmpMap.put("amount", wwaim.getAmount());
 				tmpMap.put("bill_total", new Integer(1));
@@ -365,7 +428,23 @@ public class ExpenseAccountController {
 				retMap.put(userId, tmpMap);
 			}
 		}
-		
+		for (WeixinWaitWorkGoingOutModel wwgo : workList) {
+		    String userId = wwgo.getUserId();
+		    if (retMap.containsKey(userId)) {
+		        Map<String, Object> tmpMap = (Map<String, Object>) retMap.get(userId);
+                tmpMap.put("amount", (Double)tmpMap.get("amount") + Double.parseDouble(wwgo.getAmount()));
+                tmpMap.put("bill_total", (Integer)tmpMap.get("bill_total") + 1);
+                tmpMap.put("invoice_id_list", (String)tmpMap.get("invoice_id_list") + ",#workout#" + wwgo.getWorkId());
+		    } else {
+		        Map<String, Object> tmpMap = new HashMap<>();
+		        tmpMap.put("upload_type", "work_goingout");
+                tmpMap.put("user_name", wwgo.getApprovalName()); // ApprovalName is user_Name
+                tmpMap.put("amount", Double.parseDouble(wwgo.getAmount()));
+                tmpMap.put("bill_total", new Integer(1));
+                tmpMap.put("invoice_id_list", "#workout#" + String.valueOf(wwgo.getWorkId()));
+                retMap.put(userId, tmpMap);
+		    }
+		}
 		/*
 		List<Map<String, Object>> results = expenseAccounterService
 				.newGetNeedAuditBillsByOpenId(openId);
@@ -418,9 +497,11 @@ public class ExpenseAccountController {
 		String openId = request.getParameter("openId");
 		List<Map<String, Object>> ret = new ArrayList<>();
 		List<WeixinWaitAuditInvoiceModel> retList = weixinDao.getWeixinAuditInvoice(openId, 0);
+		List<WeixinWaitWorkGoingOutModel> retWorkGoingOutList = weixinDao.getWeixinWaitWorkGoingOut(openId, 0);
 		Map<String, List<Map<String, Object>>> itemMap = new HashMap<>();
 		for(WeixinWaitAuditInvoiceModel wwaim : retList) {
 			Map<String,Object> map = new HashMap<>();
+			map.put("upload_type", "invoice");
 			map.put("bill_amount", wwaim.getAmount());
 			String imgTmp = wwaim.getFile_name();
 			if(imgTmp != null && !imgTmp.isEmpty() && imgTmp.lastIndexOf(".") != -1) {
@@ -428,7 +509,7 @@ public class ExpenseAccountController {
 			} else {
 				map.put("bill_img", wwaim.getFile_name());
 			}
-			map.put("bill_type", wwaim.getType());
+			map.put("bill_type", wwaim.getType()); 
 			map.put("approval_name", wwaim.getUser_name());
 			DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			Timestamp stamp = wwaim.getCreate_time();
@@ -440,6 +521,31 @@ public class ExpenseAccountController {
 				list.add(map);
 				itemMap.put(sdf.format(stamp), list);
 			}
+		}
+		//XiaoMing add Work_Goingout
+		for(WeixinWaitWorkGoingOutModel work : retWorkGoingOutList) {
+		    Map<String,Object> map = new HashMap<>();
+            map.put("upload_type", "work_goingout");
+            map.put("reasons", work.getReasons() != null? work.getReasons() : "");
+            map.put("timeStamp", work.getCreateTime());
+            map.put("start", work.getStart());
+            map.put("end", work.getEnd());
+            map.put("distance", work.getDistance());
+            map.put("amount", work.getAmount());
+            map.put("price", work.getPrice());
+            map.put("date", work.getDate());
+            map.put("approvalName", work.getApprovalName());
+            map.put("img", "car.png");
+            DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Timestamp stamp = work.getCreateTime();
+            map.put("submit_time", sdf.format(stamp));
+            if (itemMap.containsKey(sdf.format(stamp))) {
+                ((List<Map<String, Object>>) itemMap.get(sdf.format(stamp))).add(map);
+            } else {
+                List<Map<String, Object>> list = new ArrayList<>();
+                list.add(map);
+                itemMap.put( work.getCreateTime().toString(), list);
+            }
 		}
 		List arrayList = new ArrayList(itemMap.entrySet());
 		Collections.sort(arrayList, new Comparator() {
@@ -468,9 +574,11 @@ public class ExpenseAccountController {
 		String openId = request.getParameter("openId");
 		List<Map<String, Object>> ret = new ArrayList<>();
 		List<WeixinWaitAuditInvoiceModel> retList = weixinDao.getWeixinAuditInvoice(openId, 1);
+		List<WeixinWaitWorkGoingOutModel> retWorkGoingOutList = weixinDao.getWeixinWaitWorkGoingOut(openId, 1);
 		Map<String, List<Map<String, Object>>> itemMap = new HashMap<>();
 		for(WeixinWaitAuditInvoiceModel wwaim : retList) {
 			Map<String,Object> map = new HashMap<>();
+			map.put("upload_type", "invoice");
 			map.put("bill_amount", wwaim.getAmount());
 			String imgTmp = wwaim.getFile_name();
 			if(imgTmp != null && !imgTmp.isEmpty() && imgTmp.lastIndexOf(".") != -1) {
@@ -493,6 +601,31 @@ public class ExpenseAccountController {
 				itemMap.put(sdf.format(stamp), list);
 			}
 		}
+		//XiaoMing add Work_Goingout
+        for(WeixinWaitWorkGoingOutModel work : retWorkGoingOutList) {
+            Map<String,Object> map = new HashMap<>();
+            map.put("upload_type", "work_goingout");
+            map.put("reasons", work.getReasons() != null? work.getReasons() : "");
+            map.put("timeStamp", work.getCreateTime());
+            map.put("start", work.getStart());
+            map.put("end", work.getEnd());
+            map.put("distance", work.getDistance());
+            map.put("amount", work.getAmount());
+            map.put("price", work.getPrice());
+            map.put("date", work.getDate());
+            map.put("approvalName", work.getApprovalName());
+            map.put("img", "car.png");
+            DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Timestamp stamp = work.getCreateTime();
+            map.put("submit_time", sdf.format(stamp));
+            if (itemMap.containsKey(sdf.format(stamp))) {
+                ((List<Map<String, Object>>) itemMap.get(sdf.format(stamp))).add(map);
+            } else {
+                List<Map<String, Object>> list = new ArrayList<>();
+                list.add(map);
+                itemMap.put( work.getCreateTime().toString(), list);
+            }
+        }
 		List arrayList = new ArrayList(itemMap.entrySet());
 		Collections.sort(arrayList, new Comparator() {
 			public int compare(Object arg1, Object arg2) {
@@ -583,7 +716,8 @@ public class ExpenseAccountController {
 		List<Map<String, Object>> resultList = new ArrayList<>();
 		String submit_user_id = (String) request.getSession().getAttribute("submit_user_id");
 		List<WeixinWaitAuditInvoiceModel> retList = weixinDao.getWeixinSubmitInvoiceByUserId(submit_user_id);
-		if(retList == null || retList.isEmpty()){
+		List<WeixinWaitWorkGoingOutModel> workList = weixinDao.getWeixinAuditWorkGoingOutByUserId(submit_user_id, 0);
+		if((retList == null || retList.isEmpty()) && (workList == null || workList.isEmpty())){
 			return resultList;
 		}
 		for(WeixinWaitAuditInvoiceModel wwaim : retList) {
@@ -600,7 +734,28 @@ public class ExpenseAccountController {
 			DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			Timestamp stamp = wwaim.getCreate_time();
 			map.put("submit_time", sdf.format(stamp));
+			map.put("upload_type", "invoice");
 			resultList.add(map);
+		}
+		for (WeixinWaitWorkGoingOutModel work : workList) {
+		    Map<String, Object> map = new HashMap<String, Object>();
+		    map.put("work_id", "#workout#" +work.getWorkId());
+		    map.put("upload_type", "work_goingout");
+		    map.put("img", "car.png");
+		    map.put("reasons", work.getReasons() != null? work.getReasons() : "");
+            map.put("timeStamp", work.getCreateTime());
+            map.put("start", work.getStart());
+            map.put("end", work.getEnd());
+            map.put("distance", work.getDistance());
+            map.put("amount", work.getAmount());
+            map.put("price", work.getPrice());
+            map.put("date", work.getDate());
+            map.put("approvalName", work.getApprovalName());
+            map.put("img", "car.png");
+            DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Timestamp stamp = work.getCreateTime();
+            map.put("submit_time", sdf.format(stamp));
+            resultList.add(map);
 		}
 		/*
 		String openId = request.getParameter("open_id");

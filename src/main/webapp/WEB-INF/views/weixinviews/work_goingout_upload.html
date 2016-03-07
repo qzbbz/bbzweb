@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<link href="/css/weixincss/mui.min.css" rel="stylesheet" />
+<style type="text/css">
+body, html, #allmap, #allmap2 {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	margin: 0;
+	font-family: "微软雅黑";
+}
+.dialog {
+                position: fixed;
+                z-index: 998;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                background-color: rgba(0, 0, 0, .4);
+            }
+</style>
+<script type="text/javascript"
+	src="http://api.map.baidu.com/api?v=2.0&ak=wljoB1dxtdRQDgwvpm3lnpYm">
+	</script>
+  <script src="http://a.tbcdn.cn/s/bui/jquery-1.8.1.min.js"></script>
+<title>帮帮账</title>
+</head>
+<body>
+<header class="mui-bar mui-bar-nav">
+            <h1 class="mui-title">公出单提交</h1>
+        </header>
+        <div class="mui-content">
+        <form class="mui-input-group">
+                    <div class="mui-input-row">
+                        <label>起始地</label>
+                        <input id="startLocation"  type="text" class="mui-input-clear" placeholder="请输入起始地">
+                    </div>
+                    <div class="mui-input-row">
+                        <label>目的地</label>
+                        <input id="endLocation" type="text" class="mui-input-clear" placeholder="请输入目的地">
+                    </div>
+                      <div class="mui-input-row">
+                        <label>单价</label>
+                        <input id="priceId" type="text" class="mui-input-clear" placeholder="请输入每公里单价">
+                    </div>
+                    <div class="mui-input-row">
+                        <label>路程</label>
+                        <input id="journeyId" type="text" class="mui-input-clear" placeholder=""  value="">
+                    </div>
+                    <div class="mui-input-row">
+                        <label>总费用</label>
+                        <input id="amountId" type="text" class="mui-input-clear" placeholder=""  value="">
+                    </div>
+                     <div class="mui-button-row">
+                        <button id= "result" type="button" class="mui-btn mui-btn-primary" onclick="return false;">搜索</button>&nbsp;&nbsp;
+                        <button id= "submit"  type="button" class="mui-btn mui-btn-danger" onclick="return false;">提交</button>
+                      </div>
+                </form>
+	 <div id="allmap" style="width:400px;height:400px;">
+	 </div>
+	 </div>
+	</body>
+	<script src="../../js/weixinjs/mui.min.js"></script>
+<script type="text/javascript">
+mui.createTipDialog = function(info, callBack) {
+    var template = "<div style='width:80%;margin:50% 10%;border:1px solid #ddd;background-color: white;border-radius: 5px;'><div style='margin-top:20px;margin-left:20px;'>提示信息</div><hr/><div style='margin-top:20px;margin-left:20px;margin-bottom:20px;margin-right:20px;height:60px;'>{{info}}</div></div>";
+    var element = document.createElement('div');
+    element.classList.add('dialog');
+    element.innerHTML = template.replace('{{info}}', info);
+    element.addEventListener('touchmove', mui.preventDefault);
+    element.addEventListener('tap', function() {
+        mask.close();
+    });
+    var mask = [element];
+    mask._show = false;
+    mask.show = function() {
+        mask._show = true;
+        element.setAttribute('style', 'opacity:1');
+        document.body.appendChild(element);
+        return mask;
+    };
+    mask._remove = function() {
+        if (mask._show) {
+            mask._show = false;
+            element.setAttribute('style', 'opacity:0');
+            mui.later(function() {
+                var body = document.body;
+                element.parentNode === body && body.removeChild(element);
+            }, 350);
+        }
+        return mask;
+    };
+    mask.close = function() {
+        if (callBack) {
+            callBack();
+        }
+        mask._remove();
+    };
+    return mask;
+};
+    var map = new BMap.Map("allmap"); // 创建地图实例
+    var point = new BMap.Point(116.404, 39.950507); // 创建点坐标
+    map.centerAndZoom(point, 16); // 初始化地图，设置中心点坐标和地图级别
+    map.addControl(new BMap.OverviewMapControl({ isOpen: 1 })); //为地图添加鹰眼
+
+    //map.addControl(new BMap.NavigationControl()); //为地图添加鱼骨（默认）
+    map.addControl(new BMap.NavigationControl({ type: BMAP_NAVIGATION_CONTROL_SMALL })); //为地图添加鱼骨（迷你型）   
+
+    //map.addControl(new BMap.ScaleControl()); //添加一个带上偏移量的比例尺
+    map.addControl(new BMap.ScaleControl({ offset: new BMap.Size(5, 40) })); //添加一个带上偏移量的比例尺 
+    //检索城市
+  map.centerAndZoom(new BMap.Point(116.404, 39.915), 12);
+    var output = "";
+    var journey = "";
+    var amount = "";
+    var pos = "";
+    var searchComplete = function (results){
+        if (transit.getStatus() != BMAP_STATUS_SUCCESS){
+            return ;
+        }
+        var plan = results.getPlan(0);
+        output += plan.getDuration(true) + "\n";                //获取时间
+        output += "总路程为：" ;
+        output += plan.getDistance(true) + "\n";             //获取距离
+        journey = plan.getDistance(true);
+        var pos = journey.indexOf("公里");
+        if (journey != null && journey != "" && pos != -1) {
+        	document.getElementById("journeyId").value=journey;
+        	   journey = journey.substring(0, pos).replace(" ", "");
+        	   var price = $("#priceId").val();
+               price = parseFloat(price);
+               var journeyFloat = parseFloat(journey);
+               var amount = (journeyFloat * price).toFixed(2);
+               document.getElementById("amountId").value=amount ;
+        }
+    }
+    var transit = new BMap.DrivingRoute(map, {renderOptions: {map: map},
+        onSearchComplete: searchComplete,
+        onPolylinesSet: function(){        
+            /* setTimeout(function(){alert(output)},"1000"); */
+      /*       alert(journey); */
+    }});
+   
+    document.getElementById('result').onclick = function() {
+    	 var start = $("#startLocation").val();
+    	    var end = $("#endLocation").val();
+    	    var price = $("#priceId").val();
+        if (start == null || start == "" ) {
+        	mui.createTipDialog('请输入起始地!',null).show();
+        } 
+        else if ( end == null || end == "" ) {
+            mui.createTipDialog('请输入目的地!',null).show();
+        } 
+        else if (price == null || price == "") {
+        	mui.createTipDialog('请输入单价!',null).show();
+        } else {
+        	   /* transit.search("上海市杨浦区国定东路200号", "江苏省镇江市"); */
+            transit.search(start, end);
+        }
+     }
+    
+    $("#submit").click(function(){
+    	var start = $("#startLocation").val();
+    	var end = $("#endLocation").val();
+        var date = "2016-03-02 15:13:06.401";
+        var price = $("#priceId").val();
+        var amounts = $("#amountId").val();
+        if (start != null && start !=""  && end != null &&  end != "" && journey != null && journey != ""  && pos != -1) {
+            $.ajax({
+                url : '/uploadDistance',
+                type : "POST",
+                data : {start : start, 
+                           end : end,
+                           amounts : amounts,
+                           journey : journey,
+                           date : date,
+                           price : price},
+                success : function(data) {
+                    if(data.error_code == "0") {
+                      alert('提交成功！','success');
+                    } else {
+                        alert('提交失败！错误信息：' + data.error_msg,'warning');
+                    }
+                },
+                error : function(data) {
+                  alert('提交失败！错误信息：' + data.error_msg,'warning');
+                }
+            });
+        }
+        else {
+        	mui.createTipDialog('您还有信息没有填写，请检查!',null).show();
+        }
+        
+    })
+   //自动补齐 ////------------------------------start
+   var ac = new BMap.Autocomplete(    //建立一个自动完成的对象
+        {"input" : "startLocation"
+        ,"location" : map
+    });
+    ac.addEventListener("onhighlight", function(e) {  //鼠标放在下拉列表上的事件
+    var str = "";
+        var _value = e.fromitem.value;
+        var value = "";
+        if (e.fromitem.index > -1) {
+            value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+        }    
+        str = "FromItem<br />index = " + e.fromitem.index + "<br />value = " + value;
+        
+        value = "";
+        if (e.toitem.index > -1) {
+            _value = e.toitem.value;
+            value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+        }    
+        str += "<br />ToItem<br />index = " + e.toitem.index + "<br />value = " + value;
+       /*  G("searchResultPanel").innerHTML = str; */
+    });
+
+    var myValue;
+    ac.addEventListener("onconfirm", function(e) {    //鼠标点击下拉列表后的事件
+    var _value = e.item.value;
+        myValue = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+        /* G("searchResultPanel").innerHTML ="onconfirm<br />index = " + e.item.index + "<br />myValue = " + myValue; */
+        
+        setPlace();
+    });
+
+    function setPlace(){
+        map.clearOverlays();    //清除地图上所有覆盖物
+        function myFun(){
+            var pp = local.getResults().getPoi(0).point;    //获取第一个智能搜索的结果
+            map.centerAndZoom(pp, 18);
+            map.addOverlay(new BMap.Marker(pp));    //添加标注
+        }
+        var local = new BMap.LocalSearch(map, { //智能搜索
+          onSearchComplete: myFun
+        });
+        local.search(myValue);
+    }
+    //end
+      var ac = new BMap.Autocomplete(    //建立一个自动完成的对象
+        {"input" : "endLocation"
+        ,"location" : map
+    });
+    ac.addEventListener("onhighlight", function(e) {  //鼠标放在下拉列表上的事件
+    var str = "";
+        var _value = e.fromitem.value;
+        var value = "";
+        if (e.fromitem.index > -1) {
+            value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+        }    
+        str = "FromItem<br />index = " + e.fromitem.index + "<br />value = " + value;
+        
+        value = "";
+        if (e.toitem.index > -1) {
+            _value = e.toitem.value;
+            value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+        }    
+        str += "<br />ToItem<br />index = " + e.toitem.index + "<br />value = " + value;
+       /*  G("searchResultPanel").innerHTML = str; */
+    });
+
+    var myValue;
+    ac.addEventListener("onconfirm", function(e) {    //鼠标点击下拉列表后的事件
+    var _value = e.item.value;
+        myValue = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+       /*  G("searchResultPanel").innerHTML ="onconfirm<br />index = " + e.item.index + "<br />myValue = " + myValue; */
+        
+        setPlace();
+    });
+
+    function setPlace(){
+        map.clearOverlays();    //清除地图上所有覆盖物
+        function myFun(){
+            var pp = local.getResults().getPoi(0).point;    //获取第一个智能搜索的结果
+            map.centerAndZoom(pp, 18);
+            map.addOverlay(new BMap.Marker(pp));    //添加标注
+        }
+        var local = new BMap.LocalSearch(map, { //智能搜索
+          onSearchComplete: myFun
+        });
+        local.search(myValue);
+    }
+</script>
+</html>
