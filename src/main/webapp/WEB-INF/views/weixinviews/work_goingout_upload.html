@@ -4,6 +4,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 <link href="/css/weixincss/mui.min.css" rel="stylesheet" />
+<link href="/css/weixincss/mui.picker.min.css" rel="stylesheet" />
+<link href="/css/weixincss/mui.poppicker.css" rel="stylesheet" />
 <style type="text/css">
 body, html, #allmap, #allmap2 {
 	width: 100%;
@@ -21,6 +23,15 @@ body, html, #allmap, #allmap2 {
                 left: 0;
                 background-color: rgba(0, 0, 0, .4);
             }
+            .upload-file {
+				position: fixed;
+				z-index: 998;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				left: 0;
+				background-color: rgba(0, 0, 0, .8);
+			}
 </style>
 <script type="text/javascript"
 	src="http://api.map.baidu.com/api?v=2.0&ak=wljoB1dxtdRQDgwvpm3lnpYm">
@@ -33,26 +44,38 @@ body, html, #allmap, #allmap2 {
             <h1 class="mui-title">公出单提交</h1>
         </header>
         <div class="mui-content">
-        <form class="mui-input-group">
+        <div id="data_loading" class="mui-loading" style="margin-top:50%;">
+			<div class="mui-spinner"></div>
+			<div style="text-align: center;">正在加载数据</div>
+		</div>
+		<div id="tips_info" style="display:none;margin-top:50%;">
+				<div style="text-align: center;" id="tips_info_detail">服务器暂时无法处理请求，请稍后重试！</div>
+			</div>	
+		<div id="main_content" style="display:none;">
+			<form class="mui-input-group">
                     <div class="mui-input-row">
-                        <label>起始地</label>
+                        <label>起始地*</label>
                         <input id="startLocation"  type="text" class="mui-input-clear" placeholder="请输入起始地">
                     </div>
                     <div class="mui-input-row">
-                        <label>目的地</label>
+                        <label>目的地*</label>
                         <input id="endLocation" type="text" class="mui-input-clear" placeholder="请输入目的地">
                     </div>
                       <div class="mui-input-row">
-                        <label>单价</label>
+                        <label>单价(元)*</label>
                         <input id="priceId" type="text" class="mui-input-clear" placeholder="请输入每公里单价">
+                    </div>
+                    <div id="date_select" class="mui-input-row">
+                        <label>日期*</label>
+                        <input id="work_date" type="text" class="mui-input-clear" value="" placeholder="" readOnly>
                     </div>
                     <div class="mui-input-row">
                         <label>路程</label>
-                        <input id="journeyId" type="text" readOnly ="readOnly">(公里)
+                        <input id="journeyId" type="text" readOnly ="readOnly" disabled>(公里)
                     </div>
                     <div class="mui-input-row">
                         <label>总费用</label>
-                        <input id="amountId" type="text"  readOnly ="readOnly">(元)
+                        <input id="amountId" type="text"  readOnly ="readOnly" disabled>(元)
                     </div>
                      <div class="mui-button-row">
                         <button id= "result" type="button" class="mui-btn mui-btn-primary" onclick="return false;">搜索</button>&nbsp;&nbsp;
@@ -61,10 +84,95 @@ body, html, #allmap, #allmap2 {
                 </form>
 	 <div id="allmap" style="width:400px;height:400px;">
 	 </div>
+		</div>
+        
 	 </div>
 	</body>
 	<script src="../../js/weixinjs/mui.min.js"></script>
+	<script src="/js/weixinjs/mui.picker.min.js"></script>
+	<script src="/js/weixinjs/mui.poppicker.min.js"></script>
 <script type="text/javascript">
+var userOpenId = "";
+Date.prototype.Format = function(formatStr) {
+	var str = formatStr;
+	var Week = ['日', '一', '二', '三', '四', '五', '六'];
+
+	str = str.replace(/yyyy|YYYY/, this.getFullYear());
+	str = str.replace(/yy|YY/, (this.getYear() % 100) > 9 ? (this.getYear() % 100).toString() : '0' + (this.getYear() % 100));
+
+	str = str.replace(/MM/, (this.getMonth() + 1) > 9 ? (this.getMonth() + 1).toString() : '0' + (this.getMonth()+1));
+	str = str.replace(/M/g, this.getMonth());
+
+	str = str.replace(/w|W/g, Week[this.getDay()]);
+
+	str = str.replace(/dd|DD/, this.getDate() > 9 ? this.getDate().toString() : '0' + this.getDate());
+	str = str.replace(/d|D/g, this.getDate());
+
+	str = str.replace(/hh|HH/, this.getHours() > 9 ? this.getHours().toString() : '0' + this.getHours());
+	str = str.replace(/h|H/g, this.getHours());
+	str = str.replace(/mm/, this.getMinutes() > 9 ? this.getMinutes().toString() : '0' + this.getMinutes());
+	str = str.replace(/m/g, this.getMinutes());
+
+	str = str.replace(/ss|SS/, this.getSeconds() > 9 ? this.getSeconds().toString() : '0' + this.getSeconds());
+	str = str.replace(/s|S/g, this.getSeconds());
+
+	return str;
+}
+var currentDate = new Date();
+var currentInvoiceTypeId;
+currentDate = currentDate.Format("yyyy-MM-DD");
+document.getElementById('work_date').value = currentDate;
+var options = {
+	'type': 'date',
+	'value': currentDate
+};
+var datePicker = new mui.DtPicker(options);
+mui.createProcessingMask = function(callback, info) {
+	var element = document.createElement('div');
+	element.classList.add('upload-file');
+	element.addEventListener('touchmove', mui.preventDefault);
+	element.addEventListener('tap', function() {
+		//mask.close();
+	});
+	var processingNode = document.createElement('div');
+	processingNode.setAttribute('class', 'mui-loading');
+	processingNode.innerHTML = "<div class='mui-spinner' style='width:60px;height:60px;'></div><div style='text-align: center;color:white;'>{{info}}</div>";
+	processingNode.innerHTML = processingNode.innerHTML.replace('{{info}}', info);
+	element.appendChild(processingNode);
+	var mask = [element];
+	mask._show = false;
+	mask.show = function() {
+		mask._show = true;
+		element.setAttribute('style', 'opacity:1');
+		//processingNode.style.marginLeft = window.screen.availWidth/2 + "px";
+		processingNode.style.marginTop = document.documentElement.clientHeight /2 - 30 + "px";
+		document.body.appendChild(element);
+		return mask;
+	};
+	mask._remove = function() {
+		if (mask._show) {
+			mask._show = false;
+			element.setAttribute('style', 'opacity:0');
+			mui.later(function() {
+				var body = document.body;
+				element.parentNode === body && body.removeChild(element);
+			}, 350);
+		}
+		return mask;
+	};
+	mask.close = function() {
+		if (callback) {
+			if (callback() !== false) {
+				mask._remove();
+			}
+		} else {
+			mask._remove();
+		}
+	};
+	return mask;
+};
+var processMask = mui.createProcessingMask(null, "提交处理中");
+
    var searchFlag = false; 
 mui.createTipDialog = function(info, callBack) {
     var template = "<div style='width:80%;margin:50% 10%;border:1px solid #ddd;background-color: white;border-radius: 5px;'><div style='margin-top:20px;margin-left:20px;'>提示信息</div><hr/><div style='margin-top:20px;margin-left:20px;margin-bottom:20px;margin-right:20px;height:60px;'>{{info}}</div></div>";
@@ -121,6 +229,8 @@ mui.createTipDialog = function(info, callBack) {
     var searchComplete = function (results){
         if (transit.getStatus() != BMAP_STATUS_SUCCESS){
         	searchFlag = false;
+        	processMask.close();
+        	mui.createTipDialog('未能搜索到响应的数据，请更改起始地和目的地，重新搜索!',null).show();
             return ;
         }
         transit.setPolicy(BMAP_DRIVING_POLICY_LEAST_DISTANCE);
@@ -142,6 +252,7 @@ mui.createTipDialog = function(info, callBack) {
         	 /* document.getElementById("amountId").readOnly="readOnly"; */
         }
         searchFlag = true;
+        //processMask.close();
     }
     var transit = new BMap.DrivingRoute(map, {renderOptions: {map: map},
         onSearchComplete: searchComplete,
@@ -149,7 +260,7 @@ mui.createTipDialog = function(info, callBack) {
             /* setTimeout(function(){alert(output)},"1000"); */
       /*       alert(journey); */
     }});
-   
+      
     document.getElementById('result').onclick = function() {
     	 var start = $("#startLocation").val();
     	    var end = $("#endLocation").val();
@@ -164,6 +275,7 @@ mui.createTipDialog = function(info, callBack) {
         	mui.createTipDialog('请输入单价!',null).show();
         } else {
         	   /* transit.search("上海市杨浦区国定东路200号", "江苏省镇江市"); */
+        	
             transit.search(start, end);
         }
      }
@@ -176,40 +288,57 @@ mui.createTipDialog = function(info, callBack) {
     document.getElementById("priceId").onchange=function(){
         searchFlag = false;
     }
+    document.getElementById('date_select').addEventListener('tap', function() {
+    	datePicker.show(function(rs) {
+    		document.getElementById('work_date').value = rs.text;
+    	});
+    }, false);
     $("#submit").click(function(){
     	var start = $("#startLocation").val();
     	var end = $("#endLocation").val();
-        var date = "2016-03-02 15:13:06.401";
+        var date = $("#work_date").val();
         /* var price = $("#priceId").val(); */
         /* var amounts = $("#amountId").val(); */
-        if (start != null && start !=""  && end != null &&  end != "" && distance != "" && distance >= 1000 &&  searchFlag == true && amounts != "" && price != "") {
-            $.ajax({
+        if(start == null || start ==""  || end == null ||  end == "" || price == null || price == "") {
+        	mui.createTipDialog('请先填写必填信息，然后点击搜索，最后点击提交!',null).show();
+        	return;
+        }
+        if(!searchFlag) {
+        	mui.createTipDialog('您还没有点击搜索，或点击搜索后更改了起始地和目的地，请先点击搜索!',null).show();
+        	return;
+        }
+        if(distance == "" && distance < 1000 || amounts == "") {
+        	mui.createTipDialog('您搜索的路程不存在或是路程小于1公里，请更换起始地和目的地后重新搜索!',null).show();
+        	return;
+        }
+           	processMask.show();
+        	$.ajax({
                 url : '/uploadDistance',
                 type : "POST",
                 data : {start : start, 
                            end : end,
+                           userOpenId : userOpenId,
                            amounts : amounts,
                            distance : distance,
-                           date : date,
+                           date : date + " 00:00:00",
                            price : price},
                 success : function(data) {
                     if(data.error_code == "0") {
-                      alert('提交成功！','success');
+                      	alert('提交成功！','success');
+                      	$("#startLocation").val("");
+                    	$("#endLocation").val("");
+                    	$("#journeyId").val("");
+                    	$("#amountId").val("");
                     } else {
                         alert('提交失败！错误信息：' + data.error_msg,'warning');
                     }
+                    processMask.close();
                 },
                 error : function(data) {
                   alert('提交失败！错误信息：' + data.error_msg,'warning');
+                  processMask.close();
                 }
             });
-        }
-        else if( searchFlag == false) {
-        	mui.createTipDialog('您已修改路线信息，请重新搜索!',null).show();
-        }
-        else {
-        	mui.createTipDialog('该路线信息不可提交，请重新核实路线!',null).show();
-        }
     })
    //自动补齐 ////------------------------------start
    var ac = new BMap.Autocomplete(    //建立一个自动完成的对象
@@ -299,5 +428,40 @@ mui.createTipDialog = function(info, callBack) {
         });
         local.search(myValue);
     }
+    mui.ajax({ 
+        type : "POST", 
+        url  : "/getUserOpenIdAndCheckBindCompany",
+        data : {}, 
+        success : function(data) {
+        	if (data == null || data.openId == null || data.openId == "") {
+    			mui.createTipDialog('无法获取您的微信Openid,请稍后重试！',null).show();
+    			document.getElementById("data_loading").style.display = "none";
+    			document.getElementById("tips_info_detail").innerHTML = "无法获取您的微信Openid,<br/>请稍后重试！";
+    	    	document.getElementById("tips_info").style.display = "";
+    		} else {
+    			userOpenId = data.openId;
+    			if(data.bind_status == "has_bind") {
+    				if(data.type_id != "5") {
+    					document.getElementById("data_loading").style.display = "none";
+    					document.getElementById("tips_info_detail").innerHTML = "您没有权限上传公出单，<br/>请联系管理员！";
+    			    	document.getElementById("tips_info").style.display = "";
+    				} else {
+    					document.getElementById("data_loading").style.display = "none";
+    					document.getElementById("main_content").style.display = "";
+    				}
+    			} else {
+    				document.getElementById("data_loading").style.display = "none";
+    				document.getElementById("tips_info_detail").innerHTML = "您还没有绑定公司，<br/>请先在账号设置中绑定您的公司！";
+    		    	document.getElementById("tips_info").style.display = "";
+    			}
+    		}
+        }, 
+        error : function() {
+        	mui.createTipDialog('服务器暂时无法响应请求，请稍后重试！',null).show();
+        	document.getElementById("data_loading").style.display = "none";
+        	document.getElementById("tips_info_detail").innerHTML = "服务器暂时无法响应请求，<br/>请稍后重试！";
+        	document.getElementById("tips_info").style.display = "";
+        } 
+    });
 </script>
 </html>

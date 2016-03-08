@@ -142,8 +142,7 @@ public class ExpenseAccountController {
 	@RequestMapping("/uploadDistance")
 	@ResponseBody
 	public Map<String, String> uploadDistance(HttpSession session, HttpServletRequest request) {
-//	    String openId = (String) session.getAttribute("openId");
-	    String openId = "oSTV_tz3b146iVNfFExMHVsa6CFc";
+		String openId = request.getParameter("userOpenId");
 	    String date = request.getParameter("date");
 	    String start = request.getParameter("start");
 	    String end = request.getParameter("end");
