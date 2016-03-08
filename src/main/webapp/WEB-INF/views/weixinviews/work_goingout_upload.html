@@ -48,11 +48,11 @@ body, html, #allmap, #allmap2 {
                     </div>
                     <div class="mui-input-row">
                         <label>路程</label>
-                        <input id="journeyId" type="text" class="mui-input-clear" placeholder=""  value="">
+                        <input id="journeyId" type="text" readOnly ="readOnly">(公里)
                     </div>
                     <div class="mui-input-row">
                         <label>总费用</label>
-                        <input id="amountId" type="text" class="mui-input-clear" placeholder=""  value="">
+                        <input id="amountId" type="text"  readOnly ="readOnly">(元)
                     </div>
                      <div class="mui-button-row">
                         <button id= "result" type="button" class="mui-btn mui-btn-primary" onclick="return false;">搜索</button>&nbsp;&nbsp;
@@ -65,6 +65,7 @@ body, html, #allmap, #allmap2 {
 	</body>
 	<script src="../../js/weixinjs/mui.min.js"></script>
 <script type="text/javascript">
+   var searchFlag = false; 
 mui.createTipDialog = function(info, callBack) {
     var template = "<div style='width:80%;margin:50% 10%;border:1px solid #ddd;background-color: white;border-radius: 5px;'><div style='margin-top:20px;margin-left:20px;'>提示信息</div><hr/><div style='margin-top:20px;margin-left:20px;margin-bottom:20px;margin-right:20px;height:60px;'>{{info}}</div></div>";
     var element = document.createElement('div');
@@ -114,28 +115,33 @@ mui.createTipDialog = function(info, callBack) {
     //检索城市
   map.centerAndZoom(new BMap.Point(116.404, 39.915), 12);
     var output = "";
-    var journey = "";
-    var amount = "";
-    var pos = "";
+    var distance= "";
+    var amounts = "";
+    var price = "";
     var searchComplete = function (results){
         if (transit.getStatus() != BMAP_STATUS_SUCCESS){
+        	searchFlag = false;
             return ;
         }
+        transit.setPolicy(BMAP_DRIVING_POLICY_LEAST_DISTANCE);
         var plan = results.getPlan(0);
         output += plan.getDuration(true) + "\n";                //获取时间
         output += "总路程为：" ;
         output += plan.getDistance(true) + "\n";             //获取距离
         journey = plan.getDistance(true);
         var pos = journey.indexOf("公里");
-        if (journey != null && journey != "" && pos != -1) {
-        	document.getElementById("journeyId").value=journey;
-        	   journey = journey.substring(0, pos).replace(" ", "");
-        	   var price = $("#priceId").val();
-               price = parseFloat(price);
-               var journeyFloat = parseFloat(journey);
-               var amount = (journeyFloat * price).toFixed(2);
-               document.getElementById("amountId").value=amount ;
+        distance  = plan.getDistance(false);
+        if (distance != "") {
+        	var distanceKmFloat = parseFloat(distance/1000);
+        	price = $("#priceId").val();
+        	price = parseFloat(price);
+            amounts = (distanceKmFloat * price).toFixed(2);
+        	document.getElementById("journeyId").value=distanceKmFloat.toFixed(2) + "公里";
+        	/* document.getElementById("journeyId").readOnly="readOnly"; */
+        	 document.getElementById("amountId").value=amounts + "元";
+        	 /* document.getElementById("amountId").readOnly="readOnly"; */
         }
+        searchFlag = true;
     }
     var transit = new BMap.DrivingRoute(map, {renderOptions: {map: map},
         onSearchComplete: searchComplete,
@@ -161,21 +167,29 @@ mui.createTipDialog = function(info, callBack) {
             transit.search(start, end);
         }
      }
-    
+    document.getElementById("startLocation").onchange=function(){
+        searchFlag = false;
+    }
+    document.getElementById("endLocation").onchange=function(){
+        searchFlag = false;
+    }
+    document.getElementById("priceId").onchange=function(){
+        searchFlag = false;
+    }
     $("#submit").click(function(){
     	var start = $("#startLocation").val();
     	var end = $("#endLocation").val();
         var date = "2016-03-02 15:13:06.401";
-        var price = $("#priceId").val();
-        var amounts = $("#amountId").val();
-        if (start != null && start !=""  && end != null &&  end != "" && journey != null && journey != ""  && pos != -1) {
+        /* var price = $("#priceId").val(); */
+        /* var amounts = $("#amountId").val(); */
+        if (start != null && start !=""  && end != null &&  end != "" && distance != "" && distance >= 1000 &&  searchFlag == true && amounts != "" && price != "") {
             $.ajax({
                 url : '/uploadDistance',
                 type : "POST",
                 data : {start : start, 
                            end : end,
                            amounts : amounts,
-                           journey : journey,
+                           distance : distance,
                            date : date,
                            price : price},
                 success : function(data) {
@@ -190,10 +204,12 @@ mui.createTipDialog = function(info, callBack) {
                 }
             });
         }
-        else {
-        	mui.createTipDialog('您还有信息没有填写，请检查!',null).show();
+        else if( searchFlag == false) {
+        	mui.createTipDialog('您已修改路线信息，请重新搜索!',null).show();
         }
-        
+        else {
+        	mui.createTipDialog('该路线信息不可提交，请重新核实路线!',null).show();
+        }
     })
    //自动补齐 ////------------------------------start
    var ac = new BMap.Autocomplete(    //建立一个自动完成的对象

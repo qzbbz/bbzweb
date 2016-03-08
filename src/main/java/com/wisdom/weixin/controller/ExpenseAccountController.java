@@ -148,7 +148,7 @@ public class ExpenseAccountController {
 	    String start = request.getParameter("start");
 	    String end = request.getParameter("end");
 	    String amount = request.getParameter("amounts");
-	    String distance = request.getParameter("journey");
+	    String distance = request.getParameter("distance");
 	    String price = request.getParameter("price");
 	    logger.debug("uploadDistance openid : {}", openId);
 	    Map<String, String> retMap = new HashMap<>();
