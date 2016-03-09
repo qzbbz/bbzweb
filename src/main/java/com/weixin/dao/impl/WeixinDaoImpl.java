@@ -36,7 +36,7 @@ public class WeixinDaoImpl implements IWeixinDao {
     public List<WeixinWaitWorkGoingOutModel> getWeixinWaitWorkGoingOut(String openId, int status) {
         List<WeixinWaitWorkGoingOutModel> list = null;
         try {
-            String sql = "SELECT u.user_id, u.reasons, u.create_time, w.`start`, w.`end`, w.distance, w.amount, w.price, w.date, uu.user_name as approval_name FROM  user_openid as o , user_work_goingout as u,work_goingout as w, `user` as uu WHERE  o.openid = 'oSTV_t9z_fYa7AQVYO0y5-OMFavQ' AND u.`status` = 0 AND o.user_id = u.user_id AND u.work_goingout_id = w.id AND u.approval_id = uu.user_id ;";
+            String sql = "SELECT u.user_id, u.work_goingout_id, u.reasons, u.create_time, w.`start`, w.`end`, w.distance, w.amount, w.price, w.date, uu.user_name as approval_name FROM  user_openid as o , user_work_goingout as u,work_goingout as w, `user` as uu WHERE  o.openid = ? AND u.`status` = ? AND o.user_id = u.user_id AND u.work_goingout_id = w.id AND u.approval_id = uu.user_id ;";
             list = jdbcTemplate.query(sql, new Object[] { openId, status },
                     new RowMapperResultSetExtractor<WeixinWaitWorkGoingOutModel>(
                             new WeixinWaitWorkGoingOutModelMapper()));

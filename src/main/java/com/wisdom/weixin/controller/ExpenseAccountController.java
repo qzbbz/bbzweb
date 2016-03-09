@@ -498,53 +498,57 @@ public class ExpenseAccountController {
 		List<WeixinWaitAuditInvoiceModel> retList = weixinDao.getWeixinAuditInvoice(openId, 0);
 		List<WeixinWaitWorkGoingOutModel> retWorkGoingOutList = weixinDao.getWeixinWaitWorkGoingOut(openId, 0);
 		Map<String, List<Map<String, Object>>> itemMap = new HashMap<>();
-		for(WeixinWaitAuditInvoiceModel wwaim : retList) {
-			Map<String,Object> map = new HashMap<>();
-			map.put("upload_type", "invoice");
-			map.put("bill_amount", wwaim.getAmount());
-			String imgTmp = wwaim.getFile_name();
-			if(imgTmp != null && !imgTmp.isEmpty() && imgTmp.lastIndexOf(".") != -1) {
-				map.put("bill_img", wwaim.getFile_name().substring(0, wwaim.getFile_name().lastIndexOf(".")));
-			} else {
-				map.put("bill_img", wwaim.getFile_name());
-			}
-			map.put("bill_type", wwaim.getType()); 
-			map.put("approval_name", wwaim.getUser_name());
-			DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			Timestamp stamp = wwaim.getCreate_time();
-			map.put("submit_time", sdf.format(stamp));
-			if (itemMap.containsKey(sdf.format(stamp))) {
-				((List<Map<String, Object>>) itemMap.get(sdf.format(stamp))).add(map);
-			} else {
-				List<Map<String, Object>> list = new ArrayList<>();
-				list.add(map);
-				itemMap.put(sdf.format(stamp), list);
-			}
+		if (retList != null) {
+		    for(WeixinWaitAuditInvoiceModel wwaim : retList) {
+	            Map<String,Object> map = new HashMap<>();
+	            map.put("upload_type", "invoice");
+	            map.put("bill_amount", wwaim.getAmount());
+	            String imgTmp = wwaim.getFile_name();
+	            if(imgTmp != null && !imgTmp.isEmpty() && imgTmp.lastIndexOf(".") != -1) {
+	                map.put("bill_img", wwaim.getFile_name().substring(0, wwaim.getFile_name().lastIndexOf(".")));
+	            } else {
+	                map.put("bill_img", wwaim.getFile_name());
+	            }
+	            map.put("bill_type", wwaim.getType()); 
+	            map.put("approval_name", wwaim.getUser_name());
+	            DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	            Timestamp stamp = wwaim.getCreate_time();
+	            map.put("submit_time", sdf.format(stamp));
+	            if (itemMap.containsKey(sdf.format(stamp))) {
+	                ((List<Map<String, Object>>) itemMap.get(sdf.format(stamp))).add(map);
+	            } else {
+	                List<Map<String, Object>> list = new ArrayList<>();
+	                list.add(map);
+	                itemMap.put(sdf.format(stamp), list);
+	            }
+	        }
 		}
 		//XiaoMing add Work_Goingout
-		for(WeixinWaitWorkGoingOutModel work : retWorkGoingOutList) {
-		    Map<String,Object> map = new HashMap<>();
-            map.put("upload_type", "work_goingout");
-            map.put("reasons", work.getReasons() != null? work.getReasons() : "");
-            map.put("timeStamp", work.getCreateTime());
-            map.put("start", work.getStart());
-            map.put("end", work.getEnd());
-            map.put("distance", work.getDistance());
-            map.put("amount", work.getAmount());
-            map.put("price", work.getPrice());
-            map.put("date", work.getDate());
-            map.put("approvalName", work.getApprovalName());
-            map.put("img", "car.png");
-            DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            Timestamp stamp = work.getCreateTime();
-            map.put("submit_time", sdf.format(stamp));
-            if (itemMap.containsKey(sdf.format(stamp))) {
-                ((List<Map<String, Object>>) itemMap.get(sdf.format(stamp))).add(map);
-            } else {
-                List<Map<String, Object>> list = new ArrayList<>();
-                list.add(map);
-                itemMap.put( work.getCreateTime().toString(), list);
-            }
+		if (retWorkGoingOutList != null) {
+		    for(WeixinWaitWorkGoingOutModel work : retWorkGoingOutList) {
+	            Map<String,Object> map = new HashMap<>();
+	            map.put("upload_type", "work_goingout");
+	            map.put("reasons", work.getReasons() != null? work.getReasons() : "");
+	            map.put("timeStamp", work.getCreateTime());
+	            map.put("start", work.getStart());
+	            map.put("end", work.getEnd());
+	            map.put("distance", work.getDistance());
+	            map.put("amount", work.getAmount());
+	            map.put("price", work.getPrice());
+	            map.put("date", work.getDate());
+	            map.put("approvalName", work.getApprovalName());
+	            map.put("img", "car.png");
+	            DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	            Timestamp stamp = work.getCreateTime();
+	            map.put("submit_time", sdf.format(stamp));
+	            if (itemMap.containsKey(sdf.format(stamp))) {
+	                ((List<Map<String, Object>>) itemMap.get(sdf.format(stamp))).add(map);
+	            } else {
+	                List<Map<String, Object>> list = new ArrayList<>();
+	                list.add(map);
+	                itemMap.put( work.getCreateTime().toString(), list);
+	            }
+	        }
 		}
 		List arrayList = new ArrayList(itemMap.entrySet());
 		Collections.sort(arrayList, new Comparator() {
@@ -575,56 +579,60 @@ public class ExpenseAccountController {
 		List<WeixinWaitAuditInvoiceModel> retList = weixinDao.getWeixinAuditInvoice(openId, 1);
 		List<WeixinWaitWorkGoingOutModel> retWorkGoingOutList = weixinDao.getWeixinWaitWorkGoingOut(openId, 1);
 		Map<String, List<Map<String, Object>>> itemMap = new HashMap<>();
-		for(WeixinWaitAuditInvoiceModel wwaim : retList) {
-			Map<String,Object> map = new HashMap<>();
-			map.put("upload_type", "invoice");
-			map.put("bill_amount", wwaim.getAmount());
-			String imgTmp = wwaim.getFile_name();
-			if(imgTmp != null && !imgTmp.isEmpty() && imgTmp.lastIndexOf(".") != -1) {
-				map.put("bill_img", wwaim.getFile_name().substring(0, wwaim.getFile_name().lastIndexOf(".")));
-			} else {
-				map.put("bill_img", wwaim.getFile_name());
-			}
-			map.put("bill_type", wwaim.getType());
-			map.put("approval_name", wwaim.getUser_name());
-			map.put("approval_status", wwaim.getApproval_status());
-			map.put("reasons", wwaim.getReasons() == null ? "无" : wwaim.getReasons());
-			DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			Timestamp stamp = wwaim.getCreate_time();
-			map.put("submit_time", sdf.format(stamp));
-			if (itemMap.containsKey(sdf.format(stamp))) {
-				((List<Map<String, Object>>) itemMap.get(sdf.format(stamp))).add(map);
-			} else {
-				List<Map<String, Object>> list = new ArrayList<>();
-				list.add(map);
-				itemMap.put(sdf.format(stamp), list);
-			}
+		if (retList != null) {
+		    for(WeixinWaitAuditInvoiceModel wwaim : retList) {
+	            Map<String,Object> map = new HashMap<>();
+	            map.put("upload_type", "invoice");
+	            map.put("bill_amount", wwaim.getAmount());
+	            String imgTmp = wwaim.getFile_name();
+	            if(imgTmp != null && !imgTmp.isEmpty() && imgTmp.lastIndexOf(".") != -1) {
+	                map.put("bill_img", wwaim.getFile_name().substring(0, wwaim.getFile_name().lastIndexOf(".")));
+	            } else {
+	                map.put("bill_img", wwaim.getFile_name());
+	            }
+	            map.put("bill_type", wwaim.getType());
+	            map.put("approval_name", wwaim.getUser_name());
+	            map.put("approval_status", wwaim.getApproval_status());
+	            map.put("reasons", wwaim.getReasons() == null ? "无" : wwaim.getReasons());
+	            DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	            Timestamp stamp = wwaim.getCreate_time();
+	            map.put("submit_time", sdf.format(stamp));
+	            if (itemMap.containsKey(sdf.format(stamp))) {
+	                ((List<Map<String, Object>>) itemMap.get(sdf.format(stamp))).add(map);
+	            } else {
+	                List<Map<String, Object>> list = new ArrayList<>();
+	                list.add(map);
+	                itemMap.put(sdf.format(stamp), list);
+	            }
+	        }
 		}
 		//XiaoMing add Work_Goingout
-        for(WeixinWaitWorkGoingOutModel work : retWorkGoingOutList) {
-            Map<String,Object> map = new HashMap<>();
-            map.put("upload_type", "work_goingout");
-            map.put("reasons", work.getReasons() != null? work.getReasons() : "");
-            map.put("timeStamp", work.getCreateTime());
-            map.put("start", work.getStart());
-            map.put("end", work.getEnd());
-            map.put("distance", work.getDistance());
-            map.put("amount", work.getAmount());
-            map.put("price", work.getPrice());
-            map.put("date", work.getDate());
-            map.put("approvalName", work.getApprovalName());
-            map.put("img", "car.png");
-            DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            Timestamp stamp = work.getCreateTime();
-            map.put("submit_time", sdf.format(stamp));
-            if (itemMap.containsKey(sdf.format(stamp))) {
-                ((List<Map<String, Object>>) itemMap.get(sdf.format(stamp))).add(map);
-            } else {
-                List<Map<String, Object>> list = new ArrayList<>();
-                list.add(map);
-                itemMap.put( work.getCreateTime().toString(), list);
-            }
-        }
+       if (retWorkGoingOutList != null) {
+           for(WeixinWaitWorkGoingOutModel work : retWorkGoingOutList) {
+               Map<String,Object> map = new HashMap<>();
+               map.put("upload_type", "work_goingout");
+               map.put("reasons", work.getReasons() != null? work.getReasons() : "");
+               map.put("timeStamp", work.getCreateTime());
+               map.put("start", work.getStart());
+               map.put("end", work.getEnd());
+               map.put("distance", work.getDistance());
+               map.put("amount", work.getAmount());
+               map.put("price", work.getPrice());
+               map.put("date", work.getDate());
+               map.put("approvalName", work.getApprovalName());
+               map.put("img", "car.png");
+               DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+               Timestamp stamp = work.getCreateTime();
+               map.put("submit_time", sdf.format(stamp));
+               if (itemMap.containsKey(sdf.format(stamp))) {
+                   ((List<Map<String, Object>>) itemMap.get(sdf.format(stamp))).add(map);
+               } else {
+                   List<Map<String, Object>> list = new ArrayList<>();
+                   list.add(map);
+                   itemMap.put( work.getCreateTime().toString(), list);
+               }
+           }
+       }
 		List arrayList = new ArrayList(itemMap.entrySet());
 		Collections.sort(arrayList, new Comparator() {
 			public int compare(Object arg1, Object arg2) {
