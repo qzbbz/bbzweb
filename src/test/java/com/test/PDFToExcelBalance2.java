@@ -67,7 +67,7 @@ public class PDFToExcelBalance2 {
     private static List<String> setPath() {
         ArrayList<String> fileNewPath = new ArrayList<>();
         try {
-            Files.walk(Paths.get("D:/work/表2 - 副本")).forEach(filePath -> {
+            Files.walk(Paths.get("D:/work/表2")).forEach(filePath -> {
                 if (Files.isRegularFile(filePath)) {
                    fileNewPath.add(filePath.toString());
                 }
@@ -79,8 +79,8 @@ public class PDFToExcelBalance2 {
     }
     private static void setModelTitle(String[] txtString) {
         String[] s = txtString[3].split(" ");
-        organizationUnit = s[0] + " : "+ s[1];
-        dateTime = s[2] + "：" + s[3];
+        organizationUnit = s[0] + "   "+ s[1];
+        dateTime = s[2] + " " + s[3];
     }
     private  String getPdfFileText(String fileName) throws IOException {  
         PdfReader reader = new PdfReader(fileName);  
@@ -137,13 +137,109 @@ public class PDFToExcelBalance2 {
              return getLineContentModelThreeContents(lineString);
          } else if (lineString.length == 2) {
              return getLineContentModelTwoContents(lineString);
-         } else if (lineString.length == 6 &&( lineString[3].indexOf("非流动负债")) != -1) {
+         } else if (lineString.length == 6 &&( lineString[0].equals("非流动资产"))) {
+             return getLineContentModelSpecificContents1(lineString);
+         }  else if (lineString.length == 6 &&( lineString[0].equals("生产性生物资产"))) {
+             return getLineContentModelSpecificContents246(lineString);
+         }  else if (lineString.length == 3 &&( lineString[0].equals("生产性生物资产"))) {
+             return getLineContentModelSpecificContents243(lineString);
+         }  else if (lineString.length == 4 &&( lineString[0].equals("生产性生物资产"))) {
+             return getLineContentModelSpecificContents244(lineString);
+         }  else if (lineString.length == 5 &&( lineString[0].equals("生产性生物资产"))) {
+             return getLineContentModelSpecificContents245(lineString);
+         }  
+         else if (lineString.length == 6 &&( lineString[3].indexOf("非流动负债")) != -1) {
              return getLineContentModelSpecificContents(lineString);
          }  
          else if (lineString.length == 6) {
              return getLineContentModelSixContents(lineString);
          } 
         return null;
+    }
+    //--------------------------------------------------------
+    private List<LineContentModel> getLineContentModelSpecificContents246(String[] lineString) {
+        String price = "";
+        String description = "";
+        if(lineString.length == 6) {
+             price = lineString[3].substring(0,  lineString[3].indexOf(".") + 3);
+             description = lineString[3].substring(lineString[3].indexOf(".") + 3,  lineString[3].length());
+        }
+        List<LineContentModel> listModel = new ArrayList<>();
+        LineContentModel lcm = new LineContentModel();
+        lcm.setColumnOneContent(lineString[0]); //内容
+        lcm.setColumnTwoContent(lineString[1]);
+        lcm.setColumnThreeContent(lineString[2]);
+        lcm.setColumnFourContent(price);
+        listModel.add(lcm);
+        LineContentModel lcm2 = new LineContentModel();
+        lcm2.setColumnOneContent(description); //内容
+        lcm2.setColumnThreeContent(lineString[4]); //
+        lcm2.setColumnFourContent(lineString[5]);
+        listModel.add(lcm2);
+        return listModel;
+    }
+    private List<LineContentModel> getLineContentModelSpecificContents243(String[] lineString) {
+        List<LineContentModel> listModel = new ArrayList<>();
+        LineContentModel lcm = new LineContentModel();
+        lcm.setColumnOneContent(lineString[0]); //内容
+        lcm.setColumnTwoContent(lineString[1]);
+        listModel.add(lcm);
+        LineContentModel lcm2 = new LineContentModel();
+        lcm2.setColumnOneContent(lineString[2]); //内容
+        listModel.add(lcm2);
+        return listModel;
+    }
+    private List<LineContentModel> getLineContentModelSpecificContents244(String[] lineString) {
+        String price = "";
+        String description = "";
+        price = lineString[3].substring(0,  lineString[3].indexOf(".") + 3);
+        description = lineString[3].substring(lineString[3].indexOf(".") + 3,  lineString[3].length());
+        List<LineContentModel> listModel = new ArrayList<>();
+        LineContentModel lcm = new LineContentModel();
+        lcm.setColumnOneContent(lineString[0]); //内容
+        lcm.setColumnTwoContent(lineString[1]);
+        lcm.setColumnThreeContent(lineString[2]);
+        lcm.setColumnFourContent(price);
+        listModel.add(lcm);
+        LineContentModel lcm2 = new LineContentModel();
+        lcm2.setColumnOneContent(description); //内容
+        listModel.add(lcm2);
+        return listModel;
+    }
+    private List<LineContentModel> getLineContentModelSpecificContents245(String[] lineString) {
+        List<LineContentModel> listModel = new ArrayList<>();
+        LineContentModel lcm = new LineContentModel();
+        lcm.setColumnOneContent(lineString[0]); //内容
+        lcm.setColumnTwoContent(lineString[1]);
+        listModel.add(lcm);
+        LineContentModel lcm2 = new LineContentModel();
+        lcm2.setColumnOneContent(lineString[2]); //内容
+        lcm2.setColumnThreeContent(lineString[3]); //
+        lcm2.setColumnFourContent(lineString[4]);
+        listModel.add(lcm2);
+        return listModel;
+    }
+    //-------------------------------------------------------------------
+    private List<LineContentModel> getLineContentModelSpecificContents1(String[] lineString) {
+        String price = "";
+        String description = "";
+        if(lineString.length == 6) {
+             price = lineString[2].substring(0,  lineString[2].indexOf(".") + 3);
+             description = lineString[2].substring(lineString[2].indexOf(".") + 3,  lineString[2].length());
+        }
+        List<LineContentModel> listModel = new ArrayList<>();
+        LineContentModel lcm = new LineContentModel();
+        lcm.setColumnOneContent(lineString[0]); //内容
+        lcm.setColumnThreeContent(lineString[1]);
+        lcm.setColumnFourContent(price);
+        listModel.add(lcm);
+        LineContentModel lcm2 = new LineContentModel();
+        lcm2.setColumnOneContent(description); //内容
+        lcm2.setColumnTwoContent(lineString[3]);
+        lcm2.setColumnThreeContent(lineString[4]); //
+        lcm2.setColumnFourContent(lineString[5]);
+        listModel.add(lcm2);
+        return listModel;
     }
    
     private List<LineContentModel> getLineContentModelSpecificContents(String[] lineString) {
@@ -317,8 +413,10 @@ public class PDFToExcelBalance2 {
         for (int i = 0; i < list.size();) {
             Label content = new Label(0,lineNum, list.get(i).getColumnOneContent());
             sheet.addCell(content);
-            Label two = new Label(1,lineNum, list.get(i).getColumnTwoContent());
-            sheet.addCell(two);
+            if (list.get(i).getColumnTwoContent() != null) {
+                Label two = new Label(1,lineNum, list.get(i).getColumnTwoContent());
+                sheet.addCell(two);
+            }
             if ( list.get(i).getColumnThreeContent() != null) {
                 Label three = new Label(2,lineNum, list.get(i).getColumnThreeContent());
                 sheet.addCell(three);
@@ -327,26 +425,50 @@ public class PDFToExcelBalance2 {
                 Label four = new Label(3,lineNum,  list.get(i).getColumnFourContent());
                 sheet.addCell(four);
             }
-            if (lineNum >=24 && lineNum <= 29 ) {
-               i =  i + 1;
+            if (list.size() == 55) {
+                if (lineNum >=24 && lineNum <= 30 ) {
+                    i =  i + 1;
+                 } else {
+                     if (list.get(i + 1).getColumnOneContent() != null) {
+                         Label five = new Label(4,lineNum, list.get(i+1).getColumnOneContent());
+                         sheet.addCell(five);
+                     }
+                     if (list.get(i + 1).getColumnTwoContent() != null) {
+                         Label six = new Label(5,lineNum, list.get(i + 1).getColumnTwoContent());
+                         sheet.addCell(six);
+                     }
+                     if ( list.get(i + 1 ).getColumnThreeContent() != null) {
+                         Label seven = new Label(6,lineNum, list.get(i + 1).getColumnThreeContent());
+                         sheet.addCell(seven);
+                     }
+                     if (list.get(i + 1).getColumnFourContent() != null) {
+                         Label eight = new Label(7,lineNum,  list.get(i + 1).getColumnFourContent());
+                         sheet.addCell(eight);
+                     }
+                     i = i + 2;
+                 }
             } else {
-                if (list.get(i + 1).getColumnOneContent() != null) {
-                    Label five = new Label(4,lineNum, list.get(i+1).getColumnOneContent());
-                    sheet.addCell(five);
-                }
-                if (list.get(i + 1).getColumnTwoContent() != null) {
-                    Label six = new Label(5,lineNum, list.get(i + 1).getColumnTwoContent());
-                    sheet.addCell(six);
-                }
-                if ( list.get(i + 1 ).getColumnThreeContent() != null) {
-                    Label seven = new Label(6,lineNum, list.get(i + 1).getColumnThreeContent());
-                    sheet.addCell(seven);
-                }
-                if (list.get(i + 1).getColumnFourContent() != null) {
-                    Label eight = new Label(7,lineNum,  list.get(i + 1).getColumnFourContent());
-                    sheet.addCell(eight);
-                }
-                i = i + 2;
+                if (lineNum >=24 && lineNum <= 29 ) {
+                    i =  i + 1;
+                 } else {
+                     if (list.get(i + 1).getColumnOneContent() != null) {
+                         Label five = new Label(4,lineNum, list.get(i+1).getColumnOneContent());
+                         sheet.addCell(five);
+                     }
+                     if (list.get(i + 1).getColumnTwoContent() != null) {
+                         Label six = new Label(5,lineNum, list.get(i + 1).getColumnTwoContent());
+                         sheet.addCell(six);
+                     }
+                     if ( list.get(i + 1 ).getColumnThreeContent() != null) {
+                         Label seven = new Label(6,lineNum, list.get(i + 1).getColumnThreeContent());
+                         sheet.addCell(seven);
+                     }
+                     if (list.get(i + 1).getColumnFourContent() != null) {
+                         Label eight = new Label(7,lineNum,  list.get(i + 1).getColumnFourContent());
+                         sheet.addCell(eight);
+                     }
+                     i = i + 2;
+                 }
             }
             lineNum++;
     }

@@ -75,6 +75,9 @@
 											<div class="span12">
 												<label>组织类型：</label><span id="org_type" class="detail-text"></span>
 											</div>
+											<div class="span12">
+                                                <label>微信邀请码：</label><span id="org_weixin_code" class="detail-text"></span>
+                                            </div>
 										</div>
 									</div>
 									<div class="panel mt10">
@@ -841,6 +844,17 @@
     			}
     		}
     	});
+    	//XiaoMing add weixin invite code
+    	$.ajax({
+    		url:'/company/getCompanyWeixinInviteCode',
+    		type : "POST",
+    		data : {},
+    	    success : function(data) {
+    	    	if (data != null && data.error_code == 0) {
+    	    		$('#org_weixin_code').html(data.user_invite_code);
+    	    	}
+    	    }    		
+    	})
     	$.ajax({
     		url : '/company/getCompanyDetailInfo',
     		type : "POST",
