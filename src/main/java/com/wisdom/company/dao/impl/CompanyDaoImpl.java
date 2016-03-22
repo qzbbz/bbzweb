@@ -206,7 +206,7 @@ public class CompanyDaoImpl implements ICompanyDao {
 	public List<CompanyInfo> getCompanyInfoAndUserIDAndPhone() {
 		List<CompanyInfo> companyList = null;
 		try {
-			String sql = "select distinct c.id,c.name,c.perfect_moment,c.month_expense,c.create_time,u.type_id,up.phone  from  (company c left join user u on c.id = u.company_id AND u.type_id = 2) LEFT JOIN user_phone up on u.user_id=up.user_id WHERE up.phone is NOT NULL ";
+			String sql = "select distinct c.id,c.name,c.perfect_moment,c.month_expense,c.create_time,u.user_id, u.audit_status,u.type_id,up.phone  from  (company c left join user u on c.id = u.company_id AND u.type_id = 2) LEFT JOIN user_phone up on u.user_id=up.user_id WHERE up.phone is NOT NULL ";
 			companyList = jdbcTemplate.query(sql,
 					new RowMapperResultSetExtractor<CompanyInfo>(
 							new CompanyInfoMapper()));
