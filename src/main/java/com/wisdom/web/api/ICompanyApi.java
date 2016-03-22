@@ -59,4 +59,6 @@ public interface ICompanyApi {
 	public Map<String, Object> getModelDetails(long companyId, String date);
 		
     public Map<String, String> judgeDate(long companyId, String date);
+    
+    public Map<String, String> getCompanyWeixinInviteCode(String userId);
 }

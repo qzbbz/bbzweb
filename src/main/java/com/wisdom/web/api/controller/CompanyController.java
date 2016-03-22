@@ -633,6 +633,19 @@ public class CompanyController {
 		return companyApi.getCompanyDetailInfo(userId);
 	}
 	
+	/**
+	 * Get weixin invite code
+	 * @param request
+	 * @return Map<String, String>
+	 * @author XiaoMing
+	 * @date 2016年3月17日 下午2:16:46
+	 */
+	@RequestMapping("/company/getCompanyWeixinInviteCode")
+    @ResponseBody
+    public Map<String, String> getCompanyWeixinInviteCode(HttpServletRequest request) {
+        String userId = (String) request.getSession().getAttribute("userId");
+        return companyApi.getCompanyWeixinInviteCode(userId);
+    }
 	@RequestMapping("/company/getAllCostCenterEncode")
 	@ResponseBody
 	public List<Map<String, String>> getAllCostCenterEncode() {

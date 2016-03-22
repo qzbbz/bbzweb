@@ -1,7 +1,6 @@
 package com.wisdom.web.api.impl;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -17,7 +16,6 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -37,6 +35,7 @@ import com.wisdom.common.model.SheetBalance;
 import com.wisdom.common.model.SheetCash;
 import com.wisdom.common.model.SheetIncome;
 import com.wisdom.common.model.User;
+import com.wisdom.common.model.UserInviteCode;
 import com.wisdom.company.dao.ISheetBalanceDao;
 import com.wisdom.company.dao.ISheetCashDao;
 import com.wisdom.company.dao.ISheetIncomeDao;
@@ -49,6 +48,7 @@ import com.wisdom.company.service.ICompanyService;
 import com.wisdom.company.service.ICostCenterService;
 import com.wisdom.company.service.IDeptService;
 import com.wisdom.company.service.ISalarySocialSecurityService;
+import com.wisdom.user.dao.IUserInviteCodeDao;
 import com.wisdom.user.service.IUserModifyService;
 import com.wisdom.user.service.IUserService;
 import com.wisdom.web.api.ICompanyApi;
@@ -104,6 +104,9 @@ public class CompanyApiImpl implements ICompanyApi {
     
     @Autowired
     private ISheetSalaryTaxDao sheetSalaryTaxDao;
+    
+    @Autowired
+    private IUserInviteCodeDao userInviteCodeDao;
 	@Override
 	public Map<String, String> companyDetailRegister(Map<String, String> params) {
 		Map<String, String> retMap = new HashMap<>();
@@ -151,6 +154,8 @@ public class CompanyApiImpl implements ICompanyApi {
 		logger.debug("add company id : {}", companyId);
 		userModifyService.modifyUserCompanyIdByUserId(userId, companyId);
 		userService.addUserPhone(userId, userPhone, 1);
+		int inviteCode = (int)((Math.random()*9+1)*100000);
+		userInviteCodeDao.addUserInviteCode(userId, String.valueOf(inviteCode));
 		retMap.put("error_code", "0");
 		return retMap;
 	}
@@ -920,6 +925,24 @@ public class CompanyApiImpl implements ICompanyApi {
             map.put("error_code", "1");
         }
         return map;
+    }
+    //get type_id=2 weixin invite code
+    @Override
+    public Map<String, String> getCompanyWeixinInviteCode(String userId) {
+        Map<String, String> map = new HashMap<>();
+        UserInviteCode userInviteCode = userInviteCodeDao.getCompanyWeixinInviteCode(userId);
+        if (userInviteCode != null) {
+            logger.debug("sheetBalance : {}", userInviteCode.toString());
+            map.put("error_code", "0");
+            map.put("user_invite_code", userInviteCode.getInviteCode());
+        } else {
+            map.put("error_code", "1");
+        }
+        return map;
+    }
+    
+    public static void main(String[] args) {
+        System.out.println((int)((Math.random()*9+1)*100000));
     }
 
    
