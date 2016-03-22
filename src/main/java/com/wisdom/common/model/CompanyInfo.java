@@ -18,6 +18,8 @@ public class CompanyInfo implements java.io.Serializable {
 	private String perfectMoment;
 	private String monthExpense;
 	private String createTime;
+	private String userId;
+	private int auditStatus;
 	private int typeId;
 	private String phone;
 
@@ -33,7 +35,7 @@ public class CompanyInfo implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public CompanyInfo(Long id, String name, String perfectMoment, String monthExpense, String createTime, int typeId,
+	public CompanyInfo(Long id, String name, String perfectMoment, String monthExpense, String createTime, String userId, int auditStatus, int typeId,
 			String phone) {
 		super();
 		this.id = id;
@@ -41,6 +43,8 @@ public class CompanyInfo implements java.io.Serializable {
 		this.perfectMoment = perfectMoment;
 		this.monthExpense = monthExpense;
 		this.createTime = createTime;
+		this.userId = userId;
+		this.auditStatus = auditStatus;
 		this.typeId = typeId;
 		this.phone = phone;
 	}
@@ -101,6 +105,24 @@ public class CompanyInfo implements java.io.Serializable {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public int getAuditStatus() {
+		return auditStatus;
+	}
+
+	public void setAuditStatus(int auditStatus) {
+		this.auditStatus = auditStatus;
+	}
+	
+	
 
 	
 }
