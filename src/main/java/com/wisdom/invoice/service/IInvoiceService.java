@@ -93,4 +93,7 @@ public interface IInvoiceService {
 	
 	public boolean setInvoiceComment(long invoiceId, String comment);
 
+	   
+    Map<String, Object> createWorkGoingOutProcess(String userId, String start, String end, String distance, String amount, String date, String price);
+    
 }

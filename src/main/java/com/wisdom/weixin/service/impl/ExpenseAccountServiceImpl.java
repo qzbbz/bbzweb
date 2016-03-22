@@ -4,20 +4,34 @@ import java.io.File;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import com.weixin.dao.IWeixinDao;
+import com.weixin.dao.IWeixinUserWorkGoingOutDao;
+import com.weixin.dao.IWeixinWorkGoingOutDao;
+import com.weixin.model.WeixinUserWorkGoingOutModel;
+import com.weixin.model.WeixinWorkGoingOutModel;
 import com.wisdom.common.model.InvoiceApproval;
+import com.wisdom.common.model.TestInvoice;
 import com.wisdom.company.service.IDeptService;
 import com.wisdom.company.service.IExpenseTypeService;
 import com.wisdom.invoice.dao.IInvoiceApprovalDao;
+import com.wisdom.invoice.domain.ProcessStatus;
 import com.wisdom.invoice.service.IInvoiceService;
 import com.wisdom.user.service.IUserDeptService;
 import com.wisdom.user.service.IUserService;
@@ -30,7 +44,8 @@ public class ExpenseAccountServiceImpl implements IExpenseAccountService {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(ExpenseAccountServiceImpl.class);
-
+	
+	
 	@Autowired
 	private IInvoiceService invoiceService;
 
@@ -51,6 +66,9 @@ public class ExpenseAccountServiceImpl implements IExpenseAccountService {
 	
 	@Autowired
 	private IInvoiceApprovalDao userInvoiceService;
+	
+	@Autowired
+	private IWeixinDao weixinDao;
 
 	@Override
 	public Map<String, List<Map<String, Object>>> getInboxBillsByOpenId(String openId) {
@@ -214,7 +232,12 @@ public class ExpenseAccountServiceImpl implements IExpenseAccountService {
 		}
 		return status;
 	}
-
+	
+    @Override
+    public boolean newApprovalWork(String workId, String approval_status, String reasons) {
+        logger.debug("newApprovalWork workId : {}", workId);
+        return weixinDao.updateUserWorkGoingOut(workId, approval_status, reasons);
+       }
 	@Override
 	public boolean submitExpenseAccount(String openId, String image) {
 		String userId = userService.getUserIdByOpenId(openId);
@@ -288,5 +311,9 @@ public class ExpenseAccountServiceImpl implements IExpenseAccountService {
 		logger.debug("retMap : {}", ret.toString());
 		return ret == null || !ret.containsKey("success") || !(boolean)ret.get("success") ? false : true;
 	}
+
+
+
+  
 
 }

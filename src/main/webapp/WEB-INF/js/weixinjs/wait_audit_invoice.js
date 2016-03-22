@@ -111,13 +111,19 @@ function createDataList(data) {
 		timeBlockContentULNode.setAttribute('class', 'mui-table-view');
 		timeBlockContentNode.appendChild(timeBlockContentULNode);
 		timeBlockNode.appendChild(timeBlockContentNode);
-		
 		var detailDataList = data[i].list;
 		for(var j in detailDataList) {
-			var liNode = document.createElement('li');
-			liNode.setAttribute('class', 'mui-table-view-cell');
-			liNode.innerHTML = "<img class='mui-media-object mui-pull-left' style='width:60px;height:60px;max-width:60px;border-radius: 5px;' data-preview-group='" + img_group + "' data-preview-src='/files/company/"+detailDataList[j].bill_img+"_middle.jpg' src='/files/company/"+detailDataList[j].bill_img+"_small.jpg'><div class='mui-media-body mui-pull-left'><div><p>&#65509;"+detailDataList[j].bill_amount+"</p><h5>"+detailDataList[j].bill_type+"</h5><p class='mui-ellipsis'>审核人：<span>"+detailDataList[j].approval_name+"</span></p></div></div><span class='mui-pull-right mui-icon iconfont icon-Audit' style='width:60px;height:50px;max-width:60px;font-size:50px;margin-top:15px;margin-right:5px;position: fixed;position: absolute;left:70%;color:black;'>";
-			timeBlockContentULNode.appendChild(liNode);
+			if (detailDataList[j].upload_type == "invoice") {
+				var liNode = document.createElement('li');
+				liNode.setAttribute('class', 'mui-table-view-cell');
+				liNode.innerHTML = "<img class='mui-media-object mui-pull-left' style='width:60px;height:60px;max-width:60px;border-radius: 5px;' data-preview-group='" + img_group + "' data-preview-src='/files/company/"+detailDataList[j].bill_img+"_middle.jpg' src='/files/company/"+detailDataList[j].bill_img+"_small.jpg'><div class='mui-media-body mui-pull-left'><div><p>&#65509;"+detailDataList[j].bill_amount+"</p><h5>"+detailDataList[j].bill_type+"</h5><p class='mui-ellipsis'>审核人：<span>"+detailDataList[j].approval_name+"</span></p></div></div><span class='mui-pull-right mui-icon iconfont icon-Audit' style='width:60px;height:50px;max-width:60px;font-size:50px;margin-top:15px;margin-right:5px;position: fixed;position: absolute;left:70%;color:black;'>";
+				timeBlockContentULNode.appendChild(liNode);
+			} else if (detailDataList[j].upload_type == "work_goingout") {
+				var liNode = document.createElement('li');
+				liNode.setAttribute('class', 'mui-table-view-cell');
+				liNode.innerHTML = "<div style='height :65px;'><img class='mui-media-object mui-pull-left' style='width:60px;height:60px;max-width:60px;border-radius: 5px;' data-preview-group='" + img_group + "' data-preview-src='/img/weixinimg/"+detailDataList[j].img+"' src='/img/weixinimg/"+detailDataList[j].img+"'><div class='mui-media-body mui-pull-left'><div><p>&#65509;"+detailDataList[j].amount+"</p><h5>总公里数:"+detailDataList[j].distance+"</h5><h5>每公里单价:"+detailDataList[j].price+"</h5></div></div><span class='mui-pull-right mui-icon iconfont icon-Audit' style='width:60px;height:50px;max-width:60px;font-size:50px;margin-top:15px;margin-right:5px;position: fixed;position: absolute;left:70%;color:black;'></div><div><h5   class='mui-ellipsis' style='max-width:250px;'>起始地:"+detailDataList[j].start+"</h5><h5   class='mui-ellipsis' style='max-width:250px;'>目的地:"+detailDataList[j].end+"</h5><h5>审批人:"+detailDataList[j].approvalName+"</h5></div>";
+				timeBlockContentULNode.appendChild(liNode);
+			}
 		}
 		img_group = img_group + 1;
 		dataDetailsNode.appendChild(timeBlockNode);
@@ -173,7 +179,7 @@ mui(mui('#pull_refresh')[0]).pullToRefresh({
 		}
 	}
 });
-/*userOpenId = "oJO1gtyaaLM2QMHFNBSPLkZy1Pmk";
+/*userOpenId = "oSTV_t9z_fYa7AQVYO0y5-OMFavQ";
 getWaitAuditInvoice(null);*/
 mui.ajax({
 	url: '/getUserOpenId',

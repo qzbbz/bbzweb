@@ -43,8 +43,6 @@ public class CheckScheduleImpl implements CheckSchedule {
 				log.info("Remove accountant from " + company.getName());
 			}
 		}
-		
-		
 	}
 
 	@Scheduled(fixedDelay=60*60*100) //每小时
@@ -55,7 +53,7 @@ public class CheckScheduleImpl implements CheckSchedule {
 		cal.setTime(now);
 		cal.add(Calendar.HOUR_OF_DAY, -1);
 		Timestamp toTime = new Timestamp(0);
-		toTime.setTime(cal.getTime().getTime()); 
+		toTime.setTime(cal.getTime().getTime());
 		invoiceService.removeRedundantInvoiceArtifact(toTime);
 		log.info("Remove redundant invoice artifacts.");
 		

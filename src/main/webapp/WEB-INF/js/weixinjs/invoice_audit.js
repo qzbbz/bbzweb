@@ -132,13 +132,35 @@ mui.createConfirmDialog = function(info, eleargs, cancelCallBack, acceptCallBack
 
 //invoiceIdString:12,23,32
 //approvalStatus:0-pass,1-reject
-function auditInvoice(invoiceId, approvalStatus, successCallback, failCallback) {
+function auditInvoice( id_list, approvalStatus, successCallback, failCallback) {
+		mui.ajax({
+			url: '/newApprovalBill',
+			type: "POST",
+			data: {
+				openId : userOpenId,
+				invoiceId : id_list,
+				approvalStatus : approvalStatus
+			},
+			success: function(data) {
+				if (data.error_code == "0") {
+					if (successCallback) successCallback();
+				} else {
+					if (failCallback) failCallback(data.error_message);
+				}
+			},
+			error: function(status, error) {
+				if (failCallback) failCallback(null);
+			}
+		});
+}
+
+function auditWork( id_list, approvalStatus, successCallback, failCallback) {
 	mui.ajax({
-		url: '/newApprovalBill',
+		url: '/newApprovalWork',
 		type: "POST",
 		data: {
 			openId : userOpenId,
-			invoiceId : invoiceId,
+			workId : id_list,
 			approvalStatus : approvalStatus
 		},
 		success: function(data) {
@@ -152,38 +174,75 @@ function auditInvoice(invoiceId, approvalStatus, successCallback, failCallback) 
 			if (failCallback) failCallback(null);
 		}
 	});
+	
 }
-
 function bindAllPassButtonEvent() {
 	mui('.mui-pull-right').on('tap', '.mui-btn-success', function(event) {
 		event.stopPropagation();
 		mui.createConfirmDialog("您确认要全部通过吗？", this, null, function(eleargs){
 			var elem = eleargs;
 			var rootNode = elem.parentNode.parentNode.parentNode.parentNode.parentNode;
-			var invoice_id_list_string = rootNode.getAttribute('invoice_id_list');
+			var invoice_id_list_string = "";
+			var work_id_list = "";
+			var idList = rootNode.getAttribute('invoice_id_list');
+			var pos = idList.indexOf("#workout#");
+			if (pos != -1) {
+				if (pos != 0) {
+					invoice_id_list_string = idList.substring(0, pos - 1);
+					work_id_list = idList.substring(pos);
+				} else {
+					work_id_list = idList;
+				} 
+			} else {
+				invoice_id_list_string = idList;
+			}
 			var person_invoice_count = parseInt(rootNode.getAttribute('person_invoice_count'));
 			var person_invoice_total_amount = parseFloat(rootNode.getAttribute('person_invoice_total_amount'));
 			var mask = mui.createProcessingMask(null);
 			mask.show();
-			auditInvoice(invoice_id_list_string, 0, function() {
-				var dataDetailNode = rootNode.parentNode;
-				dataDetailNode.removeChild(rootNode);
-				document.getElementById('need_audit_invoice_count').innerHTML = parseInt(document.getElementById('need_audit_invoice_count').innerHTML) - person_invoice_count;
-				document.getElementById('need_audit_invoice_total_amount').innerHTML = (parseFloat(document.getElementById('need_audit_invoice_total_amount').innerHTML) - person_invoice_total_amount).toFixed(2);
-				if (dataDetailNode.firstChild == null) {
-					document.getElementById('data_abstract').style.display = "none";
-					document.getElementById('data_details').style.display = "none";
-					document.getElementById('no_data_tips').style.display = '';
-				}
-				mask.close();
-			}, function(msg) {
-				mask.close();
-				if(msg == null) {
-					mui.createTipDialog('服务器处理请求失败，请稍后重试!', null).show();
-				} else {
-					mui.createTipDialog(msg, null).show();
-				}
-			});
+			if (invoice_id_list_string != "") {
+				auditInvoice(invoice_id_list_string, 0, function() {
+					var dataDetailNode = rootNode.parentNode;
+					dataDetailNode.removeChild(rootNode);
+					document.getElementById('need_audit_invoice_count').innerHTML = parseInt(document.getElementById('need_audit_invoice_count').innerHTML) - person_invoice_count;
+					document.getElementById('need_audit_invoice_total_amount').innerHTML = (parseFloat(document.getElementById('need_audit_invoice_total_amount').innerHTML) - person_invoice_total_amount).toFixed(2);
+					if (dataDetailNode.firstChild == null) {
+						document.getElementById('data_abstract').style.display = "none";
+						document.getElementById('data_details').style.display = "none";
+						document.getElementById('no_data_tips').style.display = '';
+					}
+					mask.close();
+				}, function(msg) {
+					mask.close();
+					if(msg == null) {
+						mui.createTipDialog('服务器处理请求失败，请稍后重试!', null).show();
+					} else {
+						mui.createTipDialog(msg, null).show();
+					}
+				});
+			}
+			if (work_id_list != "") {
+				auditWork(work_id_list, 0, function() {
+					var dataDetailNode = rootNode.parentNode;
+					dataDetailNode.removeChild(rootNode);
+					document.getElementById('need_audit_invoice_count').innerHTML = parseInt(document.getElementById('need_audit_invoice_count').innerHTML) - person_invoice_count;
+					document.getElementById('need_audit_invoice_total_amount').innerHTML = (parseFloat(document.getElementById('need_audit_invoice_total_amount').innerHTML) - person_invoice_total_amount).toFixed(2);
+					if (dataDetailNode.firstChild == null) {
+						document.getElementById('data_abstract').style.display = "none";
+						document.getElementById('data_details').style.display = "none";
+						document.getElementById('no_data_tips').style.display = '';
+					}
+					mask.close();
+				}, function(msg) {
+					mask.close();
+					if(msg == null) {
+						mui.createTipDialog('服务器处理请求失败，请稍后重试!', null).show();
+					} else {
+						mui.createTipDialog(msg, null).show();
+					}
+				});
+			}
+			
 		}).show();
 	});
 }
@@ -289,14 +348,14 @@ mui(mui('#pull_refresh')[0]).pullToRefresh({
 	}
 });
 
-mui.ajax({
+/*mui.ajax({
 	url: '/getUserOpenId',
 	type: "POST",
 	data: {},
 	success: function(data) {
 		if (data.openId == "") {
 			mui.createTipDialog('无法获取您的微信Openid,请稍后重试！', null).show();
-			document.getElementById('data_loading').style.display = 'none';
+		document.getElementById('data_loading').style.display = 'none';
 			document.getElementById('no_data_tips').style.innerHTML = "无法获取您的微信Openid,<br/>请稍后重试！";
 			document.getElementById('no_data_tips').style.display = '';
 		} else {
@@ -306,12 +365,13 @@ mui.ajax({
 	},
 	error: function(status, error) {
 		mui.createTipDialog('请求服务器数据出错，请稍后下拉刷新重试！', null).show();
-		document.getElementById('data_loading').style.display = 'none';
+	document.getElementById('data_loading').style.display = 'none';
 		document.getElementById('no_data_tips').style.innerHTML = "请求服务器数据出错，<br/>请稍后下拉刷新重试！";
 		document.getElementById('no_data_tips').style.display = '';
 	}
-});
-//getNeedAuditInvoice(null);
+});*/
+userOpenId = "oSTV_t9z_fYa7AQVYO0y5-OMFavQ";
+getNeedAuditInvoice(null);
 var testData = [{
 	"user_name": "小明",
 	"invoice_count": "2",
