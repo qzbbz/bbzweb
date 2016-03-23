@@ -348,7 +348,7 @@ mui(mui('#pull_refresh')[0]).pullToRefresh({
 	}
 });
 
-/*mui.ajax({
+mui.ajax({
 	url: '/getUserOpenId',
 	type: "POST",
 	data: {},
@@ -369,9 +369,8 @@ mui(mui('#pull_refresh')[0]).pullToRefresh({
 		document.getElementById('no_data_tips').style.innerHTML = "请求服务器数据出错，<br/>请稍后下拉刷新重试！";
 		document.getElementById('no_data_tips').style.display = '';
 	}
-});*/
-userOpenId = "oSTV_t9z_fYa7AQVYO0y5-OMFavQ";
-getNeedAuditInvoice(null);
+});
+
 var testData = [{
 	"user_name": "小明",
 	"invoice_count": "2",
