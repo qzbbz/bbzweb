@@ -23,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.wisdom.accounter.service.IAccounterService;
 import com.wisdom.common.model.Company;
 import com.wisdom.common.model.CompanyBankSta;
 import com.wisdom.common.model.CompanyDetail;
@@ -31,6 +32,7 @@ import com.wisdom.common.model.CompanySales;
 import com.wisdom.common.model.CostCenter;
 import com.wisdom.common.model.Dept;
 import com.wisdom.common.model.SalarySocialSecurity;
+import com.wisdom.common.model.Sales;
 import com.wisdom.common.model.SheetBalance;
 import com.wisdom.common.model.SheetCash;
 import com.wisdom.common.model.SheetIncome;
@@ -48,6 +50,7 @@ import com.wisdom.company.service.ICompanyService;
 import com.wisdom.company.service.ICostCenterService;
 import com.wisdom.company.service.IDeptService;
 import com.wisdom.company.service.ISalarySocialSecurityService;
+import com.wisdom.dispatch.service.impl.JavaMailService;
 import com.wisdom.user.dao.IUserInviteCodeDao;
 import com.wisdom.user.service.IUserModifyService;
 import com.wisdom.user.service.IUserService;
@@ -107,6 +110,13 @@ public class CompanyApiImpl implements ICompanyApi {
     
     @Autowired
     private IUserInviteCodeDao userInviteCodeDao;
+    
+	@Autowired
+	private JavaMailService javaMailService;
+	
+	@Autowired
+	private IAccounterService accounterService;
+	
 	@Override
 	public Map<String, String> companyDetailRegister(Map<String, String> params) {
 		Map<String, String> retMap = new HashMap<>();
@@ -156,6 +166,7 @@ public class CompanyApiImpl implements ICompanyApi {
 		userService.addUserPhone(userId, userPhone, 1);
 		int inviteCode = (int)((Math.random()*9+1)*100000);
 		userInviteCodeDao.addUserInviteCode(userId, String.valueOf(inviteCode));
+		setMailToAccounter(params);
 		retMap.put("error_code", "0");
 		return retMap;
 	}
@@ -944,6 +955,34 @@ public class CompanyApiImpl implements ICompanyApi {
     public static void main(String[] args) {
         System.out.println((int)((Math.random()*9+1)*100000));
     }
+
+	@Override
+	public boolean setMailToAccounter(Map<String, String> params) {
+
+
+				String mailBody = "您有一个新注册客户，客户公司名称：" + params.get("userCompanyName") + ",联系电话：" + params.get("userPhone") + ",联系人姓名：" + params.get("userName") + ", 联系时间：" + params.get("userCalledTime") + ", 公司金额：" + params.get("userCompanyIncomes");
+				String mailSubject = "新注册客户提醒邮件";
+				
+				List<Map<String, String>> accountants = accounterService.getAllAccounter();
+				Random random = new Random();
+				int index = random.nextInt(accountants.size()-1);
+				Map<String, String> user = accountants.get(index);
+				//User user = userService.getUserByUserId(sale.getAccountantId());
+				String msgMail = user.get("user_id");
+				if(msgMail == null || msgMail == ""){
+					msgMail = new String("qiuchen@bangbangzhang.com");
+				}
+
+				//Get supervisor
+				String supervisors = "qiuchen@bangbangzhang.com";
+
+					
+
+					boolean blRet = javaMailService.sendMailOut(msgMail + ";" + supervisors , mailSubject, mailBody, "帮帮账");
+
+
+		return blRet;
+	}
 
    
 
