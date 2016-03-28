@@ -46,4 +46,17 @@ public class UserInviteCodeDaoImpl implements IUserInviteCodeDao {
 		logger.debug("addUserInviteCode result : {}", affectedRows);
 		return affectedRows != 0;
 	}
+
+    @Override
+    public UserInviteCode getCompanyWeixinInviteCode(String userId) {
+        String sql = "select * FROM user_invitecode WHERE user_id = ?;";
+        UserInviteCode userInviteCode = null;
+        try{
+            userInviteCode = jdbcTemplate.queryForObject(sql, 
+                    new Object[] {userId}, new UserInviteCodeMapper());
+        }catch (Exception e) {
+            logger.debug("result size is 0.");
+        }
+        return userInviteCode;
+    }
 }

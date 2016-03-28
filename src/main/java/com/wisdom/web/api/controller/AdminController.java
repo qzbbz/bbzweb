@@ -82,7 +82,7 @@ public class AdminController {
 				if(user == null) continue;
 				logger.debug("userId: {}", user.getUserId());
 				UserPhone userPhone = userQueryDao.getUserPhoneByUserId(user.getUserId());
-				String phone = (userPhone == null || userPhone.getPhone().isEmpty() ? "未设定" : userPhone.getPhone()); 
+				String phone = (userPhone == null || userPhone.getPhone().isEmpty()) ? "未设定" : userPhone.getPhone(); 
 				logger.debug("userPhone: {}", phone);
 				Map<String, String> map = new HashMap<>();
 				map.put("companyName", company.getName() == null ? "未设定" : company.getName());
@@ -111,20 +111,20 @@ public class AdminController {
 		List<Map<String, String>> retList = new ArrayList<>();
 		if(companyInfoList != null && companyInfoList.size() != 0) {
 			for(CompanyInfo companyInfo : companyInfoList) {
-				logger.debug("companyId: {}", companyInfo.getId());
-				User user =userQueryDao.getCompanyAdminUserByCompanyId(companyInfo.getId());
-				if(user == null) continue;
-				logger.debug("userId: {}", user.getUserId());
+				//logger.debug("companyId: {}", companyInfo.getId());
+
+				//logger.debug("userId: {}", companyInfo.getUserId());
 				String phone = (companyInfo.getPhone() == null || companyInfo.getPhone().isEmpty() ? "未设定" : companyInfo.getPhone()); 
-				logger.debug("userPhone: {}", phone);
+				//logger.debug("userPhone: {}", phone);
 				Map<String, String> map = new HashMap<>();
 				map.put("companyName", companyInfo.getName() == null ? "未设定" : companyInfo.getName());
 				map.put("date", companyInfo.getCreateTime().toString().substring(0, 10));
 				map.put("expense", String.valueOf(companyInfo.getMonthExpense()));
 				map.put("callTime", companyInfo.getPerfectMoment());
 				map.put("phone", phone);
-				map.put("userId", user.getUserId());
-				int auditStatus = user.getAuditStatus();
+				map.put("userId", companyInfo.getUserId());
+				int auditStatus = companyInfo.getAuditStatus();
+
 				if(auditStatus == 0) {
 					map.put("auditStatus", "正在审核");
 				} else if(auditStatus == 1) {

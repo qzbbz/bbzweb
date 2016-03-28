@@ -10,5 +10,7 @@ public interface IUserInviteCodeDao {
     public UserInviteCode getUserInviteCodeByInviteCode(String inviteCode);
 
     public boolean addUserInviteCode(String userId, String inviteCode);
+    
+    public UserInviteCode getCompanyWeixinInviteCode(String userId); 
 
 }
