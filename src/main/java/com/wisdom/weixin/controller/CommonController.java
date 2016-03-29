@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import com.wisdom.common.model.ContactUs;
 import com.wisdom.common.model.UserOpenid;
 import com.wisdom.contactus.utils.ContactUsDaoImpl;
+import com.wisdom.company.service.ISheetIncomeDetailService;
 import com.wisdom.contactus.utils.IContactUsDao;
 import com.wisdom.user.service.IUserService;
-import com.wisdom.user.service.IUserWeixinService;
 import com.wisdom.weixin.service.IMessageProcessService;
 import com.wisdom.weixin.service.ISettingService;
 import com.wisdom.weixin.service.ITokenCheckService;
@@ -49,6 +49,9 @@ public class CommonController {
 	@Autowired
 	private IContactUsDao contactUsDao;
 
+	@Autowired
+	private ISheetIncomeDetailService sheetIncomeDetailService;
+	    
 	@RequestMapping("/weixinRequest")
 	@ResponseBody
 	public String processWeixinRequest(HttpServletRequest request) {
@@ -182,4 +185,5 @@ public class CommonController {
 		logger.info("resultMap :{}", result.toString());
 		return result;
 	}
+	
 }

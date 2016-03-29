@@ -129,7 +129,7 @@ function fillDataIntoHtml(data) {
 	$('#fixed_assets_original_cost_beginning_balance').html(data.fixed_assets_original_cost_beginning_balance);
 	$('#accumulated_depreciation_ending_balance').html(data.accumulated_depreciation_ending_balance);
 	$('#accumulated_depreciation_beginning_balance').html(data.accumulated_depreciation_beginning_balance);
-	$('#book_value_of_fixed_assets_ending_balance').html(data.book_value_of_fixed_assets_ending_balance);
+	$('#book_value_of_fixed_assets_ending_balance').html("<a id='showFixedAssetsInfo' style='cursor:pointer' href='javascript:getDetailData()'>"+data.book_value_of_fixed_assets_ending_balance+"</a>");
 	$('#book_value_of_fixed_assets_beginning_balance').html(data.book_value_of_fixed_assets_beginning_balance);
 	$('#construction_in_process_ending_balance').html(data.construction_in_process_ending_balance);
 	$('#construction_in_process_beginning_balance').html(data.construction_in_process_beginning_balance);
@@ -198,10 +198,11 @@ function fillDataIntoHtml(data) {
 	$('#total_liabilities_and_owner_equity_ending_balance').html(data.total_liabilities_and_owner_equity_ending_balance);
 	$('#total_liabilities_and_owner_equity_beginning_balance').html(data.total_liabilities_and_owner_equity_beginning_balance);
 }
-
+var dateString = "";
 function getAssetSheetData(date) {
 	var mask = mui.createProcessingMask(null);
 	mask.show();
+	dateString = date;
 	mui.ajax({
 		url: '/getNewestSheetBalance',
 		type: "POST",
@@ -223,33 +224,39 @@ function getAssetSheetData(date) {
 		}
 	});
 }
-
-mui.ajax({ 
-    type : "POST", 
-    url  : "/getUserOpenIdAndCheckBindCompany",
-    data : {}, 
-    success : function(data) {
-    	if (data == null || data.openId == null || data.openId == "") {
-			mui.createTipDialog('无法获取您的微信Openid,请稍后重试！',null).show();
-			document.getElementById("data_loading").style.display = "none";
-			document.getElementById("tips_info_detail").innerHTML = "无法获取您的微信Openid,<br/>请稍后重试！";
-	    	document.getElementById("tips_info").style.display = "";
-		} else {
-			userOpenId = data.openId;
-			if(data.bind_status == "has_bind") {
-				document.getElementById("data_loading").style.display = "none";
-				document.getElementById("mui_main_page1").style.display = "";
-			} else {
-				document.getElementById("data_loading").style.display = "none";
-				document.getElementById("tips_info_detail").innerHTML = "您还没有绑定公司，<br/>请先在账号设置中绑定您的公司！";
-		    	document.getElementById("tips_info").style.display = "";
-			}
-		}
-    }, 
-    error : function() {
-    	mui.createTipDialog('服务器暂时无法响应请求，请稍后重试！',null).show();
-    	document.getElementById("data_loading").style.display = "none";
-    	document.getElementById("tips_info_detail").innerHTML = "服务器暂时无法响应请求，<br/>请稍后重试！";
-    	document.getElementById("tips_info").style.display = "";
-    } 
-});
+	function getDetailData() {
+		alert("111");
+		window.location.href = "/getNewestSheetBalanceWithWeixinSetSession?date=" + dateString;
+	}
+//mui.ajax({ 
+//    type : "POST", 
+//    url  : "/getUserOpenIdAndCheckBindCompany",
+//    data : {}, 
+//    success : function(data) {
+//    	if (data == null || data.openId == null || data.openId == "") {
+//			mui.createTipDialog('无法获取您的微信Openid,请稍后重试！',null).show();
+//			document.getElementById("data_loading").style.display = "none";
+//			document.getElementById("tips_info_detail").innerHTML = "无法获取您的微信Openid,<br/>请稍后重试！";
+//	    	document.getElementById("tips_info").style.display = "";
+//		} else {
+//			userOpenId = data.openId;
+//			if(data.bind_status == "has_bind") {
+//				document.getElementById("data_loading").style.display = "none";
+//				document.getElementById("mui_main_page1").style.display = "";
+//			} else {
+//				document.getElementById("data_loading").style.display = "none";
+//				document.getElementById("tips_info_detail").innerHTML = "您还没有绑定公司，<br/>请先在账号设置中绑定您的公司！";
+//		    	document.getElementById("tips_info").style.display = "";
+//			}
+//		}
+//    }, 
+//    error : function() {
+//    	mui.createTipDialog('服务器暂时无法响应请求，请稍后重试！',null).show();
+//    	document.getElementById("data_loading").style.display = "none";
+//    	document.getElementById("tips_info_detail").innerHTML = "服务器暂时无法响应请求，<br/>请稍后重试！";
+//    	document.getElementById("tips_info").style.display = "";
+//    } 
+//});
+document.getElementById("data_loading").style.display = "none";
+document.getElementById("mui_main_page1").style.display = "";
+userOpenId = "oSTV_t41ZaIuTRVHQQjSSr5aonKk";

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+        <title></title>
+        <link href="/css/weixincss/mui.min.css" rel="stylesheet" />
+        <link rel="stylesheet" type="text/css" href="/css/weixincss/mui.picker.min.css" />
+        <style>
+            .upload-file {
+                position: fixed;
+                z-index: 998;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                background-color: rgba(0, 0, 0, .8);
+            }
+            
+            .dialog {
+                position: fixed;
+                z-index: 998;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                background-color: rgba(0, 0, 0, .4);
+            }
+            
+            table {
+                overflow: hidden;
+                border: 1px solid #d3d3d3;
+                background: #fefefe;
+                width:100%;
+                margin: 10px 0px;
+                -moz-border-radius: 5px;
+                /* FF1+ */
+                -webkit-border-radius: 5px;
+                /* Saf3-4 */
+                border-radius: 5px;
+                -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+                -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+            }
+            
+            th,
+            td {
+                padding: 2px 4px 2px;
+                text-align: center;
+            }
+            
+            th {
+                padding-top: 5px;
+                text-shadow: 1px 1px 1px #fff;
+                background: #e8eaeb;
+                font-size: 15px;
+                color:#838B8B;
+            }
+            
+            td {
+                border-top: 1px solid #e0e0e0;
+                border-right: 1px solid #e0e0e0;
+                font-size: 15px;
+                color:#838B8B;
+            }
+            
+            tr.odd-row td {
+                background: #f6f6f6;
+            }
+            
+            td.first,
+            th.first {
+                text-align: left
+            }
+            
+            td.last {
+                border-right: none;
+            }
+            
+            td {
+                background: -moz-linear-gradient(100% 25% 90deg, #fefefe, #f9f9f9);
+                background: -webkit-gradient(linear, 0% 0%, 0% 25%, from(#f9f9f9), to(#fefefe));
+            }
+            
+            tr.odd-row td {
+                background: -moz-linear-gradient(100% 25% 90deg, #f6f6f6, #f1f1f1);
+                background: -webkit-gradient(linear, 0% 0%, 0% 25%, from(#f1f1f1), to(#f6f6f6));
+            }
+            
+            th {
+                background: -moz-linear-gradient(100% 20% 90deg, #e8eaeb, #ededed);
+                background: -webkit-gradient(linear, 0% 0%, 0% 20%, from(#ededed), to(#e8eaeb));
+            }
+            
+            tr:first-child th.first {
+                -moz-border-radius-topleft: 5px;
+                -webkit-border-top-left-radius: 5px;
+                /* Saf3-4 */
+            }
+            
+            tr:first-child th.last {
+                -moz-border-radius-topright: 5px;
+                -webkit-border-top-right-radius: 5px;
+                /* Saf3-4 */
+            }
+            
+            tr:last-child td.first {
+                -moz-border-radius-bottomleft: 5px;
+                -webkit-border-bottom-left-radius: 5px;
+                /* Saf3-4 */
+            }
+            
+            tr:last-child td.last {
+                -moz-border-radius-bottomright: 5px;
+                -webkit-border-bottom-right-radius: 5px;
+                /* Saf3-4 */
+            }
+        </style>
+</head>
+<body>
+        <div class="mui-navbar-inner mui-bar mui-bar-nav">
+            <h1 class="mui-title" style='text-align: center;'>收入详情</h1>
+        </div>
+        <div class="mui-page-content">
+           
+            <div id="tips_info" style="display:none;margin-top:50%;">
+                <div style="text-align: center;" id="tips_info_detail">服务器暂时无法处理请求，<br/>请稍后重试！</div>
+            </div>
+            <div style="margin-left:5px;margin-right: 5px;" id = "fixedAssetsInfoData">     
+                        <table cellspacing="0" id ="tableContent">
+                            <tr>
+                                <th id = "titleString"></th>
+                            </tr>
+                            <tr>
+                                <td style="color:#7D9EC0;font-weight:bold;">日期：</td>
+                                <td id="info_date"></td>
+                            </tr>
+                            <tr>
+                                <td style="color:#7D9EC0;font-weight:bold;">凭证类：</td>
+                                <td id="voucher_type" ></td>
+                            </tr>
+                            <tr>
+                                <td style="color:#7D9EC0;font-weight:bold;">凭证号：</td>
+                                <td id="voucher_no"></td>
+                            </tr>
+                            <tr>
+                                <td style="color:#7D9EC0;font-weight:bold;">附件张数：</td>
+                                <td id="attachment_nums"></td>
+                            </tr>
+                            <tr>
+                                <td style="color:#7D9EC0;font-weight:bold;">摘要：</td>
+                                <td id="abstracts"></td>
+                            </tr>
+                            <tr>
+                                <td style="color:#7D9EC0;font-weight:bold;">科目：</td>
+                                <td id="subject"></td>
+                            </tr>
+                            <tr>
+                                <td style="color:#7D9EC0;font-weight:bold;">借方：</td>
+                                <td id="borrower"></td>
+                            </tr>
+                            <tr>
+                                <td style="color:#7D9EC0;font-weight:bold;">贷方：</td>
+                                <td id="lender"></td>
+                            </tr>
+                            <tr>
+                                <td style="color:#7D9EC0;font-weight:bold;">制单：</td>
+                                <td id="touching"></td>
+                            </tr>
+                            <tr>
+                                <td style="color:#7D9EC0;font-weight:bold;">票号：</td>
+                                <td id="pchk"></td>
+                            </tr>
+                            <tr>
+                                <td style="color:#7D9EC0;font-weight:bold;">客户：</td>
+                                <td id="customer"></td>
+                            </tr>
+                        </table>
+                    </div>
+            </div>
+    <!--该js需要修改js路径及修改seajs路径-->
+    <script src="/js/webjs/jquery-1.8.1.min.js"></script>
+    <script src="/js/webjs/sea.js"></script>
+    <script src="/js/webjs/config.js"></script>
+    <script src="/js/webjs/menuTree.js"></script>
+    <script src="/js/webjs/bui.js"></script>
+    <script type="text/javascript">
+    $.ajax({
+        url : '/getNewestSheetIncomeWithWeixinData',
+        type : "POST",
+        data :{},
+        success : function(data) {
+        	  var hasData = false;
+              for(var index in data){
+                  hasData = true;
+              }
+              if (!hasData) {
+                  //BUI.Message.Alert('未获取到数据,请稍候重试！', 'success');
+              } else {
+            	  $("#tableContent").html("");
+                  var num = 1;
+                  var str = "";
+                   for(var index in data){
+                	   str += "<tr><th id='titleString'>凭证 " + num +" </th></tr><tr><td style='color:#7D9EC0;font-weight:bold;'>日期</td><td id='info_date'>" + data[index].dateTime + "</td></tr><tr><td style='color:#7D9EC0;font-weight:bold;'>凭证类</td><td id='voucher_type'>" + data[index].voucherType + "</td></tr><tr><td style='color:#7D9EC0;font-weight:bold;'>凭证号</td><td id='voucher_no'>" + data[index].voucherNo + "</td></tr><tr><td style='color:#7D9EC0;font-weight:bold;'>附件张数</td><td id='attachment_nums'>" + data[index].attachmentNums + "</td></tr><tr><td style='color:#7D9EC0;font-weight:bold;'>摘要</td><td id='abstracts'>" + data[index].abstracts + "</td></tr><tr><td style='color:#7D9EC0;font-weight:bold;'>科目</td><td id='subject'>" + data[index].subject + "</td></tr><tr><td style='color:#7D9EC0;font-weight:bold;'>借方</td><td id='borrower'>" + data[index].borrower + "</td></tr><tr><td style='color:#7D9EC0;font-weight:bold;'>贷方</td><td id='lender'>" + data[index].lender + "</td></tr><tr><td style='color:#7D9EC0;font-weight:bold;'>制单</td><td id='touching'>" + data[index].touching + "</td></tr><tr><td style='color:#7D9EC0;font-weight:bold;'>票号</td><td id='pchk'>" + data[index].pchk + " </td></tr><tr><td style='color:#7D9EC0;font-weight:bold;'>客户</td><td id='customer'>" + data[index].customer + "</td></tr>";
+                       num ++;
+               } 
+                   $("#tableContent").html(str);
+              }
+        },
+        error : function(data) {
+            //BUI.Message.Alert("未获取到数据!", 'warning');
+        }
+    })
+    </script>
+</body>
+</html>

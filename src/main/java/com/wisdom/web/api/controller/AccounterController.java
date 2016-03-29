@@ -354,4 +354,39 @@ public class AccounterController {
 		}
 		return retMap;
 	}
+	
+	@RequestMapping("/modifyCompanyBill")
+	@ResponseBody
+	public Map<String, String> demoAccounterModifyCompanyBill(
+			HttpServletRequest request) {
+		Map<String, String> retMap = new HashMap<>();
+		String id = (String)request.getParameter("id");
+		String amount = (String)request.getParameter("amount");
+		String type = (String)request.getParameter("type");
+		String supplyName = (String)request.getParameter("supplyName");
+		String tax = (String)request.getParameter("tax");
+		String isFixedAssets = (String)request.getParameter("isFixedAssets");
+		Long invoiceId = Long.parseLong(id);
+		List<Map<String, String>> contentList = new ArrayList<>();
+		Map<String, String> content = new HashMap<>();
+		content.put("description", type);
+		content.put("amount", amount);
+		content.put("supplier", supplyName);
+		content.put("tax", tax);
+		content.put("number", "1");
+		contentList.add(content);
+		Boolean fA = false;
+		if (isFixedAssets.equals("1")){
+			fA = true;
+		}
+		String itemId = UUID.randomUUID().toString();
+		try {
+			invoiceService.addInvoiceArtifact(invoiceId, contentList, itemId);
+			invoiceService.setIsFAOfInvoice(invoiceId, fA, itemId);
+			retMap.put("error_code", "0");
+		}catch(Exception e){
+			retMap.put("error_code", "1");
+		}
+		return retMap;
+	}
 }

@@ -1,4 +1,4 @@
-package com.test;
+package com.xm.pdftoexcel;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -67,7 +67,7 @@ public class PDFToExcelBalance2 {
     private static List<String> setPath() {
         ArrayList<String> fileNewPath = new ArrayList<>();
         try {
-            Files.walk(Paths.get("D:/work/表2")).forEach(filePath -> {
+            Files.walk(Paths.get("D:/work/表3")).forEach(filePath -> {
                 if (Files.isRegularFile(filePath)) {
                    fileNewPath.add(filePath.toString());
                 }
@@ -117,7 +117,10 @@ public class PDFToExcelBalance2 {
         }
     }
     private List<LineContentModel> setExcelTitleModelContent(String[] lineString ) {
-        if ((lineString[0].indexOf("非流动资产合计")) != -1 ) {
+        if (lineString.length == 4 && (lineString[0].indexOf("非流动资产合计")) != -1) {
+            return getLineContentSpecialContents294(lineString);
+         } 
+        else if ((lineString[0].indexOf("非流动资产合计")) != -1 ) {
             return getLineContentModelSevenContents(lineString);
         }else  if (lineString.length == 7 && (lineString[0].indexOf("其他非流动资产")) != -1) {
             return getLineContentModelSevenContents(lineString);
@@ -128,7 +131,8 @@ public class PDFToExcelBalance2 {
         }
         else if (lineString.length == 7) { //金额和描述一起的
            return getLineContentModelSevenContents(lineString);
-        } else if (lineString.length == 4) { // 没有金额
+        } 
+        else if (lineString.length == 4) { // 没有金额
            return  getLineContentModelFourContents(lineString);
         } else if (lineString.length == 8) { // 金额和描述没有一起的
             return  getLineContentModelEightContents(lineString);
@@ -155,6 +159,18 @@ public class PDFToExcelBalance2 {
              return getLineContentModelSixContents(lineString);
          } 
         return null;
+    }
+    private List<LineContentModel> getLineContentSpecialContents294(String[] lineString) {
+        List<LineContentModel> listModel = new ArrayList<>();
+        LineContentModel lcm = new LineContentModel();
+        lcm.setColumnOneContent(lineString[0]); //内容
+        lcm.setColumnTwoContent(lineString[1]);
+        listModel.add(lcm);
+        LineContentModel lcm2 = new LineContentModel();
+        lcm2.setColumnOneContent(lineString[2]); //内容
+        lcm2.setColumnTwoContent(lineString[3]);
+        listModel.add(lcm2);
+        return listModel;
     }
     //--------------------------------------------------------
     private List<LineContentModel> getLineContentModelSpecificContents246(String[] lineString) {
