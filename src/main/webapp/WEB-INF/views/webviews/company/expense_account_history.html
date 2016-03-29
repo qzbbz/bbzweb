@@ -421,7 +421,7 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 					timestamp = parseInt(timestamp)/1000;
 					
 
-					if(((now - timestamp) < 120 * 1000 && i < hit)|| (now - timestamp) >= 120 * 1000){
+					if(((now - timestamp) < 150 * 1000 && i < hit)|| (now - timestamp) >= 150 * 1000){
 						//console.log(data[i].id);
 						data[i].amount = fake[16-i].amount;
 						data[i].expense_type = fake[16-i].expense_type;
