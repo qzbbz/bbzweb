@@ -153,11 +153,12 @@ function bindCompany() {
 				mui.createTipDialog('绑定公司成功！',null).show();
 				userName = data.userName;
 				userEmail = data.userMsgEmail;
-				companyName = data.companyName;
-				companyDepartmentName = data.deptName;
+				var deptIndex = 0;
+				for(var i in data.companyName) {
+					companyName = companyName + data.companyName[i].text + "[" + data.deptName[deptIndex++] + "]" + "<br/>";
+				}
 				document.getElementById("bind_company_page").style.display = "none";
 				document.getElementById("comapny_name").innerHTML = companyName;
-				document.getElementById("company_department").innerHTML = companyDepartmentName;
 				document.getElementById("modify_user_name").value = userName;
 				document.getElementById("modify_user_email").value = userEmail;
 				document.getElementById("has_bind_company_page").style.display = "";
@@ -238,26 +239,24 @@ function saveInfo() {
 mui.ajax({ 
     type : "POST", 
     url  : "/getUserOpenIdAndCheckBindCompany",
-    data : {}, 
+    data : {type:"0"}, 
     success : function(data) {
-    	if (data == null || data.openId == null || data.openId == "") {
-			mui.createTipDialog('无法获取您的微信Openid,请稍后重试！',null).show();
+    	if (data.error_code != '0') {
+			mui.createTipDialog(data.error_msg, null).show();
 			document.getElementById("data_loading").style.display = "none";
-			document.getElementById("tips_info_detail").innerHTML = "无法获取您的微信Openid,<br/>请稍后重试！";
+			document.getElementById("tips_info_detail").innerHTML = data.error_msg + ",<br/>请稍后重试！";
 	    	document.getElementById("tips_info").style.display = "";
 		} else {
 			userOpenId = data.openId;
 			if(data.bind_status == "has_bind") {
 				userName = data.userName;
 				userEmail = data.userMsgEmail;
-				companyName = data.companyName;
-				companyDepartmentName = data.deptName;
-				if(data.type_id == "2") {
-					companyDepartmentName = "公司系统管理员(不属于任何部门)";
+				var deptIndex = 0;
+				for(var i in data.companyName) {
+					companyName = companyName + data.companyName[i].text + "[" + data.deptName[deptIndex++] + "]" + "<br/>";
 				}
 				document.getElementById("data_loading").style.display = "none";
 				document.getElementById("comapny_name").innerHTML = companyName;
-				document.getElementById("company_department").innerHTML = companyDepartmentName;
 				document.getElementById("modify_user_name").value = userName;
 				document.getElementById("modify_user_email").value = userEmail;
 				document.getElementById("has_bind_company_page").style.display = "";

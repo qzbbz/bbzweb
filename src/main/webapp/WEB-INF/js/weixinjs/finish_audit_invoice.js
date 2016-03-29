@@ -217,22 +217,4 @@ mui.ajax({
 		document.getElementById('no_data_tips').style.display = '';
 	}
 });
-var testData = [{"submit_time":"2015-12-22","list":[{"bill_img": "images/shuijiao.jpg",
-	"invoice_id": "11",
-	"bill_amount": "258.79",
-	"expense_type_name": "餐饮消费",
-	"approval_name":"柴快长",
-	"approval_status":"0"},{"bill_img": "images/shuijiao.jpg",
-	"invoice_id": "13",
-	"bill_amount": "228.79",
-	"expense_type_name": "餐饮消费",
-	"approval_name":"柴快长","approval_status":"1"}]},{"submit_time":"2015-12-21","list":[{"bill_img": "images/shuijiao.jpg",
-	"invoice_id": "51",
-	"bill_amount": "2258.79",
-	"expense_type_name": "餐饮消费",
-	"approval_name":"柴快长","approval_status":"0"},{"bill_img": "images/shuijiao.jpg",
-	"invoice_id": "73",
-	"bill_amount": "2218.79",
-	"expense_type_name": "餐饮消费",
-	"approval_name":"柴快长","approval_status":"1"}]}];
 //createDataList(testData);

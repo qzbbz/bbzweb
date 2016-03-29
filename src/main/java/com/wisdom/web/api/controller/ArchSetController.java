@@ -351,6 +351,7 @@ public class ArchSetController {
 		String msgMail = request.getParameter("msgMail");
 		String charger = request.getParameter("charger");
 		String auditUserId = request.getParameter("auditUserId");
+		String isCompanyAdmin = request.getParameter("isCompanyAdmin");
 
 		if (StringUtils.isEmpty(userId)) {
 			result.setResultCode(ResultCode.paramError.code);
@@ -360,10 +361,13 @@ public class ArchSetController {
 
 		int iTypeId = -1;
 		int iCharger = -1;
+		int iAdmin = 0;
 
 		try {
 			iTypeId = Integer.parseInt(typeId);
 			iCharger = Integer.parseInt(charger);
+			iAdmin = Integer.parseInt(isCompanyAdmin);
+			if(iAdmin == 1) iTypeId = 7;
 		} catch (NumberFormatException e) {
 			logger.error("parameter convert error!");
 			result.setResultCode(ResultCode.paramError.code);
@@ -494,6 +498,7 @@ public class ArchSetController {
 				map.put("deptId", String.valueOf(iDeptId));
 				map.put("deptName", deptName);
 				map.put("userCode", user.getUserEncode());
+				map.put("userType", String.valueOf(user.getTypeId()));
 				map.put("userLevel", user.getUserLevel());
 				map.put("companyId", String.valueOf(user.getCompanyId()));
 				map.put("userName", user.getUserName());

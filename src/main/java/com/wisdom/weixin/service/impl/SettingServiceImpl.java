@@ -1,6 +1,8 @@
 package com.wisdom.weixin.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -8,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.wisdom.common.model.UserOpenid;
 import com.wisdom.company.service.ICompanyService;
 import com.wisdom.company.service.IDeptService;
 import com.wisdom.user.service.IUserDeptService;
@@ -37,17 +40,23 @@ public class SettingServiceImpl implements ISettingService {
 	private IDeptService deptService;
 
 	@Override
-	public Map<String, String> checkCompanyBind(String openId) {
-		Map<String, String> retMap = new HashMap<>();
+	public Map<String, Object> checkCompanyBind(String openId, String type) {
+		Map<String, Object> retMap = new HashMap<>();
 		if (userWeixinService.userHasBindCompany(openId)) {
-			String userId = userService.getUserIdByOpenId(openId);
-			String userName = userService.getUserNameByUserId(userId);
-			String userMsgEmail = userService.getUserMsgEmailByUserId(userId);
-			
-			retMap = getCompanyNameAndDeptName(userId);
-			retMap.put("bind_status", "has_bind");
-			retMap.put("userName", userName);
-			retMap.put("userMsgEmail", userMsgEmail);
+			List<UserOpenid> uoiList = userService.getUserIdByOpenId(openId);
+			if(uoiList == null || uoiList.size() == 0) {
+				retMap.put("bind_status", "not_bind");
+			} else {
+				UserOpenid uoi = uoiList.get(0);
+				String userName = userService.getUserNameByUserId(uoi.getUserId());
+				String userMsgEmail = userService.getUserMsgEmailByUserId(uoi.getUserId());
+				for(UserOpenid oid : uoiList) {
+					getCompanyNameAndDeptName(oid.getUserId(), retMap, type);
+				}
+				retMap.put("bind_status", "has_bind");
+				retMap.put("userName", userName);
+				retMap.put("userMsgEmail", userMsgEmail);
+			}
 		} else {
 			retMap.put("bind_status", "not_bind");
 		}
@@ -56,13 +65,30 @@ public class SettingServiceImpl implements ISettingService {
 	}
 
 	@Override
-	public Map<String, String> userBindCompany(String openId, String inviteCode) {
-		Map<String, String> retMap  = checkCompanyBind(openId);
+	public Map<String, Object> userBindCompany(String openId, String inviteCode) {
+		Map<String, Object> retMap  = checkCompanyBind(openId, "0");
 		if (("has_bind").equals(retMap.get("bind_status"))) {
 			logger.info("retMap : {}", retMap.toString());
 			return retMap;
 		}
-		String userId = userWeixinService.getUserIdByUserInviteCode(inviteCode);
+		
+		String[] inviteCodeList = inviteCode.split(",");
+		for(String subInviteCode : inviteCodeList) {
+			String userId = userWeixinService.getUserIdByUserInviteCode(subInviteCode);
+			if (userId == null || userId.isEmpty()) {
+				retMap.put("invite_code_error", "invite code is wrong.");
+				logger.info("retMap : {}", retMap.toString());
+				return retMap;
+			}
+			userWeixinService.addOpenId(userId, openId);
+			String userName = userService.getUserNameByUserId(userId);
+			String userMsgEmail = userService.getUserMsgEmailByUserId(userId);
+			getCompanyNameAndDeptName(userId, retMap, "0");
+			retMap.put("userName", userName);
+			retMap.put("userMsgEmail", userMsgEmail);
+		}
+		
+		/*String userId = userWeixinService.getUserIdByUserInviteCode(inviteCode);
 		int userTpyeId = userService.getUserTypeIdByUserId(userId);
 		if (userId == null || userId.isEmpty()) {
 			retMap.put("invite_code_error", "invite code is wrong.");
@@ -77,60 +103,80 @@ public class SettingServiceImpl implements ISettingService {
 		retMap.put("userMsgEmail", userMsgEmail);
 		if(userTpyeId == 2) {
 			retMap.put("deptName", "公司系统管理员(不属于任何部门)");
-		}
+		}*/
 		logger.info("retMap : {}", retMap.toString());
 		return retMap;
 	}
 
-	private Map<String, String> getCompanyNameAndDeptName(String userId) {
-		Map<String, String> retMap = new HashMap<>();
+	private void getCompanyNameAndDeptName(String userId, Map<String, Object> retMap, String type) {
 		logger.debug("userId : {}", userId);
 		long companyId = userService.getCompanyIdByUserId(userId);
+		String adminUserId = userService.getCompanyAdminUserByCompanyId(companyId).getUserId();
 		logger.debug("comapnyId : {}", companyId);
 		String companyName = companyService.getCompanyName(companyId);
 		long deptId = userDeptService.getDeptIdByUserId(userId);
 		logger.debug("deptId : {}", deptId);
 		String deptName = deptService.getDeptNameById(deptId);
-		retMap.put("companyName", companyName);
-		retMap.put("deptName", deptName);
-		return retMap;
+		if(retMap.containsKey("companyName")) {
+			Map<String, String> map = new HashMap<>();
+			map.put("value", userId);
+			if(("1").equals(type)) {
+				map.put("admin", adminUserId);
+			}
+			map.put("text", companyName);
+			((List<Map<String, String>>)retMap.get("companyName")).add(map);
+		} else {
+			List<Map<String, String>> list = new ArrayList<>();
+			Map<String, String> map = new HashMap<>();
+			map.put("value", userId);
+			if(("1").equals(type)) {
+				map.put("admin", adminUserId);
+			}
+			map.put("text", companyName);
+			list.add(map);
+			retMap.put("companyName", list);
+		}
+		if(retMap.containsKey("deptName")) {
+			((List<String>)retMap.get("deptName")).add(deptName);
+		} else {
+			List<String> list  = new ArrayList<>();
+			list.add(deptName);
+			retMap.put("deptName", list);
+		}
 	}
 
 	@Override
 	public Map<String, String> updateUserInfo(String openId, String name,
 			String email) {
 		Map<String, String> retMap = new HashMap<>();
-		String userId = userService.getUserIdByOpenId(openId);
-		if(userId == null || userId.isEmpty()) {
-			retMap.put("error_code", "1");
-			retMap.put("error_message", "无法查询到您的UserId，请联系公司管理员！");
-			return retMap;
-		}
-		if(name == null || name.isEmpty()) {
-			String uName = userService.getUserNameByUserId(userId);
-			retMap.put("userName", uName == null ? "" : uName);
-		} else {
-			if(!userService.setUserNameByUserId(name, userId)) {
-				retMap.put("error_code", "1");
-				retMap.put("error_message", "更新用户姓名出错，请联系公司管理员！");
-				return retMap;
-			} else {
-				retMap.put("userName", name);
+		List<UserOpenid> openidList = userService.getUserIdByOpenId(openId);
+		for(UserOpenid uoi : openidList) {
+			String userId = uoi.getUserId();
+			if(userId == null || userId.isEmpty()) {
+				continue;
 			}
-		}
-		if(email == null || email.isEmpty()) {
-			String uEmail = userService.getUserMsgEmailByUserId(userId);
-			retMap.put("userMsgEmail", uEmail == null ? "" : uEmail);
-		} else {
-			if(!userService.updateUserMsgEmailByUserId(email, userId)) {
-				retMap.put("error_code", "1");
-				retMap.put("error_message", "更新用户邮箱出错，请联系公司管理员！");
-				return retMap;
+			if(name == null || name.isEmpty()) {
+				String uName = userService.getUserNameByUserId(userId);
+				retMap.put("userName", uName == null ? "" : uName);
 			} else {
-				retMap.put("userMsgEmail", email);
+				if(!userService.setUserNameByUserId(name, userId)) {
+					continue;
+				} else {
+					retMap.put("userName", name);
+				}
 			}
+			if(email == null || email.isEmpty()) {
+				String uEmail = userService.getUserMsgEmailByUserId(userId);
+				retMap.put("userMsgEmail", uEmail == null ? "" : uEmail);
+			} else {
+				if(!userService.updateUserMsgEmailByUserId(email, userId)) {
+					continue;
+				} else {
+					retMap.put("userMsgEmail", email);
+				}
+			}
+			retMap.put("error_code", "0");
 		}
-		retMap.put("error_code", "0");
 		return retMap;
 	}
 

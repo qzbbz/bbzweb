@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.wisdom.common.model.User;
 import com.wisdom.common.model.UserInviteCode;
+import com.wisdom.common.model.UserOpenid;
 import com.wisdom.common.model.UserPhone;
 
 public interface IUserService {
@@ -38,7 +39,7 @@ public interface IUserService {
 	
 	public long getCompanyIdByUserId(String userId);
 	
-	public String getUserIdByOpenId(String openId);
+	public List<UserOpenid> getUserIdByOpenId(String openId);
 	
 	public String getOpenIdByUserId(String userId);
 	

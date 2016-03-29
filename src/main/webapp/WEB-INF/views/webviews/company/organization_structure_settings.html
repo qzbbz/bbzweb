@@ -75,7 +75,7 @@
 											<div class="span12">
 												<label>组织类型：</label><span id="org_type" class="detail-text"></span>
 											</div>
-											<div class="span12">
+											<div class="span12" style="display:none;">
                                                 <label>微信邀请码：</label><span id="org_weixin_code" class="detail-text"></span>
                                             </div>
 										</div>
@@ -153,7 +153,8 @@
 							<col style="width: 13%;">
 							<col style="width: 13%;">
 							<col style="width: 13%;">
-							<col style="width: 20%;">
+							<col style="width: 10%;">
+							<col style="width: 10%;">
 							<col style="width: 15%;">
 							<col>
 						</colgroup>
@@ -165,6 +166,7 @@
 								<th>员工职级</th>
 								<th>审批人</th>
 								<th>微信邀请码</th>
+								<th>公司管理员</th>
 								<th>操作</th>
 							</tr>
 						</thead>
@@ -286,6 +288,15 @@
 				<label class="control-label">审批人：</label>
 				<div class="controls control-row-auto">
 					<select class="input input-normal" id="modify_dept_user_audit" style="width: 260px;"></select>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">公司管理员：</label>
+				<div class="controls control-row-auto">
+					<select class="input input-normal" id="modify_user_admin" style="width: 260px;">
+						<option value='0'>否</option>
+						<option value='1'>是</option>
+					</select>
 				</div>
 			</div>
 			<div class="control-group control-btn">
@@ -670,7 +681,7 @@
     	var modifyUserDialogForm = new Overlay.Dialog({
             title:'修改部门员工',
             width:600,
-            height:400,
+            height:450,
             contentId:'modifyDeptUserForm',
             success:function () {
               	//alert('确认');
@@ -703,7 +714,8 @@
     				userLevel:$('#modify_dept_user_level').val(),
     				companyId:tree.getSelected().companyId,
     				msgMail:"",
-    				auditUserId:$('#modify_dept_user_audit option:selected').val()
+    				auditUserId:$('#modify_dept_user_audit option:selected').val(),
+    				isCompanyAdmin:$('#modify_user_admin option:selected').val()
     				}
     		var fullMask = new Mask.LoadMask({
                 el : 'body',
@@ -959,7 +971,7 @@
     		for(var i=0; i<deptUser.length; i++) {
     			var container = $('#deptUserList');
     			var tr = $("<tr></tr>");
-    			var td1 = $("<td>"+deptUser[i].userName+"</td><td>"+deptUser[i].deptName+"</td><td>"+deptUser[i].userCode+"</td><td>"+deptUser[i].userLevel+ (deptUser[i].charger == 1 ? "<span class='highlight'>负责人</span>" : "") +"</td><td>"+(deptUser[i].auditUserName == null || deptUser[i].auditUserName == "" ? "默认":deptUser[i].auditUserName )+"</td><td>"+deptUser[i].inviteCode+"</td>");
+    			var td1 = $("<td>"+deptUser[i].userName+"</td><td>"+deptUser[i].deptName+"</td><td>"+deptUser[i].userCode+"</td><td>"+deptUser[i].userLevel+ (deptUser[i].charger == 1 ? "<span class='highlight'>负责人</span>" : "") +"</td><td>"+(deptUser[i].auditUserName == null || deptUser[i].auditUserName == "" ? "默认":deptUser[i].auditUserName )+"</td><td>"+deptUser[i].inviteCode+"</td><td>"+(deptUser[i].userType == "5" ? "否" : "是")+"</td>");
     			var td2 = $("<td></td>");
     			var a1 = $("<a href='javascript:void(0)'>修改</a>");
     			var a2 = $("<a href='javascript:void(0)'>删除</a>");
@@ -974,6 +986,7 @@
 		    				$('#modify_dept_user_dept_name').val(deptUser[i].deptName);
 		    				$('#modify_dept_user_code').val(deptUser[i].inviteCode);
 		    				$('#modify_dept_user_level').val(deptUser[i].userLevel);
+		    				$('#modify_user_admin option[value="'+(deptUser[i].userType==5?0:1)+'"]').attr("selected", true);
 		    				$('#modify_dept_user_audit option[value="'+deptUser[i].auditUserId+'"]').attr("selected", true);
 		    				modifyUserDialogForm.show();		
 			    		}

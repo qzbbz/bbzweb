@@ -4,6 +4,8 @@ import com.wisdom.common.model.UserInviteCode;
 import com.wisdom.user.dao.IUserInviteCodeDao;
 import com.wisdom.user.dao.IUserOpenIdDao;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +36,9 @@ public class UserWeixinService implements IUserWeixinService {
 
 	@Override
 	public boolean userHasBindCompany(String openid) {
-		UserOpenid userOpenid = userQueryDao.getUserOpenidByOpenid(openid);
+		List<UserOpenid> userOpenid = userQueryDao.getUserOpenidByOpenid(openid);
 		logger.debug("userOpenid is {}", userOpenid);
-		return userOpenid != null ? true : false;
+		return userOpenid != null && userOpenid.size() != 0 ? true : false;
 	}
 
 	@Override

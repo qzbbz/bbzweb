@@ -1,3 +1,4 @@
+var companyPicker = new mui.PopPicker();
 Date.prototype.Format = function(formatStr) {
 	var str = formatStr;
 	var Week = ['日', '一', '二', '三', '四', '五', '六'];
@@ -246,6 +247,8 @@ document.getElementById("fapiaoluru_addInvoiceImage").onchange = function(event)
 		}
 	}
 }
+var globalTypeId;
+var adminUserId;
 document.getElementById('fapiaoluru_submit').addEventListener('tap', function(event) {
 	var isEmpty = true;
 	for (var jsonKey in invoiceList) {
@@ -259,7 +262,7 @@ document.getElementById('fapiaoluru_submit').addEventListener('tap', function(ev
 	var mask = mui.createUploadMask(false);
 	mask.show();
 	$('#upload_progress').find('strong').html(0 + '<i>%</i>');
-	var formData = {openId:userOpenId,date:document.getElementById('invoice_date').innerText};
+	var formData = {userId:adminUserId,date:document.getElementById('invoice_date').innerText};
 	var xhr = new XMLHttpRequest();
 	var fd = new FormData();
 	for (var jsonKey in formData) {
@@ -301,22 +304,52 @@ document.getElementById("select_date").style.display = "";
 document.getElementById("add_invoice_page").style.display = "";
 document.getElementById("tips_image").style.display = "";
 document.getElementById("fapiaoluru_submit").style.display = "";*/
+document.getElementById('company_select').addEventListener('tap', function() {
+	companyPicker.show(function(rs) {
+		document.getElementById('companyName').innerHTML = rs[0].text;
+		document.getElementById('userId').value = rs[0].value;
+		adminUserId = rs[0].admin;
+		if(globalTypeId[rs[0].value] != "7") {
+			document.getElementById("data_loading").style.display = "none";
+			document.getElementById("tips_info_detail").innerHTML = "您没有权限上传所选公司的发票，<br/>请联系管理员！";
+	    	document.getElementById("tips_info").style.display = "";
+			document.getElementById("data_loading").style.display = "none";
+			document.getElementById("select_date").style.display = "none";
+			document.getElementById("add_invoice_page").style.display = "none";
+			document.getElementById("tips_image").style.display = "none";
+			document.getElementById("fapiaoluru_submit").style.display = "none";
+		} else {
+			document.getElementById("tips_info_detail").innerHTML = "";
+	    	document.getElementById("tips_info").style.display = "none";
+			document.getElementById("data_loading").style.display = "none";
+			document.getElementById("select_date").style.display = "";
+			document.getElementById("add_invoice_page").style.display = "";
+			document.getElementById("tips_image").style.display = "";
+			document.getElementById("fapiaoluru_submit").style.display = "";
+		}
+	});
+}, false);
 mui.ajax({ 
     type : "POST", 
     url  : "/getUserOpenIdAndCheckBindCompany",
-    data : {}, 
+    data : {type:"1"}, 
     success : function(data) {
-    	if (data == null || data.openId == null || data.openId == "") {
-			mui.createTipDialog('无法获取您的微信Openid,请稍后重试！',null).show();
+    	if (data.error_code != '0') {
+			mui.createTipDialog(data.error_msg,null).show();
 			document.getElementById("data_loading").style.display = "none";
-			document.getElementById("tips_info_detail").innerHTML = "无法获取您的微信Openid,<br/>请稍后重试！";
+			document.getElementById("tips_info_detail").innerHTML = data.error_msg + ",<br/>请稍后重试！";
 	    	document.getElementById("tips_info").style.display = "";
 		} else {
 			userOpenId = data.openId;
 			if(data.bind_status == "has_bind") {
-				if(data.type_id != "2") {
+				globalTypeId = data.type_id;
+				companyPicker.setData(data.companyName);
+				document.getElementById('companyName').innerHTML = data.companyName[0].text;
+	    		document.getElementById('userId').value = data.companyName[0].value;
+	    		adminUserId = data.companyName[0].admin;
+				if(data.type_id[data.companyName[0].value] != "7") {
 					document.getElementById("data_loading").style.display = "none";
-					document.getElementById("tips_info_detail").innerHTML = "您没有权限上传公司发票，<br/>请联系管理员！";
+					document.getElementById("tips_info_detail").innerHTML = "您没有权限上传所选公司的发票，<br/>请联系管理员！";
 			    	document.getElementById("tips_info").style.display = "";
 				} else {
 					document.getElementById("data_loading").style.display = "none";

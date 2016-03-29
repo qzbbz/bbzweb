@@ -1,9 +1,11 @@
 package com.wisdom.weixin.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.wisdom.common.model.ContactUs;
+import com.wisdom.common.model.UserOpenid;
 import com.wisdom.contactus.utils.ContactUsDaoImpl;
 import com.wisdom.contactus.utils.IContactUsDao;
 import com.wisdom.user.service.IUserService;
@@ -29,21 +32,20 @@ import com.wisdom.weixin.utils.WeixinTools;
 @SessionAttributes({ "userOpenId" })
 public class CommonController {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(CommonController.class);
+	private static final Logger logger = LoggerFactory.getLogger(CommonController.class);
 
 	@Autowired
 	private ITokenCheckService tokenCheckService;
-	
+
 	@Autowired
 	private IMessageProcessService messageProcessService;
-	
+
 	@Autowired
 	private ISettingService settingService;
-	
+
 	@Autowired
 	private IUserService userService;
-	
+
 	@Autowired
 	private IContactUsDao contactUsDao;
 
@@ -57,11 +59,9 @@ public class CommonController {
 		String ret = "";
 		logger.debug("receive a weixin request");
 		if (echostr != null && !echostr.isEmpty()) {
-			logger.debug(
-					"weixin request token check, signature:{}, echostr:{}, timestamp:{}, nonce:{}",
-					signature, echostr, timestamp, nonce);
-			ret = tokenCheckService.tokenCheck(signature, echostr, timestamp,
-					nonce);
+			logger.debug("weixin request token check, signature:{}, echostr:{}, timestamp:{}, nonce:{}", signature,
+					echostr, timestamp, nonce);
+			ret = tokenCheckService.tokenCheck(signature, echostr, timestamp, nonce);
 		} else {
 			ret = messageProcessService.processWeixinMessage(request);
 		}
@@ -81,7 +81,7 @@ public class CommonController {
 		logger.debug("resultMap :{}", result.toString());
 		return result;
 	}
-	
+
 	@RequestMapping("/contactus")
 	@ResponseBody
 	public Map<String, String> contactus(HttpServletRequest request) {
@@ -101,18 +101,16 @@ public class CommonController {
 	}
 
 	@RequestMapping("/getOpenIdRedirect")
-	public String getOpenIdRedirect(Model model,
-			HttpServletRequest request) {
+	public String getOpenIdRedirect(HttpSession session, HttpServletRequest request) {
 		logger.debug("getOpenIdRedirect");
 		String code = request.getParameter("code");
 		String view = request.getParameter("view");
 		String openId = "";
 		if (code == null || code.isEmpty()) {
-			model.addAttribute("userOpenId", "");
+			session.setAttribute("userOpenId", "");
 		} else {
 			openId = WeixinTools.getOpenId(code);
-			model.addAttribute("userOpenId",
-					openId == null || openId.isEmpty() ? "" : openId);
+			session.setAttribute("userOpenId", openId == null || openId.isEmpty() ? "" : openId);
 		}
 		logger.debug("finishGetOpenIdRedirect");
 		logger.debug("code :{}, openId :{}, view :{}", code, openId, view);
@@ -121,61 +119,63 @@ public class CommonController {
 
 	@RequestMapping("/getUserOpenId")
 	@ResponseBody
-	public Map<String, String> getUserOpenId(Model model,
-			HttpServletRequest request) {
+	public Map<String, String> getUserOpenId(HttpSession session, HttpServletRequest request) {
 		logger.debug("getUserOpenId");
 		Map<String, String> result = new HashMap<>();
-		result.put("openId", "");
-		if (model.asMap().containsKey("userOpenId")) {
-			result.put("openId", (String) model.asMap().get("userOpenId"));
-		}
+		String openId = "oSTV_t9z_fYa7AQVYO0y5-OMFavQ";//(String)session.getAttribute("openId");
+		result.put("openId", openId);
 		logger.debug("finishGetUserOpenId");
 		logger.debug("resultMap :{}", result.toString());
 		return result;
 	}
-	
+
 	@RequestMapping("/getUserOpenIdAndCheckBindCompany")
 	@ResponseBody
-	public Map<String, String> getUserOpenIdAndCheckBindCompany(Model model,
-			HttpServletRequest request) {
+	public Map<String, Object> getUserOpenIdAndCheckBindCompany(HttpSession session, HttpServletRequest request) {
 		logger.debug("getUserOpenIdAndCheckBindCompany");
-		Map<String, String> result = new HashMap<>();
-		result.put("openId", "");
-		if (model.asMap().containsKey("userOpenId")) {
-			result.put("openId", (String) model.asMap().get("userOpenId"));
-			//result.put("openId", "oJO1gtyVvLuWxm6N4T1JuYMzgysw");
-			String openId = result.get("openId");
-			if (openId == null || openId.isEmpty()) {
-				result.put("error_code", String.valueOf(WeixinJsonCode.NO_OPENID_ERROR_CODE));
-				result.put("error_message", WeixinJsonCode.NO_OPENID_ERROR_MESSAGE);
-			} else {
-				String userId = userService.getUserIdByOpenId(openId);
-				int typeId = userService.getUserTypeIdByUserId(userId);
-				result.put("error_code", String.valueOf(WeixinJsonCode.NO_ERROR_CODE));
-				result.put("error_message", WeixinJsonCode.NO_ERROR_MESSAGE);
-				result.put("type_id", String.valueOf(typeId));
-				Map<String, String> ret = settingService.checkCompanyBind(openId);
-				result.putAll(ret);
+		Map<String, Object> result = new HashMap<>();
+		String type = request.getParameter("type");
+		String openId = "oSTV_t9z_fYa7AQVYO0y5-OMFavQ";//(String)session.getAttribute("openId");
+		result.put("openId", openId);
+		if (openId == null || openId.isEmpty()) {
+			result.put("error_code", String.valueOf(WeixinJsonCode.NO_OPENID_ERROR_CODE));
+			result.put("error_message", WeixinJsonCode.NO_OPENID_ERROR_MESSAGE);
+		} else {
+			List<UserOpenid> openidList = userService.getUserIdByOpenId(openId);
+			for (UserOpenid uoi : openidList) {
+				int typeId = userService.getUserTypeIdByUserId(uoi.getUserId());
+				if (result.containsKey("type_id")) {
+					((Map<String, Object>) result.get("type_id")).put(uoi.getUserId(), typeId);
+				} else {
+					Map<String, Object> map = new HashMap<>();
+					map.put(uoi.getUserId(), typeId);
+					result.put("type_id", map);
+				}
 			}
+			result.put("error_code", String.valueOf(WeixinJsonCode.NO_ERROR_CODE));
+			result.put("error_message", WeixinJsonCode.NO_ERROR_MESSAGE);
+			Map<String, Object> ret = settingService.checkCompanyBind(openId, type);
+			result.putAll(ret);
 		}
 		logger.debug("getUserOpenIdAndCheckBindCompany");
 		logger.debug("resultMap :{}", result.toString());
 		return result;
 	}
-	
+
 	@RequestMapping("/checkBindCompany")
 	@ResponseBody
-	public Map<String, String> checkBindCompany(HttpServletRequest request) {
+	public Map<String, Object> checkBindCompany(HttpServletRequest request) {
 		logger.info("checkBindCompany");
-		Map<String, String> result = new HashMap<>();
+		Map<String, Object> result = new HashMap<>();
 		String openId = request.getParameter("openId");
+		String type = request.getParameter("type");
 		if (openId == null || openId.isEmpty()) {
 			result.put("error_code", String.valueOf(WeixinJsonCode.NO_OPENID_ERROR_CODE));
 			result.put("error_message", WeixinJsonCode.NO_OPENID_ERROR_MESSAGE);
 		} else {
 			result.put("error_code", String.valueOf(WeixinJsonCode.NO_ERROR_CODE));
 			result.put("error_message", WeixinJsonCode.NO_ERROR_MESSAGE);
-			Map<String, String> ret = settingService.checkCompanyBind(openId);
+			Map<String, Object> ret = settingService.checkCompanyBind(openId, type);
 			result.putAll(ret);
 		}
 		logger.info("finishCheckBindCompany");
