@@ -26,7 +26,7 @@ import jxl.write.biff.RowsExceededException;
  * 	 @date 2016年3月16日下午3:20:04
  */
 public class PDFToExcelInCome {
-    private static final String PATH = "D:/work/表2";
+    private static final String PATH = "D:/work/表3";
     /**
      * This is PDF path
      */
