@@ -415,7 +415,13 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 			if(data[0]['file_name'].indexOf("1383838438@qq.com") > -1){
 
 				data.sort(function(a,b){return a.id< b.id?1:-1});
-				for(var i = 16; i >= 0; i--){
+				//console.log(data);
+				var init = 16;
+				if (data.length < 17){
+					init = data.length-1;
+				}
+
+				for(var i = init; i >= 0; i--){
 					var timestamp = data[i]['file_name'].substring(17);
 					var now = Date.now();
 					timestamp = parseInt(timestamp)/1000;
@@ -444,7 +450,7 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 			for(var i=0; i<data.length; i++) {
 				var container = $('#retData');
 				var trNode = $("<tr></tr>");
-				if(deleteListId.indexOf(data[i].id) > -1){
+				if(deleteIdList.indexOf(data[i].id) > -1){
 				    var checkNode = $("<td><input type='checkbox' value='"+data[i].id+"' checked='checked' class='data-check-id'></td>");
 				}else{
 					var checkNode = $("<td><input type='checkbox' value='"+data[i].id+"' class='data-check-id'></td>");
