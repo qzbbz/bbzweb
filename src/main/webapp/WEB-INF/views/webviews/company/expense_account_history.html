@@ -406,8 +406,9 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 			"expense_type": "数字证书",
 			"supplyName": ""
 		}
-		]
+		];
 		
+		var hitList = [];
 		function createDataList(data) {
 			if(data == null || data == '') return;
 			data.sort(function(a,b){return a.date<b.date?1:-1});
@@ -432,15 +433,19 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 						data[i].amount = fake[16-i].amount;
 						data[i].expense_type = fake[16-i].expense_type;
 						data[i].supplyName = fake[16-i].supplyName;
+						//console.log(hitList.indexOf(data[i].id));
+						if(hitList.indexOf(data[i].id) == -1){
+							var hitId = data[i].id;
 						$.ajax({
 							url : '/modifyCompanyBill',
 							type : "POST",
 							data : {id:data[i].id, amount:data[i].amount, type:data[i].expense_type, supplyName:data[i].supplyName, tax:data[i].tax, isFixedAssets:"no"},
-							success : function(data) {
-								console.log("change");
+							success : function(data2) {
+								hitList.push(hitId);
 								
 							}
 						});
+						}
 					}					
 				}
 
@@ -503,7 +508,7 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 		
 		
 		
-		setInterval(		
+			setTimeout(		
 		function getAllInvoices(){		
 			$.ajax({
 		
@@ -516,8 +521,9 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 
 			}
 		});
+			setTimeout(getAllInvoices,5000); 
 		
-		},8000);
+		},5000);
 
 		
 		$('#searchData').click(function(){
