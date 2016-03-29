@@ -130,13 +130,20 @@
 			<div id="tips_info" style="display:none;margin-top:50%;">
 				<div style="text-align: center;" id="tips_info_detail">服务器暂时无法处理请求，<br/>请稍后重试！</div>
 			</div>
-			<div class="mui-scroll-wrapper" id="mui_main_page1" style="display:none;">
+			<div class="mui-scroll-wrapper" id="mui_main_page1" style="display:none;margin-top:48px;">
 				<div class="mui-scroll">
-					<div class="mui-card" style="margin-top:55px;margin-left:5px;margin-right:5px;">
+					<div class="mui-card" id="company_select" style="margin:10px 5px;height:40px;line-height:40px;">
+						<div class="mui-pull-left" style="height:40px;width:30%;"><p style="margin-left: 15px;">公司名称</p></div>
+						<div class="mui-pull-right" style="height:40px;width:70%;">
+							<span id="companyName" style="color:#8f8f94;"></span><span class="mui-icon mui-icon-arrowright" style="font-size: 20px;margin-top:0px;color:#8f8f94;display:inline-block"></span>
+							<input id="userId" type="hidden" class="mui-input-clear" value="">
+						</div>
+					</div>
+					<div class="mui-card" style="margin-left:5px;margin-right:5px;">
 						<ul class="mui-table-view">
 							<li class="mui-table-view-cell">
 								<h5>当前选择的月份为：<span id="current_select_date">2015-12</span></h5>
-								<button data-options='{"type":"month"}' class="mui-btn mui-btn-primary">月份选择</button>
+								<button data-options='{"type":"month"}' id="monthSelect" class="mui-btn mui-btn-primary">月份选择</button>
 							</li>
 						</ul>
 					</div>
@@ -307,14 +314,12 @@
 	<script src="/js/weixinjs/mui.min.js"></script>
 	<script src="/js/weixinjs/jquery-1.11.1.min.js"></script>
 	<script src="/js/weixinjs/mui.picker.min.js"></script>
-	<script src="/js/weixinjs/salary_sheet.js"></script>
+	<script src="/js/weixinjs/salary_sheet.js?201603291908"></script>
 	<script>
 		(function($) {
 			$.init();
 			var result = $('#current_select_date')[0];
-			var btns = $('.mui-btn');
-			btns.each(function(i, btn) {
-				btn.addEventListener('tap', function() {
+				$("#monthSelect")[0].addEventListener('tap', function() {
 					var optionsJson = this.getAttribute('data-options') || '{}';
 					var options = JSON.parse(optionsJson);
 					var id = this.getAttribute('id');
@@ -325,7 +330,6 @@
 						getSalarySheetData(result.innerText);
 					});
 				}, false);
-			});
 		})(mui);
 		$(function() {
 			$("table tr:nth-child(odd)").addClass("odd-row");

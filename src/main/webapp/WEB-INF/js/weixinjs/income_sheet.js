@@ -1,4 +1,4 @@
-
+var companyPicker = new mui.PopPicker();
 mui.createProcessingMask = function(callback) {
 	var element = document.createElement('div');
 	element.classList.add('upload-file');
@@ -174,13 +174,14 @@ function fillDataIntoHtml(data) {
 var dateString = "";
 function getIncomeSheetData(date) {
 	dateString = date;
+	var userId = document.getElementById('userId').value;
 	var mask = mui.createProcessingMask(null);
 	mask.show();
 	mui.ajax({
 		url: '/getNewestSheetIncome',
 		type: "POST",
 		data: {
-			userOpenId:userOpenId,date:date
+			userId:userId,date:date
 		},
 		success: function(data) {
 			if (data == null || data.result_is_null == 'true') {
@@ -204,14 +205,16 @@ function getDetailData(project,type,title){
 //	detailsInfoForm1.set('title', title);
 //	detailsInfoForm1.show();
 //	
-	window.location.href = "/getNewestSheetIncomeWithWeixinSetSession?date=" + dateString + "&&type=" + type + "&&project=";
-	$.ajax({
+	window.location.href = "/getNewestSheetIncomeWithWeixinSetSession?date=" + dateString + "&type=" + type + "&project=" + project + "&userId=" + document.getElementById('userId').value;
+	
+	/*$.ajax({
 		url : '/getNewestSheetIncomeWithWeixinSetSession',
 		type : "POST",
 		data : {
 			date:dateString,
 			type:type,
-			project:project
+			project:project,
+			userId:
 		},
 		success : function(data) {
 			var hasData = false;
@@ -235,21 +238,30 @@ function getDetailData(project,type,title){
 		error : function(data) {
 			//BUI.Message.Alert("未获取到数据!", 'warning');
 		}
-	})
+	})*/
 }
-/*mui.ajax({ 
+document.getElementById('company_select').addEventListener('tap', function() {
+	companyPicker.show(function(rs) {
+		document.getElementById('companyName').innerHTML = rs[0].text;
+		document.getElementById('userId').value = rs[0].value;
+	});
+}, false);
+mui.ajax({ 
     type : "POST", 
     url  : "/getUserOpenIdAndCheckBindCompany",
-    data : {}, 
+    data : {type:"0"}, 
     success : function(data) {
-    	if (data == null || data.openId == null || data.openId == "") {
-			mui.createTipDialog('无法获取您的微信Openid,请稍后重试！',null).show();
+    	if (data.error_code != '0') {
+			mui.createTipDialog(data.error_msg, null).show();
 			document.getElementById("data_loading").style.display = "none";
-			document.getElementById("tips_info_detail").innerHTML = "无法获取您的微信Openid,<br/>请稍后重试！";
+			document.getElementById("tips_info_detail").innerHTML = data.error_msg + ",<br/>请稍后重试！";
 	    	document.getElementById("tips_info").style.display = "";
 		} else {
 			userOpenId = data.openId;
 			if(data.bind_status == "has_bind") {
+				companyPicker.setData(data.companyName);
+				document.getElementById('companyName').innerHTML = data.companyName[0].text;
+	    		document.getElementById('userId').value = data.companyName[0].value;
 				document.getElementById("data_loading").style.display = "none";
 				document.getElementById("mui_main_page1").style.display = "";
 			} else {
@@ -265,7 +277,4 @@ function getDetailData(project,type,title){
     	document.getElementById("tips_info_detail").innerHTML = "服务器暂时无法响应请求，<br/>请稍后重试！";
     	document.getElementById("tips_info").style.display = "";
     } 
-});*/
-document.getElementById("data_loading").style.display = "none";
-document.getElementById("mui_main_page1").style.display = "";
-userOpenId = "oSTV_t41ZaIuTRVHQQjSSr5aonKk";
+});

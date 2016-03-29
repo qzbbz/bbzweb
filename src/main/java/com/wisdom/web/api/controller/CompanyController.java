@@ -1089,15 +1089,13 @@ public class CompanyController {
 		retMap.put("result_is_null", "true");
 		retMap.put("openid_exist", "true");
 		String date = (String)request.getParameter("date");
-		String userOpenId = (String)request.getParameter("userOpenId");
-		logger.debug("getNewestSheetBalance  userOpenId : {}", userOpenId);
-		UserOpenid uod = userOpenIdDao.getUserOpenidByOpenId(userOpenId);
-		logger.debug("getNewestSheetBalance  uod : {}", uod);
-		if(uod == null) {
+		String userId = (String)request.getParameter("userId");
+		logger.debug("getNewestSheetBalance  userId : {}", userId);
+		if(userId == null || userId.isEmpty()) {
 			retMap.put("openid_exist", "false");
 			return retMap;
 		}
-		long companyId = userService.getCompanyIdByUserId(uod.getUserId());
+		long companyId = userService.getCompanyIdByUserId(userId);
 		logger.debug("getNewestSheetBalance  date : {}", date);
 		logger.debug("getNewestSheetBalance  companyId : {}", companyId);
 		SheetBalance sheetBalance = sheetBalanceDao.getSheetBalanceDateByCompanyIdAndDate(companyId, date);
@@ -1229,15 +1227,13 @@ public class CompanyController {
 		retMap.put("result_is_null", "true");
 		retMap.put("openid_exist", "true");
 		String date = (String)request.getParameter("date");
-		String userOpenId = (String)request.getParameter("userOpenId");
-		logger.debug("getNewestSheetCash  userOpenId : {}", userOpenId);
-		UserOpenid uod = userOpenIdDao.getUserOpenidByOpenId(userOpenId);
-		logger.debug("getNewestSheetCash  uod : {}", uod);
-		if(uod == null) {
+		String userId = (String)request.getParameter("userId");
+		logger.debug("getNewestSheetCash  userId : {}", userId);
+		if(userId == null || userId.isEmpty()) {
 			retMap.put("openid_exist", "false");
 			return retMap;
 		}
-		long companyId = userService.getCompanyIdByUserId(uod.getUserId());
+		long companyId = userService.getCompanyIdByUserId(userId);
 		logger.debug("getNewestSheetCash  companyId : {}", companyId);
 		SheetCash sheetCash = sheetCashDao.getSheetCashDateByCompanyIdAndDate(companyId, date);
 		if(sheetCash != null) {
@@ -1304,15 +1300,13 @@ public class CompanyController {
 		retMap.put("result_is_null", "true");
 		retMap.put("openid_exist", "true");
 		String date = (String)request.getParameter("date");
-		String userOpenId = (String)request.getParameter("userOpenId");
-		logger.debug("getNewestSheetIncome  userOpenId : {}", userOpenId);
-		UserOpenid uod = userOpenIdDao.getUserOpenidByOpenId(userOpenId);
-		logger.debug("getNewestSheetIncome  uod : {}", uod);
-		if(uod == null) {
+		String userId = (String)request.getParameter("userId");
+		logger.debug("getNewestSheetIncome  userId : {}", userId);
+		if(userId == null || userId.isEmpty()) {
 			retMap.put("openid_exist", "false");
 			return retMap;
 		}
-		long companyId = userService.getCompanyIdByUserId(uod.getUserId());
+		long companyId = userService.getCompanyIdByUserId(userId);
 		logger.debug("getNewestSheetIncome  companyId : {}", companyId);
 		SheetIncome sheetIncome = sheetIncomeDao.getSheetIncomeDateByCompanyIdAndDate(companyId, date);
 		if(sheetIncome != null) {
@@ -1399,15 +1393,13 @@ public class CompanyController {
 		retMap.put("result_is_null", "true");
 		retMap.put("openid_exist", "true");
 		String date = (String)request.getParameter("date");
-		String userOpenId = (String)request.getParameter("userOpenId");
-		logger.debug("getNewestSheetSalaryTax  userOpenId : {}", userOpenId);
-		UserOpenid uod = userOpenIdDao.getUserOpenidByOpenId(userOpenId);
-		logger.debug("getNewestSheetSalaryTax  uod : {}", uod);
-		if(uod == null) {
+		String userId = (String)request.getParameter("userId");
+		logger.debug("getNewestSheetSalaryTax  userId : {}", userId);
+		if(userId == null || userId.isEmpty()) {
 			retMap.put("openid_exist", "false");
 			return retMap;
 		}
-		long companyId = userService.getCompanyIdByUserId(uod.getUserId());
+		long companyId = userService.getCompanyIdByUserId(userId);
 		logger.debug("getNewestSheetSalaryTax  companyId : {}", companyId);
 		SheetSalaryTax sheetSalaryTax = sheetSalaryTaxDao.getSheetSalaryTaxDateByCompanyIdAndDate(companyId, date);
 		if(sheetSalaryTax != null) {

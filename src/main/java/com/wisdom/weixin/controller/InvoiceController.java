@@ -43,12 +43,15 @@ public class InvoiceController {
       String dateNo=request.getParameter("type");
       String date=request.getParameter("date");
       String projectString=request.getParameter("project");
-      if (dateNo == null && date == null && projectString == null) {
+      String userId = request.getParameter("userId");
+      if (dateNo == null || date == null || projectString == null || userId == null) {
+    	  logger.debug("arguments exist null!");
           return null;
       }
       session.setAttribute("type", dateNo);
       session.setAttribute("date", date);
       session.setAttribute("project", projectString);
+      session.setAttribute("userId", userId);
       return "redirect:/views/weixinviews/invoice_income_info.html";
   }
   
@@ -57,12 +60,13 @@ public class InvoiceController {
   public  List<SheetIncomeDetail> getNewestSheetIncomeWithWeixinData(HttpSession session, HttpServletRequest request) {
       logger.debug("enter getAllSheetIncomeDetail");
       List<SheetIncomeDetail> list=new ArrayList<>();
-      String userId = "gongjiaxii@bangbangzhang.com";//(String) request.getSession().getAttribute("userId");
+      String userId = (String) request.getSession().getAttribute("userId");
       long companyId = userService.getCompanyIdByUserId(userId);
       String dateNo= (String) request.getSession().getAttribute("type");
       String date= (String) request.getSession().getAttribute("date");
       String projectString= (String) request.getSession().getAttribute("project");
       String[] projects=projectString.split(";");
+      logger.debug("userId : {}", userId);
       if(Integer.parseInt(dateNo)==0){
           list=sheetIncomeDetailService.InvokingOperateSqlByYear(date, projects,companyId);
       }else if(Integer.parseInt(dateNo)==1){
@@ -83,17 +87,20 @@ public class InvoiceController {
   public String getNewestSheetBalanceWithWeixinSetSession(HttpServletRequest request, HttpSession session) {
       logger.debug("enter set invoice weixin session");
       String date=request.getParameter("date");
-      if ( date == null ) {
+      String userId = request.getParameter("userId");
+      if ( date == null || userId == null) {
+    	  logger.debug("arguments exist null!");
           return null;
       }
       session.setAttribute("date", date);
+      session.setAttribute("userId", userId);
       return "redirect:/views/weixinviews/invoice_balance_info.html";
   }
     @RequestMapping("/getSheetBalanceWeixinData")
     @ResponseBody
     public List<Map<String, String>> getSheetBalanceWeixinData(
     		HttpSession session, HttpServletRequest request) {
-    	String userId = "gongjiaxii@bangbangzhang.com";//(String) request.getSession().getAttribute("userId");
+    	String userId = (String) request.getSession().getAttribute("userId");
         String month= (String) request.getSession().getAttribute("date");
         return  companyFixedapi.companyFixedInformation(userId,month);
     }
