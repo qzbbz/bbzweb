@@ -444,7 +444,11 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 			for(var i=0; i<data.length; i++) {
 				var container = $('#retData');
 				var trNode = $("<tr></tr>");
-				var checkNode = $("<td><input type='checkbox' value='"+data[i].id+"' class='data-check-id'></td>");
+				if(deleteListId.indexOf(data[i].id) > -1){
+				    var checkNode = $("<td><input type='checkbox' value='"+data[i].id+"' checked='checked' class='data-check-id'></td>");
+				}else{
+					var checkNode = $("<td><input type='checkbox' value='"+data[i].id+"' class='data-check-id'></td>");
+				}
 			    var tdNode1 = $("<td>"+data[i].date+"</td><td>"+data[i].company_name+"</td><td>"+(data[i].amount == null || data[i].amount == "" ? "0" : data[i].amount)+"</td><td>"+(data[i].number == null || data[i].number == "" ? "1" : data[i].number)+"</td><td>"+(data[i].tax == null || data[i].tax == "" ? "0" : data[i].tax)+"</td><td>"+(data[i].supplyName == null || data[i].supplyName == "" ? "未设定" : data[i].supplyName)+"</td><td>"+(data[i].isFixedAssets == null || data[i].isFixedAssets == "0" ? "否" : "是")+"</td><td>"+(data[i].expense_type == null || data[i].expense_type == "" ? "未设定" : data[i].expense_type)+"</td>");
 			    var tdNode2 = $("<td></td>");
 			    var aNode = $("<a href='javascript:void(0)'>点击查看发票图片</a>");
