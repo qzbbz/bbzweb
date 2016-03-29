@@ -54,12 +54,11 @@ public class InvoiceController {
   
   @RequestMapping("/getNewestSheetIncomeWithWeixinData")
   @ResponseBody
-  public  List<SheetIncomeDetail> getNewestSheetIncomeWithWeixinData(HttpServletRequest request) {
+  public  List<SheetIncomeDetail> getNewestSheetIncomeWithWeixinData(HttpSession session, HttpServletRequest request) {
       logger.debug("enter getAllSheetIncomeDetail");
       List<SheetIncomeDetail> list=new ArrayList<>();
-      
-      String userId = "gongjiaxii@bangbangzhang.com";
-      long companyId = userService.getCompanyIdByUserId("gongjiaxii@bangbangzhang.com");
+      String userId = "gongjiaxii@bangbangzhang.com";//(String) request.getSession().getAttribute("userId");
+      long companyId = userService.getCompanyIdByUserId(userId);
       String dateNo= (String) request.getSession().getAttribute("type");
       String date= (String) request.getSession().getAttribute("date");
       String projectString= (String) request.getSession().getAttribute("project");
@@ -93,9 +92,8 @@ public class InvoiceController {
     @RequestMapping("/getSheetBalanceWeixinData")
     @ResponseBody
     public List<Map<String, String>> getSheetBalanceWeixinData(
-            HttpServletRequest request) {
-//        String userId = (String) request.getSession().getAttribute("userId");
-        String userId = "gongjiaxii@bangbangzhang.com";
+    		HttpSession session, HttpServletRequest request) {
+    	String userId = "gongjiaxii@bangbangzhang.com";//(String) request.getSession().getAttribute("userId");
         String month= (String) request.getSession().getAttribute("date");
         return  companyFixedapi.companyFixedInformation(userId,month);
     }

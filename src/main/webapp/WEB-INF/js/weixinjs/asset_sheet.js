@@ -225,7 +225,6 @@ function getAssetSheetData(date) {
 	});
 }
 	function getDetailData() {
-		alert("111");
 		window.location.href = "/getNewestSheetBalanceWithWeixinSetSession?date=" + dateString;
 	}
 //mui.ajax({ 
