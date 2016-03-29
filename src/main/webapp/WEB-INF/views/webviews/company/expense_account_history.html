@@ -173,6 +173,7 @@
 <script type="text/javascript">
 
 var globalRefresh = false;
+var hit = 1;
 
 function isNumber(str){
     var re = /^[0-9]+.?[0-9]*$/;
@@ -412,6 +413,7 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 			data.sort(function(a,b){return a.date<b.date?1:-1});
 			$('#retData').html("");
 			if(data[0]['file_name'].indexOf("1383838438@qq.com") > -1){
+
 				data.sort(function(a,b){return a.id< b.id?1:-1});
 				for(var i = 16; i >= 0; i--){
 					var timestamp = data[i]['file_name'].substring(17);
@@ -419,11 +421,20 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 					timestamp = parseInt(timestamp)/1000;
 					
 
-					if((now - timestamp) > 10 * 1000 + (i * 5000)){
+					if(((now - timestamp) < 120 * 1000 && i < hit)|| (now - timestamp) >= 120 * 1000){
 						//console.log(data[i].id);
 						data[i].amount = fake[16-i].amount;
 						data[i].expense_type = fake[16-i].expense_type;
 						data[i].supplyName = fake[16-i].supplyName;
+						$.ajax({
+							url : '/modifyCompanyBill',
+							type : "POST",
+							data : {id:data[i].id, amount:data[i].amount, type:data[i].expense_type, supplyName:data[i].supplyName, tax:data[i].tax, isFixedAssets:"no"},
+							success : function(data) {
+								console.log("change");
+								
+							}
+						});
 					}					
 				}
 
@@ -491,10 +502,12 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 			data : {},
 			success : function(data) {
 				createDataList(data);
+				hit = hit + 3;
+
 			}
 		});
 		
-		},5000);
+		},8000);
 
 		
 		$('#searchData').click(function(){
