@@ -7,7 +7,7 @@
         <link href="/css/weixincss/mui.min.css" rel="stylesheet" />
         <link rel="stylesheet" type="text/css" href="/css/weixincss/mui.picker.min.css" />
         <style>
-            .upload-file {
+           .upload-file {
                 position: fixed;
                 z-index: 998;
                 top: 0;
@@ -45,7 +45,7 @@
             th,
             td {
                 padding: 2px 4px 2px;
-                text-align: center;
+                text-align: left;
             }
             
             th {
@@ -125,55 +125,8 @@
             <div id="tips_info" style="display:none;margin-top:50%;">
                 <div style="text-align: center;" id="tips_info_detail">服务器暂时无法处理请求，<br/>请稍后重试！</div>
             </div>
-            <div style="margin-left:5px;margin-right: 5px;" id = "fixedAssetsInfoData">     
+            <div style="margin-left:5px;margin-right: 5px;margin-top:48px;" id = "fixedAssetsInfoData">     
                         <table cellspacing="0" id ="tableContent">
-                            <tr>
-                                <th id = "titleString"></th>
-                            </tr>
-                            <tr>
-                                <td style="color:#7D9EC0;font-weight:bold;">日期：</td>
-                                <td id="info_date"></td>
-                            </tr>
-                            <tr>
-                                <td style="color:#7D9EC0;font-weight:bold;">凭证类：</td>
-                                <td id="voucher_type" ></td>
-                            </tr>
-                            <tr>
-                                <td style="color:#7D9EC0;font-weight:bold;">凭证号：</td>
-                                <td id="voucher_no"></td>
-                            </tr>
-                            <tr>
-                                <td style="color:#7D9EC0;font-weight:bold;">附件张数：</td>
-                                <td id="attachment_nums"></td>
-                            </tr>
-                            <tr>
-                                <td style="color:#7D9EC0;font-weight:bold;">摘要：</td>
-                                <td id="abstracts"></td>
-                            </tr>
-                            <tr>
-                                <td style="color:#7D9EC0;font-weight:bold;">科目：</td>
-                                <td id="subject"></td>
-                            </tr>
-                            <tr>
-                                <td style="color:#7D9EC0;font-weight:bold;">借方：</td>
-                                <td id="borrower"></td>
-                            </tr>
-                            <tr>
-                                <td style="color:#7D9EC0;font-weight:bold;">贷方：</td>
-                                <td id="lender"></td>
-                            </tr>
-                            <tr>
-                                <td style="color:#7D9EC0;font-weight:bold;">制单：</td>
-                                <td id="touching"></td>
-                            </tr>
-                            <tr>
-                                <td style="color:#7D9EC0;font-weight:bold;">票号：</td>
-                                <td id="pchk"></td>
-                            </tr>
-                            <tr>
-                                <td style="color:#7D9EC0;font-weight:bold;">客户：</td>
-                                <td id="customer"></td>
-                            </tr>
                         </table>
                     </div>
             </div>
@@ -194,13 +147,13 @@
                   hasData = true;
               }
               if (!hasData) {
-                  //BUI.Message.Alert('未获取到数据,请稍候重试！', 'success');
+            	  alert("暂时没有凭证数据！");
               } else {
             	  $("#tableContent").html("");
                   var num = 1;
                   var str = "";
                    for(var index in data){
-                	   str += "<tr><th id='titleString'>凭证 " + num +" </th></tr><tr><td style='color:#7D9EC0;font-weight:bold;'>日期</td><td id='info_date'>" + data[index].dateTime + "</td></tr><tr><td style='color:#7D9EC0;font-weight:bold;'>凭证类</td><td id='voucher_type'>" + data[index].voucherType + "</td></tr><tr><td style='color:#7D9EC0;font-weight:bold;'>凭证号</td><td id='voucher_no'>" + data[index].voucherNo + "</td></tr><tr><td style='color:#7D9EC0;font-weight:bold;'>附件张数</td><td id='attachment_nums'>" + data[index].attachmentNums + "</td></tr><tr><td style='color:#7D9EC0;font-weight:bold;'>摘要</td><td id='abstracts'>" + data[index].abstracts + "</td></tr><tr><td style='color:#7D9EC0;font-weight:bold;'>科目</td><td id='subject'>" + data[index].subject + "</td></tr><tr><td style='color:#7D9EC0;font-weight:bold;'>借方</td><td id='borrower'>" + data[index].borrower + "</td></tr><tr><td style='color:#7D9EC0;font-weight:bold;'>贷方</td><td id='lender'>" + data[index].lender + "</td></tr><tr><td style='color:#7D9EC0;font-weight:bold;'>制单</td><td id='touching'>" + data[index].touching + "</td></tr><tr><td style='color:#7D9EC0;font-weight:bold;'>票号</td><td id='pchk'>" + data[index].pchk + " </td></tr><tr><td style='color:#7D9EC0;font-weight:bold;'>客户</td><td id='customer'>" + data[index].customer + "</td></tr>";
+                	   str += "<tr><th nowrap='nowrap' id='titleString'>凭证 " + num +" </th><th id=''></th></tr><tr><td nowrap='nowrap' style='color:#7D9EC0;font-weight:bold;'>日期</td><td id='info_date'>" + data[index].dateTime + "</td></tr><tr><td nowrap='nowrap' style='color:#7D9EC0;font-weight:bold;'>凭证类</td><td id='voucher_type'>" + data[index].voucherType + "</td></tr><tr><td nowrap='nowrap' style='color:#7D9EC0;font-weight:bold;'>凭证号</td><td id='voucher_no'>" + data[index].voucherNo + "</td></tr><tr><td nowrap='nowrap' style='color:#7D9EC0;font-weight:bold;'>附件张数</td><td id='attachment_nums'>" + data[index].attachmentNums + "</td></tr><tr><td nowrap='nowrap' style='color:#7D9EC0;font-weight:bold;'>摘要</td><td id='abstracts'>" + data[index].abstracts + "</td></tr><tr><td nowrap='nowrap' style='color:#7D9EC0;font-weight:bold;'>科目</td><td id='subject'>" + data[index].subject + "</td></tr><tr><td nowrap='nowrap' style='color:#7D9EC0;font-weight:bold;'>借方</td><td id='borrower'>" + data[index].borrower + "</td></tr><tr><td nowrap='nowrap' style='color:#7D9EC0;font-weight:bold;'>贷方</td><td id='lender'>" + data[index].lender + "</td></tr><tr><td nowrap='nowrap' style='color:#7D9EC0;font-weight:bold;'>制单</td><td id='touching'>" + data[index].touching + "</td></tr><tr><td nowrap='nowrap' style='color:#7D9EC0;font-weight:bold;'>票号</td><td id='pchk'>" + data[index].pchk + " </td></tr><tr><td nowrap='nowrap' style='color:#7D9EC0;font-weight:bold;'>客户</td><td id='customer'>" + data[index].customer + "</td></tr>";
                        num ++;
                } 
                    $("#tableContent").html(str);

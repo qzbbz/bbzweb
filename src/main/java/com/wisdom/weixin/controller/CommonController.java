@@ -125,7 +125,7 @@ public class CommonController {
 	public Map<String, String> getUserOpenId(HttpSession session, HttpServletRequest request) {
 		logger.debug("getUserOpenId");
 		Map<String, String> result = new HashMap<>();
-		String openId = "oSTV_t9z_fYa7AQVYO0y5-OMFavQ";//(String)session.getAttribute("openId");
+		String openId = (String)session.getAttribute("userOpenId");
 		result.put("openId", openId);
 		logger.debug("finishGetUserOpenId");
 		logger.debug("resultMap :{}", result.toString());
@@ -138,7 +138,7 @@ public class CommonController {
 		logger.debug("getUserOpenIdAndCheckBindCompany");
 		Map<String, Object> result = new HashMap<>();
 		String type = request.getParameter("type");
-		String openId = "oSTV_t9z_fYa7AQVYO0y5-OMFavQ";//(String)session.getAttribute("openId");
+		String openId = (String)session.getAttribute("userOpenId");
 		result.put("openId", openId);
 		if (openId == null || openId.isEmpty()) {
 			result.put("error_code", String.valueOf(WeixinJsonCode.NO_OPENID_ERROR_CODE));

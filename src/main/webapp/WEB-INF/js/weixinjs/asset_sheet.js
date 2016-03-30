@@ -1,3 +1,4 @@
+var companyPicker = new mui.PopPicker();
 mui.createProcessingMask = function(callback) {
 	var element = document.createElement('div');
 	element.classList.add('upload-file');
@@ -200,6 +201,7 @@ function fillDataIntoHtml(data) {
 }
 var dateString = "";
 function getAssetSheetData(date) {
+	var userId = document.getElementById('userId').value;
 	var mask = mui.createProcessingMask(null);
 	mask.show();
 	dateString = date;
@@ -207,7 +209,7 @@ function getAssetSheetData(date) {
 		url: '/getNewestSheetBalance',
 		type: "POST",
 		data: {
-			userOpenId:userOpenId,date:date
+			userId:userId,date:date
 		},
 		success: function(data) {
 			if (data == null || data.result_is_null == 'true') {
@@ -225,38 +227,46 @@ function getAssetSheetData(date) {
 	});
 }
 	function getDetailData() {
-		alert("111");
-		window.location.href = "/getNewestSheetBalanceWithWeixinSetSession?date=" + dateString;
+		window.location.href = "/getNewestSheetBalanceWithWeixinSetSession?date=" + dateString + "&userId=" + document.getElementById('userId').value;
 	}
-//mui.ajax({ 
-//    type : "POST", 
-//    url  : "/getUserOpenIdAndCheckBindCompany",
-//    data : {}, 
-//    success : function(data) {
-//    	if (data == null || data.openId == null || data.openId == "") {
-//			mui.createTipDialog('无法获取您的微信Openid,请稍后重试！',null).show();
-//			document.getElementById("data_loading").style.display = "none";
-//			document.getElementById("tips_info_detail").innerHTML = "无法获取您的微信Openid,<br/>请稍后重试！";
-//	    	document.getElementById("tips_info").style.display = "";
-//		} else {
-//			userOpenId = data.openId;
-//			if(data.bind_status == "has_bind") {
-//				document.getElementById("data_loading").style.display = "none";
-//				document.getElementById("mui_main_page1").style.display = "";
-//			} else {
-//				document.getElementById("data_loading").style.display = "none";
-//				document.getElementById("tips_info_detail").innerHTML = "您还没有绑定公司，<br/>请先在账号设置中绑定您的公司！";
-//		    	document.getElementById("tips_info").style.display = "";
-//			}
-//		}
-//    }, 
-//    error : function() {
-//    	mui.createTipDialog('服务器暂时无法响应请求，请稍后重试！',null).show();
-//    	document.getElementById("data_loading").style.display = "none";
-//    	document.getElementById("tips_info_detail").innerHTML = "服务器暂时无法响应请求，<br/>请稍后重试！";
-//    	document.getElementById("tips_info").style.display = "";
-//    } 
-//});
-document.getElementById("data_loading").style.display = "none";
+	document.getElementById('company_select').addEventListener('tap', function() {
+		companyPicker.show(function(rs) {
+			document.getElementById('companyName').innerHTML = rs[0].text;
+			document.getElementById('userId').value = rs[0].value;
+		});
+	}, false);
+mui.ajax({ 
+    type : "POST", 
+    url  : "/getUserOpenIdAndCheckBindCompany",
+    data : {type:"0"}, 
+    success : function(data) {
+    	if (data.error_code != '0') {
+			mui.createTipDialog(data.error_msg, null).show();
+			document.getElementById("data_loading").style.display = "none";
+			document.getElementById("tips_info_detail").innerHTML = data.error_msg + ",<br/>请稍后重试！";
+	    	document.getElementById("tips_info").style.display = "";
+		} else {
+			userOpenId = data.openId;
+			if(data.bind_status == "has_bind") {
+				companyPicker.setData(data.companyName);
+				document.getElementById('companyName').innerHTML = data.companyName[0].text;
+	    		document.getElementById('userId').value = data.companyName[0].value;
+				document.getElementById("data_loading").style.display = "none";
+				document.getElementById("mui_main_page1").style.display = "";
+			} else {
+				document.getElementById("data_loading").style.display = "none";
+				document.getElementById("tips_info_detail").innerHTML = "您还没有绑定公司，<br/>请先在账号设置中绑定您的公司！";
+		    	document.getElementById("tips_info").style.display = "";
+			}
+		}
+    }, 
+    error : function() {
+    	mui.createTipDialog('服务器暂时无法响应请求，请稍后重试！',null).show();
+    	document.getElementById("data_loading").style.display = "none";
+    	document.getElementById("tips_info_detail").innerHTML = "服务器暂时无法响应请求，<br/>请稍后重试！";
+    	document.getElementById("tips_info").style.display = "";
+    } 
+});
+/*document.getElementById("data_loading").style.display = "none";
 document.getElementById("mui_main_page1").style.display = "";
-userOpenId = "oSTV_t41ZaIuTRVHQQjSSr5aonKk";
+userOpenId = "oSTV_t41ZaIuTRVHQQjSSr5aonKk";*/
