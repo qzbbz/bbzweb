@@ -720,7 +720,11 @@ public class ExpenseAccountController {
 			Map<String, Object> map = new HashMap<String, Object>();
 			String imgTmp = wwaim.getFile_name();
 			if(imgTmp != null && !imgTmp.isEmpty() && imgTmp.lastIndexOf(".") != -1) {
-				map.put("bill_img", wwaim.getFile_name().substring(0, wwaim.getFile_name().lastIndexOf(".")));
+				if(wwaim.getFile_name().substring(wwaim.getFile_name().lastIndexOf(".")).startsWith(".com")) {
+					map.put("bill_img", wwaim.getFile_name());
+				} else {
+					map.put("bill_img", wwaim.getFile_name().substring(0, wwaim.getFile_name().lastIndexOf(".")));
+				}
 			} else {
 				map.put("bill_img", wwaim.getFile_name());
 			}

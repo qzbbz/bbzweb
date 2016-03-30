@@ -1,3 +1,4 @@
+var companyPicker = new mui.PopPicker();
 mui.createProcessingMask = function(callback) {
 	var element = document.createElement('div');
 	element.classList.add('upload-file');
@@ -151,12 +152,13 @@ function fillDataIntoHtml(data) {
 
 function getSalarySheetData(date) {
 	var mask = mui.createProcessingMask(null);
+	var userId = document.getElementById('userId').value;
 	mask.show();
 	mui.ajax({
 		url: '/getNewestSheetSalaryTax',
 		type: "POST",
 		data: {
-			userOpenId:userOpenId,date:date
+			userId:userId,date:date
 		},
 		success: function(data) {
 			if (data == null || data.result_is_null == 'true') {
@@ -173,20 +175,28 @@ function getSalarySheetData(date) {
 		}
 	});
 }
-
+document.getElementById('company_select').addEventListener('tap', function() {
+	companyPicker.show(function(rs) {
+		document.getElementById('companyName').innerHTML = rs[0].text;
+		document.getElementById('userId').value = rs[0].value;
+	});
+}, false);
 mui.ajax({ 
     type : "POST", 
     url  : "/getUserOpenIdAndCheckBindCompany",
-    data : {}, 
+    data : {type:"0"}, 
     success : function(data) {
-    	if (data == null || data.openId == null || data.openId == "") {
-			mui.createTipDialog('无法获取您的微信Openid,请稍后重试！',null).show();
+    	if (data.error_code != '0') {
+			mui.createTipDialog(data.error_msg, null).show();
 			document.getElementById("data_loading").style.display = "none";
-			document.getElementById("tips_info_detail").innerHTML = "无法获取您的微信Openid,<br/>请稍后重试！";
+			document.getElementById("tips_info_detail").innerHTML = data.error_msg + ",<br/>请稍后重试！";
 	    	document.getElementById("tips_info").style.display = "";
 		} else {
 			userOpenId = data.openId;
 			if(data.bind_status == "has_bind") {
+				companyPicker.setData(data.companyName);
+				document.getElementById('companyName').innerHTML = data.companyName[0].text;
+	    		document.getElementById('userId').value = data.companyName[0].value;
 				document.getElementById("data_loading").style.display = "none";
 				document.getElementById("mui_main_page1").style.display = "";
 			} else {

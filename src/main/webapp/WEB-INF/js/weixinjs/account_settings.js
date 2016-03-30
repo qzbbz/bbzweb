@@ -126,9 +126,12 @@ var userName = "";
 var userEmail = "";
 var companyName = "";
 var companyDepartmentName = "";
-
+String.prototype.replaceAll = function(s1,s2) { 
+    return this.replace(new RegExp(s1,"gm"),s2); 
+}
 function bindCompany() {
 	var inviteCode = document.getElementById("invite_code").value;
+	inviteCode = inviteCode.replaceAll("，", ",");
 	if(inviteCode == null || inviteCode == "") {
 		mui.createTipDialog('邀请码不能为空，请检查！',null).show();
 		return;
