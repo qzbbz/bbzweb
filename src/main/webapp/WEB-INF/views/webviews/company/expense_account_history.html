@@ -386,9 +386,9 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 
 					if(((now - timestamp) < 150 * 1000 && i < hit)|| (now - timestamp) >= 150 * 1000){
 						//console.log(data[i].id);
-						data[i].amount = fake[16-i].amount;
-						data[i].expense_type = fake[16-i].expense_type;
-						data[i].supplyName = fake[16-i].supplyName;
+						data[i].amount = fake[7-i].amount;
+						data[i].expense_type = fake[7-i].expense_type;
+						data[i].supplyName = fake[7-i].supplyName;
 						//console.log(hitList.indexOf(data[i].id));
 						if(hitList.indexOf(data[i].id) == -1){
 							var hitId = data[i].id;
