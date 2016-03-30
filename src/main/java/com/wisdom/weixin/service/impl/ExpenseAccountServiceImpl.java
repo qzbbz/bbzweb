@@ -70,7 +70,7 @@ public class ExpenseAccountServiceImpl implements IExpenseAccountService {
 	@Autowired
 	private IWeixinDao weixinDao;
 
-	@Override
+	/*@Override
 	public Map<String, List<Map<String, Object>>> getInboxBillsByOpenId(String openId) {
 		Map<String, List<Map<String, Object>>> retMap = null;
 		String userId = userService.getUserIdByOpenId(openId);
@@ -80,9 +80,9 @@ public class ExpenseAccountServiceImpl implements IExpenseAccountService {
 		}
 		logger.debug("retMap : {}", retMap.toString());
 		return retMap;
-	}
+	}*/
 	
-	@Override
+	/*@Override
 	public List<Map<String, Object>> getWaitAuditInvoices(String openId) {
 		List<Map<String, Object>> ret = null;
 		String userId = userService.getUserIdByOpenId(openId);
@@ -92,9 +92,9 @@ public class ExpenseAccountServiceImpl implements IExpenseAccountService {
 		}
 		logger.debug("ret : {}", ret.toString());
 		return ret;
-	}
+	}*/
 	
-	@Override
+	/*@Override
 	public List<Map<String, Object>> getFinishAuditInvoices(String openId) {
 		List<Map<String, Object>> ret = null;
 		String userId = userService.getUserIdByOpenId(openId);
@@ -104,24 +104,23 @@ public class ExpenseAccountServiceImpl implements IExpenseAccountService {
 		}
 		logger.debug("ret : {}", ret.toString());
 		return ret;
-	}
+	}*/
 
 	@Override
 	public Map<String, List<Map<String, Object>>> getNeedAuditBillsByOpenId(String openId) {
 		Map<String, List<Map<String, Object>>> retMap = null;
-		String userId = userService.getUserIdByOpenId(openId);
+		/*String userId = userService.getUserIdByOpenId(openId);
 		logger.debug("userId : {}", userId);
 		if (userId != null && !userId.isEmpty()) {
 			retMap = invoiceService.getNeededAuditBillList(userId);
-		}
+		}*/
 		logger.debug("retMap : {}", retMap.toString());
 		return retMap;
 	}
 	
 	@Override
-	public List<Map<String, Object>> newGetNeedAuditBillsByOpenId(String openId) {
+	public List<Map<String, Object>> newGetNeedAuditBillsByOpenId(String userId) {
 		List<Map<String, Object>> retMap = null;
-		String userId = userService.getUserIdByOpenId(openId);
 		logger.debug("userId : {}", userId);
 		if (userId != null && !userId.isEmpty()) {
 			retMap = invoiceService.newGetNeededAuditBillList(userId);
@@ -130,7 +129,7 @@ public class ExpenseAccountServiceImpl implements IExpenseAccountService {
 		return retMap;
 	}
 
-	public String downloadFromUrl(String mediaId, String openId, String realPath) {
+/*	public String downloadFromUrl(String mediaId, String openId, String realPath) {
 		String base64ImageStr = "";
 		String weixinFileURL = "http://file.api.weixin.qq.com/cgi-bin/media/get?access_token=ACCESS_TOKEN&media_id=MEDIA_ID";
 		weixinFileURL = weixinFileURL.replace("ACCESS_TOKEN",
@@ -202,7 +201,7 @@ public class ExpenseAccountServiceImpl implements IExpenseAccountService {
 			logger.debug("Failed in download file.Exception : {}", e.toString());
 		}
 		return base64ImageStr;
-	}
+	}*/
 
 	@Override
 	public boolean approvalBill(String approvalId, String invoiceId,
@@ -238,7 +237,7 @@ public class ExpenseAccountServiceImpl implements IExpenseAccountService {
         logger.debug("newApprovalWork workId : {}", workId);
         return weixinDao.updateUserWorkGoingOut(workId, approval_status, reasons);
        }
-	@Override
+	/*@Override
 	public boolean submitExpenseAccount(String openId, String image) {
 		String userId = userService.getUserIdByOpenId(openId);
 		if (userId == null || userId.isEmpty())
@@ -250,14 +249,14 @@ public class ExpenseAccountServiceImpl implements IExpenseAccountService {
 		} else {
 			return false;
 		}
-	}
+	}*/
 
 	@Override
 	public List<Map<String, String>> getAllExpenseType() {
 		return expenseTypeService.getExpenseTypeMap();
 	}
 
-	@Override
+	/*@Override
 	public String downloadFromUrl(Map<String, Object> params) {
 		String base64ImageStr = "";
 		String weixinFileURL = "http://file.api.weixin.qq.com/cgi-bin/media/get?access_token=ACCESS_TOKEN&media_id=MEDIA_ID";
@@ -301,15 +300,51 @@ public class ExpenseAccountServiceImpl implements IExpenseAccountService {
 			logger.debug("Failed in download file.Exception : {}", e.toString());
 		}
 		return base64ImageStr;
-	}
+	}*/
 
 	@Override
-	public boolean submitBillAudit(String openId, String invoiceId, Map<String, String> params) {
-		String userId = userService.getUserIdByOpenId(openId);
+	public boolean submitBillAudit(String userId, String invoiceId, Map<String, String> params) {
+		/*String userId = userService.getUserIdByOpenId(openId);*/
 		logger.debug("user id : {}", userId);
 		Map ret = invoiceService.submitUserInvoice(userId, Long.valueOf(invoiceId), params);
 		logger.debug("retMap : {}", ret.toString());
 		return ret == null || !ret.containsKey("success") || !(boolean)ret.get("success") ? false : true;
+	}
+
+	@Override
+	public List<Map<String, Object>> getWaitAuditInvoices(String openId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Map<String, Object>> getFinishAuditInvoices(String openId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Map<String, List<Map<String, Object>>> getInboxBillsByOpenId(String openId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean submitExpenseAccount(String openId, String image) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public String downloadFromUrl(String mediaId, String openId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String downloadFromUrl(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

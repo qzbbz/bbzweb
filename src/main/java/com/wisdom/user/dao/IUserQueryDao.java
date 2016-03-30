@@ -32,7 +32,7 @@ public interface IUserQueryDao {
 	
 	public UserPhone getUserPhoneByUserId(String userId);
 	
-	public UserOpenid getUserOpenidByOpenid(String openid);
+	public List<UserOpenid> getUserOpenidByOpenid(String openid);
 	
 	public UserOpenid getUserOpenidByUserId(String userId);
 	

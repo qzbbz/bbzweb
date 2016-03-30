@@ -52,7 +52,13 @@ body, html, #allmap, #allmap2 {
 				<div style="text-align: center;" id="tips_info_detail">服务器暂时无法处理请求，请稍后重试！</div>
 			</div>	
 		<div id="main_content" style="display:none;">
+			
 			<form class="mui-input-group">
+					<div id="company_select" class="mui-input-row">
+                        <label>公司</label>
+                        <input id="companyName" type="text" class="mui-input-clear" value="" placeholder="" readOnly>
+                        <input id="userId" type="hidden" class="mui-input-clear" value="">
+                    </div>
                     <div class="mui-input-row">
                         <label>起始地*</label>
                         <input id="startLocation"  type="text" class="mui-input-clear" placeholder="请输入起始地">
@@ -118,6 +124,7 @@ Date.prototype.Format = function(formatStr) {
 
 	return str;
 }
+var companyPicker = new mui.PopPicker();
 var currentDate = new Date();
 var currentInvoiceTypeId;
 currentDate = currentDate.Format("yyyy-MM-DD");
@@ -293,6 +300,12 @@ mui.createTipDialog = function(info, callBack) {
     		document.getElementById('work_date').value = rs.text;
     	});
     }, false);
+    document.getElementById('company_select').addEventListener('tap', function() {
+    	companyPicker.show(function(rs) {
+    		document.getElementById('companyName').value = rs[0].text;
+    		document.getElementById('userId').value = rs[0].value;
+    	});
+    }, false);
     $("#submit").click(function(){
     	var start = $("#startLocation").val();
     	var end = $("#endLocation").val();
@@ -312,12 +325,13 @@ mui.createTipDialog = function(info, callBack) {
         	return;
         }
            	processMask.show();
+           	var userId = $('#userId').val();
         	$.ajax({
                 url : '/uploadDistance',
                 type : "POST",
                 data : {start : start, 
                            end : end,
-                           userOpenId : userOpenId,
+                           userId : userId,
                            amounts : amounts,
                            distance : distance,
                            date : date + " 00:00:00",
@@ -431,24 +445,20 @@ mui.createTipDialog = function(info, callBack) {
     mui.ajax({ 
         type : "POST", 
         url  : "/getUserOpenIdAndCheckBindCompany",
-        data : {}, 
+        data : {type:"0"}, 
         success : function(data) {
-        	if (data == null || data.openId == null || data.openId == "") {
-    			mui.createTipDialog('无法获取您的微信Openid,请稍后重试！',null).show();
+        	if (data.error_code != '0') {
+    			mui.createTipDialog(data.error_msg, null).show();
     			document.getElementById("data_loading").style.display = "none";
-    			document.getElementById("tips_info_detail").innerHTML = "无法获取您的微信Openid,<br/>请稍后重试！";
+    			document.getElementById("tips_info_detail").innerHTML = data.error_msg + ",<br/>请稍后重试！";
     	    	document.getElementById("tips_info").style.display = "";
     		} else {
-    			userOpenId = data.openId;
     			if(data.bind_status == "has_bind") {
-    				if(data.type_id != "5") {
-    					document.getElementById("data_loading").style.display = "none";
-    					document.getElementById("tips_info_detail").innerHTML = "您没有权限上传公出单，<br/>请联系管理员！";
-    			    	document.getElementById("tips_info").style.display = "";
-    				} else {
-    					document.getElementById("data_loading").style.display = "none";
-    					document.getElementById("main_content").style.display = "";
-    				}
+    				companyPicker.setData(data.companyName);
+    				document.getElementById('companyName').value = data.companyName[0].text;
+    	    		document.getElementById('userId').value = data.companyName[0].value;
+    				document.getElementById("data_loading").style.display = "none";
+					document.getElementById("main_content").style.display = "";
     			} else {
     				document.getElementById("data_loading").style.display = "none";
     				document.getElementById("tips_info_detail").innerHTML = "您还没有绑定公司，<br/>请先在账号设置中绑定您的公司！";

@@ -78,9 +78,9 @@ public class UserServiceImpl implements IUserService {
 	}
 
 	@Override
-	public String getUserIdByOpenId(String openId) {
-		UserOpenid userOpenid = userQueryDao.getUserOpenidByOpenid(openId);
-		return userOpenid != null ? userOpenid.getUserId() : "";
+	public List<UserOpenid> getUserIdByOpenId(String openId) {
+		List<UserOpenid> userOpenid = userQueryDao.getUserOpenidByOpenid(openId);
+		return userOpenid;
 	}
 
 	@Override

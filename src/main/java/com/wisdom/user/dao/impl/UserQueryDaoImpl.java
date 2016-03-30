@@ -91,14 +91,15 @@ public class UserQueryDaoImpl implements IUserQueryDao {
 	}
 
 	@Override
-	public UserOpenid getUserOpenidByOpenid(String openid) {
-		UserOpenid userOpenid = null;
+	public List<UserOpenid> getUserOpenidByOpenid(String openid) {
+		List<UserOpenid> userOpenid = null;
 		String sql = "select * from user_openid where openid = ?";
 		try {
-			userOpenid = jdbcTemplate.queryForObject(sql,
-					new Object[] { openid }, new UserOpenidMapper());
+			userOpenid = jdbcTemplate.query(sql,
+					new Object[] { openid }, new RowMapperResultSetExtractor<UserOpenid>(
+							new UserOpenidMapper()));
 		} catch (Exception e) {
-			logger.info("resuly is 0.");
+			logger.info("result is 0.");
 		}
 		return userOpenid;
 	}

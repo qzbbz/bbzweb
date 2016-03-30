@@ -142,21 +142,16 @@ public class ExpenseAccountController {
 	@RequestMapping("/uploadDistance")
 	@ResponseBody
 	public Map<String, String> uploadDistance(HttpSession session, HttpServletRequest request) {
-		String openId = request.getParameter("userOpenId");
+		String userId = request.getParameter("userId");
 	    String date = request.getParameter("date");
 	    String start = request.getParameter("start");
 	    String end = request.getParameter("end");
 	    String amount = request.getParameter("amounts");
 	    String distance = request.getParameter("distance");
 	    String price = request.getParameter("price");
-	    logger.debug("uploadDistance openid : {}", openId);
+	    logger.debug("uploadDistance userid : {}", userId);
 	    Map<String, String> retMap = new HashMap<>();
-        if(openId == null || openId.isEmpty()) {
-            retMap.put("error_code", "3");
-            retMap.put("error_message", "无法获取您微信的Openid，请稍后重新进入！");
-            return retMap;
-        }
-        String userId = userService.getUserIdByOpenId(openId);
+        //String userId = userService.getUserIdByOpenId(openId);
         if(userId == null || userId.isEmpty()) {
             retMap.put("error_code", "30");
             retMap.put("error_message", "无法获取您的用户ID，请稍后重新进入！");
@@ -173,7 +168,7 @@ public class ExpenseAccountController {
 			@RequestParam MultipartFile[] files,
 			HttpServletRequest request) {
 		logger.debug("uploadPersonInvoice");
-		String openId = request.getParameter("openId");
+		String userId = request.getParameter("userId");
 		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/files/company");
 		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
 		String expenseAmountStr = request.getParameter("expense_amount");
@@ -182,14 +177,8 @@ public class ExpenseAccountController {
 		expenseTypeStr = expenseTypeStr.substring(0, expenseTypeStr.length() - 1);
 		String[] expenseAmounts = expenseAmountStr.split(";");
 		String[] expenseTypes = expenseTypeStr.split(";");
-		logger.debug("openId realPath : {}, {}", openId, realPath);
+		logger.debug("openId realPath : {}, {}", userId, realPath);
 		Map<String, String> retMap = new HashMap<>();
-		if(openId == null || openId.isEmpty()) {
-			retMap.put("error_code", "3");
-			retMap.put("error_message", "无法获取您微信的Openid，请稍后重新进入！");
-			return retMap;
-		}
-		String userId = userService.getUserIdByOpenId(openId);
 		if(userId == null || userId.isEmpty()) {
 			retMap.put("error_code", "30");
 			retMap.put("error_message", "无法获取您的用户ID，请稍后重新进入！");
@@ -198,7 +187,7 @@ public class ExpenseAccountController {
 		if (files != null) {
 			Integer count = 0;
 			for(MultipartFile file:files) {
-				String fileName = openId
+				String fileName = userId
 						+ String.valueOf(System.currentTimeMillis());
 				String extendName = ".jpg";
 				try {
@@ -235,16 +224,16 @@ public class ExpenseAccountController {
 			HttpServletRequest request) {
 		logger.debug("uploadCompanyInvoice");
 		String date = request.getParameter("date");
-		String openId = request.getParameter("openId");
+		String userId = request.getParameter("userId");
 		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/files/company");
 		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
 		Map<String, String> retMap = new HashMap<>();
-		if(openId == null || openId.isEmpty()) {
+		if(userId == null || userId.isEmpty()) {
 			retMap.put("error_code", "1");
-			retMap.put("error_message", "无法获取您微信的Openid，请稍后重新进入！");
+			retMap.put("error_message", "无法获取您的ID，请稍后重新进入！");
 			return retMap;
 		}
-		String userId = userService.getUserIdByOpenId(openId);
+		//String userId = userService.getUserIdByOpenId(openId);
 		if(userId == null || userId.isEmpty()) {
 			retMap.put("error_code", "2");
 			retMap.put("error_message", "无法获取您的用户ID，请稍后重新进入！");
@@ -395,9 +384,9 @@ public class ExpenseAccountController {
 	@ResponseBody
 	public List<Map<String, Object>> newGetNeedAuditBills(
 			HttpServletRequest request) {
-		String openId = request.getParameter("openId");
+		String userId = request.getParameter("userId");
 		List<Map<String, Object>> retMap = expenseAccounterService
-				.newGetNeedAuditBillsByOpenId(openId);
+				.newGetNeedAuditBillsByOpenId(userId);
 		logger.debug("newGetNeedAuditBills result : {}", retMap.toString());
 		return retMap;
 	}
@@ -478,7 +467,7 @@ public class ExpenseAccountController {
 		return retMap;
 	}
 	
-	@RequestMapping("/getInboxBills")
+	/*@RequestMapping("/getInboxBills")
 	@ResponseBody
 	public Map<String, List<Map<String, Object>>> getMyInbox(
 			HttpServletRequest request) {
@@ -487,7 +476,7 @@ public class ExpenseAccountController {
 				.getInboxBillsByOpenId(openId);
 		logger.debug("getInboxBills result : {}", retMap.toString());
 		return retMap;
-	}
+	}*/
 	
 	@RequestMapping("/getWaitAuditInvoices")
 	@ResponseBody
@@ -667,11 +656,11 @@ public class ExpenseAccountController {
 	public Map<String, String> submitBillListAudit(
 			@RequestBody SubmitBillEntityWrapper wrapper, HttpServletRequest request) {
 		Map<String, String> retMap = new HashMap<>();
-		String openId = request.getParameter("openId");
-		logger.debug("openid : {}", openId);
-		if(openId == null || openId.isEmpty()) {
+		String userId = request.getParameter("userId");
+		logger.debug("openid : {}", userId);
+		if(userId == null || userId.isEmpty()) {
 			retMap.put("error_code", "1");
-			retMap.put("error_message", "无法获取您微信的Openid，请稍后重新进入！");
+			retMap.put("error_message", "无法获取您的ID，请稍后重新进入！");
 		}
 		List<SubmitBillEntity> sbe = wrapper.getSubmitBillEntities();
 		if(sbe == null || sbe.size() == 0) {
@@ -686,7 +675,7 @@ public class ExpenseAccountController {
 			params.put("invoiceId", bill.getInvoice_id());
 			params.put("amount", bill.getBill_amount());
 			params.put("expenseTypeId", bill.getBill_expenseTypeId());
-			if(expenseAccounterService.submitBillAudit(openId, bill.getInvoice_id(), params)) {
+			if(expenseAccounterService.submitBillAudit(userId, bill.getInvoice_id(), params)) {
 				sum++;
 				sb.append(bill.getInvoice_id());
 				sb.append(" ");

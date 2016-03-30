@@ -4,9 +4,9 @@ import java.util.Map;
 
 public interface ISettingService {
 	
-	public Map<String, String> checkCompanyBind(String openId);
+	public Map<String, Object> checkCompanyBind(String openId, String type);
 
-	public Map<String, String> userBindCompany(String openId, String inviteCode);
+	public Map<String, Object> userBindCompany(String openId, String inviteCode);
 	
 	public boolean userDisbindCompany(String openId);
 	

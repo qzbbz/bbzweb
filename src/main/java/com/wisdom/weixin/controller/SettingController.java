@@ -25,9 +25,9 @@ public class SettingController {
 
     @RequestMapping("/userBindCompany")
     @ResponseBody
-    public Map<String, String> userBindCompany(HttpServletRequest request) {
+    public Map<String, Object> userBindCompany(HttpServletRequest request) {
         logger.debug("userBindCompany");
-        Map<String, String> result = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
         String openId = request.getParameter("openId");
         String inviteCode = request.getParameter("inviteCode");
         String name = request.getParameter("name") == null ? "" : request.getParameter("name");
@@ -39,13 +39,13 @@ public class SettingController {
         	logger.debug("call settingService");
         	result.put("error_code", String.valueOf(WeixinJsonCode.NO_ERROR_CODE));
             result.put("error_message", WeixinJsonCode.NO_ERROR_MESSAGE);
-            Map<String, String> ret = settingService.userBindCompany(openId, inviteCode);
+            Map<String, Object> ret = settingService.userBindCompany(openId, inviteCode);
             settingService.updateUserInfo(openId, name, email);
             result.putAll(ret);
-            if(result.get("userName") == null || result.get("userName").isEmpty()) {
+            if(result.get("userName") == null || ((String)result.get("userName")).isEmpty()) {
             	result.put("userName", name);
             }
-            if(result.get("userMsgEmail") == null || result.get("userMsgEmail").isEmpty()) {
+            if(result.get("userMsgEmail") == null || ((String)result.get("userMsgEmail")).isEmpty()) {
             	result.put("userMsgEmail", email);
             }
         }

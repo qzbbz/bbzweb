@@ -351,11 +351,11 @@ mui(mui('#pull_refresh')[0]).pullToRefresh({
 mui.ajax({
 	url: '/getUserOpenId',
 	type: "POST",
-	data: {},
+	data: {type:"0"},
 	success: function(data) {
 		if (data.openId == "") {
 			mui.createTipDialog('无法获取您的微信Openid,请稍后重试！', null).show();
-		document.getElementById('data_loading').style.display = 'none';
+			document.getElementById('data_loading').style.display = 'none';
 			document.getElementById('no_data_tips').style.innerHTML = "无法获取您的微信Openid,<br/>请稍后重试！";
 			document.getElementById('no_data_tips').style.display = '';
 		} else {
@@ -365,79 +365,9 @@ mui.ajax({
 	},
 	error: function(status, error) {
 		mui.createTipDialog('请求服务器数据出错，请稍后下拉刷新重试！', null).show();
-	document.getElementById('data_loading').style.display = 'none';
+		document.getElementById('data_loading').style.display = 'none';
 		document.getElementById('no_data_tips').style.innerHTML = "请求服务器数据出错，<br/>请稍后下拉刷新重试！";
 		document.getElementById('no_data_tips').style.display = '';
 	}
 });
-
-var testData = [{
-	"user_name": "小明",
-	"invoice_count": "2",
-	"invoice_total_amount": "678.89",
-	list: [{
-		"bill_img": "/img/weixinimg/shuijiao.jpg",
-		"invoice_id": "11",
-		"bill_amount": "258.79",
-		"submit_time": "2015-12-09",
-		"expense_type_name": "餐饮消费"
-	}, {
-		"bill_img": "/img/weixinimg/shuijiao.jpg",
-		"invoice_id": "14",
-		"bill_amount": "22.79",
-		"submit_time": "2015-12-08",
-		"expense_type_name": "餐饮消费"
-	}]
-}, {
-	"user_name": "薛玉洁",
-	"invoice_count": "2",
-	"invoice_total_amount": "4678.89",
-	list: [{
-		"bill_img": "/img/weixinimg/shuijiao.jpg",
-		"invoice_id": "21",
-		"bill_amount": "158.79",
-		"submit_time": "2015-11-09",
-		"expense_type_name": "餐饮消费"
-	}, {
-		"bill_img": "/img/weixinimg/shuijiao.jpg",
-		"invoice_id": "167",
-		"bill_amount": "3822.79",
-		"submit_time": "2015-12-08",
-		"expense_type_name": "餐饮消费"
-	}]
-}, {
-	"user_name": "小明",
-	"invoice_count": "2",
-	"invoice_total_amount": "678.89",
-	list: [{
-		"bill_img": "/img/weixinimg/shuijiao.jpg",
-		"invoice_id": "11",
-		"bill_amount": "258.79",
-		"submit_time": "2015-12-09",
-		"expense_type_name": "餐饮消费"
-	}, {
-		"bill_img": "/img/weixinimg/shuijiao.jpg",
-		"invoice_id": "14",
-		"bill_amount": "22.79",
-		"submit_time": "2015-12-08",
-		"expense_type_name": "餐饮消费"
-	}]
-}, {
-	"user_name": "薛玉洁",
-	"invoice_count": "2",
-	"invoice_total_amount": "4678.89",
-	list: [{
-		"bill_img": "/img/weixinimg/shuijiao.jpg",
-		"invoice_id": "21",
-		"bill_amount": "158.79",
-		"submit_time": "2015-11-09",
-		"expense_type_name": "餐饮消费"
-	}, {
-		"bill_img": "/img/weixinimg/shuijiao.jpg",
-		"invoice_id": "167",
-		"bill_amount": "3822.79",
-		"submit_time": "2015-12-08",
-		"expense_type_name": "餐饮消费"
-	}]
-}];
 //createDataList(testData);

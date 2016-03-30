@@ -1,3 +1,4 @@
+var companyPicker = new mui.PopPicker();
 function checkJsonIsEmpty(json) {
 	var isEmpty = true;
 	if(json == null) return true;
@@ -354,7 +355,7 @@ document.getElementById('fapiaoluru_submit').addEventListener('tap', function(ev
 		typesStr += types[i].innerHTML + ";";
 	}
 	mask.show();
-	var formData = {openId:userOpenId, expense_amount:amountsStr, expense_type:typesStr};
+	var formData = {userId:$('#userId').val(), expense_amount:amountsStr, expense_type:typesStr};
 	var xhr = new XMLHttpRequest();
 	var fd = new FormData();
 	for (var jsonKey in formData) {
@@ -396,29 +397,33 @@ document.getElementById('fapiaoluru_submit').addEventListener('tap', function(ev
 document.getElementById("add_invoice_page").style.display = "";
 document.getElementById("tips_image").style.display = "";
 document.getElementById("fapiaoluru_submit").style.display = "";*/
+document.getElementById('company_select').addEventListener('tap', function() {
+	companyPicker.show(function(rs) {
+		document.getElementById('companyName').innerHTML = rs[0].text;
+		document.getElementById('userId').value = rs[0].value;
+	});
+}, false);
 mui.ajax({ 
     type : "POST", 
     url  : "/getUserOpenIdAndCheckBindCompany",
-    data : {}, 
+    data : {type:"0"}, 
     success : function(data) {
-    	if (data == null || data.openId == null || data.openId == "") {
-			mui.createTipDialog('无法获取您的微信Openid,请稍后重试！',null).show();
+    	if (data.error_code != '0') {
+			mui.createTipDialog(data.error_msg,null).show();
 			document.getElementById("data_loading").style.display = "none";
-			document.getElementById("tips_info_detail").innerHTML = "无法获取您的微信Openid,<br/>请稍后重试！";
+			document.getElementById("tips_info_detail").innerHTML = data.error_msg + ",<br/>请稍后重试！";
 	    	document.getElementById("tips_info").style.display = "";
 		} else {
 			userOpenId = data.openId;
 			if(data.bind_status == "has_bind") {
-				if(data.type_id != "5") {
-					document.getElementById("data_loading").style.display = "none";
-					document.getElementById("tips_info_detail").innerHTML = "您没有权限上传个人发票，<br/>请联系管理员！";
-			    	document.getElementById("tips_info").style.display = "";
-				} else {
-					document.getElementById("data_loading").style.display = "none";
-					document.getElementById("add_invoice_page").style.display = "";
-					document.getElementById("tips_image").style.display = "";
-					document.getElementById("fapiaoluru_submit").style.display = "";
-				}
+				companyPicker.setData(data.companyName);
+				document.getElementById('companyName').innerHTML = data.companyName[0].text;
+	    		document.getElementById('userId').value = data.companyName[0].value;
+				document.getElementById("data_loading").style.display = "none";
+				document.getElementById("add_invoice_page").style.display = "";
+				document.getElementById("tips_image").style.display = "";
+				document.getElementById("fapiaoluru_submit").style.display = "";
+				document.getElementById("company_select").style.display = "";
 			} else {
 				document.getElementById("data_loading").style.display = "none";
 				document.getElementById("tips_info_detail").innerHTML = "您还没有绑定公司，<br/>请先在账号设置中绑定您的公司！";
