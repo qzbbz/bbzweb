@@ -407,7 +407,7 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 						$.ajax({
 							url : '/modifyCompanyBill',
 							type : "POST",
-							data : {id:data[i].id, amount:data[i].amount, type:data[i].expense_type, supplyName:data[i].supplyName, tax:data[i].tax, isFixedAssets:isFixedAsset},
+							data : {id:data[i].id, amount:data[i].amount, type:data[i].expense_type, supplyName:data[i].supplyName, tax:data[i].tax, isFixedAssets:data[i].isFixedAssets},
 							success : function(data2) {
 								hitList.push(hitId);
 								
