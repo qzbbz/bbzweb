@@ -325,42 +325,50 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 		var fake = [{
 			"amount": 720,
 			"expense_type": "报销金税盘",
-			"supplyName": "上海爱信诺航天信息有限公司"
+			"supplyName": "上海爱信诺航天信息有限公司",
+			"isFixedAssets": "0"
 		},
 		{
 			"amount": 345.5,
 			"expense_type": "报销日用品",
-			"supplyName": ""
+			"supplyName": "",
+			"isFixedAssets": "0"
 		},
 		{
 			"amount": 760,
 			"expense_type": "餐费",
-			"supplyName": ""
+			"supplyName": "",
+			"isFixedAssets": "0"
 		},
 		{
 			"amount": 15,
 			"expense_type": "高速公路通行费",
-			"supplyName": ""
+			"supplyName": "",
+			"isFixedAssets": "0"
 		},
 		{
 			"amount": 1152,
 			"expense_type": "文件柜",
-			"supplyName": "上海申豫贸易有限公司"
+			"supplyName": "上海申豫贸易有限公司",
+			"isFixedAssets": "1"
 		},
 		{
 			"amount": 3100,
 			"expense_type": "办公椅",
-			"supplyName": "上海翡翔办公家具有限公司"
+			"supplyName": "上海翡翔办公家具有限公司",
+			"isFixedAssets": "1"
 		},
 		{
 			"amount": 1152,
 			"expense_type": "文件柜",
-			"supplyName": "上海申豫贸易有限公司"
+			"supplyName": "上海申豫贸易有限公司",
+			"isFixedAssets": "1"
 		},
 		{
 			"amount": 19000,
 			"expense_type": "设计服务",
-			"supplyName": "上海威武文化传播有限公司"
+			"supplyName": "上海威武文化传播有限公司",
+			"isFixedAssets": "0"
 		}
 		];
 		
@@ -382,20 +390,24 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 					var timestamp = data[i]['file_name'].substring(17);
 					var now = Date.now();
 					timestamp = parseInt(timestamp)/1000;
-					
 
-					if(((now - timestamp) < 150 * 1000 && i < hit)|| (now - timestamp) >= 150 * 1000){
-						//console.log(data[i].id);
+					if(((now - timestamp) < (150 * 1000) && i < hit)|| (now - timestamp) >= (150 * 1000)){
+
 						data[i].amount = fake[7-i].amount;
 						data[i].expense_type = fake[7-i].expense_type;
 						data[i].supplyName = fake[7-i].supplyName;
+						data[i].isFixedAssets = fake[7-i].isFixedAssets;
 						//console.log(hitList.indexOf(data[i].id));
 						if(hitList.indexOf(data[i].id) == -1){
 							var hitId = data[i].id;
+							var isFixedAsset = "no";
+							if(data[i].isFixedAssets == "1"){
+								isFixedAsset = "yes";
+							}
 						$.ajax({
 							url : '/modifyCompanyBill',
 							type : "POST",
-							data : {id:data[i].id, amount:data[i].amount, type:data[i].expense_type, supplyName:data[i].supplyName, tax:data[i].tax, isFixedAssets:"no"},
+							data : {id:data[i].id, amount:data[i].amount, type:data[i].expense_type, supplyName:data[i].supplyName, tax:data[i].tax, isFixedAssets:isFixedAsset},
 							success : function(data2) {
 								hitList.push(hitId);
 								
@@ -473,7 +485,7 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 			data : {},
 			success : function(data) {
 				createDataList(data);
-				hit = hit + 3;
+				hit = hit + 2;
 
 			}
 		});
