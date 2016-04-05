@@ -493,11 +493,12 @@ public class ExpenseAccountController {
 	            map.put("upload_type", "invoice");
 	            map.put("bill_amount", wwaim.getAmount());
 	            String imgTmp = wwaim.getFile_name();
-	            if(imgTmp != null && !imgTmp.isEmpty() && imgTmp.lastIndexOf(".") != -1) {
+	            /*if(imgTmp != null && !imgTmp.isEmpty() && imgTmp.lastIndexOf(".") != -1) {
 	                map.put("bill_img", wwaim.getFile_name().substring(0, wwaim.getFile_name().lastIndexOf(".")));
 	            } else {
 	                map.put("bill_img", wwaim.getFile_name());
-	            }
+	            }*/
+	            map.put("bill_img", wwaim.getFile_name());
 	            map.put("bill_type", wwaim.getType()); 
 	            map.put("approval_name", wwaim.getUser_name());
 	            DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -574,11 +575,12 @@ public class ExpenseAccountController {
 	            map.put("upload_type", "invoice");
 	            map.put("bill_amount", wwaim.getAmount());
 	            String imgTmp = wwaim.getFile_name();
-	            if(imgTmp != null && !imgTmp.isEmpty() && imgTmp.lastIndexOf(".") != -1) {
+	            /*if(imgTmp != null && !imgTmp.isEmpty() && imgTmp.lastIndexOf(".") != -1) {
 	                map.put("bill_img", wwaim.getFile_name().substring(0, wwaim.getFile_name().lastIndexOf(".")));
 	            } else {
 	                map.put("bill_img", wwaim.getFile_name());
-	            }
+	            }*/
+	            map.put("bill_img", wwaim.getFile_name());
 	            map.put("bill_type", wwaim.getType());
 	            map.put("approval_name", wwaim.getUser_name());
 	            map.put("approval_status", wwaim.getApproval_status());
