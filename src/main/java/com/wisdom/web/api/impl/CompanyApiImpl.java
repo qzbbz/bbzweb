@@ -210,11 +210,11 @@ public class CompanyApiImpl implements ICompanyApi {
 			FileUtils.copyInputStreamToFile(files[0].getInputStream(),
 					new File(realPath, fileName));
 			companyDetail.setCompanyResFile(path + fileName);
-			fileName = getGernarateFileName(files[0], userId);
+			fileName = getGernarateFileName(files[1], userId);
 			FileUtils.copyInputStreamToFile(files[1].getInputStream(),
 					new File(realPath, fileName));
 			companyDetail.setOrgCodeFile(path + fileName);
-			fileName = getGernarateFileName(files[0], userId);
+			fileName = getGernarateFileName(files[2], userId);
 			FileUtils.copyInputStreamToFile(files[2].getInputStream(),
 					new File(realPath, fileName));
 			companyDetail.setTaxCodeFile(path + fileName);
@@ -235,10 +235,16 @@ public class CompanyApiImpl implements ICompanyApi {
 
 	private String getGernarateFileName(MultipartFile file, String userId) {
 		Random rdm = new Random(System.currentTimeMillis());
-		String extendName = file.getOriginalFilename().substring(
+		String extendName = null;
+		try {
+			extendName = file.getOriginalFilename().substring(
 				file.getOriginalFilename().lastIndexOf(".") + 1);
+		} catch (IndexOutOfBoundsException ex) {
+			logger.error(ex.toString());
+		}
+		logger.debug("getGernarateFileName,extendName:{}", extendName);
 		return userId + System.currentTimeMillis() + Math.abs(rdm.nextInt())
-				% 1000 + (extendName == null ? ".unknown" : "." + extendName);
+				% 1000000 + (extendName == null || extendName.isEmpty()? ".jpg" : "." + extendName);
 	}
 
 	@Override
