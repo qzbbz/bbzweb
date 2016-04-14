@@ -37,7 +37,7 @@ public class UserWeixinService implements IUserWeixinService {
 	@Override
 	public boolean userHasBindCompany(String openid) {
 		List<UserOpenid> userOpenid = userQueryDao.getUserOpenidByOpenid(openid);
-		logger.debug("userOpenid is {}", userOpenid);
+		logger.debug("userOpenid is {}", userOpenid.toString());
 		return userOpenid != null && userOpenid.size() != 0 ? true : false;
 	}
 

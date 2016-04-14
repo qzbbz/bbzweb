@@ -251,6 +251,7 @@ mui.ajax({
 	    	document.getElementById("tips_info").style.display = "";
 		} else {
 			userOpenId = data.openId;
+			alert(userOpenId);
 			if(data.bind_status == "has_bind") {
 				userName = data.userName;
 				userEmail = data.userMsgEmail;
