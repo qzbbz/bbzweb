@@ -108,7 +108,7 @@ public class NotifyScheduleImpl implements NotifySchedule {
 		return;
 	}
 
-	@Scheduled(fixedDelay = 30000)
+	@Scheduled(fixedDelay = 300000)
 	@Override
 	public void notifyAccounterCallCustomer() {
 		// 查询一批记录
