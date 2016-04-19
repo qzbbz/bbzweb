@@ -288,12 +288,14 @@ public class AdminController {
 		File file = new File( "/home/files/company/",  fileName);
 		try {
 			HttpHeaders headers = new HttpHeaders();
+			/*headers.set("Content-Disposition:", "attachment;filename=\"" + new String(
+					fileName.getBytes("UTF-8"), "iso-8859-1") + "\"");  */
 			headers.setContentDispositionFormData("attachment", new String(
 					fileName.getBytes("UTF-8"), "iso-8859-1"));
-			headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);;
+			headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
 			re = new ResponseEntity<byte[]>(
 					FileUtils.readFileToByteArray(file), headers,
-					HttpStatus.CREATED);
+					HttpStatus.OK);
 		} catch (IOException e) {
 			logger.debug("download exception : {}", e.toString());
 		}
