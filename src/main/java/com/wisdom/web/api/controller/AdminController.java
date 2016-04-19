@@ -322,7 +322,7 @@ public class AdminController {
 			headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
 			re = new ResponseEntity<byte[]>(
 					FileUtils.readFileToByteArray(file), headers,
-					HttpStatus.CREATED);
+					HttpStatus.OK);
 		} catch (IOException e) {
 			logger.debug("download exception : {}", e.toString());
 		}
@@ -349,7 +349,7 @@ public class AdminController {
 			headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
 			re = new ResponseEntity<byte[]>(
 					FileUtils.readFileToByteArray(file), headers,
-					HttpStatus.CREATED);
+					HttpStatus.OK);
 		} catch (IOException e) {
 			logger.debug("download exception : {}", e.toString());
 		}
