@@ -907,7 +907,8 @@ public class CompanyApiImpl implements ICompanyApi {
                 headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
                 re = new ResponseEntity<byte[]>(
                         FileUtils.readFileToByteArray(file), headers,
-                        HttpStatus.CREATED);
+                        HttpStatus.OK);
+                // HttpStatus.CREATED
             } catch (IOException e) {
                 logger.debug("download exception : {}", e.toString());
             }
