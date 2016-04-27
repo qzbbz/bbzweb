@@ -209,6 +209,7 @@ public class AdminController {
 				if(companyName.indexOf(conditionValue) == -1) continue;
 				Map<String, String> map = new HashMap<>();
 				map.put("companyName", companyName);
+				map.put("companyId", String.valueOf(companyId));
 				map.put("coporation", companyDetail.getCorporation());
 				map.put("zhuzhiCode", companyDetail.getOrgCode());
 				map.put("shuiwuCode", companyDetail.getTaxCode());
@@ -277,20 +278,24 @@ public class AdminController {
 		String userId = (String) request.getSession().getAttribute("userId");
 		String cId = request.getParameter("companyId");
 		long companyId = Long.valueOf(cId);
-		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF");
+		//String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF");
 		ResponseEntity<byte[]> re = null;
 		CompanyDetail companyDetail = companyDetailService.getCompanyDetailByCompanyId(companyId);
 		if (companyDetail == null)
 			return null;
-		File file = new File(realPath + "/" + companyDetail.getCompanyResFile());
+		String fileName = companyDetail.getCompanyResFile();
+		fileName = fileName.substring(fileName.lastIndexOf("/")+1);
+		File file = new File( "/home/files/company/",  fileName);
 		try {
 			HttpHeaders headers = new HttpHeaders();
+			/*headers.set("Content-Disposition:", "attachment;filename=\"" + new String(
+					fileName.getBytes("UTF-8"), "iso-8859-1") + "\"");  */
 			headers.setContentDispositionFormData("attachment", new String(
-					companyDetail.getCompanyResFile().getBytes("UTF-8"), "iso-8859-1"));
+					fileName.getBytes("UTF-8"), "iso-8859-1"));
 			headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
 			re = new ResponseEntity<byte[]>(
 					FileUtils.readFileToByteArray(file), headers,
-					HttpStatus.CREATED);
+					HttpStatus.OK);
 		} catch (IOException e) {
 			logger.debug("download exception : {}", e.toString());
 		}
@@ -302,20 +307,22 @@ public class AdminController {
 		String userId = (String) request.getSession().getAttribute("userId");
 		String cId = request.getParameter("companyId");
 		long companyId = Long.valueOf(cId);
-		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF");
+		//String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF");
 		ResponseEntity<byte[]> re = null;
 		CompanyDetail companyDetail = companyDetailService.getCompanyDetailByCompanyId(companyId);
 		if (companyDetail == null)
 			return null;
-		File file = new File(realPath + "/" + companyDetail.getTaxCodeFile());
+		String fileName = companyDetail.getTaxCodeFile();
+		fileName = fileName.substring(fileName.lastIndexOf("/")+1);
+		File file = new File( "/home/files/company/",  fileName);
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentDispositionFormData("attachment", new String(
-					companyDetail.getTaxCodeFile().getBytes("UTF-8"), "iso-8859-1"));
+					fileName.getBytes("UTF-8"), "iso-8859-1"));
 			headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
 			re = new ResponseEntity<byte[]>(
 					FileUtils.readFileToByteArray(file), headers,
-					HttpStatus.CREATED);
+					HttpStatus.OK);
 		} catch (IOException e) {
 			logger.debug("download exception : {}", e.toString());
 		}
@@ -327,20 +334,22 @@ public class AdminController {
 		String userId = (String) request.getSession().getAttribute("userId");
 		String cId = request.getParameter("companyId");
 		long companyId = Long.valueOf(cId);
-		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF");
+		//String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF");
 		ResponseEntity<byte[]> re = null;
 		CompanyDetail companyDetail = companyDetailService.getCompanyDetailByCompanyId(companyId);
 		if (companyDetail == null)
 			return null;
-		File file = new File(realPath + "/" + companyDetail.getOrgCodeFile());
+		String fileName = companyDetail.getOrgCodeFile();
+		fileName = fileName.substring(fileName.lastIndexOf("/")+1);
+		File file = new File( "/home/files/company/",  fileName);
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentDispositionFormData("attachment", new String(
-					companyDetail.getOrgCodeFile().getBytes("UTF-8"), "iso-8859-1"));
+					fileName.getBytes("UTF-8"), "iso-8859-1"));
 			headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
 			re = new ResponseEntity<byte[]>(
 					FileUtils.readFileToByteArray(file), headers,
-					HttpStatus.CREATED);
+					HttpStatus.OK);
 		} catch (IOException e) {
 			logger.debug("download exception : {}", e.toString());
 		}

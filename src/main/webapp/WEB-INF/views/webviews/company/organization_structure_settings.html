@@ -766,6 +766,7 @@
     			BUI.Message.Alert('您没有填写所有信息，请检查！','warning');
     			return;
     		}
+    		$('#dept_user_submit').attr("disabled","true");
     		var userDataDetail = {
     				userId:$('#dept_user_email').val(),
     				userName:$('#dept_user_name').val(),
@@ -794,13 +795,16 @@
         				fullMask.hide();
         				BUI.Message.Alert('当前添加员工的电子邮件地址已经被使用，请更换重试！','warning');
         				//addUserDialogForm.show();
+        				$('#dept_user_submit').removeAttr("disabled");
         				return;
         			}
         			if(data == null || data == '' || data.resultCode == null || data.resultCode != '0') {
         				fullMask.hide();
         				BUI.Message.Alert('添加部门员工失败，请稍后重试！','warning');
+        				$('#dept_user_submit').removeAttr("disabled");
         				return;
         			}
+        			$('#dept_user_submit').removeAttr("disabled");
         			//deptUser.push(userDataDetail);
         			//$('#deptUserList').append("<tr><td>"+userDataDetail.userName+"</td><td>"+userDataDetail.deptName+"</td><td>"+userDataDetail.userCode+"</td><td>"+userDataDetail.userLevel+ (userDataDetail.charger == 1 ? "<span class='highlight'>负责人</span>" : "") +"</td><td>"+data.inviteCode+"</td><td><a href=''>修改</a><a href=''>删除</a></td></tr>");
         			$.ajax({
@@ -816,6 +820,7 @@
         			fullMask.hide();
         		},
         		error : function() {
+        			$('#dept_user_submit').removeAttr("disabled");
         			fullMask.hide();
         			BUI.Message.Alert('添加部门员工失败，请稍后重试！','warning');
         		}
