@@ -77,6 +77,13 @@
 				</div>
 			</div>
 			<div class="control-group">
+				<label class="control-label">数量：</label>
+				<div class="controls">
+					<input id="number" type="text" class="input-large"
+						data-rules="{required : true}" style="width:250px;">
+				</div>
+			</div>	
+			<div class="control-group">
 				<label class="control-label">发票税额：</label>
 				<div class="controls">
 					<input id="tax" type="text" class="input-large"
@@ -269,7 +276,7 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 		var modifyInfoForm = new Overlay.Dialog({
             title:'修改发票相关信息',
             width:600,
-            height:280,
+            height:380,
             contentId:'modifyInfo',
             success:function () {
               	//alert('确认');
@@ -284,6 +291,7 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 			var type=$("#modify_type").val();
 			var supplyName=$('#supplyName').val();
 			var tax = $("#tax").val();
+			var number = $("#number").val();
 			var flag=$("#isFixedAssets").prop('checked') ? 1 : 0;
 			if(!isNumber(amount)) {
 				BUI.Message.Alert('金额必须为数字，请检查！','warning');
@@ -300,7 +308,7 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 			$.ajax({
 				url : '/accounter/modifyCompanyBill',
 				type : "POST",
-				data : {id:id, amount:amount, type:type, supplyName:supplyName, tax:tax, isFixedAssets:flag},
+				data : {id:id, amount:amount, type:type, supplyName:supplyName, tax:tax, isFixedAssets:flag, number: number},
 				success : function(data) {
 					$.ajax({
 						url : '/accounter/getAllCompanyBill',
@@ -345,6 +353,7 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 						$('#modify_type').val(tmpData.expense_type);
 						$('#modify_amount').val(tmpData.amount);
 						$('#supplyName').val(tmpData.supplyName);
+						$('#number').val(tmpData.number);
 						$('#tax').val(tmpData.tax);
 						tmpData.isFixedAssets == null || tmpData.isFixedAssets == '0' ? $("#isFixedAssets").prop('checked', false) : $("#isFixedAssets").prop('checked', true);
 						modifyInfoForm.show();

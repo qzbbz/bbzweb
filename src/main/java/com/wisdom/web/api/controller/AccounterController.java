@@ -332,6 +332,7 @@ public class AccounterController {
 		String supplyName = (String)request.getParameter("supplyName");
 		String tax = (String)request.getParameter("tax");
 		String isFixedAssets = (String)request.getParameter("isFixedAssets");
+		String number = (String)request.getParameter("number");
 		Long invoiceId = Long.parseLong(id);
 		List<Map<String, String>> contentList = new ArrayList<>();
 		Map<String, String> content = new HashMap<>();
@@ -339,6 +340,7 @@ public class AccounterController {
 		content.put("amount", amount);
 		content.put("supplier", supplyName);
 		content.put("tax", tax);
+		content.put("number", number);
 		contentList.add(content);
 		Boolean fA = false;
 		if (isFixedAssets.equals("1")){
