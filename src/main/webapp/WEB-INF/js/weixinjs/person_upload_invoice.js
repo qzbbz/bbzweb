@@ -187,6 +187,7 @@ mui.previewImage({
 
 var userOpenId = "";
 
+
 function getImageDataURL(img) {
 	var canvas = document.createElement('canvas');
 	canvas.width = img.width;
@@ -416,9 +417,10 @@ mui.ajax({
 		} else {
 			userOpenId = data.openId;
 			if(data.bind_status == "has_bind") {
+				console.log(data);
 				companyPicker.setData(data.companyName);
-				document.getElementById('companyName').innerHTML = data.companyName[0].text;
-	    		document.getElementById('userId').value = data.companyName[0].value;
+				document.getElementById('companyName').innerHTML = data.default_company;
+	    		document.getElementById('userId').value = data.default_userid;
 				document.getElementById("data_loading").style.display = "none";
 				document.getElementById("add_invoice_page").style.display = "";
 				document.getElementById("tips_image").style.display = "";
