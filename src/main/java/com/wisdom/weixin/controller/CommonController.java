@@ -139,8 +139,7 @@ public class CommonController {
 		Map<String, Object> result = new HashMap<>();
 		String type = request.getParameter("type");
 		String openId = (String)session.getAttribute("userOpenId");
-		openId = "oSTV_t9N4kK-z5IVsMxLrWF2C_sg";
-		//openId = "oSTV_tyNc2RAxiP_y0WeVN2L-Qbw";
+
 		result.put("openId", openId);
 		if (openId == null || openId.isEmpty()) {
 			result.put("error_code", String.valueOf(WeixinJsonCode.NO_OPENID_ERROR_CODE));
