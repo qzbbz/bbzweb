@@ -90,4 +90,13 @@ public class UserInvoiceServiceImpl implements IUserInvoiceService {
 	public List<UserInvoice> getUserInvoiceByApprovalIdAndStatus(String approvalId, int status) {
 		return userInvoiceDao.getUserInvoiceByApprovalIdAndStatus(approvalId, status);
 	}
+
+	@Override
+	public UserInvoice getLatestUserInvoice(List<String> userIds) {
+		String userIdsStr = "";
+		for(String userId: userIds){
+			userIdsStr += "'" + userId + "',";
+		}
+		return userInvoiceDao.getLatestUserInvoice(userIdsStr.substring(0,userIdsStr.length()-1));
+	}
 }

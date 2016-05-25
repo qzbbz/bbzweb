@@ -10,9 +10,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.wisdom.common.model.UserInvoice;
 import com.wisdom.common.model.UserOpenid;
 import com.wisdom.company.service.ICompanyService;
 import com.wisdom.company.service.IDeptService;
+import com.wisdom.invoice.service.IUserInvoiceService;
 import com.wisdom.user.service.IUserDeptService;
 import com.wisdom.user.service.IUserService;
 import com.wisdom.user.service.IUserWeixinService;
@@ -38,6 +40,9 @@ public class SettingServiceImpl implements ISettingService {
 
 	@Autowired
 	private IDeptService deptService;
+	
+	@Autowired
+	private IUserInvoiceService userInvoiceService;
 
 	@Override
 	public Map<String, Object> checkCompanyBind(String openId, String type) {
@@ -50,9 +55,24 @@ public class SettingServiceImpl implements ISettingService {
 				UserOpenid uoi = uoiList.get(0);
 				String userName = userService.getUserNameByUserId(uoi.getUserId());
 				String userMsgEmail = userService.getUserMsgEmailByUserId(uoi.getUserId());
+				List<String> userIds = new ArrayList<>();
 				for(UserOpenid oid : uoiList) {
 					getCompanyNameAndDeptName(oid.getUserId(), retMap, type);
+					userIds.add(oid.getUserId());
 				}
+				UserInvoice userInvoice = userInvoiceService.getLatestUserInvoice(userIds);
+				if(userInvoice != null){
+					String userId = userInvoice.getUserId();
+					long companyId = userService.getCompanyIdByUserId(userId);
+					logger.debug("comapnyId : {}", companyId);
+					String companyName = companyService.getCompanyName(companyId);
+					retMap.put("default_company", companyName);
+					retMap.put("default_userid", userId);
+				}else{
+					retMap.put("default_company", "");
+					retMap.put("default_userid", "");
+				}
+				
 				retMap.put("bind_status", "has_bind");
 				retMap.put("userName", userName);
 				retMap.put("userMsgEmail", userMsgEmail);

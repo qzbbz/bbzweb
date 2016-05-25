@@ -245,4 +245,18 @@ public class UserInvoiceDaoImpl implements IUserInvoiceDao {
 		return list;
 	}
 
+	@Override
+	public UserInvoice getLatestUserInvoice(String userIds) {
+
+		try{
+			String sql = "select * from user_invoice where user_id in (" + userIds + ") order by create_time desc limit 1";
+			UserInvoice userInvoice = jdbcTemplate.queryForObject(sql,
+					new Object[] { }, new UserInvoiceMapper());
+			return userInvoice;
+		} catch (DataAccessException e) {
+			logger.error(e.toString());
+		}
+		return null;
+	}
+
 }

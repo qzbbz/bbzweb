@@ -23,5 +23,7 @@ public interface IUserInvoiceService {
 	public boolean updateUserInvoiceReason(long invoiceId, String reason);
 	
 	public List<UserInvoice> getUserInvoiceByApprovalIdAndStatus(String approvalId, int status);
+	
+	public UserInvoice getLatestUserInvoice(List<String> userIds);
 
 }
