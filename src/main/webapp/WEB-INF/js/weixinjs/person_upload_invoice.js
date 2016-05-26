@@ -301,13 +301,14 @@ document.getElementById("fapiaoluru_addInvoiceImage").onchange = function(event)
 			$(".fapiaoluru_amount").keyup(function(){
 				var amount = 0;
 				$(".fapiaoluru_amount").each(function(){
-					var elem = parseDouble($(this).val());
+					var elem = parseFloat($(this).val());
 					
 					if(!isNaN(elem)){
 						amount += elem;
 					}
 
 				});
+				amount = amount.toFixed(2);
 				$("#total_amount").html("发票总额： " + amount + "元");
 			});
 			try {
