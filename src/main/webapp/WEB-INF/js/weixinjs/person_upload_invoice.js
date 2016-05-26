@@ -281,7 +281,7 @@ document.getElementById("fapiaoluru_addInvoiceImage").onchange = function(event)
 			inputAmountNode.style.height = "45px";
 			inputAmountNode.style.color = "#8f8f94";
 			//inputAmountNode.innerHTML = "发票金额:<span class='mui-pull-right' ><span class='fapiaoluru_amount' id='fapiaoluru_amount_"+inputIndex+"'>0</span><span class='mui-icon mui-icon-arrowright' style='font-size: 20px;margin-top:0px;display:inline-block'></span></span>";
-			inputAmountNode.innerHTML = "<span>发票金额:</span><span class='mui-pull-right' style='height:20px;'><input class='fapiaoluru_amount' type='text' style='width:100px;height:20px;padding-top:0px;padding-bottom:0px;'/></span>";
+			inputAmountNode.innerHTML = "<span>发票金额:</span><span class='mui-pull-right' style='height:30px;'><input class='fapiaoluru_amount' type='text' style='width:100px;height:30px;padding-top:0px;padding-bottom:0px;'/></span>";
 			var inputTypeNode = document.createElement('div');
 			inputTypeNode.style.marginTop = "5px";
 			inputTypeNode.style.marginLeft = "5px";
@@ -298,6 +298,18 @@ document.getElementById("fapiaoluru_addInvoiceImage").onchange = function(event)
 			}, false);
 			imageRootNode.appendChild(liNode);
 			file = files[i];
+			$(".fapiaoluru_amount").keyup(function(){
+				var amount = 0;
+				$(".fapiaoluru_amount").each(function(){
+					var elem = parseInt($(this).val());
+					
+					if(!isNaN(elem)){
+						amount += elem;
+					}
+
+				});
+				$("#total_amount").html("发票总额： " + amount + "元");
+			});
 			try {
 				var URL = window.URL || window.webkitURL;
 				imgURL = URL.createObjectURL(file);
