@@ -301,7 +301,7 @@ document.getElementById("fapiaoluru_addInvoiceImage").onchange = function(event)
 			$(".fapiaoluru_amount").keyup(function(){
 				var amount = 0;
 				$(".fapiaoluru_amount").each(function(){
-					var elem = parseInt($(this).val());
+					var elem = parseDouble($(this).val());
 					
 					if(!isNaN(elem)){
 						amount += elem;
