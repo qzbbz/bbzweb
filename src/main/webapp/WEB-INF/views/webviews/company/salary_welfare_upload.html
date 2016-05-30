@@ -97,6 +97,16 @@
 	<script src="/js/webjs/bui.js"></script>
 	<script src="/js/webjs/ajaxfileupload.js"></script>
 	<script type="text/javascript">
+	var time = new Date();
+	
+	time.setMonth(time.getMonth()-1);
+	var month = time.getMonth()+1;
+	var monthStr = month.toString();
+	if(monthStr.length == 1){
+		monthStr = "0" + monthStr;
+	}
+	var timeStr = time.getFullYear() + "-" + monthStr;
+	$('#salary_date').val(timeStr);
 	$('#salary_date').click(function(){
 		var currentDate = new Date();
 		var currentYear = currentDate.getFullYear();

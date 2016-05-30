@@ -90,6 +90,17 @@
 	<script src="/js/webjs/layout.js"></script>
 	<script src="/js/webjs/bui.js"></script>
 	<script type="text/javascript">
+	var time = new Date();
+	
+	time.setMonth(time.getMonth()-1);
+	var month = time.getMonth()+1;
+	var monthStr = month.toString();
+	if(monthStr.length == 1){
+		monthStr = "0" + monthStr;
+	}
+	var timeStr = time.getFullYear() + "-" + monthStr;
+	$('#date').val(timeStr);
+	
 	$('#date').click(function(){
 		var currentDate = new Date();
 		var currentYear = currentDate.getFullYear();
