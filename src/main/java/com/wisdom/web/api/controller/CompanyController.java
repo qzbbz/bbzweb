@@ -518,6 +518,34 @@ public class CompanyController {
 		return retMap;
 	}
 	
+	@RequestMapping("/company/uploadBankRes")
+	@ResponseBody
+	public Map<String, String> uploadBankRes(DefaultMultipartHttpServletRequest multipartRequest,
+			HttpServletRequest request) {
+		logger.debug("===>uploadBankRes");
+		String userId = (String) request.getSession().getAttribute("userId");
+		
+		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/files/company");
+		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
+//		realPath = "/files/company";
+		String date = request.getParameter("date");
+		Map<String, String> params = new HashMap<>();
+		params.put("userId", userId);
+		params.put("realPath", realPath);
+		params.put("date", date);
+		if (multipartRequest != null) {
+			Iterator<String> iterator = multipartRequest.getFileNames();
+			while (iterator.hasNext()) {
+				MultipartFile multifile = multipartRequest
+						.getFile((String) iterator.next());
+				companyApi.uploadCompanyBankRes(multifile, params);
+			}
+		}
+		Map<String, String> retMap = new HashMap<String, String>();
+		retMap.put("url", "url");
+		return retMap;
+	}
+	
 	@RequestMapping("/company/uploadCompanySales")
 	@ResponseBody
 	public Map<String, String> uploadCompanySales(DefaultMultipartHttpServletRequest multipartRequest,
@@ -570,6 +598,17 @@ public class CompanyController {
 		params.put("conditionType", request.getParameter("conditionType"));
 		params.put("userId", userId);
 		return companyApi.getCompanyBankStaByCondition(params);
+	}
+	
+	@RequestMapping("/company/getAllCompanyBankRes")
+	@ResponseBody
+	public List<Map<String, String>> getAllCompanyBankRes(HttpServletRequest request) {
+		String userId = (String) request.getSession().getAttribute("userId");
+		Map<String, String> params = new HashMap<>();
+		params.put("conditionValue", request.getParameter("conditionValue"));
+		params.put("conditionType", request.getParameter("conditionType"));
+		params.put("userId", userId);
+		return companyApi.getCompanyBankResByCondition(params);
 	}
 	
 	@RequestMapping("/company/getAllCompanySales")

@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>上海元升财务咨询有限公司</title>
+    <link rel="stylesheet" type="text/css" href="/css/webcss/bui.css">
+	<link rel="stylesheet" type="text/css" href="/css/webcss/golbal.css">
+	<link rel="stylesheet" type="text/css" href="/css/webcss/layout.css">
+</head>
+<body>
+	<div class="wrap">
+		<div class="side-bar">
+			<div class="side-bar-top">
+				<img src="/img/webimg/bss-logo.png" >
+				<h1>上海元升财务咨询有限公司</h1>
+			</div>
+            <div class="side-bar-content" id="menuTree"></div>
+			<div class="side-bar-bottom">
+				<ul>
+					<li><a href="javascript:void(0);" id="setPwd"><i class="setting"></i>设置</a></li>
+					<li><a href="/logout"><i class="exit"></i>安全退出</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="main">
+			<div class="zero-state">
+				<div class="form-window form-uploader">
+                    <div class="hd"><i class="iconfont"></i></div>
+                    <div class="bd">
+                        <h2>您在这里可以上传银行回单</h2>
+                        <div class="form-horizontal" style="margin-top:20px;">
+                            <div class="row">
+                                <label for="" class="control-label">会计期间：</label>
+                                <div class="controls">
+                                  <input name="sname" id="date" name="date" type="text" class="input input-normal" style="width:300px;">
+                                </div>
+                            </div>
+                            <div id="selectMonth" style="display:none;position:relative; z-index:99999;margin-left:170px;"></div>
+                        </div>
+                    </div>
+                    <div class="uploader-wrap">
+                        <div class="uploader-label">文件列表：</div>
+                        <div id="J_Uploader">
+                            <div class="uploader-text">选择回单图片文件</div>
+                        <div class="bui-uploader defaultTheme" aria-disabled="false"><div class="bui-uploader-htmlButton bui-uploader-button" aria-disabled="false"><a href="javascript:void(0);" class="bui-uploader-button-wrap"><span class="bui-uploader-button-text">上传文件</span><div class="file-input-wrapper"><input type="file" name="fileData" hidefocus="true" class="file-input" multiple="multiple"></div></a></div><div class="bui-queue bui-simple-list" aria-disabled="false"><ul></ul></div></div></div>
+                        <a class="button button-success ml10" id="uplaodFiles" href="#">上传对账单图片文件</a>
+                    </div>
+                </div>
+			</div>
+		</div>
+	</div>
+ <div id="mask" style="width:100vw;height:100vh; position: absolute; top:0px; left: 0px;z-index:-1;"></div>
+	<div id="modifyPwd" style="display:none;">
+		<div id="form" class="form-horizontal">
+			<div class="control-group">
+				<label class="control-label">输入旧密码：</label>
+				<div class="controls">
+					<input id="old_pwd" type="password" class="input-large"
+						data-rules="{required : true}" style="width:250px;">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">输入新密码：</label>
+				<div class="controls control-row-auto">
+					<input id="new_pwd" type="password" class="input-large"
+						data-rules="{required : true}" style="width:250px;">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">再次输入新密码：</label>
+				<div class="controls control-row-auto">
+					<input id="confirm_new_pwd" type="password" class="input-large"
+						data-rules="{required : true}" style="width:250px;">
+				</div>
+			</div>
+			<div class="control-group">
+				<label id="modify_pwd_tips"></label>
+			</div>
+			<div class="control-group control-btn">
+				<div class="layer-wrap-footer"><a href="javascript:void(0);" id="modify_pwd_button" class="button button-success">确定修改</a></div>
+			</div>
+		</div>
+	</div>
+	<div style="position:fixed; bottom: 0; right: 0;"><a target="_blank" href="http://sighttp.qq.com/authd?IDKEY=a1a51fb184a88bbb4c1756a211f1ff1fbc9d47079f63eb30"><img border="0" src="http://wpa.qq.com/imgd?IDKEY=a1a51fb184a88bbb4c1756a211f1ff1fbc9d47079f63eb30&pic=41" alt="点我联系我" title="点我联系我"/></a></div>
+	<!--该js需要修改js路径及修改seajs路径-->
+	<script src="http://g.tbcdn.cn/fi/bui/jquery-1.8.1.min.js"></script>
+	<script src="/js/webjs/sea.js"></script>
+	<script src="/js/webjs/config.js"></script>
+	<script src="/js/webjs/menuTree.js"></script>
+	<script src="/js/webjs/layout.js"></script>
+	<script src="/js/webjs/bui.js"></script>
+	<script type="text/javascript">
+	$('#date').click(function(){
+		var currentDate = new Date();
+		var currentYear = currentDate.getFullYear();
+		var currentMonth = currentDate.getMonth();
+		$('#selectMonth').show();
+		var Calendar = BUI.Calendar
+        var monthpicker = new BUI.Calendar.MonthPicker({
+	        render:'#selectMonth',
+	        month:currentMonth,
+	        align : {
+	          points:['tl','tl']
+	        },
+	        year:currentYear,
+	        success:function(){
+	        	var month = (this.get('month') + 1).toString();
+	        	if(month.length == 1) month = "0" + month;
+	          	$("#date").val(this.get('year') + "-" + month);
+	          	monthpicker.close();
+	        },
+	        cancel:function() {
+	        	
+	        	monthpicker.close();
+	        }
+      	});
+      	monthpicker.show();
+	});
+	BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
+		var modifyPwdForm = new Overlay.Dialog({
+            title:'密码修改',
+            width:600,
+            height:280,
+            contentId:'modifyPwd',
+            success:function () {
+              	this.close();
+            },
+            buttons : []
+        });
+		$('#setPwd').click(function(){
+			modifyPwdForm.show();
+		})
+		$('#modify_pwd_button').click(function(){
+			var oldPwd = $('#old_pwd').val();
+			var newPwd = $('#new_pwd').val();
+			var confirmNewPwd = $('#confirm_new_pwd').val();
+			if(oldPwd == null || oldPwd == "") {
+				BUI.Message.Alert('请输入旧密码！','warning');
+				return;
+			}
+			if(newPwd == null || newPwd == "") {
+				BUI.Message.Alert('请输新密码！','warning');
+				return;
+			}
+			if(confirmNewPwd == null || confirmNewPwd == "") {
+				BUI.Message.Alert('请输入新密码！','warning');
+				return;
+			}
+			if(newPwd != confirmNewPwd) {
+				BUI.Message.Alert('两次输入的新密码不一致，请检查！','warning');
+				return;
+			}
+			$.ajax({
+				url : '/modifyPassword',
+				type : "POST",
+				data : {oldPwd:oldPwd, newPwd:newPwd},
+				success : function(data) {
+					if(data.error_code == "0") {
+						BUI.Message.Alert('修改密码成功！','success');
+					} else {
+						BUI.Message.Alert('修改密码失败！错误信息：' + data.error_msg,'warning');
+					}
+				},
+				error : function(data) {
+					BUI.Message.Alert('修改密码失败！错误信息：' + data.error_msg,'warning');
+				}
+			});
+		})
+	});
+		//侧栏高度
+        (function(){
+            var H=$(window).height();
+            var h1=$(".side-bar-top").height()+$(".side-bar-bottom").height();
+            $(".side-bar-content").height(H-h1);
+            $(window).resize(function(){
+                H=$(window).height();
+                $(".side-bar-content").height(H-h1);
+            });
+        })()
+		//竖状菜单
+	     var menu = new menuTree(
+            {"nodes" : [
+{text : '组织架构',id : '50',href:"javascript:void(0);",  expanded : false,children: [
+                                                          						{text : '基本信息设置',id : '51', href:"/views/webviews/company/organization_information_settings.html"},
+                                                          						{text : '组织架构设置',id : '52', href:"/views/webviews/company/organization_structure_settings.html"}                                           
+                                                          					]},
+					{text : '公司发票',id : '10',href:"javascript:void(0);",  expanded : false,children: [
+						{text : '发票上传',id : '11', href:"/views/webviews/company/expense_account_upload.html"},
+						{text : '发票历史记录',id : '12', href:"/views/webviews/company/expense_account_history.html"}                                           
+					]},
+					{text : '银行对账单',id : '20',href:"javascript:void(0);", expanded : true,children: [
+						{text : '上传对账单',id : '21', href:"/views/webviews/company/bank_statement_upload.html"},
+						{text : '对账单历史记录',id : '22', href:"/views/webviews/company/bank_statement_history.html"},
+						{text : '上传回单',id : '21', href:"/views/webviews/company/bank_response_upload.html"},
+						{text : '回单历史记录',id : '22', href:"/views/webviews/company/bank_response_history.html"},
+					]},
+					{text : '销售清单',id : '80',href:"javascript:void(0);", expanded : false,children: [
+						{text : '上传销售清单',id : '81', href:"/views/webviews/company/sales_upload.html"},
+						{text : '销售清单历史记录',id : '82', href:"/views/webviews/company/sales_history.html"}                                           
+					]},
+					{text : '工资社保',id : '30',href:"javascript:void(0);", expanded : false,children: [
+						
+						{text : '下载工资计算模板',id : '32', href:"/views/webviews/company/salary_welfare_template_download.html"},                                           
+						{text : '上传工资单',id : '33', href:"/views/webviews/company/salary_welfare_upload.html"},
+						{text : '工资历史记录',id : '34', href:"/views/webviews/company/salary_history.html"},
+						{text : '工资计算模板历史记录',id : '35', href:"/views/webviews/company/salary_template_history.html"}
+					]},
+					{text : '预约取发票',id : '40',href:"javascript:void(0);", expanded : false,children: [
+						{text : '方式选择',id : '41', href:"/views/webviews/company/take_expense_account_mode_select.html"}                                           
+					]},
+					{text : '基本报表',id : '70',href:"javascript:void(0);",  expanded : false,children: [
+					                                                          						{text : '资产负债表',id : '71', href:"/views/webviews/company/sheet_balance.html"},
+					                                                          						{text : '利润表',id : '72', href:"/views/webviews/company/sheet_income.html"},
+					                                                          						{text : '现金流量表',id : '73', href:"/views/webviews/company/sheet_cash.html"},
+					                                                          						{text : '薪酬及税费表',id : '74', href:"/views/webviews/company/sheet_salary.html"},
+					                                                          						{text : '下载Excel模板',id : '75', href:"/views/webviews/company/base_statement_template_download.html"}
+					                                                          					]},
+					{text : '会计点将',id : '60',href:"/views/webviews/company/select_accounter.html",  leaf:false,expanded : false,children: []},
+					{text : '申请发票',id : '90',href:"/views/webviews/company/apply_invoice.html",  leaf:false,expanded : false,children: []},
+					{text : '查看合同文件',id : '100',href:"/views/webviews/company/contract.html",  leaf:false,expanded : false,children: []},
+					]
+            },"menuTree"
+        );
+    defaultSelect("21");
+    function defaultSelect(id){ 
+        $("#"+id).parent().addClass("bui-menu-item-selected")
+    }
+        //弹层
+        BUI.use(['bui/overlay','bui/form'],function(Overlay,Form){
+    
+			var form = new Form.Form({
+				srcNode : '#form'
+			}).render();
+
+			var dialog = new Overlay.Dialog({
+				title:'标题',
+				width:500,
+				height:320,
+				//配置DOM容器的编号
+				contentId:'content',
+				success:function () {
+					alert('确认');
+					this.close();
+				}
+			});
+			//dialog.show();
+ 
+	        $('#btnGroup .button').on('click',function () {
+	          var sender = $(this),
+	            type = sender.text(),
+	            effect = {
+	              effect : type,
+	              duration : 400// 
+	              //callback : function(){} ,callback 回调函数
+	            };
+	 
+	          dialog.set('effect',effect);
+	          dialog.show();
+	 
+	        });
+	    });
+        BUI.use('bui/calendar',function(Calendar){
+            var datepicker = new Calendar.DatePicker({
+              trigger:'.calendar',
+              autoRender : true
+            });
+          });
+		BUI.use('bui/uploader', function(Uploader) {
+			/**
+			 * 返回数据的格式
+			 *
+			 *  默认是 {url : 'url'},否则认为上传失败
+			 *  可以通过isSuccess 更改判定成功失败的结构
+			 */
+
+			  var fileConuter = 0;
+             var fileNums = 0; 
+			var uploader = new Uploader.Uploader({
+				render : '#J_Uploader',
+				url : '/company/uploadBankRes',
+				autoUpload : false,
+				success : function(result) {
+
+				},
+				error : function(result) {
+					BUI.use([ 'bui/mask' ], function(Mask) {
+						var loadMask = new Mask.LoadMask({
+							el : '#mask',
+							msg : 'loading ....'
+						});
+						$("#mask").css("z-index", -1);
+						loadMask.hide();
+						var items = uploader.get("queue").getItems();
+						uploader.get("queue").removeItems(items);
+						BUI.Message.Alert('上传失败！', 'warning');
+					});
+				}
+			}).render();
+			uploader.on('success', function(ev) {
+
+				BUI.use([ 'bui/mask' ], function(Mask) {
+					var loadMask = new Mask.LoadMask({
+						el : '#mask',
+						msg : 'loading ....'
+					});
+					  fileConuter ++;
+	                    if (fileConuter == fileNums) {
+	                    	loadMask.hide();
+	                        $("#mask").css("z-index", -99);
+	                        var items = uploader.get("queue").getItems();
+	                        while(items.length != 0) {
+	                            uploader.get("queue").removeItem(items[0]);
+	                        }
+	                    }
+					BUI.Message.Alert('上传成功！', 'info');
+				});
+				
+			});
+
+			$('#uplaodFiles').click(
+					function() {
+
+						if ($('#date').val() == null
+								|| $('#date').val() == '') {
+							BUI.Message.Alert('会计期间不能为空，请检查！', 'warning');
+						}else if(uploader.get("queue").getItems().length == 0){
+							BUI.Message.Alert('上传照片不能为空，请检查！', 'warning');
+						} 
+						else {
+							BUI.use([ 'bui/mask' ], function(Mask) {
+
+								var loadMask = new Mask.LoadMask({
+									el : '#mask',
+									msg : 'loading ....'
+								});
+								$("#mask").css("z-index", 99);
+								loadMask.show();
+							});
+							uploader.set('data', {
+								date : $('#date').val()
+							});
+							 fileNums = uploader.get("queue").getItems().length;
+							uploader.upload();
+						}
+					});
+		});
+	</script>
+</body>
+</html>

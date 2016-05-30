@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.wisdom.accounter.service.IAccounterService;
 import com.wisdom.common.model.Company;
+import com.wisdom.common.model.CompanyBankRes;
 import com.wisdom.common.model.CompanyBankSta;
 import com.wisdom.common.model.CompanyDetail;
 import com.wisdom.common.model.CompanySalary;
@@ -42,6 +43,7 @@ import com.wisdom.company.dao.ISheetBalanceDao;
 import com.wisdom.company.dao.ISheetCashDao;
 import com.wisdom.company.dao.ISheetIncomeDao;
 import com.wisdom.company.dao.ISheetSalaryTaxDao;
+import com.wisdom.company.service.ICompanyBankResService;
 import com.wisdom.company.service.ICompanyBankStaService;
 import com.wisdom.company.service.ICompanyDetailService;
 import com.wisdom.company.service.ICompanySalaryService;
@@ -92,6 +94,9 @@ public class CompanyApiImpl implements ICompanyApi {
 
 	@Autowired
 	private ICompanyBankStaService companyBankStaService;
+	
+	@Autowired
+	private ICompanyBankResService companyBankResService;
 	
 	@Autowired
 	private ICompanySalesService companySalesService;
@@ -512,6 +517,45 @@ public class CompanyApiImpl implements ICompanyApi {
 		return null;
 	}
 
+	@Override
+	public List<Map<String, String>> getCompanyBankResByCondition(
+			Map<String, String> params) {
+		String userId = params.get("userId");
+		if (userId == null || userId.isEmpty())
+			return null;
+		long companyId = userService.getCompanyIdByUserId(userId);
+		if (companyId <= 0)
+			return null;
+		if (params.get("conditionType") == null
+				|| params.get("conditionType").isEmpty()
+				|| ("0").equals(params.get("conditionType"))
+				|| params.get("conditionValue") == null
+				|| params.get("conditionValue").isEmpty()) {
+			List<CompanyBankRes> list = companyBankResService
+					.getAllCompanyBankRes(companyId);
+			return createCompanyBankResList(list);
+		}
+		if (("1").equals(params.get("conditionType"))
+				&& params.get("conditionValue") != null) {
+			List<CompanyBankRes> list = companyBankResService
+					.getAllCompanyBankResByDate(companyId,
+							params.get("conditionValue"));
+			return createCompanyBankResList(list);
+		}
+		if (("2").equals(params.get("conditionType"))
+				&& params.get("conditionValue") != null) {
+			Integer conditionValue = 0;
+			if(params.get("conditionValue").equals("未识别")){
+				conditionValue = 1;
+			}
+			List<CompanyBankRes> list = companyBankResService
+					.getAllCompanyBankResByIdentifyStatus(companyId,
+							conditionValue);
+			return createCompanyBankResList(list);
+		}
+		return null;
+	}
+	
 	private List<Map<String, String>> createCompanyBankStaList(
 			List<CompanyBankSta> list) {
 		List<Map<String, String>> retList = new ArrayList<>();
@@ -534,6 +578,33 @@ public class CompanyApiImpl implements ICompanyApi {
 							.getIdentifyStatus()));
 			map.put("ide_date",
 					cbs.getIdeDate() == null ? "" : cbs.getIdeDate());
+			retList.add(map);
+		}
+		return retList.size() > 0 ? retList : null;
+	}
+	
+	private List<Map<String, String>> createCompanyBankResList(
+			List<CompanyBankRes> list) {
+		List<Map<String, String>> retList = new ArrayList<>();
+		if (list == null)
+			return null;
+		for (CompanyBankRes cbr : list) {
+			Map<String, String> map = new HashMap<>();
+			map.put("date", cbr.getDate());
+			map.put("id", String.valueOf(cbr.getId()));
+			map.put("ide_name",
+					cbr.getIdeName() == null ? "" : cbr.getIdeName());
+			map.put("ide_account",
+					cbr.getIdeAccount() == null ? "" : cbr.getIdeAccount());
+			map.put("ide_bank_name",
+					cbr.getIdeBankName() == null ? "" : cbr.getIdeBankName());
+			map.put("file_name",
+					cbr.getFileName() == null ? "" : cbr.getFileName());
+			map.put("status",
+					String.valueOf(cbr.getIdentifyStatus() == null ? 0 : cbr
+							.getIdentifyStatus()));
+			map.put("ide_date",
+					cbr.getIdeDate() == null ? "" : cbr.getIdeDate());
 			retList.add(map);
 		}
 		return retList.size() > 0 ? retList : null;
@@ -989,6 +1060,38 @@ public class CompanyApiImpl implements ICompanyApi {
 
 
 		return blRet;
+	}
+
+	@Override
+	public Map<String, String> uploadCompanyBankRes(MultipartFile file, Map<String, String> params) {
+		Map<String, String> retMap = new HashMap<>();
+		try {
+			String userId = params.get("userId");
+			long companyId = userService.getCompanyIdByUserId(userId);
+			
+			String orginFileName = file.getOriginalFilename();
+				
+			String fileName = getGernarateFileName(file, userId);
+			FileUtils.copyInputStreamToFile(file.getInputStream(), new File(
+					params.get("realPath"), fileName));
+			
+			CompanyBankRes cbr = new CompanyBankRes();
+			cbr.setDate(params.get("date"));
+			
+				cbr.setCompanyId(companyId);
+				cbr.setFileName(fileName);
+				cbr.setIdentifyStatus(0);
+				cbr.setCreateTime(new Timestamp(System.currentTimeMillis()));
+			
+			
+			companyBankResService.addCompanyBankRes(cbr);
+			retMap.put("error_code", "0");
+		} catch (IOException e) {
+			logger.debug("uploadCompanyBankSta exception : {}", e.toString());
+			retMap.put("error_code", "1");
+			retMap.put("error_message", "上传回单失败，请稍后重试！");
+		}
+		return retMap;
 	}
 
    

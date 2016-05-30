@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>上海元升财务咨询有限公司</title>
+    <link rel="stylesheet" type="text/css" href="/css/webcss/bui.css">
+	<link rel="stylesheet" type="text/css" href="/css/webcss/golbal.css">
+	<link rel="stylesheet" type="text/css" href="/css/webcss/layout.css">
+	<link rel="stylesheet" type="text/css" href="/css/webcss/iviewer.css">
+</head>
+<body>
+	<div class="wrap">
+		<div class="side-bar">
+			<div class="side-bar-top">
+				<img src="/img/webimg/bss-logo.png" >
+				<h1>上海元升财务咨询有限公司</h1>
+			</div>
+            <div class="side-bar-content" id="menuTree"></div>
+			<div class="side-bar-bottom">
+				<ul>
+					<li><a href="javascript:void(0);" id="setPwd"><i class="setting"></i>设置</a></li>
+					<li><a href="/logout"><i class="exit"></i>安全退出</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="main">
+			<div class="menu"><a href="#" class="active">对账单历史记录</a></div>
+			<div class="well mt20">
+				<div class="form-horizontal onlineTools">
+					<div class="row show-grid">
+						<label class="control-label control-label-small"></label>
+                        <div class="controls"><select name="condition" id="condition" class="input input-normal"><option value='0'>所有</option><option value='1'>按会计期间检索</option><option value='2'>按识别状态检索</option></select><input type="text" id="content" class="input input-normal ml10"><button id="searchData" class="button button-success ml10">搜索</button><button id="deleteData" class="button button-danger ml10">一键删除</button></div>
+					</div>
+				</div>
+			</div>
+			<table class="table center">
+	    		<colgroup>
+	    			<col style="width:1%;">
+	    			<col style="width:19%;">
+	    			<col style="width:20%;">
+	    			<col style="width:60%;">
+	    		</colgroup>
+	    		<thead>
+	    			<tr>
+	    				<th>&nbsp;</th>
+	    				<th>会计期间</th>
+	    				<!-- <th>对账单日期</th>
+	    				<th>对账单户名</th>
+	    				<th>对账单账号</th>
+	    				<th>对账单银行</th> -->
+	    				<th>识别状态</th>
+	    				<th>对账单预览</th>
+	    			</tr>
+	    		</thead>
+	    		<tbody id='retData'>
+	    		</tbody>
+	    	</table>
+	    	<div class="pagination"></div>
+		</div>
+	</div>
+	<div id="contentImg" class="hide">
+		<div class="imgviewwrap">
+			<div id="imgviewWrap"></div>
+			<div class="controls-wrap">
+				<!-- <span class="resume"><i class="iconfont" title="原图">&#xe63b;</i>原图</span> -->
+				<span class="zoom"><i class="iconfont" title="放大">&#xe618;</i>放大</span>
+				<span class="micrify"><i class="iconfont" title="缩小">&#xe62c;</i>缩小</span>
+			</div>
+		</div>
+	</div>
+	<div id="iviewer">
+        <div class="loader"></div>
+
+        <div class="viewer"></div>
+
+        <ul class="controls">
+            <li class="close"></li>
+            <li class="zoomin"></li>
+            <li class="zoomout"></li>
+            <li class="angle"></li>
+        </ul>
+
+    
+    </div>
+	<div id="modifyPwd" style="display:none;">
+		<div id="form" class="form-horizontal">
+			<div class="control-group">
+				<label class="control-label">输入旧密码：</label>
+				<div class="controls">
+					<input id="old_pwd" type="password" class="input-large"
+						data-rules="{required : true}" style="width:250px;">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">输入新密码：</label>
+				<div class="controls control-row-auto">
+					<input id="new_pwd" type="password" class="input-large"
+						data-rules="{required : true}" style="width:250px;">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">再次输入新密码：</label>
+				<div class="controls control-row-auto">
+					<input id="confirm_new_pwd" type="password" class="input-large"
+						data-rules="{required : true}" style="width:250px;">
+				</div>
+			</div>
+			<div class="control-group">
+				<label id="modify_pwd_tips"></label>
+			</div>
+			<div class="control-group control-btn">
+				<div class="layer-wrap-footer"><a href="javascript:void(0);" id="modify_pwd_button" class="button button-success">确定修改</a></div>
+			</div>
+		</div>
+	</div>
+	<div style="position:fixed; bottom: 0; right: 0;"><a target="_blank" href="http://sighttp.qq.com/authd?IDKEY=a1a51fb184a88bbb4c1756a211f1ff1fbc9d47079f63eb30"><img border="0" src="http://wpa.qq.com/imgd?IDKEY=a1a51fb184a88bbb4c1756a211f1ff1fbc9d47079f63eb30&pic=41" alt="点我联系我" title="点我联系我"/></a></div>
+<!--该js需要修改js路径及修改seajs路径-->
+<script src="http://g.tbcdn.cn/fi/bui/jquery-1.8.1.min.js"></script>
+<script src="http://g.alicdn.com/bui/seajs/2.3.0/sea.js"></script>
+<script src="http://g.alicdn.com/bui/bui/1.1.17/config.js"></script>
+<script src="/js/webjs/menuTree.js"></script>
+<script src="/js/webjs/jquery-ui.js"></script>
+<script src="/js/webjs/jquery-mousewheel.js"></script>
+<script src="/js/webjs/jquery.iviewer.min.js"></script>
+<script src="/js/webjs/iviewer.js"></script>
+<script type="text/javascript">
+BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
+	var modifyPwdForm = new Overlay.Dialog({
+        title:'密码修改',
+        width:600,
+        height:280,
+        contentId:'modifyPwd',
+        success:function () {
+          	this.close();
+        },
+        buttons : []
+    });
+	$('#setPwd').click(function(){
+		modifyPwdForm.show();
+	})
+	$('#modify_pwd_button').click(function(){
+		var oldPwd = $('#old_pwd').val();
+		var newPwd = $('#new_pwd').val();
+		var confirmNewPwd = $('#confirm_new_pwd').val();
+		if(oldPwd == null || oldPwd == "") {
+			BUI.Message.Alert('请输入旧密码！','warning');
+			return;
+		}
+		if(newPwd == null || newPwd == "") {
+			BUI.Message.Alert('请输新密码！','warning');
+			return;
+		}
+		if(confirmNewPwd == null || confirmNewPwd == "") {
+			BUI.Message.Alert('请输入新密码！','warning');
+			return;
+		}
+		if(newPwd != confirmNewPwd) {
+			BUI.Message.Alert('两次输入的新密码不一致，请检查！','warning');
+			return;
+		}
+		$.ajax({
+			url : '/modifyPassword',
+			type : "POST",
+			data : {oldPwd:oldPwd, newPwd:newPwd},
+			success : function(data) {
+				if(data.error_code == "0") {
+					BUI.Message.Alert('修改密码成功！','success');
+				} else {
+					BUI.Message.Alert('修改密码失败！错误信息：' + data.error_msg,'warning');
+				}
+			},
+			error : function(data) {
+				BUI.Message.Alert('修改密码失败！错误信息：' + data.error_msg,'warning');
+			}
+		});
+	})
+});
+	BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
+		
+		var deleteIdList = new Array();
+		$('#deleteData').click(function(){
+			if(deleteIdList.length == 0) {
+				BUI.Message.Alert('请先勾选需要删除的记录！','warning');
+			} else {
+				$.ajax({
+					url : '/company/deleteCompanyBankRes',
+					type : "POST",
+					data : {deleteIdList:deleteIdList.join(",")},
+					success : function(data) {
+						$.ajax({
+							url : '/company/getAllCompanyBankRes',
+							type : "POST",
+							data : {},
+							success : function(data) {
+								createDataList(data);
+							}
+						});
+					}
+				});
+			}
+		})
+		
+		function bindCheck() {
+			$(".data-check-id").die().live("click",function(){
+				var id = $(this).val();
+				if ($(this).is(':checked')) {
+					deleteIdList.push(id);
+				} else {
+					for(var i=0; i<deleteIdList.length; i++) {
+						if(deleteIdList[i] === id) {
+							deleteIdList.splice(i, 1);
+							break;
+						}
+					}
+				}
+			})
+		}
+		
+		var viewContent = new Imgview.ViewContent({
+            render: "#imgviewWrap",
+            autoRender: false, // 设置为true就自动渲染，默认为false！
+            // 以下属性全部可以set来修改。
+            width: 760,
+            height: 480,
+            imgSrc: "",
+            //rotateTime: 300, // 旋转时间,默认300
+            //scaleTime: 300, // 缩放时间,默认300
+            overflowSize: 100, // 边界回弹像素,默认100,实际上是取Math.min(overflowSize,imgNowWidth,imgNowHeight)
+            drag: true //是否可以拖动，默认为true
+        });
+		viewContent.render();
+		$(".controls-wrap").on('click',function(e){
+            var target = e.target;
+            if($.contains(this,target)){
+            var self = jQuery(target),
+            cls = self.attr("class");
+            if (cls == "viewImg") {
+                self.attr({"href" : viewContent.get('imgSrc'),"target" : "_blank"});
+                return true;
+                } else if (cls == "drag1") {
+                viewContent.set("drag", false);
+                } else if (cls == "drag2") {
+                viewContent.set("drag", true);
+                } else if (cls == "chgImg1") {
+                viewContent.set("imgSrc", "http://pic.sc.chinaz.com/files/pic/pic9/201505/apic11703.jpg");
+                } else if (cls == "chgImg2") {
+                viewContent.set("imgSrc", "http://b.hiphotos.baidu.com/image/pic/item/adaf2edda3cc7cd9840d6c923a01213fb80e915c.jpg");
+                } else if (cls == "resize1") {
+            var width = 800,height = 600;
+            $("#img-preview-wrap").width(width).height(height);
+            viewContent.resize({width : width,height : height});
+            viewContent.set('width', width);
+            viewContent.set('height', height);
+            } else if (cls == "resize2") {
+            // 测试resize
+            var width = 400,height = 300;
+            $("#img-preview-wrap").width(width).height(height);
+            // viewContent.resize({width : width,height : height});
+            viewContent.set('width', width);
+            viewContent.set('height', height);
+            }else{
+            // 为了方便,直接根据className调用
+            viewContent[cls]();
+            }
+            return false;
+            }
+        });
+		var dialogForm = new Overlay.Dialog({
+		    title:'对账单图片',
+		    width:880,
+		    height:550,
+		    contentId:'contentImg',
+		    success:function () {
+		        this.close();
+		    },
+		    buttons : []
+		});
+		function createDataList(data) {
+			$('#retData').html("");
+			if(data == null || data == '') return;
+			data.sort(function(a,b){return a.date<b.date?1:-1});
+			for(var i=0; i<data.length; i++) {
+				var container = $('#retData');
+				var trNode = $("<tr></tr>");
+				
+				var checkNode = $("<td><input type='checkbox' value='"+data[i].id+"' style='margin-top:0px;' class='data-check-id'></td>");
+				/* var tdNode = $("<td>"+data[i].date+"</td><td>"+data[i].ide_date+"</td><td>"+data[i].ide_account+"</td><td>"+data[i].ide_name+"</td><td>"+data[i].ide_bank_name+"</td><td><span class='text-info'>已识别</span></td>"); */
+				var tdNode = $("<td>"+data[i].date+"</td><td><span class='text-info'>已识别</span></td>");
+			    var aNode = $("<td><a href='javascript:void(0);'>点击查看对账单图片</a></td>");
+			    //var a = $("<tr><td>"+data[i].date+"</td><td>data[i]</td><td>1001190719016303837</td><td>中国工商银行上海市分行公司客户存款对账单</td><td><span class='text-info'>已识别</span></td><td><a href='javascript:void(0);'>点击查看对账单图片</a></td></tr>");
+			    var imgsrc = '/files/company/' + data[i].file_name;
+			    
+			    aNode.attr("img-src", imgsrc);
+			    
+			    aNode.click(function(event) {
+			    	//viewContent.set('imgSrc', $(this).attr("img-src"));
+				    //dialogForm.show();
+			    	openBillImage($(this).attr("img-src"));
+			    	//openBillImage("/img/webimg/emily.jpg");
+			    });
+			    
+			    checkNode.appendTo(trNode);
+			    tdNode.appendTo(trNode);
+			    aNode.appendTo(trNode);
+			    trNode.appendTo(container);
+			}
+			bindCheck();
+		};
+		$.ajax({
+			url : '/company/getAllCompanyBankRes',
+			type : "POST",
+			data : {},
+			success : function(data) {
+				createDataList(data);
+			}
+		});
+		$('#searchData').click(function(){
+			var conditionType = $('#condition option:selected').val();
+			var conditionValue = $('#content').val();
+			if(conditionType != '0' && (conditionValue == null || conditionValue == '')) {
+				BUI.Message.Alert('请输入需要检索内容的内容！','warning');
+				return;
+			}
+			if(conditionType == '2') {
+				if(conditionValue == '待识别') conditionValue = '0';
+				if(conditionValue == '识别成功') conditionValue = '1';
+				if(conditionValue == '识别失败') conditionValue = '2';
+			}
+			$.ajax({
+				url : '/company/getAllCompanyBankRes',
+				type : "POST",
+				data : {conditionType : conditionType, conditionValue : conditionValue},
+				success : function(data) {
+					createDataList(data);
+				}
+			});
+		})
+	});
+	//侧栏高度
+    (function(){
+        var H=$(window).height();
+        var h1=$(".side-bar-top").height()+$(".side-bar-bottom").height();
+        $(".side-bar-content").height(H-h1);
+        $(window).resize(function(){
+            H=$(window).height();
+            $(".side-bar-content").height(H-h1);
+        });
+    })()
+	//竖状菜单
+	//竖状菜单
+        var menu = new menuTree(
+            {"nodes" : [
+{text : '组织架构',id : '50',href:"javascript:void(0);",  expanded : false,children: [
+                                                          						{text : '基本信息设置',id : '51', href:"/views/webviews/company/organization_information_settings.html"},
+                                                          						{text : '组织架构设置',id : '52', href:"/views/webviews/company/organization_structure_settings.html"}                                           
+                                                          					]},
+					{text : '公司发票',id : '10',href:"javascript:void(0);",  expanded : false,children: [
+						{text : '发票上传',id : '11', href:"/views/webviews/company/expense_account_upload.html"},
+						{text : '发票历史记录',id : '12', href:"/views/webviews/company/expense_account_history.html"},
+						{text : '上传回单',id : '21', href:"/views/webviews/company/bank_response_upload.html"},
+						{text : '回单历史记录',id : '22', href:"/views/webviews/company/bank_response_history.html"},
+					]},
+					{text : '银行对账单',id : '20',href:"javascript:void(0);", expanded : true,children: [
+						{text : '上传对账单',id : '21', href:"/views/webviews/company/bank_statement_upload.html"},
+						{text : '对账单历史记录',id : '22', href:"/views/webviews/company/bank_statement_history.html"},
+						{text : '上传回单',id : '21', href:"/views/webviews/company/bank_response_upload.html"},
+						{text : '回单历史记录',id : '22', href:"/views/webviews/company/bank_response_history.html"},                                           
+					]},
+					{text : '销售清单',id : '80',href:"javascript:void(0);", expanded : false,children: [
+					                                                        						{text : '上传销售清单',id : '81', href:"/views/webviews/company/sales_upload.html"},
+					                                                        						{text : '销售清单历史记录',id : '82', href:"/views/webviews/company/sales_history.html"}                                           
+					                                                        					]},
+					{text : '工资社保',id : '30',href:"javascript:void(0);", expanded : false,children: [
+						
+						{text : '下载工资计算模板',id : '32', href:"/views/webviews/company/salary_welfare_template_download.html"},                                           
+						{text : '上传工资单',id : '33', href:"/views/webviews/company/salary_welfare_upload.html"},
+						{text : '工资历史记录',id : '34', href:"/views/webviews/company/salary_history.html"},
+						{text : '工资计算模板历史记录',id : '35', href:"/views/webviews/company/salary_template_history.html"}
+					]},
+					{text : '预约取发票',id : '40',href:"javascript:void(0);", expanded : false,children: [
+						{text : '方式选择',id : '41', href:"/views/webviews/company/take_expense_account_mode_select.html"}                                           
+					]},
+					{text : '基本报表',id : '70',href:"javascript:void(0);",  expanded : false,children: [
+						{text : '资产负债表',id : '71', href:"/views/webviews/company/sheet_balance.html"},
+						{text : '利润表',id : '72', href:"/views/webviews/company/sheet_income.html"},
+						{text : '现金流量表',id : '73', href:"/views/webviews/company/sheet_cash.html"},
+						{text : '薪酬及税费表',id : '74', href:"/views/webviews/company/sheet_salary.html"},
+						{text : '下载Excel模板',id : '75', href:"/views/webviews/company/base_statement_template_download.html"}
+					]},
+					{text : '会计点将',id : '60',href:"/views/webviews/company/select_accounter.html",  leaf:false,expanded : false,children: []},
+					{text : '申请发票',id : '90',href:"/views/webviews/company/apply_invoice.html",  leaf:false,expanded : false,children: []},
+					{text : '查看合同文件',id : '100',href:"/views/webviews/company/contract.html",  leaf:false,expanded : false,children: []},
+					]
+            },"menuTree"
+        );
+    defaultSelect("11");
+    function defaultSelect(id){ 
+        $("#"+id).parent().addClass("bui-menu-item-selected")
+    }
+</script>
+</body>
+</html>
