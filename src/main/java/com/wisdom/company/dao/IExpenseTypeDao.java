@@ -16,4 +16,6 @@ public interface IExpenseTypeDao {
 	
 	public boolean updateExpenseType(ExpenseType expenseType);
 	
+	public boolean increaseExpenseTypeHit(String name);
+	
 }
