@@ -101,15 +101,49 @@
 		<div style="margin-bottom:10px;">
 			<h4>当前支付方式仅支持支付宝支付</h4>
 		</div>
-		<div class="control-group">
-				<label class="control-label">请选择时间：</label>
-				<div class="controls" style="margin-top:10px;">
-					<select id="alipay_time" name="alipay_time" style="width:200px;">
-						<option value ="6">6个月</option>
-						<option value="12">12个月</option>
-					</select>
-				</div>
-		</div>
+		<table class="control-group">
+			<tr>
+				<td>
+				    <label class="control-label">请选择时间：</label>
+				</td>
+				<td>
+					<div class="controls" style="margin-top:10px; display: inline; float:right; margin-right: 15vw;">
+						<select id="alipay_time" name="alipay_time" class="select" style="width:200px;">
+							<option value ="6">6个月</option>
+							<option value="12">12个月</option>
+						</select>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label class="control-label">请选择纳税人性质：</label>
+				</td>
+				<td>
+					<div class="controls" style="margin-top:10px; display: inline;float:right; margin-right: 15vw;">
+						<select id="alipay_tax_type" name="alipay_tax_type" class="select" style="width:200px;">
+							<option value ="small">小规模纳税人</option>
+							<option value="normal">一般规模纳税人</option>
+						</select>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label class="control-label">请选择当月费用发票数量：</label>
+				</td>
+				<td>
+					<div class="controls" style="margin-top:10px;display: inline;float:right; margin-right: 15vw;">
+						<select id="alipay_invoice_amount" name="alipay_invoice_amount"  class="select" style="width:200px;">
+							<option value ="30">0~30张</option>
+							<option value="60">30~60张</option>
+							<option value="90">60~90张</option>
+							<option value="120">90~120张</option>
+						</select>
+					</div>
+				</td>
+			</tr>
+		</table>
 		<div style="margin-top:10px;margin-bottom:10px;">
 			<h4>您总共需要支付人民币：<span id="alipay_sum" name="alipay_sum" style="color:red;">594</span>元，合同范文如下：<span style="color:red;">(注意：默认您已经同意我们的合同范文)</span></h4>
 		</div>
@@ -197,40 +231,106 @@
 		$.get('/recommend/isRecommended', function(data){
 			if(data['message'] == "yes"){
 				var time = $('#alipay_time option:selected').val();
-
-				if(time == '6') {
-					$('#alipay_sum').html('594');
+				var type = $('#alipay_tax_type option:selected').val();
+				var amount = $('#alipay_invoice_amount option:selected').val();
+				var sum = 0;
+				if(type=="small"){
+					if(amount == '30'){
+						sum = 99;
+					}else if(amount == '60'){
+						sum = 150;
+					}else if(amount == '90'){
+						sum = 250;
+					}else {
+						sum = 350;
+					}
+				}else if(type == "normal"){
+					if(amount == '30'){
+						sum = 199;
+					}else if(amount == '60'){
+						sum = 250;
+					}else if(amount == '90'){
+						sum = 350;
+					}else {
+						sum = 450;
+					}
 				}
-				if(time == '12') $('#alipay_sum').html('1089');
+				
+				if(time == '6') {
+					$('#alipay_sum').html(parseInt(sum) * 6);
+				}
+				if(time == '12') $('#alipay_sum').html(parseInt(sum) * 12);
 				
 			}
 			else {
 
-				if(time == '6') $('#alipay_sum').html('594');
-				if(time == '12') $('#alipay_sum').html('1188');
+				var time = $('#alipay_time option:selected').val();
+				var type = $('#alipay_tax_type option:selected').val();
+				var amount = $('#alipay_invoice_amount option:selected').val();
+				var sum = 0;
+				if(type=="small"){
+					if(amount == '30'){
+						sum = 99;
+					}else if(amount == '60'){
+						sum = 150;
+					}else if(amount == '90'){
+						sum = 250;
+					}else {
+						sum = 350;
+					}
+				}else if(type == "normal"){
+					if(amount == '30'){
+						sum = 199;
+					}else if(amount == '60'){
+						sum = 250;
+					}else if(amount == '90'){
+						sum = 350;
+					}else {
+						sum = 450;
+					}
+				}
+				
+				if(time == '6') {
+					$('#alipay_sum').html(parseInt(sum) * 6);
+				}
+				if(time == '12') $('#alipay_sum').html(parseInt(sum) * 12);
 			}
 		});
-		$('#alipay_time').change(function(){
+		$('.select').change(function(){
+
 			var time = $('#alipay_time option:selected').val();
-
-			$.get('/recommend/isRecommended', function(data){
-
-				if(data['message'] == "yes"){
-					if(time == '1') $('#alipay_sum').html('99');
-					if(time == '6') {
-						$('#alipay_sum').html('594');
-					}
-					if(time == '12') $('#alipay_sum').html('1089');
-					
+			var type = $('#alipay_tax_type option:selected').val();
+			var amount = $('#alipay_invoice_amount option:selected').val();
+			var sum = 0;
+			if(type=="small"){
+				if(amount == '30'){
+					sum = 99;
+				}else if(amount == '60'){
+					sum = 150;
+				}else if(amount == '90'){
+					sum = 250;
+				}else {
+					sum = 350;
 				}
-				else {
-					if(time == '1') $('#alipay_sum').html('99');
-					if(time == '6') $('#alipay_sum').html('594');
-					if(time == '12') $('#alipay_sum').html('1188');
+			}else if(type == "normal"){
+				if(amount == '30'){
+					sum = 199;
+				}else if(amount == '60'){
+					sum = 250;
+				}else if(amount == '90'){
+					sum = 350;
+				}else {
+					sum = 450;
 				}
-			});
+			}
+			
+			if(time == '6') {
+				$('#alipay_sum').html(parseInt(sum) * 6);
+			}
+			if(time == '12') $('#alipay_sum').html(parseInt(sum) * 12);
 
 		});
+		
 		$('#alipay_button').click(function(){
 			var time = $('#alipay_time option:selected').val();
 			var realTime = parseInt(time);
@@ -665,7 +765,9 @@
 					]},
 					{text : '银行对账单',id : '20',href:"javascript:void(0);", expanded : false,children: [
 						{text : '上传对账单',id : '21', href:"/views/webviews/company/bank_statement_upload.html"},
-						{text : '对账单历史记录',id : '22', href:"/views/webviews/company/bank_statement_history.html"}                                           
+						{text : '对账单历史记录',id : '22', href:"/views/webviews/company/bank_statement_history.html"},
+						{text : '上传回单',id : '21', href:"/views/webviews/company/bank_response_upload.html"},
+						{text : '回单历史记录',id : '22', href:"/views/webviews/company/bank_response_history.html"},                                           
 					]},
 					{text : '销售清单',id : '80',href:"javascript:void(0);", expanded : false,children: [
 					                                                         						{text : '上传销售清单',id : '81', href:"/views/webviews/company/sales_upload.html"},

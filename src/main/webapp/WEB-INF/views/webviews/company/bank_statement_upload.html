@@ -90,6 +90,16 @@
 	<script src="/js/webjs/layout.js"></script>
 	<script src="/js/webjs/bui.js"></script>
 	<script type="text/javascript">
+	var time = new Date();
+	time.setDate(1);
+	time.setMonth(time.getMonth()-1);
+	var month = time.getMonth()+1;
+	var monthStr = month.toString();
+	if(monthStr.length == 1){
+		monthStr = "0" + monthStr;
+	}
+	var timeStr = time.getFullYear() + "-" + monthStr;
+	$('#date').val(timeStr);
 	$('#date').click(function(){
 		var currentDate = new Date();
 		var currentYear = currentDate.getFullYear();
@@ -190,7 +200,9 @@
 					]},
 					{text : '银行对账单',id : '20',href:"javascript:void(0);", expanded : true,children: [
 						{text : '上传对账单',id : '21', href:"/views/webviews/company/bank_statement_upload.html"},
-						{text : '对账单历史记录',id : '22', href:"/views/webviews/company/bank_statement_history.html"}                                           
+						{text : '对账单历史记录',id : '22', href:"/views/webviews/company/bank_statement_history.html"},
+						{text : '上传回单',id : '21', href:"/views/webviews/company/bank_response_upload.html"},
+						{text : '回单历史记录',id : '22', href:"/views/webviews/company/bank_response_history.html"},                                           
 					]},
 					{text : '销售清单',id : '80',href:"javascript:void(0);", expanded : false,children: [
 						{text : '上传销售清单',id : '81', href:"/views/webviews/company/sales_upload.html"},

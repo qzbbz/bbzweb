@@ -26,9 +26,13 @@ public interface ICompanyApi {
 	
 	public Map<String, String> uploadCompanyBankSta(MultipartFile file, Map<String, String> params);
 	
+	public Map<String, String> uploadCompanyBankRes(MultipartFile file, Map<String, String> params);
+	
 	public Map<String, String> uploadCompanySales(MultipartFile file, Map<String, String> params);
 	
 	public List<Map<String, String>> getCompanyBankStaByCondition(Map<String, String> params);
+	
+	public List<Map<String, String>> getCompanyBankResByCondition(Map<String, String> params);
 	
 	public List<Map<String, String>> getCompanySalesByCondition(Map<String, String> params);
 	
