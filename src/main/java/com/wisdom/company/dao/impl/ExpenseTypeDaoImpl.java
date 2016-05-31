@@ -39,8 +39,8 @@ public class ExpenseTypeDaoImpl implements IExpenseTypeDao {
 
 	@Override
 	public boolean addExpenseType(ExpenseType expenseType) {
-		String sql = "insert into expense_type (name, create_time)"
-				+ " values (?, ?)";
+		String sql = "insert into expense_type (name, create_time, hit)"
+				+ " values (?, ?, 0)";
 		int affectedRows = jdbcTemplate.update(
 				sql,
 				expenseType.getName(),
@@ -71,7 +71,7 @@ public class ExpenseTypeDaoImpl implements IExpenseTypeDao {
 	public List<ExpenseType> getAllExpenseType() {
 		List<ExpenseType> list = null;
 		try {
-			String sql = "select * from expense_type";
+			String sql = "select * from expense_type order by hit desc";
 			list = jdbcTemplate.query(sql,
 					new RowMapperResultSetExtractor<ExpenseType>(
 							new ExpenseTypeMapper()));
@@ -79,6 +79,14 @@ public class ExpenseTypeDaoImpl implements IExpenseTypeDao {
 			logger.error(e.toString());
 		}
 		return list;
+	}
+
+	@Override
+	public boolean increaseExpenseTypeHit(String name) {
+		String sql = "update expense_type set hit=hit+1 where name=?";
+		int affectedRows = jdbcTemplate.update(sql, name);
+		logger.debug("updateExpenseType result : {}", affectedRows);
+		return affectedRows != 0;
 	}
 
 }

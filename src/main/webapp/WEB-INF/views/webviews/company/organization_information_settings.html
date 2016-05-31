@@ -241,9 +241,21 @@
 					addExtra == '' || orgCode == '' ||
 					taxCode == '' || bankName == '' ||
 					comFile == '' || orgFile == '' || taxFile == '') {
-				BUI.use(['bui/overlay'], function(Overlay){
-					BUI.Message.Alert('您的信息没有填写完整，请检查！','warning');
-				});
+				if($("#three-into-one")[0].checked){
+					$("#orgCode").val($("#corpCode").val());
+					$("#orgFile").val($("#comFile").val());
+					$("#taxCode").val($("#corpCode").val());
+					$("#taxFile").val($("#comFile").val());
+					$("#orgCode").prop('disabled', false);
+					$("#orgFile").prop('disabled', false);
+					$("#taxCode").prop('disabled', false);
+					$("#taxFile").prop('disabled', false);
+					$('#orgInfoSettings').submit();
+				}else{
+					BUI.use(['bui/overlay'], function(Overlay){
+						BUI.Message.Alert('您的信息没有填写完整，请检查！','warning');
+					});
+				}
 			} else {
 				if($("#three-into-one")[0].checked){
 					$("#orgCode").val($("#corpCode").val());

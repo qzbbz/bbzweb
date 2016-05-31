@@ -17,6 +17,7 @@ public class ExpenseType implements java.io.Serializable {
 	private Long id;
 	private String name;
 	private Timestamp createTime;
+	private Integer hit;
 
 	// Constructors
 
@@ -31,10 +32,11 @@ public class ExpenseType implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public ExpenseType(Long id, String name, Timestamp createTime) {
+	public ExpenseType(Long id, String name, Timestamp createTime, Integer hit) {
 		this.id = id;
 		this.name = name;
 		this.createTime = createTime;
+		this.hit = hit;
 	}
 
 	// Property accessors
@@ -63,4 +65,13 @@ public class ExpenseType implements java.io.Serializable {
 		this.createTime = createTime;
 	}
 
+	public Integer getHit() {
+		return hit;
+	}
+
+	public void setHit(Integer hit) {
+		this.hit = hit;
+	}
+
+	
 }
