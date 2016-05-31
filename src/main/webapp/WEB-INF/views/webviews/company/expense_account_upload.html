@@ -105,7 +105,7 @@
 	<script src="/js/webjs/bui.js"></script>
 	<script type="text/javascript">
 	var time = new Date();
-	
+	time.setDate(1);
 	time.setMonth(time.getMonth()-1);
 	var month = time.getMonth()+1;
 	var monthStr = month.toString();
@@ -113,7 +113,7 @@
 		monthStr = "0" + monthStr;
 	}
 	var timeStr = time.getFullYear() + "-" + monthStr;
-	$('#date').val(timeStr);
+	$('#bill_date').val(timeStr);
 	$('#bill_date').click(function(){
 		var currentDate = new Date();
 		var currentYear = currentDate.getFullYear();
