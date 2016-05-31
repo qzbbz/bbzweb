@@ -12,6 +12,7 @@ import org.springframework.util.StringUtils;
 
 import com.wisdom.common.model.InvoiceInfo;
 import com.wisdom.common.model.UserInvoice;
+import com.wisdom.invoice.dao.IInvoiceDao;
 import com.wisdom.invoice.dao.IUserInvoiceDao;
 import com.wisdom.invoice.dao.impl.UserInvoiceDaoImpl;
 import com.wisdom.invoice.service.IUserInvoiceService;
@@ -23,6 +24,9 @@ public class UserInvoiceServiceImpl implements IUserInvoiceService {
 	
 	@Autowired
 	private IUserInvoiceDao userInvoiceDao; 
+	
+	@Autowired
+	private IInvoiceDao invoiceDao;
 
 	@Override
 	public UserInvoice getUserInvoiceByInvoiceId(long longId) {
@@ -98,5 +102,14 @@ public class UserInvoiceServiceImpl implements IUserInvoiceService {
 			userIdsStr += "'" + userId + "',";
 		}
 		return userInvoiceDao.getLatestUserInvoice(userIdsStr.substring(0,userIdsStr.length()-1));
+	}
+
+	@Override
+	public boolean updateInvoiceStatus(long invoiceId, int status) {
+		UserInvoice userInvoice = userInvoiceDao.getUserInvoiceByInvoiceId(invoiceId);
+		userInvoice.setStatus(status);
+		userInvoiceDao.updateUserInvoice(userInvoice);
+		invoiceDao.updateInoviceStatus(invoiceId, "DEPRECATED");
+		return true;
 	}
 }

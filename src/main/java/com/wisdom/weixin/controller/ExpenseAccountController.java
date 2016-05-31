@@ -504,6 +504,7 @@ public class ExpenseAccountController {
 	            DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	            Timestamp stamp = wwaim.getCreate_time();
 	            map.put("submit_time", sdf.format(stamp));
+	            map.put("invoice_id", wwaim.getInvoice_id());
 	            if (itemMap.containsKey(sdf.format(stamp))) {
 	                ((List<Map<String, Object>>) itemMap.get(sdf.format(stamp))).add(map);
 	            } else {
@@ -861,6 +862,15 @@ public class ExpenseAccountController {
 			retList.add(expenseType.get("name"));
 		}
 		//System.out.println(expenseTypes);
+		return retList;
+	}
+	
+	@RequestMapping("/setInvoiceDeprecated")
+	@ResponseBody
+	public List<String> setInvoiceDeprecated(HttpServletRequest request){
+		List<String> retList = new ArrayList<>();
+		String invoiceId = request.getParameter("invoice_id");
+		userInvoiceService.updateInvoiceStatus(Long.parseLong(invoiceId), 2);
 		return retList;
 	}
 }
