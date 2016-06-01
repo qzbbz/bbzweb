@@ -169,9 +169,11 @@ function getWaitAuditInvoice(ajaxCallBack) {
 		success: function(data) {
 			if (!checkJsonIsEmpty(data)) {
 				document.getElementById('no_data_tips').style.display = 'none';
+				document.getElementById('cd-timeline').style.display = '';
 				createDataList(data);
 			} else {
 				document.getElementById('no_data_tips').style.display = '';
+				document.getElementById('cd-timeline').style.display = 'none';
 			}
 			document.getElementById('data_loading').style.display = 'none';
 			if (ajaxCallBack) ajaxCallBack();
@@ -209,9 +211,9 @@ mui(mui('#pull_refresh')[0]).pullToRefresh({
 		}
 	}
 });
-userOpenId = "oSTV_t9z_fYa7AQVYO0y5-OMFavQ";
-getWaitAuditInvoice(null);
-/*mui.ajax({
+//userOpenId = "oSTV_t9z_fYa7AQVYO0y5-OMFavQ";
+//getWaitAuditInvoice(null);
+mui.ajax({
 	url: '/getUserOpenId',
 	type: "POST",
 	data: {type:"0"},
@@ -232,5 +234,5 @@ getWaitAuditInvoice(null);
 		document.getElementById('no_data_tips').style.innerHTML = "请求服务器数据出错，<br/>请稍后下拉刷新重试！";
 		document.getElementById('no_data_tips').style.display = '';
 	}
-});*/
+});
 //createDataList(testData);
