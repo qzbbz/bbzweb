@@ -169,8 +169,7 @@ public class ExpenseAccountController {
 			HttpServletRequest request) {
 		logger.debug("uploadPersonInvoice");
 		String userId = request.getParameter("userId");
-		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/files/company");
-		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
+		String realPath = "/home/files/company";
 		String expenseAmountStr = request.getParameter("expense_amount");
 		String expenseTypeStr = request.getParameter("expense_type");
 		expenseAmountStr = expenseAmountStr.substring(0, expenseAmountStr.length() - 1);
@@ -190,6 +189,7 @@ public class ExpenseAccountController {
 				String fileName = userId
 						+ String.valueOf(System.currentTimeMillis());
 				String extendName = ".jpg";
+				logger.debug("uploadPersonInvoice file size : {}" , file.getSize());
 				try {
 					FileUtils.copyInputStreamToFile(file.getInputStream(),
 							new File(realPath, fileName + extendName));

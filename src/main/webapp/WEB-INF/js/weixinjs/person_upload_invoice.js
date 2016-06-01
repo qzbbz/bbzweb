@@ -315,14 +315,14 @@ document.getElementById("fapiaoluru_addInvoiceImage").onchange = function(event)
 				var URL = window.URL || window.webkitURL;
 				imgURL = URL.createObjectURL(file);
 				imgNode.src = imgURL;
-				invoiceList[imgURL] = document.getElementById('fapiaoluru_addInvoiceImage').files[0];
+				invoiceList[imgURL] = file;//document.getElementById('fapiaoluru_addInvoiceImage').files[0];
 				//URL.revokeObjectURL(imgURL);
 			} catch (e) {
 				try {
 					var fileReader = new FileReader();
 					fileReader.onload = function(event) {
 						imgNode.src = event.target.result;
-						invoiceList[imgNode.src] = document.getElementById('fapiaoluru_addInvoiceImage').files[0];
+						invoiceList[imgNode.src] = file;//document.getElementById('fapiaoluru_addInvoiceImage').files[0];
 					};
 					fileReader.readAsDataURL(file);
 				} catch (e) {
