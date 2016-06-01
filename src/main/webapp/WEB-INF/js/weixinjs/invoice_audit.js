@@ -1,4 +1,5 @@
 var userOpenId = "";
+
 var globleEle;
 function checkJsonIsEmpty(json) {
 	var isEmpty = true;
@@ -298,6 +299,7 @@ function createDataList(data) {
 }
 
 function getNeedAuditInvoice(ajaxCallBack) {
+
 	mui.ajax({
 		url: '/newGetNeedAuditBillsSummary?openId=' + userOpenId,
 		type: "POST",
