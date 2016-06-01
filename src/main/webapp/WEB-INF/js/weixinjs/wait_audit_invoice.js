@@ -207,9 +207,9 @@ mui(mui('#pull_refresh')[0]).pullToRefresh({
 		}
 	}
 });
-//userOpenId = "oSTV_tyNc2RAxiP_y0WeVN2L-Qbw";
-//getWaitAuditInvoice(null);
-mui.ajax({
+userOpenId = "oSTV_t9z_fYa7AQVYO0y5-OMFavQ";
+getWaitAuditInvoice(null);
+/*mui.ajax({
 	url: '/getUserOpenId',
 	type: "POST",
 	data: {type:"0"},
@@ -230,5 +230,5 @@ mui.ajax({
 		document.getElementById('no_data_tips').style.innerHTML = "请求服务器数据出错，<br/>请稍后下拉刷新重试！";
 		document.getElementById('no_data_tips').style.display = '';
 	}
-});
+});*/
 //createDataList(testData);
