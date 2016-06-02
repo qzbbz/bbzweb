@@ -139,7 +139,7 @@
 					<div class="controls" style="margin-top:10px; display: inline;float:right; margin-right: 15vw;">
 						<select id="alipay_tax_type" name="alipay_tax_type" class="select" style="width:200px;">
 							<option value ="small">小规模纳税人</option>
-							<option value="normal">一般规模纳税人</option>
+							<option value="normal">一般纳税人</option>
 						</select>
 					</div>
 				</td>
@@ -289,7 +289,7 @@
 		var alipayForm = new Overlay.Dialog({
             title:'支付页面',
             width:820,
-            height:570,
+            height:620,
             contentId:'alipayForm',
             success:function () {
               	this.close();
@@ -438,7 +438,6 @@
 					}else {
 						sum = 450;
 					}
-				}
 	    	}else if(place == 'jiangzhe'){
 				 time = $('#alipay_time_jz option:selected').val();
 				 type = $('#alipay_tax_type_jz option:selected').val();
