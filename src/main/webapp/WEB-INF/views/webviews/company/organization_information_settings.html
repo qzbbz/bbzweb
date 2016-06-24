@@ -243,9 +243,10 @@
 					comFile == '' || orgFile == '' || taxFile == '') {
 				if($("#three-into-one")[0].checked){
 					$("#orgCode").val($("#corpCode").val());
-					$("#orgFile").val($("#comFile").val());
+					
+					//$("#orgFile").val($("#comFile").val());
 					$("#taxCode").val($("#corpCode").val());
-					$("#taxFile").val($("#comFile").val());
+					//$("#taxFile").val($("#comFile").val());
 					$("#orgCode").prop('disabled', false);
 					$("#orgFile").prop('disabled', false);
 					$("#taxCode").prop('disabled', false);
@@ -259,9 +260,9 @@
 			} else {
 				if($("#three-into-one")[0].checked){
 					$("#orgCode").val($("#corpCode").val());
-					$("#orgFile").val($("#comFile").val());
+					//$("#orgFile").val($("#comFile").val());
 					$("#taxCode").val($("#corpCode").val());
-					$("#taxFile").val($("#comFile").val());
+					//$("#taxFile").val($("#comFile").val());
 					$("#orgCode").prop('disabled', false);
 					$("#orgFile").prop('disabled', false);
 					$("#taxCode").prop('disabled', false);
