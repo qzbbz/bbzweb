@@ -163,11 +163,11 @@ mui.createCommentDialog = function(info, cancelCallBack, acceptCallBack, type, i
 				}
 			}
 			elements = document.getElementsByClassName("mui-table-view-cell");
-			console.log(elements);
+
 			for(var key in elements){
 				if(elements[key].className != undefined){
 					if(elements[key].className.indexOf("mui-selected") != -1){
-						console.log(elements[key].childNodes);
+
 						for(key2 in elements[key].childNodes){
 							if(elements[key].childNodes[key2].className != undefined){
 								elements[key].childNodes[key2].className = elements[key].childNodes[key2].className.replace("mui-disabled", "");
@@ -298,11 +298,9 @@ function leftAndRightSliderEventCallback(element, approvalStatus) {
 
 function bindLeftAndRightSliderEvent() {
 	mui('.mui-table-view').on('slideleft', '.mui-table-view-cell', function(event) {
-		console.log("left");
 		leftAndRightSliderEventCallback(this, 1);
 	});
 	mui('.mui-table-view').on('slideright', '.mui-table-view-cell', function(event) {
-		console.log("right");
 		leftAndRightSliderEventCallback(this, 0);
 	});
 }
