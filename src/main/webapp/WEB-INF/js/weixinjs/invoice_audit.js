@@ -1,5 +1,5 @@
-//var userOpenId = "";
-var userOpenId = "oSTV_t9z_fYa7AQVYO0y5-OMFavQ";
+var userOpenId = "";
+
 
 var globleEle;
 function checkJsonIsEmpty(json) {
@@ -302,7 +302,7 @@ function createDataList(data) {
 function getNeedAuditInvoice(ajaxCallBack) {
 
 	mui.ajax({
-		url: '/newGetNeedAuditBillsSummary?openId=' + "oSTV_t9z_fYa7AQVYO0y5-OMFavQ",//userOpenId,
+		url: '/newGetNeedAuditBillsSummary?openId=' + userOpenId,
 		type: "POST",
 		data: {},
 		success: function(data) {
