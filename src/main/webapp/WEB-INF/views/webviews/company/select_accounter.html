@@ -108,11 +108,10 @@
 				    <label class="control-label">请选择地区：</label>
 				</td>
 				<td>
-					<div class="controls" style="margin-top:10px; display: inline; float:right; margin-right: 15vw;">
-						<select id="place" name="place" class="select" style="width:200px;">
-							<option value ="shanghai">上海地区</option>
-							<option value="jiangzhe">江浙地区</option>
-						</select>
+					<div class="controls" style="display: inline; float:right; margin-right: 15vw;">
+						<input class="place select" type="radio" name="place" value="shanghai" checked=checked /> 上海地区 
+						<input class="place select" type="radio" name="place" value="jiangzhe" /> 江浙地区 <br />
+
 					</div>
 				</td>
 				</tr>
@@ -137,10 +136,10 @@
 				</td>
 				<td>
 					<div class="controls" style="margin-top:10px; display: inline;float:right; margin-right: 15vw;">
-						<select id="alipay_tax_type" name="alipay_tax_type" class="select" style="width:200px;">
-							<option value ="small">小规模纳税人</option>
-							<option value="normal">一般纳税人</option>
-						</select>
+
+						<input class="select" type="radio" name="alipay_tax_type" value="small" checked=checked/> 小规模纳税人
+						<input class="select" type="radio" name="alipay_tax_type" value="normal" /> 一般规模纳税人 <br />
+
 					</div>
 				</td>
 			</tr>
@@ -180,10 +179,8 @@
 				</td>
 				<td>
 					<div class="controls" style="margin-top:10px; display: inline;float:right; margin-right: 15vw;">
-						<select id="alipay_tax_type_jz" name="alipay_tax_type_jz" class="select" style="width:200px;">
-							<option value ="small">小规模纳税人</option>
-							<option value="normal">一般规模纳税人</option>
-						</select>
+						<input class="select" type="radio" name="alipay_tax_type_jz" value="small" checked=checked /> 小规模纳税人 
+						<input class="select" type="radio" name="alipay_tax_type_jz" value="normal" /> 一般规模纳税人 <br />
 					</div>
 				</td>
 			</tr>
@@ -272,8 +269,10 @@
 		}
 	});
 
-    $("#place").on('change', function(){
-    	var place = $('#place option:selected').val();
+    $(".place").on('change', function(){
+    	console.log("change");
+    	place = $('input[name=place]:checked').val();
+    	console.log(place);
     	if(place == "shanghai"){
     		$("#jiangzhe-form").css("display", "none");
     		$("#shanghai-form").css("display", "");
@@ -299,11 +298,11 @@
 		globalAlipayForm = alipayForm;
 		$.get('/recommend/isRecommended', function(data){
 			if(data['message'] == "yes"){
-				var time = $('#alipay_time option:selected').val();
-				var type = $('#alipay_tax_type option:selected').val();
-				var amount = $('#alipay_invoice_amount option:selected').val();
-				var sum = 0;
-		    	var place = $('#place option:selected').val();
+				time = $('#alipay_time option:selected').val();
+				type = $('input[name=alipay_tax_type]:checked').val()
+				amount = $('#alipay_invoice_amount option:selected').val();
+				sum = 0;
+		    	place = $('input[name=place]:checked').val();
 		    	if(place == "shanghai"){
 					if(type=="small"){
 						if(amount == '30'){
@@ -355,12 +354,11 @@
 			}
 			else {
 
-				var time = $('#alipay_time option:selected').val();
-				var type = $('#alipay_tax_type option:selected').val();
-				var amount = $('#alipay_invoice_amount option:selected').val();
-		    	var place = $('#place option:selected').val();
-		    	console.log(place);
-				var sum = 0;
+				time = $('#alipay_time option:selected').val();
+				type = $('input[name=alipay_tax_type]:checked').val()
+				amount = $('#alipay_invoice_amount option:selected').val();
+				sum = 0;
+		    	place = $('input[name=place]:checked').val();
 				if(place == "shanghai"){
 					if(type=="small"){
 						if(amount == '30'){
@@ -409,13 +407,14 @@
 				if(time == '12') $('#alipay_sum').html(parseInt(sum) * 12);
 			}
 		});
-		$('.select').change(function(){
+		$('.select').on("change",function(){
+			console.log("select");
 
-			var time = $('#alipay_time option:selected').val();
-			var type = $('#alipay_tax_type option:selected').val();
-			var amount = $('#alipay_invoice_amount option:selected').val();
-	    	var place = $('#place option:selected').val();
-			var sum = 0;
+			time = $('#alipay_time option:selected').val();
+			type = $('input[name=alipay_tax_type]:checked').val();
+			amount = $('#alipay_invoice_amount option:selected').val();
+	    	place = $('input[name=place]:checked').val();
+			sum = 0;
 
 			if(place == "shanghai"){
 				if(type=="small"){
@@ -441,7 +440,7 @@
 				}
 	    	}else if(place == 'jiangzhe'){
 				 time = $('#alipay_time_jz option:selected').val();
-				 type = $('#alipay_tax_type_jz option:selected').val();
+				 type = $('input[name=alipay_tax_type_jz]:checked').val();
 				 amount = $('#alipay_invoice_amount_jz option:selected').val();
 	    		if(type == 'small'){
 	    			if(amount=='zero'){
@@ -467,7 +466,11 @@
 		});
 		
 		$('#alipay_button').click(function(){
-			var time = $('#alipay_time option:selected').val();
+			if(place == "shanghai"){
+			 	time = $('#alipay_time option:selected').val();
+			}else{
+				time = $('#alipay_time_jz option:selected').val();
+			}
 			var realTime = parseInt(time);
 			if(globalSelectedAccounterId === undefined){
 				globalSelectedAccounterId = "";
@@ -478,11 +481,10 @@
 					realTime += 1;
 				}
 
-
 				$.ajax({
 					url : '/company/selectOneAccounter',
 					type : "POST",
-					data : {accounterId:globalSelectedAccounterId, alipayMonth:realTime, alipayAmount:$('#alipay_sum').html(), type:'normal'},
+					data : {accounterId:globalSelectedAccounterId, alipayMonth:realTime, alipayAmount:$('#alipay_sum').html(), type:'normal', location: place, tax_type:type},
 					success : function(data) {
 						if (data == ""){
 							BUI.Message.Alert('请先在左侧的组织架构内完善公司信息！',function(){
