@@ -117,9 +117,9 @@ public class CompanyPayDaoImpl implements ICompanyPayDao {
 	}
 
 	@Override
-	public boolean updateCompanyPayByCompanyId(Long companyId, Integer payStatus, Double amount, String orderNo, int serviceTime, Timestamp expiredTime) {
-		String sql = "update company_pay set pay_status=?, pay_amount=?, service_time=?, order_no=?, create_time=NOW(), expired_time=? where company_id=?";
-		int affectedRows = jdbcTemplate.update(sql, payStatus, amount, serviceTime, orderNo, expiredTime, companyId);
+	public boolean updateCompanyPayByCompanyId(Long companyId, Integer payStatus, Double amount, String orderNo, int serviceTime, Timestamp expiredTime,String location, Integer perMonth, String type) {
+		String sql = "update company_pay set pay_status=?, pay_amount=?, service_time=?, order_no=?, create_time=NOW(), expired_time=?, location=?, per_month=?, type=? where company_id=?";
+		int affectedRows = jdbcTemplate.update(sql, payStatus, amount, serviceTime, orderNo, expiredTime, location, perMonth, type,companyId);
 		logger.debug("updateCompanyPay result : {}", affectedRows);
 		return affectedRows != 0;
 	}

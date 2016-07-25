@@ -163,8 +163,24 @@ public class CompanyController {
 		String accounterUserId = request.getParameter("accounterId");
 		String alipayMonth = request.getParameter("alipayMonth");
 		String alipayAmount = request.getParameter("alipayAmount");
+		String location = request.getParameter("location");
+		String taxType = request.getParameter("tax_type");
 		String userId = (String) request.getSession().getAttribute("userId");
 		String type = request.getParameter("type");
+		if(location.equals("shanghai")){
+			location = "上海";
+		}else if(location.equals("jiangzhe")){
+			location = "江浙";
+		}else{
+			location = "其它";
+		}
+		if(taxType.equals("small")){
+			taxType = "小规模纳税人";
+		}else{
+			taxType = "一般规模纳税人";
+		}
+		//String perMonth = request.getParameter("per_month");
+		
 		long companyId = userService.getCompanyIdByUserId(userId);
 		CompanyPay companyPay = companyPayService.getCompanyPayByCompanyId(companyId);
 		String resHtml = "";
@@ -181,7 +197,7 @@ public class CompanyController {
 			alipayMonth = "1";
 			alipayAmount = "99";
 
-			companyPayService.updateCompanyPayByCompanyId(companyId, 2, Double.valueOf(alipayAmount), "", Integer.valueOf(alipayMonth),null);
+			companyPayService.updateCompanyPayByCompanyId(companyId, 2, Double.valueOf(alipayAmount), "", Integer.valueOf(alipayMonth),null,location, 99, taxType);
 			//Add record to company_pay_history
 			CompanyPayHistory companyPayHistory = new CompanyPayHistory();
 			companyPayHistory.setApplyInvoice(companyPay.getApplyInvoice());
@@ -211,11 +227,14 @@ public class CompanyController {
 			newPay.setOrderNo(orderNo);
 			newPay.setPayAmount(Double.valueOf(alipayAmount));
 			newPay.setServiceTime(Integer.valueOf(alipayMonth));
+			newPay.setLocation(location);
+			newPay.setType(taxType);
+			newPay.setPerMonth(Integer.valueOf(alipayAmount)/Integer.valueOf(alipayMonth));
 			newPay.setCreateTime(new Timestamp(System.currentTimeMillis()));
 			companyPayService.addCompanyPay(newPay);
 		} else {
 			
-			companyPayService.updateCompanyPayByCompanyId(companyId, 0, Double.valueOf(alipayAmount), orderNo, Integer.valueOf(alipayMonth),null);
+			companyPayService.updateCompanyPayByCompanyId(companyId, 0, Double.valueOf(alipayAmount), orderNo, Integer.valueOf(alipayMonth),null, location,Integer.valueOf(alipayAmount)/Integer.valueOf(alipayMonth) ,taxType);
 		}
 
 		AlipayService alipayService = new AlipayService();
@@ -296,7 +315,14 @@ public class CompanyController {
 					logger.info(email);
 					recommendService.setCustomerPaid(email);
 					logger.info("debug1");
-					PdfProcess.generateContractPdf(realPath + contractFileName, company.getName(), code, address, owner, String.valueOf(companyPay.getPayAmount()), date, webRoot);
+					companyPay.getPayAmount();
+					companyPay.getServiceTime();
+					//companyPay.get
+					
+					String type = companyPay.getType();
+					String location = companyPay.getLocation();
+					String perMonth = String.valueOf(companyPay.getPerMonth());
+					PdfProcess.generateContractPdf(realPath + contractFileName, company.getName(), code, address, owner,perMonth,String.valueOf(companyPay.getServiceTime()), String.valueOf(companyPay.getPayAmount()),location, type, date, webRoot);
 					logger.info("debug2");
 					
 				} catch(Exception e) {
@@ -342,12 +368,14 @@ public class CompanyController {
 			Timestamp now = new Timestamp(date.getTime());
 			String accounterId = company.getAccounterId();
 			String accounterName = userService.getUserNameByUserId(accounterId);
+			String contract = companyPay.getContractFile();
 			if(expiredTime != null && expiredTime.after(now)){
 				long gap = expiredTime.getTime() - now.getTime();
 				if(gap <= 5 * 24* 60 * 60 * 1000){
 					retMap.put("alert", "您的服务时间已少于五天，请尽快续费！");
 				}
 				retMap.put("selected", "true");
+				retMap.put("contract", contract);
 				retMap.put("info", "您已选择了会计师：" + accounterName + ", 您的服务到期时间为：" + sdf.format(expiredTime) + "。");
 				retMap.put("amount", String.valueOf(companyPay.getPayAmount()));
 				retMap.put("companyName", company.getName());

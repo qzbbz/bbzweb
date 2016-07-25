@@ -30,7 +30,7 @@
 			<div class="tips tips-warning mt20" id="tipInfo" style="display:none;"></div>
 			
 			<div id="contractInfo" style="display:none;margin-top:20px;margin-left:0px;">
-				<a id="contract" class="media {width:850, height:600}" href="/img/webimg/contract.pdf" target="_blank"></a>
+				
 			</div>
 			
         </div>
@@ -77,7 +77,7 @@
 	<script type="text/javascript" src="/js/webjs/jquery.media.js"></script>  
     <script type="text/javascript">
     (function(){
-    	$('a.media').media();
+
     })()
     $.ajax({
 		url : '/company/checkSelectAccounter',
@@ -90,7 +90,13 @@
 				$('#tipInfo').show();
 				$('#contractInfo').hide();
 			} else {
+				console.log(data);
+				var contract = '<a id="contract" class="media {width:850, height:600}" href="/files/company/'+data.contract+'" target="_blank"></a>';
+				//$('#contract').attr("href", "/files/company/"+data.contract);
+				$("#contractInfo").append(contract);
+		    	$('a.media').media();
 				$('#contractInfo').show();
+
 			}
 		},
 		error : function() {
