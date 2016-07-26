@@ -338,13 +338,26 @@ document.getElementById("fapiaoluru_addInvoiceImage").onchange = function(event)
 			}
 		}
 	}
+	console.log(invoiceList);
 	bindRightSliderEvent();
 }
 
 
 function bindRightSliderEvent() {
 	mui('.mui-table-view').on('slideleft', '.mui-table-view-cell', function(event) {
-		console.log(this);
+		console.log($(this).find("img"));
+		try{
+			var imgSrc = $(this).find("img").attr("src");
+
+			if(imgSrc in invoiceList){
+				delete invoiceList[imgSrc];
+			}
+
+
+		}catch(e){
+			console.log(e);
+		}
+		
 		this.remove();
 		var amount = 0;
 		$(".fapiaoluru_amount").each(function(){
@@ -483,4 +496,3 @@ mui.ajax({
     	document.getElementById("tips_info").style.display = "";
     } 
 });
-
