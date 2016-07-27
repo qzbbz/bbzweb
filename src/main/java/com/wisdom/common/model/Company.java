@@ -23,6 +23,7 @@ public class Company implements java.io.Serializable {
 	private String accounterId;
 	private String companyCode;
 	private Timestamp createTime;
+	private String taxStatus;
 
 	// Constructors
 
@@ -37,7 +38,7 @@ public class Company implements java.io.Serializable {
 
 	/** full constructor */
 	public Company(Long id, String name, Long parentId, String monthExpense,
-			String perfectMoment, String takeType, String accounterId, String companyCode, Timestamp createTime) {
+			String perfectMoment, String takeType, String accounterId, String companyCode, Timestamp createTime,String taxStatus) {
 		this.id = id;
 		this.name = name;
 		this.parentId = parentId;
@@ -47,6 +48,7 @@ public class Company implements java.io.Serializable {
 		this.accounterId = accounterId;
 		this.companyCode = companyCode;
 		this.createTime = createTime;
+		this.taxStatus = taxStatus;
 	}
 
 	// Property accessors
@@ -122,5 +124,15 @@ public class Company implements java.io.Serializable {
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
 	}
+
+	public String getTaxStatus() {
+		return taxStatus;
+	}
+
+	public void setTaxStatus(String taxStatus) {
+		this.taxStatus = taxStatus;
+	}
+	
+	
 
 }
