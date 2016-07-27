@@ -13,7 +13,7 @@ public class CompanyMapper implements RowMapper<Company> {
 				rs.getLong("parent_id"), rs.getString("month_expense"), 
 				rs.getString("perfect_moment"), rs.getString("take_type"),
 				rs.getString("accounter_id"),rs.getString("company_code"), 
-				rs.getTimestamp("create_time"));
+				rs.getTimestamp("create_time"), rs.getString("tax_status"));
 		return u;
 	}
 }
