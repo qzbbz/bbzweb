@@ -37,7 +37,8 @@ public class CheckScheduleImpl implements CheckSchedule {
 		List<CompanyPay> list = companyPayService.getExpiredCompanyPay();
 		for(CompanyPay companyPay: list){
 			Company company = companyService.getCompanyByCompanyId(companyPay.getCompanyId());
-			if(!company.getAccounterId().equals("")){
+			
+			if(company!= null && !company.getAccounterId().equals("")){
 				//Remove the accountant from the company
 				companyService.updateCompanyAccounter(companyPay.getCompanyId(), "");
 				log.info("Remove accountant from " + company.getName());
