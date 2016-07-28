@@ -241,15 +241,28 @@
 					addExtra == '' || orgCode == '' ||
 					taxCode == '' || bankName == '' ||
 					comFile == '' || orgFile == '' || taxFile == '') {
-				BUI.use(['bui/overlay'], function(Overlay){
-					BUI.Message.Alert('您的信息没有填写完整，请检查！','warning');
-				});
+				if($("#three-into-one")[0].checked){
+					$("#orgCode").val($("#corpCode").val());
+					
+					//$("#orgFile").val($("#comFile").val());
+					$("#taxCode").val($("#corpCode").val());
+					//$("#taxFile").val($("#comFile").val());
+					$("#orgCode").prop('disabled', false);
+					$("#orgFile").prop('disabled', false);
+					$("#taxCode").prop('disabled', false);
+					$("#taxFile").prop('disabled', false);
+					$('#orgInfoSettings').submit();
+				}else{
+					BUI.use(['bui/overlay'], function(Overlay){
+						BUI.Message.Alert('您的信息没有填写完整，请检查！','warning');
+					});
+				}
 			} else {
 				if($("#three-into-one")[0].checked){
 					$("#orgCode").val($("#corpCode").val());
-					$("#orgFile").val($("#comFile").val());
+					//$("#orgFile").val($("#comFile").val());
 					$("#taxCode").val($("#corpCode").val());
-					$("#taxFile").val($("#comFile").val());
+					//$("#taxFile").val($("#comFile").val());
 					$("#orgCode").prop('disabled', false);
 					$("#orgFile").prop('disabled', false);
 					$("#taxCode").prop('disabled', false);
@@ -329,7 +342,7 @@
                                                           						{text : '基本信息设置',id : '51', href:"/views/webviews/company/organization_information_settings.html"},
                                                           						{text : '组织架构设置',id : '52', href:"/views/webviews/company/organization_structure_settings.html"}                                           
                                                           					]},
-					{text : '公司发票',id : '10',href:"javascript:void(0);",  expanded : false,children: [
+					{text : '公司费用发票',id : '10',href:"javascript:void(0);",  expanded : false,children: [
 						{text : '发票上传',id : '11', href:"/views/webviews/company/expense_account_upload.html"},
 						{text : '发票历史记录',id : '12', href:"/views/webviews/company/expense_account_history.html"}                                           
 					]},

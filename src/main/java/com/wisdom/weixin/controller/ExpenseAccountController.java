@@ -169,8 +169,7 @@ public class ExpenseAccountController {
 			HttpServletRequest request) {
 		logger.debug("uploadPersonInvoice");
 		String userId = request.getParameter("userId");
-		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/files/company");
-		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
+		String realPath = "/home/files/company";
 		String expenseAmountStr = request.getParameter("expense_amount");
 		String expenseTypeStr = request.getParameter("expense_type");
 		expenseAmountStr = expenseAmountStr.substring(0, expenseAmountStr.length() - 1);
@@ -190,6 +189,7 @@ public class ExpenseAccountController {
 				String fileName = userId
 						+ String.valueOf(System.currentTimeMillis());
 				String extendName = ".jpg";
+				logger.debug("uploadPersonInvoice file size : {}" , file.getSize());
 				try {
 					FileUtils.copyInputStreamToFile(file.getInputStream(),
 							new File(realPath, fileName + extendName));
@@ -504,6 +504,7 @@ public class ExpenseAccountController {
 	            DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	            Timestamp stamp = wwaim.getCreate_time();
 	            map.put("submit_time", sdf.format(stamp));
+	            map.put("invoice_id", wwaim.getInvoice_id());
 	            if (itemMap.containsKey(sdf.format(stamp))) {
 	                ((List<Map<String, Object>>) itemMap.get(sdf.format(stamp))).add(map);
 	            } else {
@@ -861,6 +862,15 @@ public class ExpenseAccountController {
 			retList.add(expenseType.get("name"));
 		}
 		//System.out.println(expenseTypes);
+		return retList;
+	}
+	
+	@RequestMapping("/setInvoiceDeprecated")
+	@ResponseBody
+	public List<String> setInvoiceDeprecated(HttpServletRequest request){
+		List<String> retList = new ArrayList<>();
+		String invoiceId = request.getParameter("invoice_id");
+		userInvoiceService.updateInvoiceStatus(Long.parseLong(invoiceId), 2);
 		return retList;
 	}
 }

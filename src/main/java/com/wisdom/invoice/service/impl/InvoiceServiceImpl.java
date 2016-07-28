@@ -35,6 +35,7 @@ import com.wisdom.common.model.TestInvoice;
 import com.wisdom.common.model.TestInvoiceArtifact;
 import com.wisdom.common.model.TestInvoiceRecord;
 import com.wisdom.common.model.UserInvoice;
+import com.wisdom.company.dao.IExpenseTypeDao;
 import com.wisdom.company.service.ICompanyService;
 import com.wisdom.company.service.IDeptService;
 import com.wisdom.company.service.IExpenseTypeService;
@@ -79,6 +80,8 @@ public class InvoiceServiceImpl implements IInvoiceService {
 	private IUserService userService;
 	@Autowired
 	private IInvoiceDao invoiceDao;
+	@Autowired
+	private IExpenseTypeDao expenseTypeDao;
 	@Autowired
     private IWeixinWorkGoingOutDao workGoingOutDao;
     @Autowired
@@ -169,6 +172,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			String itemId = UUID.randomUUID().toString();
 			invoiceDao.addInvoiceArtifact(newInvoiceId, Double.parseDouble(params.get("amount").toString()), params.get("type").toString(), params.get("type").toString(), 0, itemId, 1);
 			invoiceDao.setIsFAOfInvoice(newInvoiceId, false, itemId);
+			expenseTypeDao.increaseExpenseTypeHit(params.get("type").toString());
 			
 		}
 		

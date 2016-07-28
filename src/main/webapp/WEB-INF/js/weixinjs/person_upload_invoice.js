@@ -188,6 +188,7 @@ mui.previewImage({
 var userOpenId = "";
 
 
+
 function getImageDataURL(img) {
 	var canvas = document.createElement('canvas');
 	canvas.width = img.width;
@@ -265,6 +266,9 @@ document.getElementById("fapiaoluru_addInvoiceImage").onchange = function(event)
 		for(var i=0; i<files.length; i++) {
 			var liNode = document.createElement('li');
 			liNode.setAttribute("class", "mui-media mui-table-view-cell");
+			liNode.innerHTML = "<div class='mui-slider-right mui-disabled'><a class='mui-btn mui-btn-red'>作废</a></div>";
+			var slideNode = document.createElement('div');
+			slideNode.setAttribute('class', 'mui-slider-handle');
 			var imgNode = document.createElement('img');
 			imgNode.setAttribute('class', 'mui-pull-left');
 			imgNode.setAttribute('data-preview-group', '1');
@@ -272,7 +276,7 @@ document.getElementById("fapiaoluru_addInvoiceImage").onchange = function(event)
 			imgNode.style.width = '100px';
 			imgNode.style.height = '80px';
 			imgNode.style.maxWidth = '100px';
-			liNode.appendChild(imgNode);
+			slideNode.appendChild(imgNode);
 			var inputRootNode = document.createElement('div');
 			inputRootNode.setAttribute('class', 'mui-media-body');
 			var inputAmountNode = document.createElement('div');
@@ -289,7 +293,10 @@ document.getElementById("fapiaoluru_addInvoiceImage").onchange = function(event)
 			inputTypeNode.innerHTML = "发票类型:<span class='mui-pull-right' ><span class='fapiaoluru_type' id='fapiaoluru_type_"+inputIndex+"'>选择</span><span class='mui-icon mui-icon-arrowright' style='font-size: 20px;margin-top:0px;display:inline-block'></span></span>";
 			inputRootNode.appendChild(inputAmountNode);
 			inputRootNode.appendChild(inputTypeNode);
-			liNode.appendChild(inputRootNode);
+
+			slideNode.appendChild(inputRootNode);
+			//liNode.innerHTML += "</div>";
+			liNode.appendChild(slideNode);
 			inputTypeNode.addEventListener('tap', function(event) {
 				var ele = this.childNodes[1].childNodes[0];
 				invoiceTypePicker.show(function(items) {
@@ -315,14 +322,14 @@ document.getElementById("fapiaoluru_addInvoiceImage").onchange = function(event)
 				var URL = window.URL || window.webkitURL;
 				imgURL = URL.createObjectURL(file);
 				imgNode.src = imgURL;
-				invoiceList[imgURL] = document.getElementById('fapiaoluru_addInvoiceImage').files[0];
+				invoiceList[imgURL] = file;//document.getElementById('fapiaoluru_addInvoiceImage').files[0];
 				//URL.revokeObjectURL(imgURL);
 			} catch (e) {
 				try {
 					var fileReader = new FileReader();
 					fileReader.onload = function(event) {
 						imgNode.src = event.target.result;
-						invoiceList[imgNode.src] = document.getElementById('fapiaoluru_addInvoiceImage').files[0];
+						invoiceList[imgNode.src] = file;//document.getElementById('fapiaoluru_addInvoiceImage').files[0];
 					};
 					fileReader.readAsDataURL(file);
 				} catch (e) {
@@ -331,6 +338,41 @@ document.getElementById("fapiaoluru_addInvoiceImage").onchange = function(event)
 			}
 		}
 	}
+	console.log(invoiceList);
+	bindRightSliderEvent();
+}
+
+
+function bindRightSliderEvent() {
+	mui('.mui-table-view').on('slideleft', '.mui-table-view-cell', function(event) {
+		console.log($(this).find("img"));
+		try{
+			var imgSrc = $(this).find("img").attr("src");
+
+			if(imgSrc in invoiceList){
+				delete invoiceList[imgSrc];
+			}
+
+
+		}catch(e){
+			console.log(e);
+		}
+		
+		this.remove();
+		var amount = 0;
+		$(".fapiaoluru_amount").each(function(){
+			var elem = parseFloat($(this).val());
+			
+			if(!isNaN(elem)){
+				amount += elem;
+			}
+
+		});
+		amount = amount.toFixed(2);
+		$("#total_amount").html("发票总额： " + amount + "元");
+
+		
+	});
 }
 
 document.getElementById('fapiaoluru_submit').addEventListener('tap', function(event) {
@@ -417,6 +459,7 @@ document.getElementById('company_select').addEventListener('tap', function() {
 		document.getElementById('userId').value = rs[0].value;
 	});
 }, false);
+
 mui.ajax({ 
     type : "POST", 
     url  : "/getUserOpenIdAndCheckBindCompany",

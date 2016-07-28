@@ -134,7 +134,7 @@ mui.createConfirmDialog = function(info, cancelCallBack, acceptCallBack) {
 };
 
 mui.createCommentDialog = function(info, cancelCallBack, acceptCallBack, type, id, eleargs, approvalStatus) {
-	var template = "<div style='width:80%;margin:50% 10%;border:1px solid #ddd;background-color: white;border-radius: 5px;'><div style='margin-top:20px;margin-left:20px;'>审核信息</div><hr/><div style='margin-top:20px;margin-left:20px;margin-bottom:20px;margin-right:20px;height:60px;'><textarea id='comment' placeholder='输入审核信息'></textarea></div><div style='text-align:right;margin-bottom:20px;margin-right:20px;'><a id='createCommentDialog_accept' href='javascript:void(0);' style='text-decoration:none;'>确定</a></div></div>";
+	var template = "<div style='width:80%;margin:50% 10%;border:1px solid #ddd;background-color: white;border-radius: 5px;'><div style='margin-top:20px;margin-left:20px;'>审核信息</div><hr/><div style='margin-top:20px;margin-left:20px;margin-bottom:20px;margin-right:20px;height:60px;'><textarea id='comment' placeholder='输入审核信息'></textarea></div><div style='text-align:right;margin-bottom:20px;margin-right:20px;'><a id='createCommentDialog_accept' href='javascript:void(0);' style='text-decoration:none;'>确定</a>&nbsp&nbsp<a id='createCommentDialog_cancel' href='javascript:void(0);' style='text-decoration:none;'>取消</a></div></div>";
 	var element = document.createElement('div');
 	element.classList.add('dialog');
 	element.innerHTML = template.replace('{{info}}', info);
@@ -147,6 +147,39 @@ mui.createCommentDialog = function(info, cancelCallBack, acceptCallBack, type, i
 		document.body.appendChild(element);
 		document.getElementById('createCommentDialog_accept').addEventListener('tap', function() {
 			if (acceptCallBack) acceptCallBack(type, id, eleargs, approvalStatus);
+			mask.close();
+		});
+		document.getElementById('createCommentDialog_cancel').addEventListener('tap', function() {
+			var elements = document.getElementsByClassName("mui-slider-handle");
+			for(var key in elements){
+				if(elements[key].style != undefined){
+					elements[key].style.transform = "";
+				}
+			}
+			elements = document.getElementsByClassName("mui-btn-red");
+			for(var key in elements){
+				if(elements[key].style != undefined){
+					elements[key].style.transform = "";
+				}
+			}
+			elements = document.getElementsByClassName("mui-table-view-cell");
+
+			for(var key in elements){
+				if(elements[key].className != undefined){
+					if(elements[key].className.indexOf("mui-selected") != -1){
+
+						for(key2 in elements[key].childNodes){
+							if(elements[key].childNodes[key2].className != undefined){
+								elements[key].childNodes[key2].className = elements[key].childNodes[key2].className.replace("mui-disabled", "");
+								elements[key].childNodes[key2].className = elements[key].childNodes[key2].className.replace("mui-selected", "");
+							}
+						}
+					}
+					elements[key].className = elements[key].className.replace("mui-selected", "");
+					
+				}
+			}
+			
 			mask.close();
 		});
 		return mask;

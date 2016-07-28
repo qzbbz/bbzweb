@@ -45,7 +45,7 @@ public class CheckScheduleImpl implements CheckSchedule {
 		}
 	}
 
-	@Scheduled(fixedDelay=60*60*100) //每小时
+	@Scheduled(fixedDelay=60*60*1000) //每小时
 	@Override
 	public void redundantInvoiceArtifactCheckService() {
 		Timestamp now = new Timestamp(System.currentTimeMillis());

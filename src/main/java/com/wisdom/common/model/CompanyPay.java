@@ -23,6 +23,9 @@ public class CompanyPay implements java.io.Serializable {
 	private Timestamp createTime;
 	private Integer trial;
 	private Timestamp expiredTime;
+	private Integer perMonth;
+	private String location;
+	private String type;
 
 	// Constructors
 
@@ -36,7 +39,7 @@ public class CompanyPay implements java.io.Serializable {
 	}
 
 	public CompanyPay(Long id, Long companyId, Integer payStatus, Double payAmount, Integer serviceTime,
-			String orderNo, int applyInvoice, String mailAddress, String contractFile, Timestamp createTime, Integer trial, Timestamp expiredTime) {
+			String orderNo, int applyInvoice, String mailAddress, String contractFile, Timestamp createTime, Integer trial, Timestamp expiredTime, Integer perMonth, String location, String type) {
 		super();
 		this.id = id;
 		this.companyId = companyId;
@@ -50,6 +53,9 @@ public class CompanyPay implements java.io.Serializable {
 		this.createTime = createTime;
 		this.trial = trial;
 		this.expiredTime = expiredTime;
+		this.perMonth = perMonth;
+		this.location = location;
+		this.type = type;
 	}
 
 	public Long getId() {
@@ -151,6 +157,32 @@ public class CompanyPay implements java.io.Serializable {
 	public void setExpiredTime(Timestamp expiredTime) {
 		this.expiredTime = expiredTime;
 	}
+
+	public Integer getPerMonth() {
+		return perMonth;
+	}
+
+	public void setPerMonth(Integer perMonth) {
+		this.perMonth = perMonth;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+	
+	
 	
 	
 }

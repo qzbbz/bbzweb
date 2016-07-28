@@ -1,4 +1,6 @@
 var userOpenId = "";
+
+
 var globleEle;
 function checkJsonIsEmpty(json) {
 	var isEmpty = true;
@@ -267,7 +269,7 @@ function createDataList(data) {
 		var abstractNode = document.createElement('div');
 		abstractNode.style.backgroundColor = "white";
 		abstractNode.style.border = "1px solid #ddd";
-		abstractNode.innerHTML = "<div style='background-color: white;border:1px solid #ddd;'><div style='height:80px;'><div class='mui-pull-left' style='margin-left:10px;margin-top:8px;'><div style='font-size:11px;color:#7D9EC0;'>发票提交人：" + data[key].user_name + "</div><div style='font-size:11px;color:#7D9EC0;'>发票总张数：" + data[key].bill_total + "</div><div style='font-size:11px;color:#7D9EC0;'>发票总金额：&#65509;<span class='person_total_amount' style='font-size:11px;'>" + data[key].amount + "</span></div></div><div class='mui-pull-right' style='margin-right:10px;margin-top:20px;'><button class='mui-btn mui-btn-block mui-btn-success' style='height:40px;width:120px;padding:0px 0px;z-index:999999999;'><span style='font-size: 15px;'>全部通过</span></button></div></div></div>";
+		abstractNode.innerHTML = "<div style='background-color: white;border:1px solid #ddd;'><div style='height:80px;'><div class='mui-pull-left' style='margin-left:10px;margin-top:8px;'><div style='font-size:11px;color:#7D9EC0;'>发票提交人：" + data[key].user_name + "</div><div style='font-size:11px;color:#7D9EC0;'>发票总张数：" + data[key].bill_total + "</div><div style='font-size:11px;color:#7D9EC0;'>发票总金额：&#65509;<span class='person_total_amount' style='font-size:11px;'>" + data[key].amount.toFixed(2) + "</span></div></div><div class='mui-pull-right' style='margin-right:10px;margin-top:20px;'><button class='mui-btn mui-btn-block mui-btn-success' style='height:40px;width:120px;padding:0px 0px;z-index:999999999;'><span style='font-size: 15px;'>全部通过</span></button></div></div></div>";
 		rootNode.appendChild(abstractNode);
 		dataDetailsNode.appendChild(rootNode);
 		rootNode.addEventListener("tap", function(){
@@ -298,6 +300,7 @@ function createDataList(data) {
 }
 
 function getNeedAuditInvoice(ajaxCallBack) {
+
 	mui.ajax({
 		url: '/newGetNeedAuditBillsSummary?openId=' + userOpenId,
 		type: "POST",

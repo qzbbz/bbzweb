@@ -10,7 +10,7 @@ import com.wisdom.common.model.ExpenseType;
 public class ExpenseTypeMapper  implements RowMapper<ExpenseType> {
 	public ExpenseType mapRow(ResultSet rs, int index) throws SQLException {
 		ExpenseType u = new ExpenseType(rs.getLong("id"), rs.getString("name"),
-				rs.getTimestamp("create_time"));
+				rs.getTimestamp("create_time"), rs.getInt("hit"));
 		return u;
 	}
 }

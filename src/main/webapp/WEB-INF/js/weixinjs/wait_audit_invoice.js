@@ -88,6 +88,27 @@ mui.createConfirmDialog = function(info, cancelCallBack, acceptCallBack) {
 	return mask;
 };
 
+function bindRightSliderEvent() {
+	mui('.mui-table-view').on('slideleft', '.mui-table-view-cell', function(event) {
+		console.log(event);
+
+		var invoiceId = this.getAttribute('id');
+		
+		mui.ajax({
+			url: '/setInvoiceDeprecated',
+			type: "POST",
+			data: {'invoice_id': invoiceId},
+			success: function(data) {
+				getWaitAuditInvoice(null);
+			},
+			error: function(status, error) {
+				mui.createTipDialog('请求服务器数据出错，请稍后重试！', null).show();
+			}
+		});
+		
+	});
+}
+
 function createDataList(data) {
 	document.getElementById('data_loading').style.display = "none";
 	document.getElementById('no_data_tips').style.display = "none";
@@ -115,8 +136,16 @@ function createDataList(data) {
 		for(var j in detailDataList) {
 			if (detailDataList[j].upload_type == "invoice") {
 				var liNode = document.createElement('li');
+				//console.log(detailDataList[j]);
+				liNode.setAttribute('id', detailDataList[j].invoice_id);
 				liNode.setAttribute('class', 'mui-table-view-cell');
 				liNode.innerHTML = "<img class='mui-media-object mui-pull-left' style='width:60px;height:60px;max-width:60px;border-radius: 5px;' data-preview-group='" + img_group + "' data-preview-src='/files/company/"+detailDataList[j].bill_img+".jpg' src='/files/company/"+detailDataList[j].bill_img+"_small.jpg'><div class='mui-media-body mui-pull-left'><div><p>&#65509;"+detailDataList[j].bill_amount+"</p><h5>"+detailDataList[j].bill_type+"</h5><p class='mui-ellipsis'>审核人：<span>"+detailDataList[j].approval_name+"</span></p></div></div><span class='mui-pull-right mui-icon iconfont icon-Audit' style='width:60px;height:50px;max-width:60px;font-size:50px;margin-top:15px;margin-right:5px;position: fixed;position: absolute;left:70%;color:black;'>";
+				
+				liNode.innerHTML = 
+						"<div class='mui-slider-right mui-disabled'><a class='mui-btn mui-btn-red'>作废</a></div>" +
+						"<div class='mui-slider-handle'>" +
+						"<img class='mui-media-object mui-pull-left' style='width:60px;height:60px;max-width:60px;border-radius: 5px;' data-preview-group='" + img_group + "' data-preview-src='/files/company/"+detailDataList[j].bill_img+".jpg' src='/files/company/"+detailDataList[j].bill_img+"_small.jpg'><div class='mui-media-body mui-pull-left'><div><p>&#65509;"+detailDataList[j].bill_amount+"</p><h5>"+detailDataList[j].bill_type+"</h5><p class='mui-ellipsis'>审核人：<span>"+detailDataList[j].approval_name+"</span></p></div></div><span class='mui-pull-right mui-icon iconfont icon-Audit' style='width:60px;height:50px;max-width:60px;font-size:50px;margin-top:15px;margin-right:5px;position: fixed;position: absolute;left:70%;color:black;'></div>";
+						//"<img style='width:60px;height:60px;max-width:60px;border-radius: 5px;' class='mui-media-object mui-pull-left' data-preview-group='" + img_group + "' data-preview-src='/files/company/" + detailDataList[j].bill_img + ".jpg' style='width:60px;height:60px;max-width:60px;border-radius: 5px;' src='/files/company/" + detailDataList[j].bill_img + "_small.jpg'><div class='mui-media-body'><div class='mui-pull-left' style='margin-top:15px;'><p>" + detailDataList[j].bill_type + "</p><p class='mui-ellipsis'>提交日期：<span>" + data[i].submit_time + "</span></p></div><div class='mui-pull-right' style='margin-top:35px;'><p>&#65509;" + data[i].bill_amount + "</p></div></div></div>";
 				timeBlockContentULNode.appendChild(liNode);
 			} else if (detailDataList[j].upload_type == "work_goingout") {
 				var liNode = document.createElement('li');
@@ -129,6 +158,7 @@ function createDataList(data) {
 		dataDetailsNode.appendChild(timeBlockNode);
 	}
 	document.getElementById('cd-timeline').style.display = "";
+	bindRightSliderEvent();
 }
 
 function getWaitAuditInvoice(ajaxCallBack) {
@@ -139,9 +169,11 @@ function getWaitAuditInvoice(ajaxCallBack) {
 		success: function(data) {
 			if (!checkJsonIsEmpty(data)) {
 				document.getElementById('no_data_tips').style.display = 'none';
+				document.getElementById('cd-timeline').style.display = '';
 				createDataList(data);
 			} else {
 				document.getElementById('no_data_tips').style.display = '';
+				document.getElementById('cd-timeline').style.display = 'none';
 			}
 			document.getElementById('data_loading').style.display = 'none';
 			if (ajaxCallBack) ajaxCallBack();
@@ -179,8 +211,8 @@ mui(mui('#pull_refresh')[0]).pullToRefresh({
 		}
 	}
 });
-/*userOpenId = "oSTV_t9z_fYa7AQVYO0y5-OMFavQ";
-getWaitAuditInvoice(null);*/
+//userOpenId = "oSTV_t9z_fYa7AQVYO0y5-OMFavQ";
+//getWaitAuditInvoice(null);
 mui.ajax({
 	url: '/getUserOpenId',
 	type: "POST",

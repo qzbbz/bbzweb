@@ -24,7 +24,7 @@ public interface ICompanyPayDao {
 	
 	public boolean updateCompanyPayStatusAndTimeByOrderNo(String orderNo, int status, Timestamp time, String contractFile, Timestamp expiredTime);
 	
-	public boolean updateCompanyPayByCompanyId(Long companyId, Integer payStatus, Double amount, String orderNo, int serviceTime, Timestamp expiredTime);
+	public boolean updateCompanyPayByCompanyId(Long companyId, Integer payStatus, Double amount, String orderNo, int serviceTime, Timestamp expiredTime,String location, Integer perMonth, String type);
 	
 	public boolean updateApplyInvoiceByCompanyId(Long companyId, int applyInvoice, String address);
 	

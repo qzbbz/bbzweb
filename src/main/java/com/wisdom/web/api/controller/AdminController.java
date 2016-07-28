@@ -484,7 +484,7 @@ public class AdminController {
 			if(parsedDate != null){
 				expiredTimestamp = new java.sql.Timestamp(parsedDate.getTime());
 			}
-			success = companyPayService.updateCompanyPayByCompanyId(companyId, 0, Double.valueOf(serviceAmount), "", Integer.valueOf(serviceTime), expiredTimestamp);
+			success = companyPayService.updateCompanyPayByCompanyId(companyId, 0, Double.valueOf(serviceAmount), "", Integer.valueOf(serviceTime), expiredTimestamp, cp.getLocation(),cp.getPerMonth(),cp.getType());
 		}
 		if(success) {
 			retMap.put("result", "true");

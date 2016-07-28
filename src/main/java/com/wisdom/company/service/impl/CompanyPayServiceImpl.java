@@ -105,7 +105,7 @@ public class CompanyPayServiceImpl implements ICompanyPayService {
 	}
 
 	@Override
-	public boolean updateCompanyPayByCompanyId(Long companyId, Integer payStatus, Double amount, String orderNo, int serviceTime, Timestamp expiredTime) {
+	public boolean updateCompanyPayByCompanyId(Long companyId, Integer payStatus, Double amount, String orderNo, int serviceTime, Timestamp expiredTime, String location, Integer perMonth, String type) {
 		// TODO Auto-generated method stub
 		CompanyPay companyPay = companyPayDao.getCompanyPayByCompanyId(companyId);
 		Timestamp newExpiredTime = new Timestamp(0);
@@ -123,13 +123,14 @@ public class CompanyPayServiceImpl implements ICompanyPayService {
 			}
 
 			newExpiredTime.setTime(c.getTime().getTime());
+			
 		}else{
 			newExpiredTime = companyPay.getExpiredTime();
 		}
 		if(expiredTime != null){
 			newExpiredTime = expiredTime;
 		}
-		return companyPayDao.updateCompanyPayByCompanyId(companyId, payStatus, amount, orderNo, serviceTime, newExpiredTime);
+		return companyPayDao.updateCompanyPayByCompanyId(companyId, payStatus, amount, orderNo, serviceTime, newExpiredTime, location, perMonth, type);
 	}
 
 	@Override
