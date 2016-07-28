@@ -13,6 +13,14 @@ import java.util.Map;
 import java.util.Random;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,9 +80,18 @@ public class CompanyBillApiImpl implements ICompanyBillApi {
 			//Create invoice
 			long invoiceId = invoiceService.addInvoice(companyId, fileName, date, 0, "company");
 			Company company = companyService.getCompanyByCompanyId(companyId);
+			/**
+			 * Thread (request url by get)
+			 */
+			logger.debug("Thread has start");
+//			new Thread(new Runnable() {
+//				@Override
+//				public void run() {
+//					requestByGetMethod("http://121.40.63.208:8899/invoiceidentify?invoiceId=" + invoiceId);
+//				}// run
+//			}).start();
 			//Send to queue
 			invoiceService.publishUnrecognizedInvoive(invoiceId, companyId, fileName, company.getName());
-			
 			retMap.put("error_code", "0");
 		} catch (Exception e) {
 			logger.debug("uploadCompanyBill exception : {}", e.toString());
@@ -83,7 +100,34 @@ public class CompanyBillApiImpl implements ICompanyBillApi {
 		}
 		return retMap;
 	}
-
+	/**
+	 * Http Get for url eg:"http://121.40.63.208:8899/invoiceidentify?invoiceId="
+	 */
+	private void requestByGetMethod(String url) {
+		logger.debug("Execute requestByGetMethod , income paratemeter url {} ", url);
+		CloseableHttpClient httpClient = getHttpClient();
+		HttpGet httpGet = new HttpGet(url);
+		CloseableHttpResponse httpResponse = null;
+		try {
+			httpResponse = httpClient.execute(httpGet);
+			HttpEntity entity = httpResponse.getEntity();
+			logger.debug("return status code {}", httpResponse.getStatusLine());
+			EntityUtils.consume(entity);
+		} catch (Exception e) {
+			logger.debug("HttpClient request By get happen Exception {}", e.toString());
+		} finally {
+			try {
+				httpClient.close();
+			} catch (IOException e) {
+				logger.debug("HttpClient close Exception {}", e.toString());
+			}
+		}
+	}
+	// return CloseableHttpClient
+	private CloseableHttpClient getHttpClient() {
+		return HttpClients.createDefault();
+	}
+	
 	@Override
 	public List<Map<String, String>> getCompanyBillByCondition(
 			Map<String, String> params) {

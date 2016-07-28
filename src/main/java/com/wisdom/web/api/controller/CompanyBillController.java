@@ -68,8 +68,8 @@ public class CompanyBillController {
 		String date=request.getParameter("bill_date");
 		String supplyName = request.getParameter("supplyName");
 		String isFixedAssets = request.getParameter("isFixedAssets");
-		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
-//		realPath = "/files/company";
+//		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
+		realPath = "/files/company";
 		logger.debug("uploadCompanyBill realPath : {}", realPath);
 		Map<String, String> params = new HashMap<>();
 		params.put("userId", userId);

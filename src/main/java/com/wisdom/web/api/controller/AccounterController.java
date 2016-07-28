@@ -150,6 +150,15 @@ public class AccounterController {
 		return retMap;
 	}
 
+	@RequestMapping("/accounter/getCustomerManagementDetails")
+	@ResponseBody
+	public List<Map<String, String>> getCustomerManagementDetails(HttpServletRequest request) {
+		logger.debug("enter getCustomerManagementDetails");
+		List<Map<String, String>> retMap = accounterService.getAllCustomer();
+		logger.debug("returen CustomerManagementDetails list size: {}", retMap.size());
+		return retMap;
+		
+	}
 	@RequestMapping("/accounter/updateAccounterInfo")
 	public String updateAccounterInfo(
 			@RequestParam("files") MultipartFile file, HttpServletRequest request) {
