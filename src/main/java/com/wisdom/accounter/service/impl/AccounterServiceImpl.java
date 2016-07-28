@@ -760,9 +760,12 @@ public class AccounterServiceImpl implements IAccounterService {
 		map.put("name", customer.getCompanyName() == null? "" : customer.getCompanyName());
 		map.put("create_time", customer.getCreateTinme()== null? "" :customer.getCreateTinme());
 		map.put("tax_status", customer.getTaxStatus() == null? "" : customer.getTaxStatus());
-		map.put("expired_time", customer.getExpiredTime() == null? "" :  customer.getExpiredTime().toString());
+		map.put("expired_time", customer.getExpiredTime() == null? "" :  customer.getExpiredTime().toString().substring(0, 10));
 		map.put("user_name", customer.getAccounterName() == null? "" : customer.getAccounterName());
 		return map;
 	}
-
+	public static void main(String[] args) {
+		Timestamp time = Timestamp.valueOf("2010-10-07 14:30:30"); 
+		System.out.println(time);
+	}
 }
