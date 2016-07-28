@@ -134,7 +134,7 @@ public class AccounterDaoImpl implements IAccounterDao {
 	public List<CustomerManagement> getAllCustomer() {
 		List<CustomerManagement> list = null;
 		try {
-			String sql = "SELECT c1.name,s.create_time,c1.tax_status,c2.expired_time,u.user_name FROM company AS c1 LEFT JOIN company_pay AS c2 ON c1.id = c2.company_id LEFT JOIN sheet_balance AS s ON c1.id = s.company_id LEFT JOIN `user` AS u ON c1.accounter_id = u.user_id WHERE LENGTH(c1.accounter_id)<>0 GROUP BY c1.name ORDER BY s.create_time DESC ";
+			String sql = "SELECT * from(SELECT c1.id,c1.name,s.create_time,c1.tax_status,c2.expired_time,u.user_name FROM company AS c1 LEFT JOIN company_pay AS c2 ON c1.id = c2.company_id LEFT JOIN sheet_balance AS s ON c1.id = s.company_id LEFT JOIN `user` AS u ON c1.accounter_id = u.user_id WHERE LENGTH(c1.accounter_id)<>0  ORDER  BY s.create_time DESC ) AS ss  GROUP BY ss.name";
 			list = jdbcTemplate.query(sql,
 					new RowMapperResultSetExtractor<CustomerManagement>(
 							new CustomerManagementMapper()));
