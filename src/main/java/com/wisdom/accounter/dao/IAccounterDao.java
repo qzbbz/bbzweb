@@ -3,6 +3,7 @@ package com.wisdom.accounter.dao;
 import java.util.List;
 
 import com.wisdom.common.model.Accounter;
+import com.wisdom.common.model.CustomerManagement;
 
 public interface IAccounterDao {
 
@@ -23,4 +24,5 @@ public interface IAccounterDao {
 	
 	public boolean isAccounterExistByUserId(String userId);
 	
+	public List<CustomerManagement> getAllCustomer();
 }

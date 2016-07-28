@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.wisdom.common.model.Accounter;
+import com.wisdom.common.model.CustomerManagement;
 
 public interface IAccounterService {
 
@@ -45,5 +46,7 @@ public interface IAccounterService {
 	public Map<String, String> uploadCompanySalaryTemplate(String companyId, String realPath, MultipartFile file, String userId);
 	
 	public Map<String, String> getTakeBillWay(String companyId);
+	
+	public List<Map<String, String>>  getAllCustomer();
 	
 }

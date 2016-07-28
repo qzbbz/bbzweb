@@ -34,6 +34,7 @@ import com.wisdom.common.model.CompanyBankSta;
 import com.wisdom.common.model.CompanyBill;
 import com.wisdom.common.model.CompanySalary;
 import com.wisdom.common.model.CompanySales;
+import com.wisdom.common.model.CustomerManagement;
 import com.wisdom.common.model.Invoice;
 import com.wisdom.common.model.SalarySocialSecurity;
 import com.wisdom.common.model.TestInvoice;
@@ -741,6 +742,27 @@ public class AccounterServiceImpl implements IAccounterService {
 	@Override
 	public List<Accounter> getAllAccounterList() {
 		return accounterDao.getAllAccounter();
+	}
+
+	@Override
+	public List<Map<String, String>>  getAllCustomer() {
+		List<Map<String, String>> retList = new ArrayList<>();
+		Map<String, String> map = new HashMap<>();
+		List<CustomerManagement> list = accounterDao.getAllCustomer();
+		for (CustomerManagement c : list) {
+			retList.add(customerToMap(c));
+		}
+		return retList;
+	}
+	
+	public Map<String, String> customerToMap(CustomerManagement customer) {
+		Map<String, String> map = new HashMap<>();
+		map.put("name", customer.getCompanyName() == null? "" : customer.getCompanyName());
+		map.put("create_time", customer.getCreateTinme()== null? "" :customer.getCreateTinme());
+		map.put("tax_status", customer.getTaxStatus() == null? "" : customer.getTaxStatus());
+		map.put("expired_time", customer.getExpiredTime() == null? "" :  customer.getExpiredTime().toString());
+		map.put("user_name", customer.getAccounterName() == null? "" : customer.getAccounterName());
+		return map;
 	}
 
 }

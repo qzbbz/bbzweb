@@ -11,7 +11,9 @@ import org.springframework.stereotype.Repository;
 
 import com.wisdom.accounter.dao.IAccounterDao;
 import com.wisdom.accounter.mapper.AccounterMapper;
+import com.wisdom.accounter.mapper.CustomerManagementMapper;
 import com.wisdom.common.model.Accounter;
+import com.wisdom.common.model.CustomerManagement;
 
 @Repository("accounterDao")
 public class AccounterDaoImpl implements IAccounterDao {
@@ -122,6 +124,20 @@ public class AccounterDaoImpl implements IAccounterDao {
 			list = jdbcTemplate.query(sql, new Object[] { province, city, area, industry, career },
 					new RowMapperResultSetExtractor<Accounter>(
 							new AccounterMapper()));
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return list;
+	}
+
+	@Override
+	public List<CustomerManagement> getAllCustomer() {
+		List<CustomerManagement> list = null;
+		try {
+			String sql = "SELECT distinct(c1.name),s.create_time,c1.tax_status,c2.expired_time,u.user_name FROM company AS c1 LEFT JOIN company_pay AS c2 ON c1.id = c2.company_id LEFT JOIN sheet_balance AS s ON c1.id = s.company_id LEFT JOIN `user` AS u ON c1.accounter_id = u.user_id WHERE LENGTH(c1.accounter_id)<>0 GROUP BY c1.name ORDER BY s.create_time DESC";
+			list = jdbcTemplate.query(sql,
+					new RowMapperResultSetExtractor<CustomerManagement>(
+							new CustomerManagementMapper()));
 		} catch (Exception e) {
 			logger.error(e.toString());
 		}
