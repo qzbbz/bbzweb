@@ -238,8 +238,10 @@ function saveInfo() {
 		}
 	});
 }
-
-mui.ajax({ 
+userOpenId = "oSTV_t9PTe4XeEhsMXdAR7izvQWA";
+document.getElementById("data_loading").style.display = "none";
+document.getElementById("bind_company_page").style.display = "";
+/*mui.ajax({ 
     type : "POST", 
     url  : "/getUserOpenIdAndCheckBindCompany",
     data : {type:"0"}, 
@@ -275,4 +277,4 @@ mui.ajax({
     	document.getElementById("tips_info_detail").innerHTML = "服务器暂时无法响应请求，<br/>请稍后重试！";
     	document.getElementById("tips_info").style.display = "";
     } 
-});
+});*/

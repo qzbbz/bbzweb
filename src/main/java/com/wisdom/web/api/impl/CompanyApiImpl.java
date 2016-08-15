@@ -132,7 +132,7 @@ public class CompanyApiImpl implements ICompanyApi {
 		if (userPwd == null || userPwd.isEmpty() || userId == null
 				|| userId.isEmpty()) {
 			retMap.put("error_code", "1");
-			retMap.put("error_message", "系统暂时无法获取您的用户名和密码，请重登陆页面重新进入，完成注册！");
+			retMap.put("error_message", "用户名或密码为空，请从登陆页面重新进入，完成注册！");
 			return retMap;
 		}
 
@@ -140,7 +140,7 @@ public class CompanyApiImpl implements ICompanyApi {
 		String encPwd = UserPwdMD5Encrypt.getPasswordByMD5Encrypt(userPwd);
 		if (dbPwd.isEmpty() || !encPwd.equals(dbPwd)) {
 			retMap.put("error_code", "1");
-			retMap.put("error_message", "系统暂时无法获取您的用户名和密码，请重登陆页面重新进入，完成注册！");
+			retMap.put("error_message", "密码错误或密码为空，请从登陆页面重新进入，完成注册！");
 			return retMap;
 		}
 
