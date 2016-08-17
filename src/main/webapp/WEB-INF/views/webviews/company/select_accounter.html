@@ -218,7 +218,6 @@
 		</div>
 		<div class="control-group control-btn">
 				<div class="layer-wrap-footer1">
-				<a id="trial_button" class="button button-success">免费试用</a>
 				<a  id="alipay_button" class="button button-success">确定购买</a></div>
 		</div>
 	</div>
@@ -507,39 +506,7 @@
 			});
 		});
 		
-		$('#trial_button').click(function(){
-			if(globalSelectedAccounterId === undefined){
-				globalSelectedAccounterId = "";
-			}
-			$.ajax({
-				url : '/company/selectOneAccounter',
-				type : "POST",
-				data : {accounterId:globalSelectedAccounterId, alipayMonth:$('#alipay_time option:selected').val(), alipayAmount:$('#alipay_sum').html(),type:'trial'},
-				success : function(data) {
-					if (data == ""){
-						BUI.Message.Alert('请先在左侧的组织架构内完善公司信息！',function(){
-						},'warning');
-						
-					}else {
-						BUI.Message.Alert(data, function(){
-							alipayForm.close();
-							window.location.reload();
-						},'warning');
 
-
-					}
-				},
-				error : function() {
-					BUI.use('bui/overlay',function(overlay){
-						function show () {
-							BUI.Message.Alert('选择会计师失败，请稍后重试！',function(){
-							},'warning');
-						}
-						show();	      
-					});	
-				}
-			});
-		});
 	});
     
 
