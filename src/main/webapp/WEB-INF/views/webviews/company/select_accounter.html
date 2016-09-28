@@ -109,8 +109,8 @@
 				</td>
 				<td>
 					<div class="controls" style="display: inline; float:right; margin-right: 15vw;">
-						<input class="place select" type="radio" name="place" value="shanghai" checked=checked /> 上海地区 
-						<input class="place select" type="radio" name="place" value="jiangzhe" /> 江浙地区 <br />
+						<input class="place select" type="radio" name="place" value="shanghai" checked=checked /> 江浙沪地区 
+						<!-- <input class="place select" type="radio" name="place" value="jiangzhe" /> 江浙地区 <br /> -->
 
 					</div>
 				</td>
@@ -305,23 +305,23 @@
 		    	if(place == "shanghai"){
 					if(type=="small"){
 						if(amount == '30'){
-							sum = 99;
-						}else if(amount == '60'){
 							sum = 150;
-						}else if(amount == '90'){
-							sum = 250;
-						}else {
-							sum = 350;
-						}
-					}else if(type == "normal"){
-						if(amount == '30'){
-							sum = 199;
 						}else if(amount == '60'){
 							sum = 250;
 						}else if(amount == '90'){
 							sum = 350;
 						}else {
 							sum = 450;
+						}
+					}else if(type == "normal"){
+						if(amount == '30'){
+							sum = 250;
+						}else if(amount == '60'){
+							sum = 350;
+						}else if(amount == '90'){
+							sum = 450;
+						}else {
+							sum = 550;
 						}
 					}
 		    	}else if(place == 'jiangzhe'){
@@ -361,23 +361,23 @@
 				if(place == "shanghai"){
 					if(type=="small"){
 						if(amount == '30'){
-							sum = 99;
-						}else if(amount == '60'){
 							sum = 150;
-						}else if(amount == '90'){
-							sum = 250;
-						}else {
-							sum = 350;
-						}
-					}else if(type == "normal"){
-						if(amount == '30'){
-							sum = 199;
 						}else if(amount == '60'){
 							sum = 250;
 						}else if(amount == '90'){
 							sum = 350;
 						}else {
 							sum = 450;
+						}
+					}else if(type == "normal"){
+						if(amount == '30'){
+							sum = 250;
+						}else if(amount == '60'){
+							sum = 350;
+						}else if(amount == '90'){
+							sum = 450;
+						}else {
+							sum = 550;
 						}
 					}
 		    	}else if(place == 'jiangzhe'){
@@ -418,23 +418,23 @@
 			if(place == "shanghai"){
 				if(type=="small"){
 					if(amount == '30'){
-						sum = 99;
-					}else if(amount == '60'){
 						sum = 150;
-					}else if(amount == '90'){
-						sum = 250;
-					}else {
-						sum = 350;
-					}
-				}else if(type == "normal"){
-					if(amount == '30'){
-						sum = 199;
 					}else if(amount == '60'){
 						sum = 250;
 					}else if(amount == '90'){
 						sum = 350;
 					}else {
 						sum = 450;
+					}
+				}else if(type == "normal"){
+					if(amount == '30'){
+						sum = 250;
+					}else if(amount == '60'){
+						sum = 350;
+					}else if(amount == '90'){
+						sum = 450;
+					}else {
+						sum = 550;
 					}
 				}
 	    	}else if(place == 'jiangzhe'){
