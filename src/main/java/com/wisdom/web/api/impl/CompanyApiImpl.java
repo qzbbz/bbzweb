@@ -169,6 +169,7 @@ public class CompanyApiImpl implements ICompanyApi {
 		logger.debug("add company id : {}", companyId);
 		userModifyService.modifyUserCompanyIdByUserId(userId, companyId);
 		userService.addUserPhone(userId, userPhone, 1);
+		userService.setUserNameByUserId(userName, userId);
 		int inviteCode = (int)((Math.random()*9+1)*100000);
 		userInviteCodeDao.addUserInviteCode(userId, String.valueOf(inviteCode));
 		setMailToAccounter(params);

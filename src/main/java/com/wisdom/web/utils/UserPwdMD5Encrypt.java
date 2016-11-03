@@ -27,4 +27,8 @@ public class UserPwdMD5Encrypt {
 		}
 		return sb.toString();
 	}
+	
+	public static void main(String[] args) {
+		System.out.println(UserPwdMD5Encrypt.getPasswordByMD5Encrypt("love810505"));
+	}
 }
