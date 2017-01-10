@@ -1,0 +1,124 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" 		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:redis="http://www.springframework.org/schema/redis"
+    xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	http://www.springframework.org/schema/mvc
+	http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-4.0.xsd
+	http://www.springframework.org/schema/task
+	http://www.springframework.org/schema/task/spring-task-4.0.xsd
+	http://www.springframework.org/schema/tx
+	http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+	http://www.springframework.org/schema/redis http://www.springframework.org/schema/redis/spring-redis.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+<bean id="srpConnectionFactory" class="org.springframework.data.redis.connection.srp.SrpConnectionFactory" p:host-name="139.196.40.99" p:port="6379" p:password="T4729VT95%XsIvM"/>
+  
+  <!-- user component-scan begin-->
+	<context:component-scan base-package="com.wisdom.user.dao.impl" />
+	<context:component-scan base-package="com.wisdom.user.service.impl" />
+	<!-- user component-scan end-->
+	
+	<!-- company component-scan begin-->
+	<context:component-scan base-package="com.wisdom.company.dao.impl" />
+	<context:component-scan base-package="com.wisdom.company.service.impl" />
+	<!-- company component-scan end-->
+	
+	<!-- area component-scan begin-->
+	<context:component-scan base-package="com.wisdom.area.dao.impl" />
+	<context:component-scan base-package="com.wisdom.area.service.impl" />
+	<!-- area component-scan end-->
+	
+	<!-- recommend component-scan begin-->
+	<context:component-scan base-package="com.wisdom.recommender.dao.impl" />
+	<context:component-scan base-package="com.wisdom.recommender.service.impl" />
+	<!-- recommend component-scan end-->
+	
+	<!-- accounter component-scan begin-->
+	<context:component-scan base-package="com.wisdom.accounter.dao.impl" />
+	<context:component-scan base-package="com.wisdom.accounter.service.impl" />
+	<!-- accounter component-scan end-->
+	
+	<!-- community component-scan begin-->
+	<context:component-scan base-package="com.wisdom.community.dao.impl" />
+	<context:component-scan base-package="com.wisdom.community.service.impl" />
+	<!-- community component-scan end-->
+	
+	<!-- invoice component-scan begin-->
+	<context:component-scan base-package="com.wisdom.invoice.dao.impl" />
+	<context:component-scan base-package="com.wisdom.invoice.service.impl" />
+	<context:component-scan base-package="com.wisdom.invoice.controller" />
+	<!-- invoice component-scan end-->
+	
+	<!-- dispatch component-scan begin-->
+	<context:component-scan base-package="com.wisdom.dispatch.dao.impl" />
+	<context:component-scan base-package="com.wisdom.dispatch.service.impl" />
+	<context:component-scan base-package="com.wisdom.dispatch.schedule.impl" />
+	<!-- dispatch component-scan end-->
+	
+	
+	<!-- recommend component-scan begin-->
+	<context:component-scan base-package="com.wisdom.recommender.dao.impl" />
+	<context:component-scan base-package="com.wisdom.recommender.service.impl" />
+	<!-- recommend component-scan end-->
+	
+	<!-- web component-scan begin-->
+	<context:component-scan base-package="com.wisdom.web.api.impl" />
+	<context:component-scan base-package="com.wisdom.web.api.controller" />
+	<context:component-scan base-package="com.wisdom.web.controller" />
+	<!-- web component-scan end-->
+	
+	<!-- sales component-scan begin-->
+	<context:component-scan base-package="com.wisdom.sales.dao.impl" />
+	<context:component-scan base-package="com.wisdom.sales.service.impl" />
+	<context:component-scan base-package="com.wisdom.sales.controller" />
+	<!-- sales component-scan end-->
+		
+	<!-- weixin begin -->
+	<context:component-scan base-package="com.wisdom.weixin.controller" />
+	<context:component-scan base-package="com.wisdom.weixin.service.impl" />
+	<context:component-scan base-package="com.weixin.dao.impl" />
+	<context:component-scan base-package="com.weixin.campaign" />
+	<!-- weixin end -->
+	
+	<context:component-scan base-package="com.wisdom.contactus.utils" />
+  
+  <bean id="messageListener" class="org.springframework.data.redis.listener.adapter.MessageListenerAdapter">
+  <constructor-arg>
+    <bean class="com.redis.queue.DefaultMessageDelegate"/>
+  </constructor-arg>
+</bean>
+
+  <bean id="messageListener2" class="org.springframework.data.redis.listener.adapter.MessageListenerAdapter">
+  <constructor-arg>
+    <bean class="com.redis.queue.InvalidMessageDelegate"/>
+  </constructor-arg>
+</bean>
+
+<bean id="redisContainer" class="org.springframework.data.redis.listener.RedisMessageListenerContainer">
+  <property name="connectionFactory" ref="srpConnectionFactory"/>
+  <property name="messageListeners">
+    <map>
+      <entry key-ref="messageListener">
+        <bean class="org.springframework.data.redis.listener.ChannelTopic">
+          <constructor-arg value="RECOGNIZED_INVOICE"></constructor-arg>
+        </bean>
+      </entry>
+      <entry key-ref="messageListener2">
+        <bean class="org.springframework.data.redis.listener.ChannelTopic">
+          <constructor-arg value="INVALID_INVOICE"></constructor-arg>
+        </bean>
+      </entry>
+    </map>
+  </property>
+</bean>
+    
+</beans>

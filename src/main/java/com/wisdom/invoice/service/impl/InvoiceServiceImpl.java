@@ -981,9 +981,11 @@ public class InvoiceServiceImpl implements IInvoiceService {
 
 				Jedis jedis = jedisPool.getResource();
 				try {
-					jedis.publish("UNRECOGNIZED_INVOICE", exportDataStr);
+					logger.debug("begin publishUnrecognizedInvoive");
+					long k_ = jedis.publish("UNRECOGNIZED_INVOICE", exportDataStr);
+					logger.debug("end publishUnrecognizedInvoive, publish return value : {}", k_);
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.debug(e.toString());
 				} finally {
 					jedisPool.returnResource(jedis);
 				}

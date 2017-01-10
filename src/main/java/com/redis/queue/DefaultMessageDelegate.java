@@ -1,4 +1,4 @@
-package com.wisdom.common.queue;
+package com.redis.queue;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -8,6 +8,8 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,10 +22,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wisdom.dispatch.service.IDispatcherService;
 import com.wisdom.invoice.service.IInvoiceApprovalService;
 import com.wisdom.invoice.service.IInvoiceService;
+import com.wisdom.invoice.service.impl.InvoiceServiceImpl;
 
 
 @Service
 public class DefaultMessageDelegate implements MessageDelegate {
+	
+	private static final Logger logger = LoggerFactory.getLogger(DefaultMessageDelegate.class);
 	
 	@Autowired IInvoiceService invoiceService;
 	
@@ -36,7 +41,7 @@ public class DefaultMessageDelegate implements MessageDelegate {
 	public synchronized void handleMessage(String message) throws JsonParseException, JsonMappingException, IOException {
 		// TODO Auto-generated method stub
 		System.out.println(message);
-		
+		logger.debug("default handle message : {}", message);
 		
 		
 		JsonFactory factory = new JsonFactory(); 
@@ -48,13 +53,13 @@ public class DefaultMessageDelegate implements MessageDelegate {
 			data2 = mapper.readValue(message, typeRef);
 		} catch (JsonParseException e1) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			logger.debug(e1.toString());
 		} catch (JsonMappingException e1) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			logger.debug(e1.toString());
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			logger.debug(e1.toString());
 		} 
         boolean fA = false;
         HashMap<String, Object> data = new HashMap<>();
@@ -72,6 +77,7 @@ public class DefaultMessageDelegate implements MessageDelegate {
         String contentStr = (String) data.get("data");
         List<Map<String,String>> content = mapper2.readValue(contentStr, typeRef); 
         String requestId = UUID.randomUUID().toString();
+        logger.debug("invoiceId, fA, requestId : {},{},{}", invoiceId, fA, requestId);
         invoiceService.setIsFAOfInvoice(invoiceId, fA, requestId);
 	    invoiceService.addInvoiceArtifact(invoiceId, content, requestId);
 	    dispatcherService.updateDispatcherStatus(invoiceId, 0);
