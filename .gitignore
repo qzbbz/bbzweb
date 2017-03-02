@@ -15,4 +15,5 @@ bbzweb.iml
 important.properties
 important.properties.*
 dispatcher-servlet.xml
+bbz_dispatcher-servlet.xml
 WeixinConstEnum.*
