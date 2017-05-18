@@ -56,6 +56,7 @@ import com.wisdom.user.service.IUserService;
 import com.wisdom.web.utils.RedisSetting;
 
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 import com.wisdom.web.api.impl.CompanyUserApiImpl;
 
@@ -83,9 +84,9 @@ public class InvoiceServiceImpl implements IInvoiceService {
 	@Autowired
 	private IExpenseTypeDao expenseTypeDao;
 	@Autowired
-    private IWeixinWorkGoingOutDao workGoingOutDao;
-    @Autowired
-    private IWeixinUserWorkGoingOutDao userWorkGoingOutDao;
+	private IWeixinWorkGoingOutDao workGoingOutDao;
+	@Autowired
+	private IWeixinUserWorkGoingOutDao userWorkGoingOutDao;
 	@Autowired
 	private IAttachmentService attachmentService;
 	@Autowired
@@ -102,7 +103,6 @@ public class InvoiceServiceImpl implements IInvoiceService {
 	private IUserDeptService userDeptService;
 	@Autowired
 	private IDeptService deptService;
-	
 
 	@Transactional
 	@Override
@@ -115,26 +115,21 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			log.error("null pointor error");
 			return retMap;
 		}
-		
 
 		long deptId = userDeptService.getDeptIdByUserId(userId);
 		String costCenterCode = deptService.getCostCenterCodeById(deptId);
 
-		/*if (null == params || null == (Integer) params.get("expenseTypeId")) {
-			log.error("expenseTypeId not exsited");
-			retMap.put("message", "lost expenseTypeId param!");
-			return retMap;
-		}
-		if (null == params || null == (Double) params.get("amount")) {
-			log.error("amount not exsited");
-			retMap.put("message", "lost amount param!");
-			return retMap;
-		}
-		if (null == params || null == (String) params.get("costCenterCode")) {
-			log.error("costCenterCode not exsited");
-			retMap.put("message", "lost costCenterCode param!");
-			return retMap;
-		}*/
+		/*
+		 * if (null == params || null == (Integer) params.get("expenseTypeId"))
+		 * { log.error("expenseTypeId not exsited"); retMap.put("message",
+		 * "lost expenseTypeId param!"); return retMap; } if (null == params ||
+		 * null == (Double) params.get("amount")) { log.error(
+		 * "amount not exsited"); retMap.put("message", "lost amount param!");
+		 * return retMap; } if (null == params || null == (String)
+		 * params.get("costCenterCode")) { log.error(
+		 * "costCenterCode not exsited"); retMap.put("message",
+		 * "lost costCenterCode param!"); return retMap; }
+		 */
 		int expenseTypeId = 1;
 		double amount = 0.0;
 		Invoice invoice = new Invoice();
@@ -167,17 +162,18 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		newInvoice.setCostCenter(costCenterCode);
 		newInvoice.setType("wechat");
 		long newInvoiceId = invoiceDao.addInvoice(newInvoice);
-		
-		if(type.equals("wechat")){
+
+		if (type.equals("wechat")) {
 			String itemId = UUID.randomUUID().toString();
-			invoiceDao.addInvoiceArtifact(newInvoiceId, Double.parseDouble(params.get("amount").toString()), params.get("type").toString(), params.get("type").toString(), 0, itemId, 1);
+			invoiceDao.addInvoiceArtifact(newInvoiceId, Double.parseDouble(params.get("amount").toString()),
+					params.get("type").toString(), params.get("type").toString(), 0, itemId, 1);
 			invoiceDao.setIsFAOfInvoice(newInvoiceId, false, itemId);
 			expenseTypeDao.increaseExpenseTypeHit(params.get("type").toString());
-			
+
 		}
-		
+
 		String companyName = companyService.getCompanyName(companyId);
-		if(! type.equals("wechat")){
+		if (!type.equals("wechat")) {
 			publishUnrecognizedInvoive(newInvoiceId, companyId, fileName, companyName);
 		}
 		log.debug("addAttachMentRecord");
@@ -219,7 +215,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		log.debug("getUserNameByUserId:" + userName);
 		// 生成一条dispatcher日志。
 		blRet = dispatcherService.addDispatcherRecord(userId, userName, newInvoiceId, -1, 0, receiver, openId, 1); // TODO
-		if(type.equals("wechat")){
+		if (type.equals("wechat")) {
 			dispatcherService.updateDispatcherStatus(newInvoiceId, 0);
 		}
 		if (!blRet) {
@@ -482,7 +478,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			public int compare(Object arg1, Object arg2) {
 				Map.Entry obj1 = (Map.Entry) arg1;
 				Map.Entry obj2 = (Map.Entry) arg2;
-				return (obj1.getKey()).toString().compareTo((String)obj2.getKey());
+				return (obj1.getKey()).toString().compareTo((String) obj2.getKey());
 			}
 		});
 		for (Iterator iter = arrayList.iterator(); iter.hasNext();) {
@@ -514,7 +510,8 @@ public class InvoiceServiceImpl implements IInvoiceService {
 				if (1 == invoice.getStatus()) {
 					billInfo.put("bill_status", "1");
 					if (itemMap.containsKey(billInfo.get("create_time"))) {
-						List<Map<String, Object>> list = (List<Map<String, Object>>) itemMap.get(billInfo.get("create_time"));
+						List<Map<String, Object>> list = (List<Map<String, Object>>) itemMap
+								.get(billInfo.get("create_time"));
 						list.add(billInfo);
 					} else {
 						List<Map<String, Object>> list = new ArrayList<>();
@@ -532,7 +529,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			public int compare(Object arg1, Object arg2) {
 				Map.Entry obj1 = (Map.Entry) arg1;
 				Map.Entry obj2 = (Map.Entry) arg2;
-				return (obj1.getKey()).toString().compareTo((String)obj2.getKey());
+				return (obj1.getKey()).toString().compareTo((String) obj2.getKey());
 			}
 		});
 		for (Iterator iter = arrayList.iterator(); iter.hasNext();) {
@@ -683,7 +680,8 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		List<Map<String, Object>> ret = new ArrayList<>();
 		logger.debug("getNeededAuditBillList approvalId : {}", approvalId);
 		List<UserInvoice> userInvoiceList = userInvoiceService.getUserInvoiceByApprovalIdAndStatus(approvalId, 0);
-		//List<InvoiceApproval> invoiceApprovalList = invoiceApprovalService.getInvoiceApprovalListByUserId(approvalId);
+		// List<InvoiceApproval> invoiceApprovalList =
+		// invoiceApprovalService.getInvoiceApprovalListByUserId(approvalId);
 		if (null == userInvoiceList) {
 			log.error("null invoiceApprovalList error:" + approvalId);
 			return null;
@@ -708,19 +706,20 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Timestamp stamp = userInvoice.getUpdateTime();
 			map.put("submit_time", sdf.format(stamp));
-			//UserInvoice userInvoice = userInvoiceService.getUserInvoiceByInvoiceId(invoiceApproval.getInvoiceId());
-			//if (null != userInvoice) {
-				map.put("user_id", userInvoice.getUserId());
-				stamp = userInvoice.getCreateTime();
-				map.put("bill_date", sdf.format(stamp));
-				String userName = userService.getUserNameByUserId(userInvoice.getUserId());
-				map.put("user_name", userName);
-				map.put("bill_status", userInvoice.getStatus());
-				String approvalName = userService.getUserNameByUserId(userInvoice.getUserId());
-				map.put("approval_name", approvalName);
-				map.put("reasons", userInvoice.getReasons() == null || userInvoice.getReasons().isEmpty() ? "无"
-						: userInvoice.getReasons());
-			//}
+			// UserInvoice userInvoice =
+			// userInvoiceService.getUserInvoiceByInvoiceId(invoiceApproval.getInvoiceId());
+			// if (null != userInvoice) {
+			map.put("user_id", userInvoice.getUserId());
+			stamp = userInvoice.getCreateTime();
+			map.put("bill_date", sdf.format(stamp));
+			String userName = userService.getUserNameByUserId(userInvoice.getUserId());
+			map.put("user_name", userName);
+			map.put("bill_status", userInvoice.getStatus());
+			String approvalName = userService.getUserNameByUserId(userInvoice.getUserId());
+			map.put("approval_name", approvalName);
+			map.put("reasons", userInvoice.getReasons() == null || userInvoice.getReasons().isEmpty() ? "无"
+					: userInvoice.getReasons());
+			// }
 			map.put("approval_id", approvalId);
 
 			// Invoice invoice =
@@ -958,9 +957,9 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		exportedData.put("company_id", Long.toString(companyId));
 		exportedData.put("path", fileName);
 		exportedData.put("company", companyName);
-		String exportDataStr = JSONArray.fromObject(exportedData).toString();
+		String exportDataStr = JSONObject.fromObject(exportedData).toString();
 
-		JedisPoolConfig poolConfig = new JedisPoolConfig();
+		/*JedisPoolConfig poolConfig = new JedisPoolConfig();
 		poolConfig.setMaxIdle(RedisSetting.MAX_IDLE);
 		poolConfig.setMinIdle(RedisSetting.MIN_IDLE);
 		poolConfig.setTestOnBorrow(RedisSetting.TEST_ON_BORROW);
@@ -969,7 +968,6 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		poolConfig.setMaxWaitMillis(RedisSetting.MAX_WAIT_MILLIS);
 		// poolConfig.setBlockWhenExhausted(org.apache.commons.pool.impl.GenericObjectPool.WHEN_EXHAUSTED_FAIL);
 
-		// Timeout is set larger to the deploy environment
 		JedisPool jedisPool = new JedisPool(poolConfig, RedisSetting.ADDRESS, RedisSetting.PORT, 1000,
 				RedisSetting.PASSWORD);
 
@@ -981,16 +979,25 @@ public class InvoiceServiceImpl implements IInvoiceService {
 
 				Jedis jedis = jedisPool.getResource();
 				try {
-					jedis.publish("UNRECOGNIZED_INVOICE", exportDataStr);
+					logger.debug("begin publishUnrecognizedInvoive");
+					long k_ = jedis.rpush("invoice_identify_task", exportDataStr);
+					logger.debug("end publishUnrecognizedInvoive, publish return value : {}", k_);
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.debug(e.toString());
 				} finally {
 					jedisPool.returnResource(jedis);
+					jedisPool.close();
 				}
 
 			}
-		});
-
+		});*/
+		
+		Jedis jedis = new Jedis("139.196.40.99", 6379);
+		jedis.auth("T4729VT95%XsIvM");
+		logger.debug("begin publishUnrecognizedInvoive");
+		long k_ = jedis.rpush("invoice_identify_task", exportDataStr);
+		logger.debug("end publishUnrecognizedInvoive, publish return value : {}", k_);
+		jedis.close();
 	}
 
 	@Override
@@ -1077,61 +1084,112 @@ public class InvoiceServiceImpl implements IInvoiceService {
 	public boolean setInvoiceComment(long invoiceId, String comment) {
 		return invoiceDao.setInvoiceComment(invoiceId, comment);
 	}
-	
-	  @Override
-	    public Map<String, Object> createWorkGoingOutProcess(String userId, String start, String end, String distance,
-	            String amount, String date, String price) {
-	        // TODO Auto-generated method stub
-	        Map<String, Object> retMap = new HashMap<String, Object>();
-	        logger.debug("createWorkGoingOutProcess");
-	        if (StringUtils.isEmpty(userId) && StringUtils.isEmpty(start) && StringUtils.isEmpty(distance) && StringUtils.isEmpty(amount) && StringUtils.isEmpty(price)) {
-	            logger.error("null pointor error");
-	            return retMap;
-	        }
-	        long deptId = userDeptService.getDeptIdByUserId(userId);
-	        String costCenterCode = deptService.getCostCenterCodeById(deptId);
-	        Date newdate = new Date();       
-	        Timestamp nousedate = new Timestamp(newdate.getTime());
-	        WeixinWorkGoingOutModel wgom = new WeixinWorkGoingOutModel();
-	        wgom.setStart(start != null ? start : "");
-	        wgom.setEnd(end != null ? end : "");
-	        wgom.setDistance(distance != null ? distance : "");
-	        wgom.setAmount(amount != null ? amount : "");
-	        wgom.setCostCenter(costCenterCode != null ? costCenterCode : "");
-	        wgom.setDate(Timestamp.valueOf(date));
-	        wgom.setCreateTime(nousedate);
-	        wgom.setPrice(price != null ? price : "");
-	        Long workGoingOutNum = workGoingOutDao.addWorkGoingOut(wgom);
-	        if ( workGoingOutNum == null || workGoingOutNum.longValue() == -1) {
-	            logger.error("addWorkGoingOutfailed");
-	            return retMap;
-	        }
-	        WeixinUserWorkGoingOutModel uwgom = new WeixinUserWorkGoingOutModel();
-	           // TODO 获取当前用户的审批信息。
-            String receiver = new String("");
-            receiver = getApprovalUserList(userId);
-            if (StringUtils.isEmpty(receiver)) {
-                log.error("get approval user error");
-                retMap.put("message", "获取审批人信息失败!");
-                return retMap;
-            }
-	            uwgom.setUserId(userId != null ? userId : "");
-	            uwgom.setUserWorkGoingOutId(workGoingOutNum);
-	            uwgom.setApprovalStatus(0);
-	            uwgom.setStatus(ProcessStatus.PROCESSING);
-	            uwgom.setApprovalId(receiver);
-	            uwgom.setCreateTime(nousedate);
-	            Long uwgomId = userWorkGoingOutDao.addUserWorkGoingOut(uwgom);
-	            if ( uwgomId == null || uwgomId.longValue() == -1) {
-	                logger.error("adduserWorkGoingOutfailed");
-	                return retMap;
-	            }
-	        // 成功后put相关信息
-	        retMap.put("workId", wgom.getId());
-	        retMap.put("receiver", receiver);
-	        retMap.put("success", true);
-	        retMap.put("message", "提交审批流程成功!");
-	        return retMap;
-	    }
+
+	@Override
+	public Map<String, Object> createWorkGoingOutProcess(String userId, String start, String end, String distance,
+			String amount, String date, String price) {
+		// TODO Auto-generated method stub
+		Map<String, Object> retMap = new HashMap<String, Object>();
+		logger.debug("createWorkGoingOutProcess");
+		if (StringUtils.isEmpty(userId) && StringUtils.isEmpty(start) && StringUtils.isEmpty(distance)
+				&& StringUtils.isEmpty(amount) && StringUtils.isEmpty(price)) {
+			logger.error("null pointor error");
+			return retMap;
+		}
+		long deptId = userDeptService.getDeptIdByUserId(userId);
+		String costCenterCode = deptService.getCostCenterCodeById(deptId);
+		Date newdate = new Date();
+		Timestamp nousedate = new Timestamp(newdate.getTime());
+		WeixinWorkGoingOutModel wgom = new WeixinWorkGoingOutModel();
+		wgom.setStart(start != null ? start : "");
+		wgom.setEnd(end != null ? end : "");
+		wgom.setDistance(distance != null ? distance : "");
+		wgom.setAmount(amount != null ? amount : "");
+		wgom.setCostCenter(costCenterCode != null ? costCenterCode : "");
+		wgom.setDate(Timestamp.valueOf(date));
+		wgom.setCreateTime(nousedate);
+		wgom.setPrice(price != null ? price : "");
+		Long workGoingOutNum = workGoingOutDao.addWorkGoingOut(wgom);
+		if (workGoingOutNum == null || workGoingOutNum.longValue() == -1) {
+			logger.error("addWorkGoingOutfailed");
+			return retMap;
+		}
+		WeixinUserWorkGoingOutModel uwgom = new WeixinUserWorkGoingOutModel();
+		// TODO 获取当前用户的审批信息。
+		String receiver = new String("");
+		receiver = getApprovalUserList(userId);
+		if (StringUtils.isEmpty(receiver)) {
+			log.error("get approval user error");
+			retMap.put("message", "获取审批人信息失败!");
+			return retMap;
+		}
+		uwgom.setUserId(userId != null ? userId : "");
+		uwgom.setUserWorkGoingOutId(workGoingOutNum);
+		uwgom.setApprovalStatus(0);
+		uwgom.setStatus(ProcessStatus.PROCESSING);
+		uwgom.setApprovalId(receiver);
+		uwgom.setCreateTime(nousedate);
+		Long uwgomId = userWorkGoingOutDao.addUserWorkGoingOut(uwgom);
+		if (uwgomId == null || uwgomId.longValue() == -1) {
+			logger.error("adduserWorkGoingOutfailed");
+			return retMap;
+		}
+		// 成功后put相关信息
+		retMap.put("workId", wgom.getId());
+		retMap.put("receiver", receiver);
+		retMap.put("success", true);
+		retMap.put("message", "提交审批流程成功!");
+		return retMap;
+	}
+
+	// IInvoiceService 里新增方法的实现
+	@Override
+	public void publishUnrecognizedInvoive(long invoiceId, long companyId, String fileName, String companyName,
+			List<Map<String, Object>> content) {
+		
+		System.out.println("Start to publish");
+		Map<String, String> exportedData = new HashMap<>();
+		exportedData.put("invoice_id", Long.toString(invoiceId));
+		exportedData.put("company_id", Long.toString(companyId));
+		exportedData.put("path", fileName);
+		exportedData.put("company", companyName);
+		exportedData.put("content", JSONArray.fromObject(content).toString());
+
+		String exportDataStr = JSONArray.fromObject(exportedData).toString();
+
+		JedisPoolConfig poolConfig = new JedisPoolConfig();
+		poolConfig.setMaxIdle(RedisSetting.MAX_IDLE);
+		poolConfig.setMinIdle(RedisSetting.MIN_IDLE);
+		poolConfig.setTestOnBorrow(RedisSetting.TEST_ON_BORROW);
+		poolConfig.setNumTestsPerEvictionRun(RedisSetting.NUM_TESTS_PER_EVICTION_RUN);
+		poolConfig.setTimeBetweenEvictionRunsMillis(RedisSetting.TIME_BETWEEN_EVICTION_RUNS_MILLIS);
+		poolConfig.setMaxWaitMillis(RedisSetting.MAX_WAIT_MILLIS);
+
+		JedisPool jedisPool = new JedisPool(poolConfig, RedisSetting.ADDRESS, RedisSetting.PORT, 1000,
+				RedisSetting.PASSWORD);
+
+		ExecutorService newFixedThreadPool = Executors.newFixedThreadPool(10);
+		newFixedThreadPool.submit(new Runnable() {
+
+			@Override
+			public void run() {
+
+				Jedis jedis = jedisPool.getResource();
+				try {
+					logger.debug("begin publishUnrecognizedInvoive");
+
+					long k_ = jedis.publish("UNRECOGNIZED", exportDataStr);
+					logger.debug("end publishUnrecognizedInvoive, publish return value : {}", k_);
+				} catch (Exception e) {
+					logger.debug(e.toString());
+				} finally {
+					jedisPool.returnResource(jedis);
+					jedisPool.close();
+				}
+
+			}
+		});
+
+	}
 
 }

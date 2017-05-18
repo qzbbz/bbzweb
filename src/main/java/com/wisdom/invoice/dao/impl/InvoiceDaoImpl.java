@@ -241,6 +241,7 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 	}
 	@Override
 	public boolean setIsFAOfInvoice(long invoiceId, boolean isFA, String itemId) {
+		logger.debug("setIsFAOfInvoice");
 		String sql = "update test_invoice set is_fixed_assets = ? , modified_time = NOW(), item_id = ? where id = ?";
 		Integer fA = 0;
 		if(isFA){
@@ -251,7 +252,7 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 			logger.debug("updateInvoice result : {}", affectedRows);
 			return affectedRows != 0;
 		} catch (DataAccessException e) {
-			e.printStackTrace();
+			logger.debug(e.toString());
 		}
 		return false;
 	}

@@ -16,6 +16,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -27,6 +28,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wisdom.common.model.Company;
 import com.wisdom.common.model.CompanyBill;
 import com.wisdom.common.model.TestInvoiceRecord;
@@ -64,6 +68,10 @@ public class CompanyBillApiImpl implements ICompanyBillApi {
 			String isFixedAssets = params.get("isFixedAssets");
 			long companyId = userService.getCompanyIdByUserId(userId);
 			String fileName = getGernarateFileName(file, userId);
+			String realPath = params.get("realPath");
+			
+			String filePath = realPath + "/" + fileName;
+			
 			FileUtils.copyInputStreamToFile(file.getInputStream(),
 					new File(params.get("realPath"), fileName));
 			CompanyBill cb = new CompanyBill();
@@ -80,18 +88,16 @@ public class CompanyBillApiImpl implements ICompanyBillApi {
 			//Create invoice
 			long invoiceId = invoiceService.addInvoice(companyId, fileName, date, 0, "company");
 			Company company = companyService.getCompanyByCompanyId(companyId);
-			/**
-			 * Thread (request url by get)
-			 */
+			
 			logger.debug("Thread has start");
-//			new Thread(new Runnable() {
-//				@Override
-//				public void run() {
-//					requestByGetMethod("http://121.40.63.208:8899/invoiceidentify?invoiceId=" + invoiceId);
-//				}// run
-//			}).start();
-			//Send to queue
-			invoiceService.publishUnrecognizedInvoive(invoiceId, companyId, fileName, company.getName());
+			
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					invoiceService.publishUnrecognizedInvoive(invoiceId, companyId, fileName, company.getName());
+				}
+			}).start();
+			
 			retMap.put("error_code", "0");
 		} catch (Exception e) {
 			logger.debug("uploadCompanyBill exception : {}", e.toString());
@@ -100,21 +106,37 @@ public class CompanyBillApiImpl implements ICompanyBillApi {
 		}
 		return retMap;
 	}
+	
+	
 	/**
 	 * Http Get for url eg:"http://121.40.63.208:8899/invoiceidentify?invoiceId="
 	 */
-	private void requestByGetMethod(String url) {
+	private List<Map<String, Object>> requestByGetMethod(String url) {
 		logger.debug("Execute requestByGetMethod , income paratemeter url {} ", url);
-		CloseableHttpClient httpClient = getHttpClient();
+		List<Map<String, Object>> data = new ArrayList<>();
+		RequestConfig config = RequestConfig.custom()
+				.setConnectTimeout(20000)
+				.setConnectionRequestTimeout(20000)
+				.setSocketTimeout(20000)
+				.build();
+		CloseableHttpClient httpClient = HttpClients.custom()
+			    .setDefaultRequestConfig(config)
+			    .build();
 		HttpGet httpGet = new HttpGet(url);
 		CloseableHttpResponse httpResponse = null;
 		try {
 			httpResponse = httpClient.execute(httpGet);
 			HttpEntity entity = httpResponse.getEntity();
 			logger.debug("return status code {}", httpResponse.getStatusLine());
+			String content = EntityUtils.toString(entity, "utf-8");
+			JsonFactory factory = new JsonFactory(); 
+		    ObjectMapper mapper = new ObjectMapper(factory);
+		    TypeReference<List<HashMap<String,Object>>> typeRef  = new TypeReference<List<HashMap<String,Object>>>() {};
+	        data = mapper.readValue(content, typeRef);
 			EntityUtils.consume(entity);
 		} catch (Exception e) {
 			logger.debug("HttpClient request By get happen Exception {}", e.toString());
+			return data;
 		} finally {
 			try {
 				httpClient.close();
@@ -122,8 +144,13 @@ public class CompanyBillApiImpl implements ICompanyBillApi {
 				logger.debug("HttpClient close Exception {}", e.toString());
 			}
 		}
+		return data;
 	}
-	// return CloseableHttpClient
+	
+	
+	
+	
+	
 	private CloseableHttpClient getHttpClient() {
 		return HttpClients.createDefault();
 	}

@@ -27,9 +27,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
 import com.wisdom.accounter.service.IAccounterService;
 import com.wisdom.common.model.Accounter;
+import com.wisdom.common.model.CustomerTaoBao;
 import com.wisdom.common.model.SalarySocialSecurity;
 import com.wisdom.invoice.service.IInvoiceService;
 import com.wisdom.user.service.IUserService;
@@ -159,6 +161,55 @@ public class AccounterController {
 		return retMap;
 		
 	}
+	
+	@RequestMapping("/accounter/getCustomerTaoBaoCountByMonth")
+	@ResponseBody
+	public Map<String, String> getCustomerTaoBaoCountByMonth(HttpServletRequest request) {
+		logger.debug("enter getCustomerTaoBaoCountByMonth");
+		String company_id = request.getParameter("company_id");
+		String search_type = request.getParameter("search_type");
+		int count = accounterService.getCustomerTaoBaoCountByMonth(Long.valueOf(company_id), Integer.valueOf(search_type));
+		Map<String, String> retMap = new HashMap<>();
+		retMap.put("count", String.valueOf(count));
+		logger.debug("returen getCustomerTaoBaoCountByMonth count: {}", count);
+		return retMap;
+		
+	}
+	
+	@RequestMapping("/accounter/uploadCustomerSnapshot")
+	@ResponseBody
+	public Map<String, String> uploadCustomerSnapshot(
+			DefaultMultipartHttpServletRequest multipartRequest,
+			HttpServletRequest request) {
+		logger.debug("enter uploadCustomerSnapshot");
+		Map<String, String> retMap = new HashMap<>();
+		String userId = (String) request.getSession().getAttribute("userId");
+		String company_id = request.getParameter("company_id");
+		String taobao_accounter = request.getParameter("taobao_accounter");
+		String realPath = "/home/files/taobao";
+		if (multipartRequest != null) {
+			Iterator<String> iterator = multipartRequest.getFileNames();
+			while (iterator.hasNext()) {
+				MultipartFile multifile = multipartRequest
+						.getFile((String) iterator.next());
+				String fileName = getGernarateFileName(multifile, userId);
+				try {
+					FileUtils.copyInputStreamToFile(multifile.getInputStream(),
+							new File(realPath, fileName));
+					CustomerTaoBao ctb = new CustomerTaoBao();
+					ctb.setCompanyId(Long.valueOf(company_id));
+					ctb.setCreateTime(new Timestamp(System.currentTimeMillis()));
+					ctb.setFileName(fileName);
+					ctb.setTaobaoAccounter(taobao_accounter);
+					accounterService.addCustomerComment(ctb);
+				} catch (IOException e) {
+					logger.error("Failed in saving file, exception : {}", e.toString());
+				}
+			}
+		}
+		return retMap;
+	}
+	
 	@RequestMapping("/accounter/updateAccounterInfo")
 	public String updateAccounterInfo(
 			@RequestParam("files") MultipartFile file, HttpServletRequest request) {
@@ -226,6 +277,56 @@ public class AccounterController {
 		return accounterService.getAllCompanyExpense(userId);
 	}
 	
+	@RequestMapping("/accounter/getAllCompanyExpenseDataTable")
+	@ResponseBody
+	public Map<String, Object> getAllCompanyExpenseDataTable(HttpServletRequest request) {
+		Map<String, Object> retMap = new HashMap<>();
+		String userId = (String) request.getSession().getAttribute(
+				SessionConstant.SESSION_USER_ID);
+		int start = 0;
+		int length = 0;
+		try {
+			start = Integer.valueOf(request.getParameter("iDisplayStart"));
+			length = Integer.valueOf(request.getParameter("iDisplayLength"));
+		} catch(Exception e) {
+			logger.debug(e.toString());
+			return retMap;
+		}
+		List<Map<String, Object>> result = accounterService.getAllCompanyExpenseDataTable(userId, start, length);
+		int recordTotal = accounterService.getAllCompanyExpenseRecordTotal(userId);
+		retMap.put("data", result);
+		retMap.put("iTotalRecords", recordTotal);
+		retMap.put("iTotalDisplayRecords", recordTotal);
+		return retMap;
+	}
+	
+	@RequestMapping("/accounter/getAllCompanyExpenseDataTableByCondition")
+	@ResponseBody
+	public Map<String, Object> getAllCompanyExpenseDataTableByCondition(HttpServletRequest request) {
+		Map<String, Object> retMap = new HashMap<>();
+		String userId = (String) request.getSession().getAttribute(
+				SessionConstant.SESSION_USER_ID);
+		int start = 0;
+		int length = 0;
+		try {
+			start = Integer.valueOf(request.getParameter("start"));
+			length = Integer.valueOf(request.getParameter("length"));
+		} catch(Exception e) {
+			logger.debug(e.toString());
+			return retMap;
+		}
+		Map<String, String> conditions = new HashMap<>();
+		conditions.put("companyName", request.getParameter("name"));
+		conditions.put("created_time", request.getParameter("created_time"));
+		conditions.put("item_type", request.getParameter("item_type"));
+		List<Map<String, Object>> result = accounterService.getAllCompanyExpenseDataTableByCondition(userId, conditions, start, length);
+		int count = accounterService.getAllCompanyExpenseByConditionRecordTotal(userId, conditions);
+		retMap.put("data", result);
+		retMap.put("iTotalRecords", count);
+		retMap.put("iTotalDisplayRecords", count);
+		return retMap;
+	}
+	
 	@RequestMapping("/accounter/uploadCompanySalaryTemplate")
 	public String uploadCompanySalaryTemplate(@RequestParam("files") MultipartFile file, HttpServletRequest request) {
 		String userId = (String) request.getSession().getAttribute(
@@ -260,8 +361,6 @@ public class AccounterController {
 		String userId = (String) request.getSession().getAttribute(
 				SessionConstant.SESSION_USER_ID);
 		Map conditions = request.getParameterMap();
-
-		
 		return accounterService.getAllCompanyExpenseByCondition(userId, conditions);
 	}
 	

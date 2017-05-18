@@ -1,4 +1,4 @@
-package com.wisdom.common.queue;
+package com.redis.queue;
 
 import java.io.IOException;
 

@@ -1,7 +1,9 @@
 package com.wisdom.accounter.dao.impl;
 
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import com.wisdom.accounter.mapper.AccounterMapper;
 import com.wisdom.accounter.mapper.CustomerManagementMapper;
 import com.wisdom.common.model.Accounter;
 import com.wisdom.common.model.CustomerManagement;
+import com.wisdom.common.model.CustomerTaoBao;
 
 @Repository("accounterDao")
 public class AccounterDaoImpl implements IAccounterDao {
@@ -134,7 +137,8 @@ public class AccounterDaoImpl implements IAccounterDao {
 	public List<CustomerManagement> getAllCustomer() {
 		List<CustomerManagement> list = null;
 		try {
-			String sql = "SELECT * from(SELECT c1.id,c1.name,s.create_time,c1.tax_status,c2.expired_time,u.user_name FROM company AS c1 LEFT JOIN company_pay AS c2 ON c1.id = c2.company_id LEFT JOIN sheet_balance AS s ON c1.id = s.company_id LEFT JOIN `user` AS u ON c1.accounter_id = u.user_id WHERE LENGTH(c1.accounter_id)<>0  ORDER  BY s.create_time DESC ) AS ss  GROUP BY ss.name";
+			//String sql = "SELECT * from(SELECT c1.id,c1.name,s.create_time,c1.tax_status,c2.expired_time,u.user_name FROM company AS c1 LEFT JOIN company_pay AS c2 ON c1.id = c2.company_id LEFT JOIN sheet_balance AS s ON c1.id = s.company_id LEFT JOIN `user` AS u ON c1.accounter_id = u.user_id WHERE LENGTH(c1.accounter_id)<>0  ORDER  BY s.create_time DESC ) AS ss  GROUP BY ss.name";
+			String sql = "select * from (SELECT * from(SELECT c1.id,c1.name,s.create_time,c1.tax_status,c2.expired_time,u.user_name FROM company AS c1 LEFT JOIN company_pay AS c2 ON c1.id = c2.company_id LEFT JOIN sheet_balance AS s ON c1.id = s.company_id LEFT JOIN `user` AS u ON c1.accounter_id = u.user_id WHERE LENGTH(c1.accounter_id)<>0  ORDER  BY s.create_time DESC ) AS ss  GROUP BY ss.name) as final LEFT JOIN (select *, count(ctb.company_id) as comment_count from customer_taobao as ctb where date_format(ctb.create_time, '%Y-%m-%d') >= date_format(date_sub(sysdate(), interval 1 month), '%Y-%m-%d') group by ctb.company_id) as tmp on final.id=tmp.company_id";
 			list = jdbcTemplate.query(sql,
 					new RowMapperResultSetExtractor<CustomerManagement>(
 							new CustomerManagementMapper()));
@@ -142,6 +146,141 @@ public class AccounterDaoImpl implements IAccounterDao {
 			logger.error(e.toString());
 		}
 		return list;
+	}
+
+	@Override
+	public List<Map<String, Object>> getAllCompanyExpense(String userId, int start, int length) {
+		// TODO Auto-generated method stub
+		String sql = "select c.name, date_format(ti.created_time,'%Y-%m-%d') as created_time, ti.file_name, tia.type, sum(tia.amount) as amount, '公司发票' as item_type from company c inner join (test_invoice ti left join test_invoice_artifact tia on ti.item_id=tia.item_id) on c.id=ti.company_id where c.accounter_id='" + userId + "' group by ti.id"
+				+ " union all ("
+				+ "select c.name, date_format(cbs.create_time,'%Y-%m-%d') as created_time, cbs.file_name, '无' as type, 0.0 as amount, '公司银行对账单' as item_type from company c inner join company_bank_sta cbs on c.id=cbs.company_id where c.accounter_id='" + userId + "'"
+				+ ") union all ("
+				+ "select c.name, date_format(cs.create_time,'%Y-%m-%d') as created_time, cs.file_name, '无' as type, 0.0 as amount, '公司销售清单' as item_type  from company c inner join company_sales cs on c.id=cs.company_id where c.accounter_id='" + userId + "'"
+				+ ") union all ("
+				+ "select c.name, date_format(cs.create_time,'%Y-%m-%d') as created_time, cs.salary_file as file_name, '无' as type, 0.0 as amount, '公司工资单' as item_type from company c inner join company_salary cs on c.id=cs.company_id where c.accounter_id='" + userId + "'"
+				+ ") limit " + start + "," + length;
+		logger.debug("sql : {}", sql);
+		
+		List<Map<String, Object>> result = jdbcTemplate.queryForList(sql);
+		return result;
+	}
+
+	@Override
+	public int getAllCompanyExpenseRecordTotal(String userId) {
+		String sql = "select count(*) from (select c.name, ti.created_time, ti.file_name, tia.type, sum(tia.amount) as amount, '公司发票' as item_type from company c inner join (test_invoice ti left join test_invoice_artifact tia on ti.item_id=tia.item_id) on c.id=ti.company_id where c.accounter_id='" + userId + "' group by ti.id"
+				+ " union all ("
+				+ "select c.name, cbs.create_time as created_time, cbs.file_name, '无' as type, 0.0 as amount, '公司银行对账单' as item_type from company c inner join company_bank_sta cbs on c.id=cbs.company_id where c.accounter_id='" + userId + "'"
+				+ ") union all ("
+				+ "select c.name, cs.create_time as created_time, cs.file_name, '无' as type, 0.0 as amount, '公司销售清单' as item_type  from company c inner join company_sales cs on c.id=cs.company_id where c.accounter_id='" + userId + "'"
+				+ ") union all ("
+				+ "select c.name, cs.create_time as created_time, cs.salary_file as file_name, '无' as type, 0.0 as amount, '公司工资单' as item_type from company c inner join company_salary cs on c.id=cs.company_id where c.accounter_id='" + userId + "'"
+				+ ")) record";
+		logger.debug("sql : {}", sql);
+		int total = jdbcTemplate.queryForObject(sql, Integer.class);
+		return total;
+	}
+
+	@Override
+	public List<Map<String, Object>> getAllCompanyExpenseDataTableByCondition(String userId, Map<String, String> conditionMap, int start, int length) {
+		String sql = "select * from (select c.name, date_format(ti.created_time, '%Y-%m-%d') as created_time, ti.file_name, tia.type, sum(tia.amount) as amount, '公司发票' as item_type from company c inner join (test_invoice ti left join test_invoice_artifact tia on ti.item_id=tia.item_id) on c.id=ti.company_id where c.accounter_id='" + userId + "' group by ti.id"
+				+ " union all ("
+				+ "select c.name, date_format(cbs.create_time, '%Y-%m-%d') as created_time, cbs.file_name, '无' as type, 0.0 as amount, '公司银行对账单' as item_type from company c inner join company_bank_sta cbs on c.id=cbs.company_id where c.accounter_id='" + userId + "'"
+				+ ") union all ("
+				+ "select c.name, date_format(cs.create_time, '%Y-%m-%d') as created_time, cs.file_name, '无' as type, 0.0 as amount, '公司销售清单' as item_type  from company c inner join company_sales cs on c.id=cs.company_id where c.accounter_id='" + userId + "'"
+				+ ") union all ("
+				+ "select c.name, date_format(cs.create_time, '%Y-%m-%d') as created_time, cs.salary_file as file_name, '无' as type, 0.0 as amount, '公司工资单' as item_type from company c inner join company_salary cs on c.id=cs.company_id where c.accounter_id='" + userId + "'"
+				+ ")) total where ";
+		String conditions = "";
+		if(!StringUtils.isEmpty(conditionMap.get("companyName"))) {
+			if(!StringUtils.isEmpty(conditions)) {
+				conditions = conditions + " and ";
+			}
+			conditions = conditions + "total.name like '%" + conditionMap.get("companyName") + "%'";
+		}
+		
+		if(!StringUtils.isEmpty(conditionMap.get("created_time"))) {
+			if(!StringUtils.isEmpty(conditions)) {
+				conditions = conditions + " and ";
+			}
+			conditions = conditions + "total.created_time like '%" + conditionMap.get("created_time") + "%'";
+		}
+		
+		if(!StringUtils.isEmpty(conditionMap.get("item_type"))) {
+			if(!StringUtils.isEmpty(conditions)) {
+				conditions = conditions + " and ";
+			}
+			conditions = conditions + "total.item_type like '%" + conditionMap.get("item_type") + "%'";
+		}
+		
+		sql = sql + conditions + " limit "+ start + "," + length;
+		logger.debug("sql : {}", sql);
+		List<Map<String, Object>> result = jdbcTemplate.queryForList(sql);
+		logger.debug("query result : {}", result.size());
+		return result;
+	}
+
+	@Override
+	public int getAllCompanyExpenseByConditionRecordTotal(String userId, Map<String, String> conditionMap) {
+		String sql = "select count(*) from (select * from (select c.name, ti.created_time, ti.file_name, tia.type, sum(tia.amount) as amount, '公司发票' as item_type from company c inner join (test_invoice ti left join test_invoice_artifact tia on ti.item_id=tia.item_id) on c.id=ti.company_id where c.accounter_id='" + userId + "' group by ti.id"
+				+ " union all ("
+				+ "select c.name, cbs.create_time as created_time, cbs.file_name, '无' as type, 0.0 as amount, '公司银行对账单' as item_type from company c inner join company_bank_sta cbs on c.id=cbs.company_id where c.accounter_id='" + userId + "'"
+				+ ") union all ("
+				+ "select c.name, cs.create_time as created_time, cs.file_name, '无' as type, 0.0 as amount, '公司销售清单' as item_type  from company c inner join company_sales cs on c.id=cs.company_id where c.accounter_id='" + userId + "'"
+				+ ") union all ("
+				+ "select c.name, cs.create_time as created_time, cs.salary_file as file_name, '无' as type, 0.0 as amount, '公司工资单' as item_type from company c inner join company_salary cs on c.id=cs.company_id where c.accounter_id='" + userId + "'"
+				+ ")) total where ";
+		String conditions = "";
+		if(!StringUtils.isEmpty(conditionMap.get("companyName"))) {
+			if(!StringUtils.isEmpty(conditions)) {
+				conditions = conditions + " and ";
+			}
+			conditions = conditions + "total.name like '%" + conditionMap.get("companyName") + "%'";
+		}
+		
+		if(!StringUtils.isEmpty(conditionMap.get("created_time"))) {
+			if(!StringUtils.isEmpty(conditions)) {
+				conditions = conditions + " and ";
+			}
+			conditions = conditions + "total.created_time like '%" + conditionMap.get("created_time") + "%'";
+		}
+		
+		if(!StringUtils.isEmpty(conditionMap.get("item_type"))) {
+			if(!StringUtils.isEmpty(conditions)) {
+				conditions = conditions + " and ";
+			}
+			conditions = conditions + "total.item_type like '%" + conditionMap.get("item_type") + "%'";
+		}
+		
+		sql = sql + conditions + ") recordTotal";
+		logger.debug("sql : {}", sql);
+		int total = jdbcTemplate.queryForObject(sql, Integer.class);
+		return total;
+	}
+	
+	public boolean addCustomerComment(CustomerTaoBao ctb) {
+		String sql = "insert into customer_taobao (company_id, file_name, taobao_accounter, create_time)"
+				+ " values (?, ?, ?, ?)";
+		int affectedRows = 0;
+		try {
+			affectedRows = jdbcTemplate.update(sql, ctb.getCompanyId(),
+				ctb.getFileName(), ctb.getTaobaoAccounter(), ctb.getCreateTime());
+		} catch(Exception e) {
+			logger.error(e.toString());
+		}
+		return affectedRows != 0;
+	}
+
+	@Override
+	public int getCustomerTaoBaoCountByMonth(long companyId, int type) {
+		int count = 0;
+		try {
+			//String sql = "SELECT * from(SELECT c1.id,c1.name,s.create_time,c1.tax_status,c2.expired_time,u.user_name FROM company AS c1 LEFT JOIN company_pay AS c2 ON c1.id = c2.company_id LEFT JOIN sheet_balance AS s ON c1.id = s.company_id LEFT JOIN `user` AS u ON c1.accounter_id = u.user_id WHERE LENGTH(c1.accounter_id)<>0  ORDER  BY s.create_time DESC ) AS ss  GROUP BY ss.name";
+			String sql = "select count(*) from customer_taobao as ctb where ctb.company_id=? and date_format(ctb.create_time, '%Y-%m-%d') >= date_format(date_sub(sysdate(), interval ? month), '%Y-%m-%d')";
+			count = jdbcTemplate.queryForObject(sql, new Object[] { companyId, type }, Integer.class);
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return count;
 	}
 
 }

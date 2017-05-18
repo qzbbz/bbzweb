@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<title>上海元升财务咨询有限公司</title>
+		<link rel="stylesheet" type="text/css" href="/css/webcss/bui.css">
+		<link rel="stylesheet" type="text/css" href="/css/webcss/golbal.css">
+		<link rel="stylesheet" type="text/css" href="/css/webcss/layout.css">
+		<link rel="stylesheet" type="text/css" href="/css/webcss/jquery.dataTables.min.css">
+		
+		<style>
+			a:hover {
+				cursor: pointer;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="wrap">
+			<div class="side-bar">
+				<div class="side-bar-top">
+					<img src="/img/webimg/bss-logo.png">
+					<h1>上海元升财务咨询有限公司</h1>
+				</div>
+				<div class="side-bar-content" id="menuTree"></div>
+				<div class="side-bar-bottom">
+					<ul>
+						<li>
+							<a href="javascript:void(0);" id="setPwd"><i class="setting"></i>设置</a>
+						</li>
+						<li>
+							<a href="/logout"><i class="exit"></i>安全退出</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="main">
+				<div class="menu">
+					<a href="#" class="active">公司客户管理</a>
+				</div>
+				<table id="table_demo" class="display" >
+				 <thead>
+            <tr>
+                <th>公司名</th>
+                <th>记账状况</th>
+                <th>报税状况</th>
+                <th>收费状况</th>
+                <th>记账会计</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                  <th>公司名</th>
+                <th>记账状况</th>
+                <th>报税状况</th>
+                <th>收费状况</th>
+                <th>记账会计</th>
+            </tr>
+        </tfoot>
+				</table>
+			</div>
+		</div>
+		<div id="modifyPwd" style="display:none;">
+			<div id="form" class="form-horizontal">
+				<div class="control-group">
+					<label class="control-label">输入旧密码：</label>
+					<div class="controls">
+						<input id="old_pwd" type="password" class="input-large" data-rules="{required : true}" style="width:250px;">
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">输入新密码：</label>
+					<div class="controls control-row-auto">
+						<input id="new_pwd" type="password" class="input-large" data-rules="{required : true}" style="width:250px;">
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">再次输入新密码：</label>
+					<div class="controls control-row-auto">
+						<input id="confirm_new_pwd" type="password" class="input-large" data-rules="{required : true}" style="width:250px;">
+					</div>
+				</div>
+				<div class="control-group">
+					<label id="modify_pwd_tips"></label>
+				</div>
+				<div class="control-group control-btn">
+					<div class="layer-wrap-footer">
+						<a href="javascript:void(0);" id="modify_pwd_button" class="button button-success">确定修改</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div style="position:fixed; bottom: 0; right: 0;">
+			<a target="_blank" href="http://sighttp.qq.com/authd?IDKEY=a1a51fb184a88bbb4c1756a211f1ff1fbc9d47079f63eb30"><img border="0" src="http://wpa.qq.com/imgd?IDKEY=a1a51fb184a88bbb4c1756a211f1ff1fbc9d47079f63eb30&pic=41" alt="点我联系我" title="点我联系我" /></a>
+		</div>
+		<!--该js需要修改js路径及修改seajs路径-->
+		<script src="/js/webjs/jquery-1.11.1.js"></script>
+		<script src="http://g.alicdn.com/bui/seajs/2.3.0/sea.js"></script>
+		<script src="http://g.alicdn.com/bui/bui/1.1.17/config.js"></script>
+		<script src="/js/webjs/menuTree.js"></script>
+		<script type="text/javascript" language="javascript" src="/js/webjs/datatable/jquery.dataTables.min.js"></script>
+		<script type="text/javascript">
+			BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay) {
+						var modifyPwdForm = new Overlay.Dialog({
+							title: '密码修改',
+							width: 600,
+							height: 280,
+							contentId: 'modifyPwd',
+							success: function() {
+								this.close();
+							},
+							buttons: []
+						});
+						$('#setPwd').click(function() {
+								modifyPwdForm.show();
+						});
+						
+							//datatable
+						$(document).ready(function() {
+							$.post("/accounter/getCustomerManagementDetails", function(data) {
+								console.log(data);
+								$('#table_demo').dataTable({
+									"data" : data,
+									"sDom": '<"top" f>rt<"bottom" p><"clear">',
+									
+									"order": [
+										[0, "desc"]
+									],
+									"oLanguage": {
+										"sSearch": "查找 ",
+										oPaginate: {
+											"sFirst": "首页",
+											'sPrevious': "上一页",
+											'sNext': "下一页",
+											"sLast": "末页"
+										}
+									},
+									 " pageLength":10,
+					    "columns": [
+							{ "data": "name",'sClass': "text-center" },
+					        { "data": "create_time" ,'sClass': "text-center"},
+					        { "data": "tax_status" ,'sClass': "text-center"},
+					        { "data": "expired_time" ,'sClass': "text-center"},
+					        { "data": "user_name" ,'sClass': "text-center"},
+					        
+					    ]
+								});
+								$("#datatable").dataTable({
+									"processing": true,
+									"serverSide": true,
+									"ajax": "load",
+									"columns": [{
+										"data": "id",
+										"bSortable": false
+									}, {
+										"data": "firstName"
+									}, {
+										"data": "lastName"
+									}]
+								});
+							});
+							});
+							$('#modify_pwd_button').click(function() {
+								var oldPwd = $('#old_pwd').val();
+								var newPwd = $('#new_pwd').val();
+								var confirmNewPwd = $('#confirm_new_pwd').val();
+								if(oldPwd == null || oldPwd == "") {
+									BUI.Message.Alert('请输入旧密码！', 'warning');
+									return;
+								}
+								if(newPwd == null || newPwd == "") {
+									BUI.Message.Alert('请输新密码！', 'warning');
+									return;
+								}
+								if(confirmNewPwd == null || confirmNewPwd == "") {
+									BUI.Message.Alert('请输入新密码！', 'warning');
+									return;
+								}
+								if(newPwd != confirmNewPwd) {
+									BUI.Message.Alert('两次输入的新密码不一致，请检查！', 'warning');
+									return;
+								}
+								$.ajax({
+									url: '/modifyPassword',
+									type: "POST",
+									data: {
+										oldPwd: oldPwd,
+										newPwd: newPwd
+									},
+									success: function(data) {
+										if(data.error_code == "0") {
+											BUI.Message.Alert('修改密码成功！', 'success');
+										} else {
+											BUI.Message.Alert('修改密码失败！错误信息：' + data.error_msg, 'warning');
+										}
+									},
+									error: function(data) {
+										BUI.Message.Alert('修改密码失败！错误信息：' + data.error_msg, 'warning');
+									}
+								});
+							});
+
+							$.ajax({
+								url: '/accounter/accounterHasFinishRegister',
+								type: "POST",
+								data: {},
+								success: function(data) {
+									if(data != null && data.hasFinishRegister == 'false') {
+										$('#currentTips').html('您还没有完成信息的详细注册，公司无法查看到您的信息，请先在完善注册信息菜单中完善您的个人信息！');
+										$('#currentTips').show();
+									} else {
+										$.ajax({
+											url: '/accounter/accounterHasBelongToCompany',
+											type: "POST",
+											data: {},
+											success: function(data) {
+												if(data != null && data.hasBind == 'false') {
+													$('#currentTips').html('当前还没有任何公司选中您，因此没有相关数据可以查看！');
+													$('#currentTips').show();
+												} else {
+													/* $.ajax({
+														url : '/accounter/getAllCompanyExpense',
+														type : "POST",
+														data : {},
+														success : function(data) {
+															createDataList(data);
+														}
+													}); */
+												}
+											}
+										});
+									}
+								}
+							});
+
+							
+						});
+						//侧栏高度
+						(function() {
+							var H = $(window).height();
+							var h1 = $(".side-bar-top").height() + $(".side-bar-bottom").height();
+							$(".side-bar-content").height(H - h1);
+							$(window).resize(function() {
+								H = $(window).height();
+								$(".side-bar-content").height(H - h1);
+							});
+						})()
+						//竖状菜单
+						//竖状菜单
+						var menu = new menuTree({
+							"nodes": [{
+								text: '完善注册信息',
+								id: '20',
+								href: "/views/webviews/accounter/finish_reg_info.html",
+								leaf: false,
+								expanded: false,
+								children: []
+							}, {
+								text: '公司费用信息',
+								id: '10',
+								href: "/views/webviews/accounter/company_expense_records.html",
+								leaf: false,
+								expanded: false,
+								children: []
+							}, {
+								text: '公司工资模板上传',
+								id: '30',
+								href: "/views/webviews/accounter/company_salary_template_upload.html",
+								leaf: false,
+								expanded: false,
+								children: []
+							}, {
+								text: '预约取发票方式查询',
+								id: '40',
+								href: "/views/webviews/accounter/take_bill_way.html",
+								leaf: false,
+								expanded: false,
+								children: []
+							}, {
+								text: '公司发票信息',
+								id: '50',
+								href: "/views/webviews/accounter/company_expense_account.html",
+								leaf: false,
+								expanded: false,
+								children: []
+							}, {
+								text: '销售记录',
+								id: '60',
+								href: "/views/salesviews/record.html",
+								leaf: false,
+								expanded: false,
+								children: []
+							}, {
+								text: '客户管理',
+								id: '70',
+								href: "/views/webviews/accounter/company_customer_management.html",
+								leaf: false,
+								expanded: false,
+								children: []
+							}]
+						}, "menuTree");
+						defaultSelect("10");
+
+						function defaultSelect(id) {
+							$("#" + id).parent().addClass("bui-menu-item-selected")
+						}
+		</script>
+	</body>
+
+</html>

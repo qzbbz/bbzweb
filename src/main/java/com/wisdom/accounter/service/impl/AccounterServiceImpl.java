@@ -35,6 +35,7 @@ import com.wisdom.common.model.CompanyBill;
 import com.wisdom.common.model.CompanySalary;
 import com.wisdom.common.model.CompanySales;
 import com.wisdom.common.model.CustomerManagement;
+import com.wisdom.common.model.CustomerTaoBao;
 import com.wisdom.common.model.Invoice;
 import com.wisdom.common.model.SalarySocialSecurity;
 import com.wisdom.common.model.TestInvoice;
@@ -313,7 +314,7 @@ public class AccounterServiceImpl implements IAccounterService {
 		retMap.put("companyExpense", new ArrayList<>());
 		retMap.put("companyInvoice", new ArrayList<>());
 
-		Map<String, String>conditionMap = new HashMap<>();
+		Map<String, String> conditionMap = new HashMap<>();
 		
 		for (Iterator iter = conditions.keySet().iterator(); iter.hasNext();) {
 			String name = (String) iter.next();
@@ -762,10 +763,43 @@ public class AccounterServiceImpl implements IAccounterService {
 		map.put("tax_status", customer.getTaxStatus() == null? "" : customer.getTaxStatus());
 		map.put("expired_time", customer.getExpiredTime() == null? "" :  customer.getExpiredTime().toString().substring(0, 10));
 		map.put("user_name", customer.getAccounterName() == null? "" : customer.getAccounterName());
+		map.put("comment_count", String.valueOf(customer.getComment_count()));
+		map.put("taobao_accounter", customer.getTaobao_accounter() == null ? "" : customer.getTaobao_accounter());
+		map.put("company_id", String.valueOf(customer.getCompanyId()));
 		return map;
 	}
 	public static void main(String[] args) {
 		Timestamp time = Timestamp.valueOf("2010-10-07 14:30:30"); 
 		System.out.println(time);
+	}
+
+	@Override
+	public List<Map<String, Object>> getAllCompanyExpenseDataTable(String userId, int start, int length) {
+		return accounterDao.getAllCompanyExpense(userId, start, length);
+	}
+
+	@Override
+	public int getAllCompanyExpenseRecordTotal(String userId) {
+		int recordTotal = accounterDao.getAllCompanyExpenseRecordTotal(userId);
+		return recordTotal;
+	}
+
+	@Override
+	public List<Map<String, Object>> getAllCompanyExpenseDataTableByCondition(String userId, Map<String, String> conditions, int start, int length) {
+		return accounterDao.getAllCompanyExpenseDataTableByCondition(userId, conditions, start, length);
+	}
+
+	@Override
+	public int getAllCompanyExpenseByConditionRecordTotal(String userId, Map<String, String> conditions) {
+		return accounterDao.getAllCompanyExpenseByConditionRecordTotal(userId, conditions);
+	}
+	
+	public boolean addCustomerComment(CustomerTaoBao ctb) {
+		return accounterDao.addCustomerComment(ctb);
+	}
+
+	@Override
+	public int getCustomerTaoBaoCountByMonth(long companyId, int type) {
+		return accounterDao.getCustomerTaoBaoCountByMonth(companyId, type);
 	}
 }
