@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.wisdom.common.model.Accounter;
 import com.wisdom.common.model.CustomerManagement;
+import com.wisdom.common.model.CustomerTaoBao;
 
 public interface IAccounterDao {
 
@@ -25,4 +26,8 @@ public interface IAccounterDao {
 	public boolean isAccounterExistByUserId(String userId);
 	
 	public List<CustomerManagement> getAllCustomer();
+	
+	public boolean addCustomerComment(CustomerTaoBao ctb);
+	
+	public int getCustomerTaoBaoCountByMonth(long companyId, int type);
 }

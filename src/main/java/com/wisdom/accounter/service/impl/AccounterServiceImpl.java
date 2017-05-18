@@ -35,6 +35,7 @@ import com.wisdom.common.model.CompanyBill;
 import com.wisdom.common.model.CompanySalary;
 import com.wisdom.common.model.CompanySales;
 import com.wisdom.common.model.CustomerManagement;
+import com.wisdom.common.model.CustomerTaoBao;
 import com.wisdom.common.model.Invoice;
 import com.wisdom.common.model.SalarySocialSecurity;
 import com.wisdom.common.model.TestInvoice;
@@ -762,10 +763,22 @@ public class AccounterServiceImpl implements IAccounterService {
 		map.put("tax_status", customer.getTaxStatus() == null? "" : customer.getTaxStatus());
 		map.put("expired_time", customer.getExpiredTime() == null? "" :  customer.getExpiredTime().toString().substring(0, 10));
 		map.put("user_name", customer.getAccounterName() == null? "" : customer.getAccounterName());
+		map.put("comment_count", String.valueOf(customer.getComment_count()));
+		map.put("taobao_accounter", customer.getTaobao_accounter() == null ? "" : customer.getTaobao_accounter());
 		return map;
 	}
 	public static void main(String[] args) {
 		Timestamp time = Timestamp.valueOf("2010-10-07 14:30:30"); 
 		System.out.println(time);
+	}
+
+	@Override
+	public boolean addCustomerComment(CustomerTaoBao ctb) {
+		return accounterDao.addCustomerComment(ctb);
+	}
+
+	@Override
+	public int getCustomerTaoBaoCountByMonth(long companyId, int type) {
+		return accounterDao.getCustomerTaoBaoCountByMonth(companyId, type);
 	}
 }
