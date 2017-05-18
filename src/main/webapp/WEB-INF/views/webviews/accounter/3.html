@@ -278,19 +278,18 @@ a {
 				
 				
 				//
-				$.post('/', function(data) {
-					var data = data.data;
+				$.post('/accounter/getCustomerManagementDetails', function(data) {
 					for(var key in data) {
 						var item = data[key];
 						var tr = "<tr id='" + item.id + "'>"
-								+ "<td>" + item.companyName + "</td>"
-								+ "<td>" + item.created_time + "</td>"
-								+ "<td>" + item.status + "</td>"
-								+ "<td>" + item.pay + "</td>"
-								+ "<td>" + item.accounter + "</td>"
-								+ "<td><input type='text' value='" + item.taobao_account + "'/></td>"
+								+ "<td>" + item.name + "</td>"
+								+ "<td>" + item.create_time + "</td>"
+								+ "<td>" + item.tax_status + "</td>"
+								+ "<td>" + item.expired_time + "</td>"
+								+ "<td>" + item.user_name + "</td>"
+								+ "<td><input type='text' value='" + item.taobao_accounter + "'/></td>"
 								+ "<td><input type='file' style='width:90%'/></td>"
-								+ "<td><span style='margin-right:10px'>" + item.number + "</span><select class='select'><option value='1'>一个月内</option><option value='2'>两个月内</option><option value='3'>三个月内</option></select></td>"
+								+ "<td><span style='margin-right:10px'>" + item.comment_count + "</span><select class='select'><option value='1'>一个月内</option><option value='2'>两个月内</option><option value='3'>三个月内</option></select></td>"
 								+ "<td><button class='submit'></button></td>"
 						$('#adminTbody').append(tr);
 					}

@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.wisdom.common.model.Accounter;
 import com.wisdom.common.model.CustomerManagement;
+import com.wisdom.common.model.CustomerTaoBao;
 
 public interface IAccounterService {
 
@@ -56,5 +57,9 @@ public interface IAccounterService {
 	public List<Map<String, Object>> getAllCompanyExpenseDataTableByCondition(String userId, Map<String, String> conditions, int start, int length);
 
 	public int getAllCompanyExpenseByConditionRecordTotal(String userId, Map<String, String> conditions);
+	
+	public boolean addCustomerComment(CustomerTaoBao ctb);
+	
+	public int getCustomerTaoBaoCountByMonth(long companyId, int type);
 	
 }

@@ -16,6 +16,7 @@ import com.wisdom.accounter.mapper.AccounterMapper;
 import com.wisdom.accounter.mapper.CustomerManagementMapper;
 import com.wisdom.common.model.Accounter;
 import com.wisdom.common.model.CustomerManagement;
+import com.wisdom.common.model.CustomerTaoBao;
 
 @Repository("accounterDao")
 public class AccounterDaoImpl implements IAccounterDao {
@@ -136,7 +137,8 @@ public class AccounterDaoImpl implements IAccounterDao {
 	public List<CustomerManagement> getAllCustomer() {
 		List<CustomerManagement> list = null;
 		try {
-			String sql = "SELECT * from(SELECT c1.id,c1.name,s.create_time,c1.tax_status,c2.expired_time,u.user_name FROM company AS c1 LEFT JOIN company_pay AS c2 ON c1.id = c2.company_id LEFT JOIN sheet_balance AS s ON c1.id = s.company_id LEFT JOIN `user` AS u ON c1.accounter_id = u.user_id WHERE LENGTH(c1.accounter_id)<>0  ORDER  BY s.create_time DESC ) AS ss  GROUP BY ss.name";
+			//String sql = "SELECT * from(SELECT c1.id,c1.name,s.create_time,c1.tax_status,c2.expired_time,u.user_name FROM company AS c1 LEFT JOIN company_pay AS c2 ON c1.id = c2.company_id LEFT JOIN sheet_balance AS s ON c1.id = s.company_id LEFT JOIN `user` AS u ON c1.accounter_id = u.user_id WHERE LENGTH(c1.accounter_id)<>0  ORDER  BY s.create_time DESC ) AS ss  GROUP BY ss.name";
+			String sql = "select * from (SELECT * from(SELECT c1.id,c1.name,s.create_time,c1.tax_status,c2.expired_time,u.user_name FROM company AS c1 LEFT JOIN company_pay AS c2 ON c1.id = c2.company_id LEFT JOIN sheet_balance AS s ON c1.id = s.company_id LEFT JOIN `user` AS u ON c1.accounter_id = u.user_id WHERE LENGTH(c1.accounter_id)<>0  ORDER  BY s.create_time DESC ) AS ss  GROUP BY ss.name) as final LEFT JOIN (select *, count(ctb.company_id) as comment_count from customer_taobao as ctb where date_format(ctb.create_time, '%Y-%m-%d') >= date_format(date_sub(sysdate(), interval 1 month), '%Y-%m-%d') group by ctb.company_id) as tmp on final.id=tmp.company_id";
 			list = jdbcTemplate.query(sql,
 					new RowMapperResultSetExtractor<CustomerManagement>(
 							new CustomerManagementMapper()));
@@ -253,6 +255,32 @@ public class AccounterDaoImpl implements IAccounterDao {
 		logger.debug("sql : {}", sql);
 		int total = jdbcTemplate.queryForObject(sql, Integer.class);
 		return total;
+	}
+	
+	public boolean addCustomerComment(CustomerTaoBao ctb) {
+		String sql = "insert into customer_taobao (company_id, file_name, taobao_accounter, create_time)"
+				+ " values (?, ?, ?, ?)";
+		int affectedRows = 0;
+		try {
+			affectedRows = jdbcTemplate.update(sql, ctb.getCompanyId(),
+				ctb.getFileName(), ctb.getTaobaoAccounter(), ctb.getCreateTime());
+		} catch(Exception e) {
+			logger.error(e.toString());
+		}
+		return affectedRows != 0;
+	}
+
+	@Override
+	public int getCustomerTaoBaoCountByMonth(long companyId, int type) {
+		int count = 0;
+		try {
+			//String sql = "SELECT * from(SELECT c1.id,c1.name,s.create_time,c1.tax_status,c2.expired_time,u.user_name FROM company AS c1 LEFT JOIN company_pay AS c2 ON c1.id = c2.company_id LEFT JOIN sheet_balance AS s ON c1.id = s.company_id LEFT JOIN `user` AS u ON c1.accounter_id = u.user_id WHERE LENGTH(c1.accounter_id)<>0  ORDER  BY s.create_time DESC ) AS ss  GROUP BY ss.name";
+			String sql = "select * from customer_taobao as ctb where ctb.company_id=? and date_format(ctb.create_time, '%Y-%m-%d') >= date_format(date_sub(sysdate(), interval ? month), '%Y-%m-%d')";
+			count = jdbcTemplate.queryForObject(sql, new Object[] { companyId, type }, Integer.class);
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return count;
 	}
 
 }
