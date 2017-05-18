@@ -275,7 +275,7 @@ public class AccounterDaoImpl implements IAccounterDao {
 		int count = 0;
 		try {
 			//String sql = "SELECT * from(SELECT c1.id,c1.name,s.create_time,c1.tax_status,c2.expired_time,u.user_name FROM company AS c1 LEFT JOIN company_pay AS c2 ON c1.id = c2.company_id LEFT JOIN sheet_balance AS s ON c1.id = s.company_id LEFT JOIN `user` AS u ON c1.accounter_id = u.user_id WHERE LENGTH(c1.accounter_id)<>0  ORDER  BY s.create_time DESC ) AS ss  GROUP BY ss.name";
-			String sql = "select * from customer_taobao as ctb where ctb.company_id=? and date_format(ctb.create_time, '%Y-%m-%d') >= date_format(date_sub(sysdate(), interval ? month), '%Y-%m-%d')";
+			String sql = "select count(*) from customer_taobao as ctb where ctb.company_id=? and date_format(ctb.create_time, '%Y-%m-%d') >= date_format(date_sub(sysdate(), interval ? month), '%Y-%m-%d')";
 			count = jdbcTemplate.queryForObject(sql, new Object[] { companyId, type }, Integer.class);
 		} catch (Exception e) {
 			logger.error(e.toString());
