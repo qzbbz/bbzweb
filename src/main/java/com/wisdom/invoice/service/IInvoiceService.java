@@ -96,4 +96,10 @@ public interface IInvoiceService {
 	   
     Map<String, Object> createWorkGoingOutProcess(String userId, String start, String end, String distance, String amount, String date, String price);
     
+    
+    //新增接口方法 publishUnrecognizedInvoive 多态
+    public void publishUnrecognizedInvoive(long invoiceId, long companyId, String fileName, String companyName,
+			List<Map<String, Object>> content);
+    
+    
 }

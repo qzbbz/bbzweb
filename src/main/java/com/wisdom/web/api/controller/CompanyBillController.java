@@ -29,8 +29,7 @@ import com.wisdom.web.api.ICompanyBillApi;
 @Controller
 public class CompanyBillController {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(CompanyBillController.class);
+	private static final Logger logger = LoggerFactory.getLogger(CompanyBillController.class);
 
 	@Autowired
 	private ICompanyBillApi companyBillApi;
@@ -58,20 +57,18 @@ public class CompanyBillController {
 
 	@RequestMapping("/company/uploadCompanyBill")
 	@ResponseBody
-	public Map<String, String> uploadCompanyBill(
-			DefaultMultipartHttpServletRequest multipartRequest,
+	public Map<String, String> uploadCompanyBill(DefaultMultipartHttpServletRequest multipartRequest,
 			HttpServletRequest request) {
 		logger.debug("entrance uploadCompanyBill");
 		String userId = (String) request.getSession().getAttribute("userId");
 		String realPath = request.getSession().getServletContext()
 				.getRealPath("/WEB-INF").substring(0);
-		String date=request.getParameter("bill_date");
+		String date = request.getParameter("bill_date");
 		String supplyName = request.getParameter("supplyName");
 		String isFixedAssets = request.getParameter("isFixedAssets");
-		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
-//		realPath = "/files/company";
-		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
-		//realPath = "/files/company";
+		//realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
+		realPath = "/home/files/company";
+		
 		logger.debug("uploadCompanyBill realPath : {}", realPath);
 		Map<String, String> params = new HashMap<>();
 		params.put("userId", userId);
@@ -83,8 +80,7 @@ public class CompanyBillController {
 		if (multipartRequest != null) {
 			Iterator<String> iterator = multipartRequest.getFileNames();
 			while (iterator.hasNext()) {
-				MultipartFile multifile = multipartRequest
-						.getFile((String) iterator.next());
+				MultipartFile multifile = multipartRequest.getFile((String) iterator.next());
 				companyBillApi.uploadCompanyBill(params, multifile);
 			}
 		}
@@ -95,8 +91,7 @@ public class CompanyBillController {
 
 	@RequestMapping("/company/getAllCompanyBill")
 	@ResponseBody
-	public List<Map<String, String>> getAllCompanyBankSta(
-			HttpServletRequest request) {
+	public List<Map<String, String>> getAllCompanyBankSta(HttpServletRequest request) {
 		String userId = (String) request.getSession().getAttribute("userId");
 		Map<String, String> params = new HashMap<>();
 		params.put("conditionValue", request.getParameter("conditionValue"));
@@ -105,19 +100,17 @@ public class CompanyBillController {
 		logger.debug("params : {}", params.toString());
 		return companyBillApi.getCompanyBillByCondition(params);
 	}
-	
+
 	@RequestMapping("/company/getAllInvoices")
 	@ResponseBody
-	public List<Map<String, String>> getAllInvoices(HttpServletRequest request){
-		String userId = (String)request.getSession().getAttribute("userId");
+	public List<Map<String, String>> getAllInvoices(HttpServletRequest request) {
+		String userId = (String) request.getSession().getAttribute("userId");
 		return companyBillApi.getAllInvoicesByUserId(userId);
 	}
-	
 
 	@RequestMapping("/company/getAllInvoicesByCondition")
 	@ResponseBody
-	public List<Map<String, String>> getAllInvoicesByCondition(
-			HttpServletRequest request) {
+	public List<Map<String, String>> getAllInvoicesByCondition(HttpServletRequest request) {
 		String userId = (String) request.getSession().getAttribute("userId");
 		Map<String, String> params = new HashMap<>();
 		params.put("conditionValue", request.getParameter("conditionValue"));
@@ -126,34 +119,31 @@ public class CompanyBillController {
 		logger.debug("params : {}", params.toString());
 		return companyBillApi.getAllInvoicesByCondition(params, userId);
 	}
-	
+
 	@RequestMapping("/company/deleteCompanyBill")
 	@ResponseBody
-	public Map<String, String> deleteCompanyBill(
-			HttpServletRequest request) {
+	public Map<String, String> deleteCompanyBill(HttpServletRequest request) {
 		Map<String, String> retMap = new HashMap<>();
-		String idList = (String)request.getParameter("deleteIdList");
-		String realPath = request.getSession().getServletContext()
-				.getRealPath("/WEB-INF/files/company");
+		String idList = (String) request.getParameter("deleteIdList");
+		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/files/company");
 		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
-		if(companyBillApi.deleteInvoice(idList, realPath)) {
+		if (companyBillApi.deleteInvoice(idList, realPath)) {
 			retMap.put("error_code", "0");
 		} else {
 			retMap.put("error_code", "1");
 		}
 		return retMap;
 	}
-	
+
 	@RequestMapping("/company/modifyCompanyBill")
 	@ResponseBody
-	public Map<String, String> modifyCompanyBill(
-			HttpServletRequest request) {
+	public Map<String, String> modifyCompanyBill(HttpServletRequest request) {
 		Map<String, String> retMap = new HashMap<>();
-		String id = (String)request.getParameter("id");
-		String amount = (String)request.getParameter("amount");
-		String type = (String)request.getParameter("type");
-		String supplyName = (String)request.getParameter("supplyName");
-		String isFixedAssets = (String)request.getParameter("isFixedAssets");
+		String id = (String) request.getParameter("id");
+		String amount = (String) request.getParameter("amount");
+		String type = (String) request.getParameter("type");
+		String supplyName = (String) request.getParameter("supplyName");
+		String isFixedAssets = (String) request.getParameter("isFixedAssets");
 		Long invoiceId = Long.parseLong(id);
 		List<Map<String, String>> contentList = new ArrayList<>();
 		Map<String, String> content = new HashMap<>();
@@ -167,46 +157,46 @@ public class CompanyBillController {
 			invoiceService.addInvoiceArtifact(invoiceId, contentList, itemId);
 			invoiceService.setIsFAOfInvoice(invoiceId, fA, itemId);
 			retMap.put("error_code", "0");
-		}catch(Exception e){
+		} catch (Exception e) {
 			retMap.put("error_code", "1");
 		}
 		return retMap;
 	}
-	
+
 	@RequestMapping("/getUngeneratedInvoiceImages")
 	@ResponseBody
-	public Map<String, String> getUngeneratedInvoiceImages(HttpServletRequest request){
+	public Map<String, String> getUngeneratedInvoiceImages(HttpServletRequest request) {
 		Map<String, String> retMap = new HashMap<>();
 		int limit = Integer.parseInt(request.getParameter("limit"));
 		List<TestInvoice> invoices = invoiceService.getUngeneratedInvoiceImages(limit);
-		for(TestInvoice invoice: invoices){
+		for (TestInvoice invoice : invoices) {
 			retMap.put(invoice.getId().toString(), invoice.getFileName());
 		}
 		return retMap;
-		
+
 	}
-	
+
 	@RequestMapping("/setInvoiceImageToGenerated")
 	@ResponseBody
-	public Map<String, String> setInvoiceImageToGenerated(HttpServletRequest request){
+	public Map<String, String> setInvoiceImageToGenerated(HttpServletRequest request) {
 		long invoiceId = Long.parseLong(request.getParameter("invoice_id"));
 		Map<String, String> retMap = new HashMap<>();
-		if(invoiceService.setInvoiceImageToGenerated(invoiceId)){
+		if (invoiceService.setInvoiceImageToGenerated(invoiceId)) {
 			retMap.put("error_code", "0");
-		}else{
+		} else {
 			retMap.put("error_code", "1");
 		}
 		return retMap;
 	}
-	
+
 	@RequestMapping("/setInvoiceImageToInvalid")
 	@ResponseBody
-	public Map<String, String> setInvoiceImageToInvalid(HttpServletRequest request){
+	public Map<String, String> setInvoiceImageToInvalid(HttpServletRequest request) {
 		long invoiceId = Long.parseLong(request.getParameter("invoice_id"));
 		Map<String, String> retMap = new HashMap<>();
-		if(invoiceService.setInvoiceImageToInvalid(invoiceId)){
+		if (invoiceService.setInvoiceImageToInvalid(invoiceId)) {
 			retMap.put("error_code", "0");
-		}else{
+		} else {
 			retMap.put("error_code", "1");
 		}
 		return retMap;

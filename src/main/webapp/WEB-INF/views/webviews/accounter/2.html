@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>上海元升财务咨询有限公司</title>
+    <link rel="stylesheet" type="text/css" href="/css/webcss/bui.css">
+	<link rel="stylesheet" type="text/css" href="/css/webcss/golbal.css">
+	<link rel="stylesheet" type="text/css" href="/css/webcss/layout.css">
+	<link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">
+	<style>
+		a:hover{
+		cursor: pointer;
+		}
+	</style>
+</head>
+<body>
+	<div class="wrap">
+		<div class="side-bar">
+			<div class="side-bar-top">
+				<img src="/img/webimg/bss-logo.png" >
+				<h1>上海元升财务咨询有限公司</h1>
+			</div>
+            <div class="side-bar-content" id="menuTree"></div>
+			<div class="side-bar-bottom">
+				<ul>
+					<li><a href="javascript:void(0);" id="setPwd"><i class="setting"></i>设置</a></li>
+					<li><a href="/logout"><i class="exit"></i>安全退出</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="main">
+			<div class="menu"><a href="#" class="active">公司费用记录</a></div>
+			<div class="well mt20">
+				<div class="form-horizontal onlineTools">
+					<div id="search-row" class="row show-grid">
+						<label class="control-label control-label-small"></label>
+                        <div class="controls"><select name="condition" id="condition" class="input input-normal" style="height:30px;"><option value='0'>所有</option><option value='1'>按公司名称检索</option><option value='2'>按创建日期检索</option><option value='3'>按项目类型检索</option></select><input type="text" id="content" class="input input-normal ml10"></div>
+					</div>
+					<div id="search-row2" class="row show-grid" >
+						<label class="control-label control-label-small"></label>
+                        <div class="controls"><select name="condition" id="condition2" class="input input-normal" style="height:30px;"><option value='0'>所有</option><option value='1'>按公司名称检索</option><option value='2'>按创建日期检索</option><option value='3'>按项目类型检索</option></select><input type="text" id="content2" class="input input-normal ml10"></div>
+					</div>
+					<div id="search-row3" class="row show-grid">
+						<label class="control-label control-label-small"></label>
+                        <div class="controls"><select name="condition" id="condition3" class="input input-normal" style="height:30px;"><option value='0'>所有</option><option value='1'>按公司名称检索</option><option value='2'>按创建日期检索</option><option value='3'>按项目类型检索</option></select><input type="text" id="content3" class="input input-normal ml10"><button id="searchData3" class="button button-success ml10 searchData">搜索</button></div>
+					</div>
+				</div>
+			</div>
+			<div id="currentTips" class="tips tips-warning" style="display: none;"></div>
+			<table class="table center" id="data_table">
+	    		<colgroup>
+	    			<col style="width:20%;">
+	    			<col style="width:16%;">
+	    			<col style="width:16%;">
+	    			<col style="width:16%;">
+	    			<col style="width:16%;">
+	    			<col style="width:16%;">
+	    		</colgroup>
+	    		<thead id="records">
+	    			<tr>
+	    				<th>公司名称</th>
+	    				<th>创建日期</th>
+	    				<th>项目类型</th>
+	    				<th>费用类型</th>
+	    				<th>费用金额</th>
+	    				<th>下载文件</th>
+	    			</tr>
+	    		</thead>
+	    		<tfoot>
+		            <tr>
+	    				<th>公司名称</th>
+	    				<th>创建日期</th>
+	    				<th>项目类型</th>
+	    				<th>费用类型</th>
+	    				<th>费用金额</th>
+	    				<th>下载文件</th>
+	    			</tr>
+        		</tfoot>
+	    	</table>
+	    	<div class="pagination"></div>
+	    	<form action="/accounter/downloadCompanyExpense" id="downloadForm" method="POST">
+        		<input type="hidden" id="fileName" name="fileName">
+			</form>
+		</div>
+	</div>
+	<div id="modifyPwd" style="display:none;">
+		<div id="form" class="form-horizontal">
+			<div class="control-group">
+				<label class="control-label">输入旧密码：</label>
+				<div class="controls">
+					<input id="old_pwd" type="password" class="input-large"
+						data-rules="{required : true}" style="width:250px;">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">输入新密码：</label>
+				<div class="controls control-row-auto">
+					<input id="new_pwd" type="password" class="input-large"
+						data-rules="{required : true}" style="width:250px;">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">再次输入新密码：</label>
+				<div class="controls control-row-auto">
+					<input id="confirm_new_pwd" type="password" class="input-large"
+						data-rules="{required : true}" style="width:250px;">
+				</div>
+			</div>
+			<div class="control-group">
+				<label id="modify_pwd_tips"></label>
+			</div>
+			<div class="control-group control-btn">
+				<div class="layer-wrap-footer"><a href="javascript:void(0);" id="modify_pwd_button" class="button button-success">确定修改</a></div>
+			</div>
+			<form action="/accounter/downloadCompanyExpense" id="downloadForm" method="POST">
+        		<input type="hidden" id="fileName" name="fileName">
+			</form>
+		</div>
+	</div>
+	<div style="position:fixed; bottom: 0; right: 0;"><a target="_blank" href="http://sighttp.qq.com/authd?IDKEY=a1a51fb184a88bbb4c1756a211f1ff1fbc9d47079f63eb30"><img border="0" src="http://wpa.qq.com/imgd?IDKEY=a1a51fb184a88bbb4c1756a211f1ff1fbc9d47079f63eb30&pic=41" alt="点我联系我" title="点我联系我"/></a></div>
+<!--该js需要修改js路径及修改seajs路径-->
+<script src="/js/webjs/jquery-1.11.1.js"></script>
+<script src="http://g.alicdn.com/bui/seajs/2.3.0/sea.js"></script>
+<script src="http://g.alicdn.com/bui/bui/1.1.17/config.js"></script>
+<script src="/js/webjs/menuTree.js"></script>
+<script type="text/javascript" src="http://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript">
+	BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
+		var modifyPwdForm = new Overlay.Dialog({
+            title:'密码修改',
+            width:600,
+            height:280,
+            contentId:'modifyPwd',
+            success:function () {
+              	this.close();
+            },
+            buttons : []
+        });
+		
+		$('#setPwd').click(function(){
+			modifyPwdForm.show();
+		});
+		
+		$('#modify_pwd_button').click(function(){
+			var oldPwd = $('#old_pwd').val();
+			var newPwd = $('#new_pwd').val();
+			var confirmNewPwd = $('#confirm_new_pwd').val();
+			if(oldPwd == null || oldPwd == "") {
+				BUI.Message.Alert('请输入旧密码！','warning');
+				return;
+			}
+			if(newPwd == null || newPwd == "") {
+				BUI.Message.Alert('请输新密码！','warning');
+				return;
+			}
+			if(confirmNewPwd == null || confirmNewPwd == "") {
+				BUI.Message.Alert('请输入新密码！','warning');
+				return;
+			}
+			if(newPwd != confirmNewPwd) {
+				BUI.Message.Alert('两次输入的新密码不一致，请检查！','warning');
+				return;
+			}
+			$.ajax({
+				url : '/modifyPassword',
+				type : "POST",
+				data : {oldPwd:oldPwd, newPwd:newPwd},
+				success : function(data) {
+					if(data.error_code == "0") {
+						BUI.Message.Alert('修改密码成功！','success');
+					} else {
+						BUI.Message.Alert('修改密码失败！错误信息：' + data.error_msg,'warning');
+					}
+				},
+				error : function(data) {
+					BUI.Message.Alert('修改密码失败！错误信息：' + data.error_msg,'warning');
+				}
+			});
+		})
+		
+		$.ajax({
+			url : '/accounter/accounterHasFinishRegister',
+			type : "POST",
+			data : {},
+			success : function(data) {
+				if(data != null && data.hasFinishRegister == 'false') {
+					$('#currentTips').html('您还没有完成信息的详细注册，公司无法查看到您的信息，请先在完善注册信息菜单中完善您的个人信息！');
+					$('#currentTips').show();
+				} else {
+					$.ajax({
+						url : '/accounter/accounterHasBelongToCompany',
+						type : "POST",
+						data : {},
+						success : function(data) {
+							if(data != null && data.hasBind == 'false') {
+								$('#currentTips').html('当前还没有任何公司选中您，因此没有相关数据可以查看！');
+								$('#currentTips').show();
+							} else {
+								/* $.ajax({
+									url : '/accounter/getAllCompanyExpense',
+									type : "POST",
+									data : {},
+									success : function(data) {
+										createDataList(data);
+									}
+								}); */
+							}
+						}
+					});
+				}
+			}
+		});
+
+		
+		function checkConditionInput(conditionType, conditionValue) {
+			if(conditionType != '0' && (conditionValue == null || conditionValue == '')) {
+				BUI.Message.Alert('请输入需要检索内容的内容！','warning');
+				return false;
+			}
+			return true
+		}
+		
+		$('.searchData').click(function(){
+			var conditionType = $('#condition option:selected').val();
+			var conditionValue = $('#content').val();
+			var conditionType2 = $("#condition2 option:selected").val();
+			var conditionValue2 = $("#content2").val();
+			var conditionType3 = $("#condition3 option:selected").val();
+			var conditionValue3 = $("#content3").val();
+			
+			if(!checkConditionInput(conditionType, conditionValue)){
+				return;
+			}
+			if(!checkConditionInput(conditionType2, conditionValue2)){
+				return;
+			}
+			if(!checkConditionInput(conditionType3, conditionValue3)){
+				return;
+			}
+
+			var conditions = {};
+			conditions[conditionType] = conditionValue;
+			if($("#search-row2").css("display") != "none"){
+				if(conditionType2 == "0") {
+					conditions[conditionType2] = conditionValue2;
+				}
+				else {
+					if(conditions[conditionType2]){
+						BUI.Message.Alert("重复条件会导致结果为空，请重新选择！");
+						return;
+					}
+					else{
+						conditions[conditionType2] = conditionValue2;
+					}
+					
+				}
+				
+			}
+			
+			if($("#search-row3").css("display") != "none"){
+				if(conditionType3 == "0") {
+					conditions[conditionType3] = conditionValue3;
+				}
+				else {
+					if(conditions[conditionType3]){
+						BUI.Message.Alert("重复条件会导致结果为空，请重新选择！");
+						return;
+					}
+					else{
+						conditions[conditionType3] = conditionValue3;
+					}
+					
+				}
+				
+			}
+			console.log(conditions);
+			console.log(Object.keys(conditions).length);
+			console.log("0" in conditions);
+			
+			if(Object.keys(conditions).length == 1 && "0" in conditions) {
+				$('#data_table').dataTable({
+	                "sPaginationType": "full_numbers", //分页风格，full_number会把所有页码显示出来（大概是，自己尝试）
+	                "bDestroy":true,
+	                "sDom": '<"top" f>rt<"bottom" p><"clear">',
+	                "iDisplayLength": 20,//每页显示10条数据
+	                "bAutoWidth": false,//宽度是否自动，感觉不好使的时候关掉试试
+	　　　　　　　　　　	"bLengthChange": false, 
+	　　　　　　　　　　	"bFilter": false,
+	                "oLanguage": {//下面是一些汉语翻译
+	                    "sSearch": "搜索",
+	                    "sLengthMenu": "每页显示 _MENU_ 条记录",
+	                    "sZeroRecords": "没有检索到数据",
+	                    "sInfo": "显示 _START_ 至 _END_ 条 &nbsp;&nbsp;共 _TOTAL_ 条",
+	                    "sInfoFiltered": "(筛选自 _MAX_ 条数据)",
+	                    "sInfoEmtpy": "没有数据",
+	                    "sProcessing": "正在加载数据...",
+	                    "sProcessing": "<img src='/img/webimg/loader2.gif'/>", //这里是给服务器发请求后到等待时间显示的 加载gif
+                        "oPaginate":
+                        {
+                            "sFirst": "首页",
+                            "sPrevious": "前一页",
+                            "sNext": "后一页",
+                            "sLast": "末页"
+                        }
+	                },
+	                "bProcessing": false, //开启读取服务器数据时显示正在加载中……特别是大数据量的时候，开启此功能比较好
+	                "bServerSide": true, //开启服务器模式，使用服务器端处理配置datatable。注意：sAjaxSource参数也必须被给予为了给datatable源代码来获取所需的数据对于每个画。 这个翻译有点别扭。开启此模式后，你对datatables的每个操作 每页显示多少条记录、下一页、上一页、排序（表头）、搜索，这些都会传给服务器相应的值。 
+	                "sAjaxSource": "/accounter/getAllCompanyExpenseDataTable", //给服务器发请求的url
+	                "columns": [ //这个属性下的设置会应用到所有列，按顺序没有是空
+	                    {"mData": 'name'}, //mData 表示发请求时候本列的列明，返回的数据中相同下标名字的数据会填充到这一列
+	                    {"mData": 'created_time'},
+	                    {"mData": 'item_type'},
+	                    {"mData": 'type'},
+	                    {"mData": 'amount'},
+	                    {"mData": 'file_name'},
+	                ],
+	                
+	                "columnDefs": [{
+	                	"targets":5,
+	                	"data":"weblink",
+	                	"render": function (data,type,full,meta) {
+	                    	     return $('<a>').attr('href', "javascript:$('#fileName').val($(this).attr('file-src'));$('#downloadForm').submit();").text("点击下载").wrap('<div></div>').parent().html();
+	                    	}
+	                }],
+		        });
+			} else {
+				$('#data_table').dataTable({
+	                "sPaginationType": "full_numbers", //分页风格，full_number会把所有页码显示出来（大概是，自己尝试）
+	                "bDestroy":true,
+	                "sDom": '<"top" f>rt<"bottom" p><"clear">',
+	                "iDisplayLength": 20,//每页显示10条数据
+	                "bAutoWidth": false,//宽度是否自动，感觉不好使的时候关掉试试
+	　　　　　　　　　　	"bLengthChange": false, 
+	　　　　　　　　　　	"bFilter": false,
+	                "oLanguage": {//下面是一些汉语翻译
+	                    "sSearch": "搜索",
+	                    "sLengthMenu": "每页显示 _MENU_ 条记录",
+	                    "sZeroRecords": "没有检索到数据",
+	                    "sInfo": "显示 _START_ 至 _END_ 条 &nbsp;&nbsp;共 _TOTAL_ 条",
+	                    "sInfoFiltered": "(筛选自 _MAX_ 条数据)",
+	                    "sInfoEmtpy": "没有数据",
+	                    "sProcessing": "正在加载数据...",
+	                    "sProcessing": "<img src='/img/webimg/loader2.gif'/>", //这里是给服务器发请求后到等待时间显示的 加载gif
+                        "oPaginate":
+                        {
+                            "sFirst": "首页",
+                            "sPrevious": "前一页",
+                            "sNext": "后一页",
+                            "sLast": "末页"
+                        }
+	                },
+	                "bProcessing": false, //开启读取服务器数据时显示正在加载中……特别是大数据量的时候，开启此功能比较好
+	                "bServerSide": true, //开启服务器模式，使用服务器端处理配置datatable。注意：sAjaxSource参数也必须被给予为了给datatable源代码来获取所需的数据对于每个画。 这个翻译有点别扭。开启此模式后，你对datatables的每个操作 每页显示多少条记录、下一页、上一页、排序（表头）、搜索，这些都会传给服务器相应的值。
+	                "ajax": {
+                        "url": "/accounter/getAllCompanyExpenseDataTableByCondition",
+                        "type": "POST",
+                        "data": function(d) {
+                        	d.name = conditions[1];
+                        	d.created_time = conditions[2];
+                        	d.item_type = conditions[3];
+                        }
+            		},
+	                //"sAjaxSource": "/accounter/getAllCompanyExpenseDataTableByCondition", //给服务器发请求的url
+	                "columns": [ //这个属性下的设置会应用到所有列，按顺序没有是空
+	                    {"mData": 'name'}, //mData 表示发请求时候本列的列明，返回的数据中相同下标名字的数据会填充到这一列
+	                    {"mData": 'created_time'},
+	                    {"mData": 'item_type'},
+	                    {"mData": 'type'},
+	                    {"mData": 'amount'},
+	                    {"mData": 'file_name'},
+	                ],
+	                
+	                "columnDefs": [{
+	                	"targets":5,
+	                	"data":"weblink",
+	                	"render": function (data,type,full,meta) {
+	                    	     return $('<a>').attr('href', "javascript:$('#fileName').val($(this).attr('file-src'));$('#downloadForm').submit();").text("点击下载").wrap('<div></div>').parent().html();
+	                    	}
+	                }],
+		        });
+			}
+		});
+	});
+	//侧栏高度
+    (function(){
+        var H=$(window).height();
+        var h1=$(".side-bar-top").height()+$(".side-bar-bottom").height();
+        $(".side-bar-content").height(H-h1);
+        $(window).resize(function(){
+            H=$(window).height();
+            $(".side-bar-content").height(H-h1);
+        });
+    })()
+	//竖状菜单
+	//竖状菜单
+       var menu = new menuTree(
+           {"nodes" : [
+				{text : '完善注册信息',id : '20',href:"/views/webviews/accounter/finish_reg_info.html",  leaf:false, expanded : false,children: []},
+				{text : '公司费用信息',id : '10',href:"/views/webviews/accounter/company_expense_records.html", leaf:false, expanded : false,children: []},
+				{text : '公司工资模板上传',id : '30',href:"/views/webviews/accounter/company_salary_template_upload.html", leaf:false, expanded : false,children: []},
+				{text : '预约取发票方式查询',id : '40',href:"/views/webviews/accounter/take_bill_way.html", leaf:false, expanded : false,children: []},
+				{text : '公司发票信息',id : '50',href:"/views/webviews/accounter/company_expense_account.html", leaf:false, expanded : false,children: []},
+				{text : '销售记录', id: '60', href:"/views/salesviews/record.html", leaf:false, expanded: false, children:[]},
+				{text : '客户管理', id: '70', href:"/views/webviews/accounter/company_customer_management.html", leaf:false, expanded: false, children:[]}
+				]
+           },"menuTree"
+       );
+    defaultSelect("10");
+    function defaultSelect(id){ 
+        $("#"+id).parent().addClass("bui-menu-item-selected")
+    }
+	</script>
+	</body>
+</html>

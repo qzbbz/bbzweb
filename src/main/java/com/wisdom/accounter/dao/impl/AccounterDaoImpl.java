@@ -1,7 +1,9 @@
 package com.wisdom.accounter.dao.impl;
 
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -142,6 +144,115 @@ public class AccounterDaoImpl implements IAccounterDao {
 			logger.error(e.toString());
 		}
 		return list;
+	}
+
+	@Override
+	public List<Map<String, Object>> getAllCompanyExpense(String userId, int start, int length) {
+		// TODO Auto-generated method stub
+		String sql = "select c.name, date_format(ti.created_time,'%Y-%m-%d') as created_time, ti.file_name, tia.type, sum(tia.amount) as amount, '公司发票' as item_type from company c inner join (test_invoice ti left join test_invoice_artifact tia on ti.item_id=tia.item_id) on c.id=ti.company_id where c.accounter_id='" + userId + "' group by ti.id"
+				+ " union all ("
+				+ "select c.name, date_format(cbs.create_time,'%Y-%m-%d') as created_time, cbs.file_name, '无' as type, 0.0 as amount, '公司银行对账单' as item_type from company c inner join company_bank_sta cbs on c.id=cbs.company_id where c.accounter_id='" + userId + "'"
+				+ ") union all ("
+				+ "select c.name, date_format(cs.create_time,'%Y-%m-%d') as created_time, cs.file_name, '无' as type, 0.0 as amount, '公司销售清单' as item_type  from company c inner join company_sales cs on c.id=cs.company_id where c.accounter_id='" + userId + "'"
+				+ ") union all ("
+				+ "select c.name, date_format(cs.create_time,'%Y-%m-%d') as created_time, cs.salary_file as file_name, '无' as type, 0.0 as amount, '公司工资单' as item_type from company c inner join company_salary cs on c.id=cs.company_id where c.accounter_id='" + userId + "'"
+				+ ") limit " + start + "," + length;
+		logger.debug("sql : {}", sql);
+		
+		List<Map<String, Object>> result = jdbcTemplate.queryForList(sql);
+		return result;
+	}
+
+	@Override
+	public int getAllCompanyExpenseRecordTotal(String userId) {
+		String sql = "select count(*) from (select c.name, ti.created_time, ti.file_name, tia.type, sum(tia.amount) as amount, '公司发票' as item_type from company c inner join (test_invoice ti left join test_invoice_artifact tia on ti.item_id=tia.item_id) on c.id=ti.company_id where c.accounter_id='" + userId + "' group by ti.id"
+				+ " union all ("
+				+ "select c.name, cbs.create_time as created_time, cbs.file_name, '无' as type, 0.0 as amount, '公司银行对账单' as item_type from company c inner join company_bank_sta cbs on c.id=cbs.company_id where c.accounter_id='" + userId + "'"
+				+ ") union all ("
+				+ "select c.name, cs.create_time as created_time, cs.file_name, '无' as type, 0.0 as amount, '公司销售清单' as item_type  from company c inner join company_sales cs on c.id=cs.company_id where c.accounter_id='" + userId + "'"
+				+ ") union all ("
+				+ "select c.name, cs.create_time as created_time, cs.salary_file as file_name, '无' as type, 0.0 as amount, '公司工资单' as item_type from company c inner join company_salary cs on c.id=cs.company_id where c.accounter_id='" + userId + "'"
+				+ ")) record";
+		logger.debug("sql : {}", sql);
+		int total = jdbcTemplate.queryForObject(sql, Integer.class);
+		return total;
+	}
+
+	@Override
+	public List<Map<String, Object>> getAllCompanyExpenseDataTableByCondition(String userId, Map<String, String> conditionMap, int start, int length) {
+		String sql = "select * from (select c.name, date_format(ti.created_time, '%Y-%m-%d') as created_time, ti.file_name, tia.type, sum(tia.amount) as amount, '公司发票' as item_type from company c inner join (test_invoice ti left join test_invoice_artifact tia on ti.item_id=tia.item_id) on c.id=ti.company_id where c.accounter_id='" + userId + "' group by ti.id"
+				+ " union all ("
+				+ "select c.name, date_format(cbs.create_time, '%Y-%m-%d') as created_time, cbs.file_name, '无' as type, 0.0 as amount, '公司银行对账单' as item_type from company c inner join company_bank_sta cbs on c.id=cbs.company_id where c.accounter_id='" + userId + "'"
+				+ ") union all ("
+				+ "select c.name, date_format(cs.create_time, '%Y-%m-%d') as created_time, cs.file_name, '无' as type, 0.0 as amount, '公司销售清单' as item_type  from company c inner join company_sales cs on c.id=cs.company_id where c.accounter_id='" + userId + "'"
+				+ ") union all ("
+				+ "select c.name, date_format(cs.create_time, '%Y-%m-%d') as created_time, cs.salary_file as file_name, '无' as type, 0.0 as amount, '公司工资单' as item_type from company c inner join company_salary cs on c.id=cs.company_id where c.accounter_id='" + userId + "'"
+				+ ")) total where ";
+		String conditions = "";
+		if(!StringUtils.isEmpty(conditionMap.get("companyName"))) {
+			if(!StringUtils.isEmpty(conditions)) {
+				conditions = conditions + " and ";
+			}
+			conditions = conditions + "total.name like '%" + conditionMap.get("companyName") + "%'";
+		}
+		
+		if(!StringUtils.isEmpty(conditionMap.get("created_time"))) {
+			if(!StringUtils.isEmpty(conditions)) {
+				conditions = conditions + " and ";
+			}
+			conditions = conditions + "total.created_time like '%" + conditionMap.get("created_time") + "%'";
+		}
+		
+		if(!StringUtils.isEmpty(conditionMap.get("item_type"))) {
+			if(!StringUtils.isEmpty(conditions)) {
+				conditions = conditions + " and ";
+			}
+			conditions = conditions + "total.item_type like '%" + conditionMap.get("item_type") + "%'";
+		}
+		
+		sql = sql + conditions + " limit "+ start + "," + length;
+		logger.debug("sql : {}", sql);
+		List<Map<String, Object>> result = jdbcTemplate.queryForList(sql);
+		logger.debug("query result : {}", result.size());
+		return result;
+	}
+
+	@Override
+	public int getAllCompanyExpenseByConditionRecordTotal(String userId, Map<String, String> conditionMap) {
+		String sql = "select count(*) from (select * from (select c.name, ti.created_time, ti.file_name, tia.type, sum(tia.amount) as amount, '公司发票' as item_type from company c inner join (test_invoice ti left join test_invoice_artifact tia on ti.item_id=tia.item_id) on c.id=ti.company_id where c.accounter_id='" + userId + "' group by ti.id"
+				+ " union all ("
+				+ "select c.name, cbs.create_time as created_time, cbs.file_name, '无' as type, 0.0 as amount, '公司银行对账单' as item_type from company c inner join company_bank_sta cbs on c.id=cbs.company_id where c.accounter_id='" + userId + "'"
+				+ ") union all ("
+				+ "select c.name, cs.create_time as created_time, cs.file_name, '无' as type, 0.0 as amount, '公司销售清单' as item_type  from company c inner join company_sales cs on c.id=cs.company_id where c.accounter_id='" + userId + "'"
+				+ ") union all ("
+				+ "select c.name, cs.create_time as created_time, cs.salary_file as file_name, '无' as type, 0.0 as amount, '公司工资单' as item_type from company c inner join company_salary cs on c.id=cs.company_id where c.accounter_id='" + userId + "'"
+				+ ")) total where ";
+		String conditions = "";
+		if(!StringUtils.isEmpty(conditionMap.get("companyName"))) {
+			if(!StringUtils.isEmpty(conditions)) {
+				conditions = conditions + " and ";
+			}
+			conditions = conditions + "total.name like '%" + conditionMap.get("companyName") + "%'";
+		}
+		
+		if(!StringUtils.isEmpty(conditionMap.get("created_time"))) {
+			if(!StringUtils.isEmpty(conditions)) {
+				conditions = conditions + " and ";
+			}
+			conditions = conditions + "total.created_time like '%" + conditionMap.get("created_time") + "%'";
+		}
+		
+		if(!StringUtils.isEmpty(conditionMap.get("item_type"))) {
+			if(!StringUtils.isEmpty(conditions)) {
+				conditions = conditions + " and ";
+			}
+			conditions = conditions + "total.item_type like '%" + conditionMap.get("item_type") + "%'";
+		}
+		
+		sql = sql + conditions + ") recordTotal";
+		logger.debug("sql : {}", sql);
+		int total = jdbcTemplate.queryForObject(sql, Integer.class);
+		return total;
 	}
 
 }

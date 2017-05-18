@@ -313,7 +313,7 @@ public class AccounterServiceImpl implements IAccounterService {
 		retMap.put("companyExpense", new ArrayList<>());
 		retMap.put("companyInvoice", new ArrayList<>());
 
-		Map<String, String>conditionMap = new HashMap<>();
+		Map<String, String> conditionMap = new HashMap<>();
 		
 		for (Iterator iter = conditions.keySet().iterator(); iter.hasNext();) {
 			String name = (String) iter.next();
@@ -767,5 +767,26 @@ public class AccounterServiceImpl implements IAccounterService {
 	public static void main(String[] args) {
 		Timestamp time = Timestamp.valueOf("2010-10-07 14:30:30"); 
 		System.out.println(time);
+	}
+
+	@Override
+	public List<Map<String, Object>> getAllCompanyExpenseDataTable(String userId, int start, int length) {
+		return accounterDao.getAllCompanyExpense(userId, start, length);
+	}
+
+	@Override
+	public int getAllCompanyExpenseRecordTotal(String userId) {
+		int recordTotal = accounterDao.getAllCompanyExpenseRecordTotal(userId);
+		return recordTotal;
+	}
+
+	@Override
+	public List<Map<String, Object>> getAllCompanyExpenseDataTableByCondition(String userId, Map<String, String> conditions, int start, int length) {
+		return accounterDao.getAllCompanyExpenseDataTableByCondition(userId, conditions, start, length);
+	}
+
+	@Override
+	public int getAllCompanyExpenseByConditionRecordTotal(String userId, Map<String, String> conditions) {
+		return accounterDao.getAllCompanyExpenseByConditionRecordTotal(userId, conditions);
 	}
 }

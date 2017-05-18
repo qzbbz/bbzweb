@@ -226,6 +226,56 @@ public class AccounterController {
 		return accounterService.getAllCompanyExpense(userId);
 	}
 	
+	@RequestMapping("/accounter/getAllCompanyExpenseDataTable")
+	@ResponseBody
+	public Map<String, Object> getAllCompanyExpenseDataTable(HttpServletRequest request) {
+		Map<String, Object> retMap = new HashMap<>();
+		String userId = (String) request.getSession().getAttribute(
+				SessionConstant.SESSION_USER_ID);
+		int start = 0;
+		int length = 0;
+		try {
+			start = Integer.valueOf(request.getParameter("iDisplayStart"));
+			length = Integer.valueOf(request.getParameter("iDisplayLength"));
+		} catch(Exception e) {
+			logger.debug(e.toString());
+			return retMap;
+		}
+		List<Map<String, Object>> result = accounterService.getAllCompanyExpenseDataTable(userId, start, length);
+		int recordTotal = accounterService.getAllCompanyExpenseRecordTotal(userId);
+		retMap.put("data", result);
+		retMap.put("iTotalRecords", recordTotal);
+		retMap.put("iTotalDisplayRecords", recordTotal);
+		return retMap;
+	}
+	
+	@RequestMapping("/accounter/getAllCompanyExpenseDataTableByCondition")
+	@ResponseBody
+	public Map<String, Object> getAllCompanyExpenseDataTableByCondition(HttpServletRequest request) {
+		Map<String, Object> retMap = new HashMap<>();
+		String userId = (String) request.getSession().getAttribute(
+				SessionConstant.SESSION_USER_ID);
+		int start = 0;
+		int length = 0;
+		try {
+			start = Integer.valueOf(request.getParameter("start"));
+			length = Integer.valueOf(request.getParameter("length"));
+		} catch(Exception e) {
+			logger.debug(e.toString());
+			return retMap;
+		}
+		Map<String, String> conditions = new HashMap<>();
+		conditions.put("companyName", request.getParameter("name"));
+		conditions.put("created_time", request.getParameter("created_time"));
+		conditions.put("item_type", request.getParameter("item_type"));
+		List<Map<String, Object>> result = accounterService.getAllCompanyExpenseDataTableByCondition(userId, conditions, start, length);
+		int count = accounterService.getAllCompanyExpenseByConditionRecordTotal(userId, conditions);
+		retMap.put("data", result);
+		retMap.put("iTotalRecords", count);
+		retMap.put("iTotalDisplayRecords", count);
+		return retMap;
+	}
+	
 	@RequestMapping("/accounter/uploadCompanySalaryTemplate")
 	public String uploadCompanySalaryTemplate(@RequestParam("files") MultipartFile file, HttpServletRequest request) {
 		String userId = (String) request.getSession().getAttribute(
@@ -260,8 +310,6 @@ public class AccounterController {
 		String userId = (String) request.getSession().getAttribute(
 				SessionConstant.SESSION_USER_ID);
 		Map conditions = request.getParameterMap();
-
-		
 		return accounterService.getAllCompanyExpenseByCondition(userId, conditions);
 	}
 	

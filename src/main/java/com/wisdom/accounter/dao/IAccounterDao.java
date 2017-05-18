@@ -1,6 +1,7 @@
 package com.wisdom.accounter.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.wisdom.common.model.Accounter;
 import com.wisdom.common.model.CustomerManagement;
@@ -25,4 +26,13 @@ public interface IAccounterDao {
 	public boolean isAccounterExistByUserId(String userId);
 	
 	public List<CustomerManagement> getAllCustomer();
+
+	public List<Map<String, Object>> getAllCompanyExpense(String userId, int start, int length);
+
+	public int getAllCompanyExpenseRecordTotal(String userId);
+
+	public List<Map<String, Object>> getAllCompanyExpenseDataTableByCondition(String userId,
+			Map<String, String> conditionMap, int start, int length);
+
+	public int getAllCompanyExpenseByConditionRecordTotal(String userId, Map<String, String> conditions);
 }
