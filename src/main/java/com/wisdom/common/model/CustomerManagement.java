@@ -22,11 +22,13 @@ public class CustomerManagement implements Serializable{
 		private int comment_count;
 		
 		private String taobao_accounter;
+		
+		private long companyId;
 
 		
 
 		public CustomerManagement(String companyName, String createTinme, String taxStatus, Timestamp expiredTime,
-				String accounterName, int comment_count, String taobao_accounter) {
+				String accounterName, int comment_count, String taobao_accounter, long companyId) {
 			super();
 			this.companyName = companyName;
 			this.createTinme = createTinme;
@@ -35,6 +37,7 @@ public class CustomerManagement implements Serializable{
 			this.accounterName = accounterName;
 			this.comment_count = comment_count;
 			this.taobao_accounter = taobao_accounter;
+			this.companyId = companyId;
 		}
 
 		
@@ -103,6 +106,16 @@ public class CustomerManagement implements Serializable{
 
 		public void setTaobao_accounter(String taobao_accounter) {
 			this.taobao_accounter = taobao_accounter;
+		}
+
+
+		public long getCompanyId() {
+			return companyId;
+		}
+
+
+		public void setCompanyId(long companyId) {
+			this.companyId = companyId;
 		}
 		
 		
