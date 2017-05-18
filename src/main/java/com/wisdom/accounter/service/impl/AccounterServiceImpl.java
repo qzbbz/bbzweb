@@ -765,6 +765,7 @@ public class AccounterServiceImpl implements IAccounterService {
 		map.put("user_name", customer.getAccounterName() == null? "" : customer.getAccounterName());
 		map.put("comment_count", String.valueOf(customer.getComment_count()));
 		map.put("taobao_accounter", customer.getTaobao_accounter() == null ? "" : customer.getTaobao_accounter());
+		map.put("company_id", String.valueOf(customer.getCompanyId()));
 		return map;
 	}
 	public static void main(String[] args) {
