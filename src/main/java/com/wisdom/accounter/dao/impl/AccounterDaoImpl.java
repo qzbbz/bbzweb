@@ -158,7 +158,7 @@ public class AccounterDaoImpl implements IAccounterDao {
 				+ "select c.name, date_format(cs.create_time,'%Y-%m-%d') as created_time, cs.file_name, '无' as type, 0.0 as amount, '公司销售清单' as item_type  from company c inner join company_sales cs on c.id=cs.company_id where c.accounter_id='" + userId + "'"
 				+ ") union all ("
 				+ "select c.name, date_format(cs.create_time,'%Y-%m-%d') as created_time, cs.salary_file as file_name, '无' as type, 0.0 as amount, '公司工资单' as item_type from company c inner join company_salary cs on c.id=cs.company_id where c.accounter_id='" + userId + "'"
-				+ ") limit " + start + "," + length;
+				+ ") order by created_time desc limit " + start + "," + length;
 		logger.debug("sql : {}", sql);
 		
 		List<Map<String, Object>> result = jdbcTemplate.queryForList(sql);
@@ -212,7 +212,7 @@ public class AccounterDaoImpl implements IAccounterDao {
 			conditions = conditions + "total.item_type like '%" + conditionMap.get("item_type") + "%'";
 		}
 		
-		sql = sql + conditions + " limit "+ start + "," + length;
+		sql = sql + conditions + " order by created_time desc limit "+ start + "," + length;
 		logger.debug("sql : {}", sql);
 		List<Map<String, Object>> result = jdbcTemplate.queryForList(sql);
 		logger.debug("query result : {}", result.size());
