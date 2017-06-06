@@ -319,7 +319,7 @@
 	                	"targets":5,
 	                	"data":"weblink",
 	                	"render": function (data,type,full,meta) {
-	                    	     return $('<a>').attr('href', "javascript:$('#fileName').val($(this).attr('file-src'));$('#downloadForm').submit();").text("点击下载").wrap('<div></div>').parent().html();
+	                    	     return $('<a>').attr('file-src', data).attr('href', "javascript:download('" + data + "')").text("点击下载").wrap('<div></div>').parent().html();
 	                    	}
 	                }],
 		        });
@@ -374,7 +374,7 @@
 	                	"targets":5,
 	                	"data":"weblink",
 	                	"render": function (data,type,full,meta) {
-	                    	     return $('<a>').attr('href', "javascript:$('#fileName').val($(this).attr('file-src'));$('#downloadForm').submit();").text("点击下载").wrap('<div></div>').parent().html();
+	                    	     return $('<a>').attr('file-src', data).attr('href', "javascript:download('" + data + "')").text("点击下载").wrap('<div></div>').parent().html();
 	                    	}
 	                }],
 		        });
@@ -382,6 +382,13 @@
 		});
 	});
 	//侧栏高度
+	
+	function download(src) {
+		$('#fileName').val(src);
+		$('#downloadForm').submit();
+	}
+	
+	
     (function(){
         var H=$(window).height();
         var h1=$(".side-bar-top").height()+$(".side-bar-bottom").height();
