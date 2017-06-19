@@ -19,6 +19,8 @@ public interface ICompanyBillApi {
 	
 	public List<Map<String, String>> getAllInvoicesByUserId(String uid);
 	
+	public List<Map<String, String>> getAllInvoicesByCompanyId(long companyId);
+	
 	public List<Map<String, String>> getAllInvoicesByCondition(Map<String, String> params, String uid);
 	
 	public boolean deleteInvoice(String idList, String realPath);

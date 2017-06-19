@@ -24,7 +24,7 @@ public class SessionFilterService extends OncePerRequestFilter {
 
 	public SessionFilterService() {
 		filterUrls = new String[] { "/admin/", "/company/", "/accounter/",
-				"/companyUser/"};
+				"/companyUser/", "/invoiceupload/"};
 	}
 
 	@Override
@@ -76,6 +76,10 @@ public class SessionFilterService extends OncePerRequestFilter {
 					break;
 				case 5:
 					if (uri.indexOf("/companyUser/") == -1)
+						noAuth = true;
+					break;
+				case 8:
+					if (uri.indexOf("/invoiceupload/") == -1)
 						noAuth = true;
 					break;
 				default:

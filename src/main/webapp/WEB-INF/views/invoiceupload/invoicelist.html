@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>上海元升财务咨询有限公司</title>
+    <link rel="stylesheet" type="text/css" href="/css/webcss/bui.css">
+	<link rel="stylesheet" type="text/css" href="/css/webcss/golbal.css">
+	<link rel="stylesheet" type="text/css" href="/css/webcss/layout.css">
+	<link rel="stylesheet" type="text/css" href="/css/webcss/iviewer.css">
+</head>
+<body>
+	<div class="wrap">
+		<div class="side-bar">
+			<div class="side-bar-top">
+				<img src="/img/webimg/bss-logo.png" >
+				<h1>上海元升财务咨询有限公司</h1>
+			</div>
+            <div class="side-bar-content" id="menuTree"></div>
+			<div class="side-bar-bottom">
+				<ul>
+					<li><a href="javascript:void(0);" id="setPwd"><i class="setting"></i>设置</a></li>
+					<li><a href="/logout"><i class="exit"></i>安全退出</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="main">
+			<div class="menu" style="margin-bottom:20px;"><a href="#" class="active">已上传发票列表</a></div>
+			<div class="well mt20">
+				<div class="form-horizontal onlineTools">
+					<div class="row show-grid">
+						<label class="control-label control-label-small">公司名称：</label>
+                        <div class="controls"><select style="width:300px;" name="companylist" id="companylist" class="input input-normal"></select><input id="search_company" name="search_company" type="text" id="content" class="input input-normal ml10"><button id="searchData" class="button button-success ml10">搜索公司名称</button></div>
+					</div>
+				</div>
+				<div class="form-horizontal" style="">
+                    <div class="row">
+                    	<button id="searchInvoice" class="button button-success ml10">搜索发票</button><button id="deleteData" class="button button-danger ml10">一键删除所选发票</button>
+                	</div>
+                </div>
+			</div>
+			<table class="table center">
+	    		<colgroup>
+	    			<col style="width:3%;">
+	    			<col style="width:7%;">
+	    			<col style="width:9%;">
+	    			<col style="width:7%;">
+	    			<col style="width:8%;">
+	    			<col style="width:5%;">
+	    			<col style="width:5%;">
+	    			<col style="width:11%;">
+	    			<col style="width:7%;">
+	    			<col style="width:12%;">
+	    			<col style="width:8%;">
+	    			<col style="width:8%;">
+	    		</colgroup>
+	    		<thead>
+	    			<tr>
+	    				<th>&nbsp;</th>
+	    				<th>上传日期</th>
+	    				<th>公司名称</th>
+	    				<th>会计期间</th>
+	    				<th>发票金额</th>
+	    				<th>数量</th>
+	    				<th>税额</th>
+	    				<th>供应商名称</th>
+	    				<th>固定资产</th>
+	    				<th>费用类型</th>
+	    				<th>发票预览</th>
+	    				<th>操作</th>
+	    			</tr>
+	    		</thead>
+	    		<tbody id="retData">
+	    		</tbody>
+	    	</table>
+	    	<div class="pagination"></div>
+		</div>
+	</div>
+	
+	<div id="modifyInfo" style="display:none;">
+		<div id="form" class="form-horizontal">
+			<div class="control-group">
+				<label class="control-label">发票金额：</label>
+				<div class="controls">
+					<input id="modify_amount" type="text" class="input-large"
+						data-rules="{required : true}" style="width:250px;">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">数量：</label>
+				<div class="controls">
+					<input id="number" type="text" class="input-large"
+						data-rules="{required : true}" style="width:250px;">
+				</div>
+			</div>	
+			<div class="control-group">
+				<label class="control-label">发票税额：</label>
+				<div class="controls">
+					<input id="tax" type="text" class="input-large"
+						data-rules="{required : true}" style="width:250px;">
+				</div>
+			</div>			
+			<div class="control-group">
+				<label class="control-label">供应商名称：</label>
+				<div class="controls control-row-auto">
+					<input id="supplyName" type="text" class="input-large"
+						data-rules="{required : true}" style="width:250px;">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">费用类型：</label>
+				<div class="controls control-row-auto">
+					<input id="modify_type" type="text" class="input-large"
+						data-rules="{required : true}" style="width:250px;">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">固定资产：</label>
+				<div class="controls control-row-auto" style="margin-top:6px;">
+					<input type="checkbox" name="isFixedAssets" id="isFixedAssets" style="width:20px;height:20px;">
+				</div>
+			</div>
+			<div class="control-group control-btn">
+				<div class="layer-wrap-footer"><a href="javascript:void(0);" id="modify_button" class="button button-success">确定修改</a></div>
+			</div>
+			<input type='hidden' id="current_modify_id">
+		</div>
+	</div>
+	
+	<div id="iviewer">
+        <div class="loader"></div>
+
+        <div class="viewer"></div>
+
+        <ul class="controls">
+            <li class="close"></li>
+            <li class="zoomin"></li>
+            <li class="zoomout"></li>
+            <li class="angle"></li>
+        </ul>
+
+    
+    </div>
+	
+	<div id="modifyPwd" style="display:none;">
+		<div id="form" class="form-horizontal">
+			<div class="control-group">
+				<label class="control-label">输入旧密码：</label>
+				<div class="controls">
+					<input id="old_pwd" type="password" class="input-large"
+						data-rules="{required : true}" style="width:250px;">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">输入新密码：</label>
+				<div class="controls control-row-auto">
+					<input id="new_pwd" type="password" class="input-large"
+						data-rules="{required : true}" style="width:250px;">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">再次输入新密码：</label>
+				<div class="controls control-row-auto">
+					<input id="confirm_new_pwd" type="password" class="input-large"
+						data-rules="{required : true}" style="width:250px;">
+				</div>
+			</div>
+			<div class="control-group">
+				<label id="modify_pwd_tips"></label>
+			</div>
+			<div class="control-group control-btn">
+				<div class="layer-wrap-footer"><a href="javascript:void(0);" id="modify_pwd_button" class="button button-success">确定修改</a></div>
+			</div>
+		</div>
+	</div>
+<!--该js需要修改js路径及修改seajs路径-->
+<!-- <script src="http://g.tbcdn.cn/fi/bui/jquery-1.8.1.min.js"></script> -->
+<script src="/js/webjs/jquery-1.7.2.min.js"></script>
+<script src="http://g.alicdn.com/bui/seajs/2.3.0/sea.js"></script>
+<script src="http://g.alicdn.com/bui/bui/1.1.17/config.js"></script>
+<script src="/js/webjs/menuTree.js"></script>
+<script src="/js/webjs/jquery-ui.js"></script>
+<script src="/js/webjs/jquery-mousewheel.js"></script>
+<script src="/js/webjs/jquery.iviewer.min.js"></script>
+<script src="/js/webjs/iviewer.js"></script>
+<script type="text/javascript">
+function checkJsonIsEmpty(json) {
+	var isEmpty = true;
+	if (json == null) return true;
+	for (var jsonKey in json) {
+		isEmpty = false;
+		break;
+	}
+	return isEmpty;
+}
+function isNumber(str){
+    var re = /^[0-9]+.?[0-9]*$/;
+    if (!re.test(str)){
+   	 return false;
+    }
+    return true;
+}
+BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
+	var modifyPwdForm = new Overlay.Dialog({
+        title:'密码修改',
+        width:600,
+        height:280,
+        contentId:'modifyPwd',
+        success:function () {
+          	this.close();
+        },
+        buttons : []
+    });
+	$('#setPwd').click(function(){
+		modifyPwdForm.show();
+	})
+	$('#modify_pwd_button').click(function(){
+		var oldPwd = $('#old_pwd').val();
+		var newPwd = $('#new_pwd').val();
+		var confirmNewPwd = $('#confirm_new_pwd').val();
+		if(oldPwd == null || oldPwd == "") {
+			BUI.Message.Alert('请输入旧密码！','warning');
+			return;
+		}
+		if(newPwd == null || newPwd == "") {
+			BUI.Message.Alert('请输新密码！','warning');
+			return;
+		}
+		if(confirmNewPwd == null || confirmNewPwd == "") {
+			BUI.Message.Alert('请输入新密码！','warning');
+			return;
+		}
+		if(newPwd != confirmNewPwd) {
+			BUI.Message.Alert('两次输入的新密码不一致，请检查！','warning');
+			return;
+		}
+		$.ajax({
+			url : '/modifyPassword',
+			type : "POST",
+			data : {oldPwd:oldPwd, newPwd:newPwd},
+			success : function(data) {
+				if(data.error_code == "0") {
+					BUI.Message.Alert('修改密码成功！','success');
+				} else {
+					BUI.Message.Alert('修改密码失败！错误信息：' + data.error_msg,'warning');
+				}
+			},
+			error : function(data) {
+				BUI.Message.Alert('修改密码失败！错误信息：' + data.error_msg,'warning');
+			}
+		});
+	})
+});
+	
+	//侧栏高度
+    (function(){
+        var H=$(window).height();
+        var h1=$(".side-bar-top").height()+$(".side-bar-bottom").height();
+        $(".side-bar-content").height(H-h1);
+        $(window).resize(function(){
+            H=$(window).height();
+            $(".side-bar-content").height(H-h1);
+        });
+    })()
+	//竖状菜单
+	var menu = new menuTree(
+            {"nodes" : [
+{text : '发票上传',id : '20',href:"/views/invoiceupload/home.html",  leaf:false, expanded : false,children: []},
+{text : '发票列表',id : '10',href:"/views/invoiceupload/invoicelist.html", leaf:false, expanded : false,children: []}
+
+						]
+            },"menuTree"
+        );
+    defaultSelect("10");
+    function defaultSelect(id){ 
+        $("#"+id).parent().addClass("bui-menu-item-selected")
+    }
+    var companyData = null;
+    $.ajax({
+		url: '/invoiceupload/invoiceUploadGetAllCompanyInfo',
+		type: "POST",
+		data: {},
+		success: function(data) {
+			if (!checkJsonIsEmpty(data)) {
+				companyData = data;
+				for(var index in data) {
+					$("#companylist").append("<option value='"+data[index].id+"'>" + data[index].name + "</option>");
+				}
+			}
+		},
+		error: function(status, error) {
+		}
+	});
+    $("#searchData").click(function(){
+    	var key = $("#search_company").val();
+    	$("#companylist").html("");
+    	var hasFind = false;
+    	for(var index in companyData) {
+    		if(companyData[index].name == null || companyData[index].name == "") continue;
+			if(key == "" || key == null || companyData == null || companyData[index].name.indexOf(key) != -1) {
+				hasFind = true;
+				$("#companylist").append("<option value='"+companyData[index].id+"'>" + companyData[index].name + "</option>");
+    		}
+    	}
+    	if(!hasFind) {
+    		$("#companylist").append("<option value='-1'>没有搜索到结果</option>");
+    	}
+    });
+    BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){	
+    	var deleteIdList = new Array();
+		$('#deleteData').click(function(){
+			if(deleteIdList.length == 0) {
+				BUI.Message.Alert('请先勾选需要删除的记录！','warning');
+			} else {
+				var companyId = $("#companylist option:selected").val();
+				$.ajax({
+					url : '/invoiceupload/invoiceUploadDeleteCompanyBill',
+					type : "POST",
+					data : {deleteIdList:deleteIdList.join(",")},
+					success : function(data) {
+						$.ajax({
+							url : '/invoiceupload/invoiceUploadGetAllInvoices',
+							type : "POST",
+							data : {companyId:companyId},
+							success : function(data) {
+								createDataList(data);
+							}
+						});
+					}
+				});
+			}
+		})
+    function bindCheck() {
+		$(".data-check-id").die().live("click",function(){
+			var id = $(this).val();
+			if ($(this).is(':checked')) {
+				deleteIdList.push(id);
+			} else {
+				for(var i=0; i<deleteIdList.length; i++) {
+					if(deleteIdList[i] === id) {
+						deleteIdList.splice(i, 1);
+						break;
+					}
+				}
+			}
+		})
+	}
+    function createDataList(data) {
+		if(data == null || data == '') return;
+		data.sort(function(a,b){return a.date<b.date?1:-1});
+		for(var i=0; i<data.length; i++) {
+			var container = $('#retData');
+			var trNode = $("<tr></tr>");
+			if(deleteIdList.indexOf(data[i].id) > -1){
+			    var checkNode = $("<td><input type='checkbox' value='"+data[i].id+"' checked='checked' class='data-check-id'></td>");
+			}else{
+				var checkNode = $("<td><input type='checkbox' value='"+data[i].id+"' class='data-check-id'></td>");
+			}
+		    var tdNode1 = $("<td>"+data[i].date+"</td><td>"+data[i].company_name+"</td><td>"+data[i].bill_date+"</td><td>"+(data[i].amount == null || data[i].amount == "" ? "0" : data[i].amount)+"</td><td>"+(data[i].number == null || data[i].number == "" ? "1" : data[i].number)+"</td><td>"+(data[i].tax == null || data[i].tax == "" ? "0" : data[i].tax)+"</td><td>"+(data[i].supplyName == null || data[i].supplyName == "" ? "未设定" : data[i].supplyName)+"</td><td>"+(data[i].isFixedAssets == null || data[i].isFixedAssets == "0" ? "否" : "是")+"</td><td>"+(data[i].expense_type == null || data[i].expense_type == "" ? "未设定" : data[i].expense_type)+"</td>");
+		    var tdNode2 = $("<td></td>");
+		    var aNode = $("<a href='javascript:void(0)'>查看</a>");
+		    var tdNode3 = $("<td></td>");
+		    var operateNode1 = $("<p>识别中<img style='height:20px;width:60px;' src='/img/webimg/progress2.gif'></p>");
+		    var operateNode2 = $("<p>识别已完成</p>");
+		    var operateNode3 = $("<p>无法识别</p>");
+		    var operateNode = $("<a href='edit.html?id="+data[i].id+"'>编辑</a>");
+		    
+		    var imgsrc = '/files/company/' + data[i].file_name;
+		    aNode.attr("img-src", imgsrc);
+		    aNode.click(function(event) {
+		    	openBillImage($(this).attr("img-src"));
+		    });
+		    aNode.appendTo(tdNode2);
+		    operateNode.appendTo(tdNode3);
+		    checkNode.appendTo(trNode);
+		    tdNode1.appendTo(trNode);
+		    tdNode2.appendTo(trNode);
+		    tdNode3.appendTo(trNode);
+		    trNode.appendTo(container);
+		}
+		bindCheck();
+	};
+    
+    $("#searchInvoice").click(function(){
+    	var companyId = $("#companylist option:selected").val();
+    	if(companyId == null || companyId == "" || companyId == undefined) {
+    		alert("请先选择公司！");
+    	} else {
+    		$.ajax({
+    			url: '/invoiceupload/invoiceUploadGetAllInvoices',
+    			type: "POST",
+    			data: {companyId:companyId},
+    			success: function(data) {
+    				if (!checkJsonIsEmpty(data)) {
+    					createDataList(data);
+    				}
+    			},
+    			error: function(status, error) {
+    			}
+    		});
+    	}
+    });
+    });
+</script>
+</body>
+</html>

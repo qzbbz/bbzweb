@@ -25,6 +25,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
 import com.wisdom.accounter.service.IAccounterService;
 import com.wisdom.common.model.Accounter;
@@ -68,6 +70,9 @@ public class AdminController {
 	
 	@Autowired
 	private IUserQueryDao userQueryDao;
+	
+	@Autowired
+	private ICompanyBillApi companyBillApi;
 	
 	@RequestMapping("/admin/getAllRegisterCompanyInfo")
 	@ResponseBody
@@ -512,5 +517,72 @@ public class AdminController {
 			}
 		}
 		return retList;
+	}
+	
+	@RequestMapping("/invoiceupload/invoiceUploadGetAllCompanyInfo")
+	@ResponseBody
+	public List<Company> invoiceUploadGetAllCompanyInfo(HttpServletRequest request) {
+		List<Company> companyList = companyService.getAllCompany();
+		return companyList;
+	}
+	
+	@RequestMapping("/invoiceupload/invoiceUploadUploadInvoices")
+	@ResponseBody
+	public Map<String, String> invoiceUploadUploadInvoices(DefaultMultipartHttpServletRequest multipartRequest,
+			HttpServletRequest request) {
+		logger.debug("invoiceUploadUploadInvoices uploadCompanyBill");
+		String userId = (String) request.getSession().getAttribute("userId");
+		String companyId = request.getParameter("companyId");
+		String date = request.getParameter("bill_date");
+		String realPath = "/home/files/company";
+		logger.debug("invoiceUploadUploadInvoices realPath : {}", realPath);
+		Map<String, String> params = new HashMap<>();
+		params.put("userId", userId);
+		params.put("companyId", companyId);
+		params.put("realPath", realPath);
+		params.put("date", date);
+		logger.debug("params : {}", params.toString());
+		if (multipartRequest != null) {
+			Iterator<String> iterator = multipartRequest.getFileNames();
+			while (iterator.hasNext()) {
+				MultipartFile multifile = multipartRequest.getFile((String) iterator.next());
+				companyBillApi.uploadCompanyBill(params, multifile);
+			}
+		}
+		Map<String, String> retMap = new HashMap<>();
+		retMap.put("url", "url");
+		return retMap;
+	}
+	
+	@RequestMapping("/invoiceupload/invoiceUploadGetAllInvoices")
+	@ResponseBody
+	public List<Map<String, String>> invoiceUploadGetAllInvoices(HttpServletRequest request) {
+		String companyId = request.getParameter("companyId");
+		long companyId_ = -1;
+		try {
+			companyId_ = Long.valueOf(companyId);
+		} catch(Exception ex) {
+			logger.error(ex.toString());
+		}
+		if(companyId_ == -1) {
+			return null;
+		} else {
+			return companyBillApi.getAllInvoicesByCompanyId(companyId_);
+		}
+	}
+	
+	@RequestMapping("/invoiceupload/invoiceUploadDeleteCompanyBill")
+	@ResponseBody
+	public Map<String, String> invoiceUploadDeleteCompanyBill(HttpServletRequest request) {
+		Map<String, String> retMap = new HashMap<>();
+		String idList = (String) request.getParameter("deleteIdList");
+		String realPath = request.getSession().getServletContext().getRealPath("/WEB-INF/files/company");
+		realPath = realPath.substring(0, realPath.indexOf("/", 1)) + "/files/company";
+		if (companyBillApi.deleteInvoice(idList, realPath)) {
+			retMap.put("error_code", "0");
+		} else {
+			retMap.put("error_code", "1");
+		}
+		return retMap;
 	}
 }

@@ -66,7 +66,15 @@ public class CompanyBillApiImpl implements ICompanyBillApi {
 			String date=params.get("date");
 			String supplyName = params.get("supplyName");
 			String isFixedAssets = params.get("isFixedAssets");
-			long companyId = userService.getCompanyIdByUserId(userId);
+			long companyId = -1;
+			try {
+				companyId = Long.valueOf(params.get("companyId"));
+			} catch(Exception ex) {
+				logger.error(ex.toString());
+			}
+			if(companyId == -1) {
+				companyId = userService.getCompanyIdByUserId(userId);
+			}
 			String fileName = getGernarateFileName(file, userId);
 			String realPath = params.get("realPath");
 			
@@ -90,11 +98,11 @@ public class CompanyBillApiImpl implements ICompanyBillApi {
 			Company company = companyService.getCompanyByCompanyId(companyId);
 			
 			logger.debug("Thread has start");
-			
+			final long comId = companyId;
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
-					invoiceService.publishUnrecognizedInvoive(invoiceId, companyId, fileName, company.getName());
+					invoiceService.publishUnrecognizedInvoive(invoiceId, comId, fileName, company.getName());
 				}
 			}).start();
 			
@@ -267,6 +275,15 @@ public class CompanyBillApiImpl implements ICompanyBillApi {
 		List<TestInvoiceRecord> list = invoiceService.getAllInvoicesByCompanyId(companyId);
 		return createInvoiceList(list, extraParams);
 
+	}
+	
+	@Override
+	public List<Map<String, String>> getAllInvoicesByCompanyId(long companyId) {
+		String companyName = companyService.getCompanyName(companyId);
+		Map<String, String> extraParams = new HashMap<>();
+		extraParams.put("company_name", companyName);
+		List<TestInvoiceRecord> list = invoiceService.getAllInvoicesByCompanyId(companyId);
+		return createInvoiceList(list, extraParams);
 	}
 	
 	

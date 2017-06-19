@@ -1,0 +1,384 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>发票识别</title>
+<meta name="description" content="简介">
+<meta name="keywords" content="关键字">
+<link rel="stylesheet" type="text/css"
+	href="/css/webcss/jquery.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="/css/webcss/global.css" />
+<link
+	href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"
+	rel="stylesheet">
+<link rel="stylesheet" type="text/css"
+	href="/css/webcss/jquery.guillotine.css" />
+<link rel="stylesheet" href="/css/webcss/bootstrap.css" />
+<link rel="stylesheet" href="/css/webcss/jquery.loadmask.css" />
+<link rel="stylesheet" href="/css/webcss/jquery-ui.css" />
+
+
+
+<style>
+.ui-autocomplete {
+	
+}
+
+#controls {
+	font-size: 250%;
+	background-color: darkcyan;
+	color: white;
+	text-align: center;
+}
+
+#controls>a {
+	color: white;
+	margin: 0em 1vw;
+}
+
+#add-row {
+	margin-top: 1em;
+}
+
+.nav-left {
+	position: relative;
+	float: left;
+	margin-top: 15px;
+	margin-left: 2vw;
+	width: 45vw;
+	height: auto;
+	border: 1px solid #008B8B;
+	box-shadow: 5px 5px 20px grey;
+}
+
+.nav-right {
+	float: left;
+	width: 30vw;
+}
+
+.delete {
+	margin-left: 1em;
+	margin-right: 1em;
+}
+
+.loadmask-msg>div {
+	font-size: 400%;
+}
+</style>
+</head>
+
+<body>
+	<div class="nav">
+		<div class="container">
+			<a href="/views/webviews/user/setting.html"><img
+				src="/img/webimg/logo-white1.png"></a>
+			<ul id="navigator" class="nav-header">
+			</ul>
+		</div>
+	</div>
+	<div class="text">
+		<ul class="nav-left">
+			<img id="invoice-img" onerror="imgError(this);" />
+			<div id="controls" class="">
+				<a href="#" id="rotate_left" title="逆时针旋转"><i
+					class="fa fa-rotate-left"></i></a> <a href="#" id="zoom_out" title="缩小"><i
+					class="fa fa-search-minus"></i></a> <a href="#" id="fit" title="还原"><i
+					class="fa fa-arrows-alt"></i></a> <a href="#" id="zoom_in" title="放大"><i
+					class="fa fa-search-plus"></i></a> <a href="#" id="rotate_right"
+					title="顺时针旋转"><i class="fa fa-rotate-right"></i></a>
+			</div>
+
+		</ul>
+		<ul class="nav-right">
+			<div>
+				公司名称: <b id="company-name"></b>
+			</div>
+			<table id="invoice" width="30vw" border="0" cellspacing="0"
+				cellpadding="0">
+				<colgroup>
+					<col span="1" style="width: 25%;">
+					<col span="1" style="width: 25%;">
+					<col span="1" style="width: 25%;">
+					<col span="1" style="width: 25%;">
+				</colgroup>
+				<thead>
+					<tr>
+						<th>供应商</th>
+						<th>摘要</th>
+						<th>金额</th>
+						<th>税额</th>
+						<th>数量</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+			<p class="mt10 ft14">
+				<input type="button" class="btn btn-default" id="add-row"
+					value="点击添加" />
+			</p>
+
+			<p class="btn-l">
+				<input id="fa" type="checkbox" style="vertical-align: middle;">
+				固定资产
+			</p>
+			<p class="btn-r">
+				<input id="invalid" type="checkbox" style="vertical-align: middle;">
+				无法识别
+			</p>
+			<p class="btn">
+				<input id="submit" type="button" class="btn btn-primary" value="提交">
+			</p>
+		</ul>
+	</div>
+	<div class="footer">
+		<div class="container">
+			<p>沪ICP备15012848号 | COPYRIGHT © 2014-2015, BANGBANGZHANG, ALL
+				RIGHTS RESERVED</p>
+		</div>
+	</div>
+	<script src="/js/webjs/jquery-1.7.2.min.js"></script>
+	<script src="/js/webjs/jquery-ui.js"></script>
+	<script type="text/javascript" language="javascript"
+		src="/js/webjs/jquery.dataTables.min.js"></script>
+	<script src="/js/webjs/navigator.js"></script>
+	<script src="/js/webjs/jquery.guillotine.js"></script>
+	<script src="/js/webjs/jquery.loadmask.js"></script>
+	<script>
+
+                
+		var table =  $('#invoice').DataTable({
+			"bSort" : false,
+      		"paging": false,
+			"sDom": '<"top">rt<"bottom" p><"clear">'
+		});
+		
+		//table行的计数器
+        var count = 0;
+        
+        
+                
+        $('#add-row').click(function(){
+        	count = count + 1;
+
+            table.row.add( ['<input id="supplier'+ count + '" class="autocomplete" type="text"/>','<input id="description'+count+'" class="autocomplete" type="text"/>','<input id="amount" class="autocomplete" type="text"/>','<input type="text" value="0"/>','<input type="text" value="1"/>',"<input type='button' class='delete' value='删除'/>" ] ).draw( false );
+        	$.post("/invoice/getCalculatedCandidatePhrase", {'type':'supplier', 'invoice_id':invoice_id}, function(data){
+        		var autocomplete = $("#supplier" + count).autocomplete( {source: data, minLength: 0
+        		});
+        			$("#supplier" + count).on("click", function(){
+        				$(this).autocomplete( "search", "" );
+        			});
+        		if(data){
+        			$("#supplier" + count).val(data[0]);
+        		}
+        	});
+        	
+        	$.post("/invoice/getCalculatedCandidatePhrase", {'type':'description', 'invoice_id':invoice_id}, function(data){
+        		console.log("hello");
+        		var autocomplete = $("#description" + count).autocomplete( {source: data, minLength: 0
+        		});
+        			$("#description" + count).on("click", function(){
+        				$(this).autocomplete( "search", "" );
+        			});
+        		if(data){
+        			$("#description" + count).val(data[0]);
+        		}
+        	});
+        });
+        
+        $("#invoice tbody").on('click', '.delete', function (){
+			table.row( $(this).parents('tr') ).remove().draw();
+			count--;
+        });
+
+        $('.del-list').on('click',function(){
+        	console.log("click");
+            $(this).parent().parent().remove();                   
+    	});
+        
+        $('.del-list2').on('click',function(){
+        	console.log("click");
+            $(this).parent().parent().remove();                   
+    	});
+        
+        var id = "";
+        var invoice_id = "";
+        var companyName = "";
+        $.post('/invoice/getInvoiceForUser', {"status":"UNRECOGNIZED_INVOICE"}, function(data){
+        	console.log("hola");
+        	var isImageExisted = true;
+        	if(data.status == "nok"){
+        		alert("您的访问超时，请重新登录！");
+        		window.location.href = "/views/frontviews/index.html";
+        	}
+        	if(data.data == ""){
+        		isImageExisted = false;
+        	}
+        	if(isImageExisted == false){
+        		var invoicePath = "/img/webimg/not_available.jpg";
+        	}else{
+            	var result = $.parseJSON(data.data);
+        		var invoicePath = result[0]['path'];
+            	id = result[0]['id'];
+            	invoice_id = result[0]['invoice_id'];
+            	companyName = result[0]['company'];
+            	$("#company-name").html(companyName);
+            	console.log(companyName);
+            	
+            	//修改内容：用invoice_id查询artifact表，拿出识别数据
+            	$.post("/invoice/getArtifactByInvoiceId", {invoice_id:invoice_id}, function(data){
+            		var data = $.parseJSON(data.data);
+            		if(data != '') {
+            			for(var index in data) {
+                			table.row.add( ['<input id="supplier'+index+'" class="autocomplete" type="text" value="'+data[index]['supplier_name']+'"/>','<input id="type'+index+'" class="autocomplete" type="text" value="'+data[index]['type']+'"/>','<input id="amount'+index+'" class="autocomplete" type="text" value="'+data[index]['amount']+'"/>','<input id="tax'+index+'" type="text" value="'+data[index]['tax']+'"/>','<input id="number'+index+'" type="text" value="'+data[index]['number']+'"/>','<input type="button" id="'+data[index]['id']+'" class="delete" value="删除"/>' ] ).draw(false);
+                			count++;
+                		}
+            		} else {
+            			table.row.add( ['<input id="supplier'+count+'" class="autocomplete" type="text"/>','<input id="type'+count+'" class="autocomplete" type="text"/>','<input id="amount'+count+'" class="autocomplete" type="text"/>','<input id="tax'+count+'" type="text"/>','<input id="number'+count+'" type="text"/>','<input type="button" class="delete" value="删除"/>' ] ).draw(false);
+            		}
+            	});
+        	}
+        	
+        	$.post("/invoice/getCalculatedCandidatePhrase", {'type':'supplier', 'invoice_id':invoice_id}, function(data){
+        		var autocomplete = $("#supplier").autocomplete( {source: data, minLength: 0
+        		});
+        			$("#supplier").on("click", function(){
+        				$(this).autocomplete( "search", "" );
+        			});
+        		if(data){
+        			$("#supplier").val(data[0]);
+        		}
+        	});
+        	
+        	$.post("/invoice/getCalculatedCandidatePhrase", {'type':'description', 'invoice_id':invoice_id}, function(data){
+        		var autocomplete = $("#description").autocomplete( {source: data, minLength: 0
+        		});
+        			$("#description").on("click", function(){
+        				$(this).autocomplete( "search", "" );
+        			});
+        			$("#description").val(data[0]);
+        	});
+        
+        	$.post("/invoice/getCalculatedCandidatePhrase", {'type':'amount', 'invoice_id':invoice_id}, function(data){
+        		if(data){
+        			$("#amount").val(data[0]);
+        		}
+        	});
+        	
+             jQuery(function() {
+             	  var picture = $('#invoice-img')
+
+             	  var camelize = function() {
+             	    var regex = /[\W_]+(.)/g
+             	    var replacer = function (match, submatch) { return submatch.toUpperCase() }
+             	    return function (str) { return str.replace(regex, replacer) }
+             	  }()
+
+             	  var showData = function (data) {
+             	    data.scale = parseFloat(data.scale.toFixed(1))
+             	    for(var k in data) { $('#'+k).html(data[k]) }
+             	  }
+
+             	  picture.on('load', function() {
+             	    picture.guillotine({ eventOnChange: 'guillotinechange' })
+             	    picture.guillotine('fit')
+             	    //for (var i=0; i<5; i++) { picture.guillotine('zoomIn') }
+
+             	    // Show controls and data
+             	    $('.loading').remove()
+             	    $('.notice, #controls, #data').removeClass('hidden')
+             	    showData( picture.guillotine('getData') )
+
+             	    // Bind actions
+             	    $('#controls a').click(function(e) {
+             	      e.preventDefault()
+             	      action = camelize(this.id)
+             	      picture.guillotine(action)
+             	    })
+
+             	    // Update data on change
+             	    picture.on('guillotinechange', function(e, data, action) { showData(data) })
+             	  })
+
+             	  // Display random picture
+             	  picture.attr('src', invoicePath);
+                  //Double click zoom in the picture
+                  $("#invoice-img").on("dblclick", function(){
+                  	$(this).guillotine('zoomIn');
+                  	
+                  });
+             	});
+
+        });
+
+        
+        //Send the recognized data
+        $("#submit").on("click", function(){
+        	if($("#invalid").prop("checked")){
+        		$.post('/invoice/updateInvoiceStatus',{'id':id, 'status':'INVALID'}, function(data){
+        			if(data.status == 'ok'){
+        				alert("切换到下一张");
+        				window.location.reload();
+        			}
+        			else{
+        				alert("提交出错，请稍后再试！");
+        			}
+        		});
+        	}else{
+        		
+        		//Need to apply a mask since the response is a bit slow
+        		$("body").mask("正在上传数据，请等待...");
+        		var resultList = [];
+        		$("tbody>tr").each(function(){
+        			console.log($(this).children());
+        			var supplier = $(this).children().eq(0).find('input');
+        			var description = $(this).children().eq(1).find('input');
+        			var amount = $(this).children().eq(2).find('input');
+        			if(amount.val() == '') return;
+        			var tax = $(this).children().eq(3).find('input');
+        			var number = $(this).children().eq(4).find('input');
+        			var id = $(this).children().eq(5).find('input');
+        			resultList.push({'supplier': supplier.val(), 'description':description.val(), 'amount':amount.val(), 'tax':tax.val(), 'number':number.val(), 'id':id.attr('id')});
+        		});
+        		var FA = "no";
+        		if($("#fa").prop("checked")){
+        			FA = "yes";
+        		}
+        		if(resultList.length == 0) {
+        			alert("没有数据，请重新填写！");	
+        			window.location.reload();
+        		}
+        		$.post('/invoice/updateInvoiceContent', {"data": JSON.stringify(resultList), 'FA':FA, "id":id}, function(data){
+        			if(data.status == 'ok'){
+        				$("body").unmask();
+        				alert("切换到下一张");
+        				window.location.reload();
+        			}
+        			else{
+        				$("body").umask();
+        				alert("提交出错，请稍后再试！");
+        			}
+        		});
+        	}
+        });
+        
+
+        
+        $("#logout").click(function(){
+        	$.post("/logout", {}, function(){
+        		window.location.href = '/views/frontviews/index.html';
+        	});
+        });
+        function imgError(image) {
+            image.onerror = "";
+            image.src = "/img/webimg/error.jpg";
+            return true;
+        }
+        
+        
+       
+        
+</script>
+</body>
+</html>
