@@ -209,17 +209,21 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 					type : "POST",
 					data : {serviceTime:serviceTime,serviceAmount:serviceAmount,expiredTime:serviceExpiredTime,companyId:currentSelectedCompanyId},
 					success : function(data) {
-						BUI.Message.Alert('修改成功！','success');
 						modifyCompanyPay.close();
-						loadMask.show();
-						$.ajax({
-							url : '/admin/getAllCompanyPayInfo',
-							type : "POST",
-							data : {},
-							success : function(data) {
-								createDataList(data);
-							}
-						});
+						if(data.result == "false") {
+							BUI.Message.Alert('修改失败，请检查权限！','warning');
+						} else {
+							BUI.Message.Alert('修改成功！','success');
+							loadMask.show();
+							$.ajax({
+								url : '/admin/getAllCompanyPayInfo',
+								type : "POST",
+								data : {},
+								success : function(data) {
+									createDataList(data);
+								}
+							});
+						}
 					},
 					error : function(data) {
 						BUI.Message.Alert('修改失败！','warning');

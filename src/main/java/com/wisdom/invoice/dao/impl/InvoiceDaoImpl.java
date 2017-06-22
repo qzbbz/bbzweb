@@ -338,7 +338,6 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 	}
 	@Override
 	public List<TestInvoiceRecord> getAllInvoicesByCompanyId(long companyId) {
-
 			List<TestInvoiceRecord> list = null;
 			try {
 				String sql = "select i.id as invoice_id, i.company_id as company_id, group_concat(a.type separator ', ') as type, sum(a.amount) as amount, sum(a.tax) as tax, i.created_time as created_time, i.is_fixed_assets as is_fixed_assets, i.bill_date as bill_date, a.supplier_name as supplier_name , i.file_name as file_name, i.status as status, a.number as number from test_invoice_artifact a  right join test_invoice i on i.item_id = a.item_id where  i.company_id = ?  group by i.id";
@@ -415,6 +414,19 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 		}
 		return list;
 	}
+	
+	@Override
+	public List<Map<String, Object>> getInvoiceByInvoiceId(long invoiceId) {
+		List<Map<String, Object>> listMap = null;
+		try {
+			String sql = "select ti.company_id, ti.file_name, ti.bill_date, ti.is_fixed_assets, tia.*  from test_invoice as ti RIGHT JOIN test_invoice_artifact as tia on ti.id = tia.invoice_id and ti.item_id = tia.item_id where ti.id=?";
+			listMap = jdbcTemplate.queryForList(sql, new Object[]{invoiceId});
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return listMap;
+	}
+	
 	@Override
 	public List<TestInvoice> getUngeneratedInvoices(Integer limit) {
 		List<TestInvoice> list = null;

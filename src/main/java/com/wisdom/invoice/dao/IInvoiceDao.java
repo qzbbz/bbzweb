@@ -49,6 +49,8 @@ public interface IInvoiceDao {
 	
 	public List<TestInvoiceRecord> getAllCompanyInvoicesByCompanyId(long companyId);
 	
+	public List<Map<String, Object>> getInvoiceByInvoiceId(long invoiceId);
+	
 	public List<TestInvoice> getUngeneratedInvoices(Integer limit);
 	
 	public boolean setInvoiceToGenerated(long invoiceId);

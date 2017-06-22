@@ -82,6 +82,10 @@ public class SessionFilterService extends OncePerRequestFilter {
 					if (uri.indexOf("/invoiceupload/") == -1)
 						noAuth = true;
 					break;
+				case 9:
+					if (uri.indexOf("/admin/") == -1)
+						noAuth = true;
+					break;
 				default:
 					noAuth = true;
 				}

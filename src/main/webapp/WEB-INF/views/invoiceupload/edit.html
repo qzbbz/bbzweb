@@ -140,14 +140,22 @@
 	</div>
 	<script src="/js/webjs/jquery-1.7.2.min.js"></script>
 	<script src="/js/webjs/jquery-ui.js"></script>
-	<script type="text/javascript" language="javascript"
-		src="/js/webjs/jquery.dataTables.min.js"></script>
+	<script src="/js/webjs/jquery.dataTables.min.js"></script>
 	<script src="/js/webjs/navigator.js"></script>
 	<script src="/js/webjs/jquery.guillotine.js"></script>
 	<script src="/js/webjs/jquery.loadmask.js"></script>
+	<script src="/js/webjs/navigator.js"></script>
 	<script>
-
-                
+	function checkJsonIsEmpty(json) {
+		var isEmpty = true;
+		if (json == null) return true;
+		for (var jsonKey in json) {
+			isEmpty = false;
+			break;
+		}
+		return isEmpty;
+	}
+	$("#navigator").append('<li><a class="link" href="javascript:void(0);">发票编辑</a></li>');   
 		var table =  $('#invoice').DataTable({
 			"bSort" : false,
       		"paging": false,
@@ -163,28 +171,7 @@
         	count = count + 1;
 
             table.row.add( ['<input id="supplier'+ count + '" class="autocomplete" type="text"/>','<input id="description'+count+'" class="autocomplete" type="text"/>','<input id="amount" class="autocomplete" type="text"/>','<input type="text" value="0"/>','<input type="text" value="1"/>',"<input type='button' class='delete' value='删除'/>" ] ).draw( false );
-        	$.post("/invoice/getCalculatedCandidatePhrase", {'type':'supplier', 'invoice_id':invoice_id}, function(data){
-        		var autocomplete = $("#supplier" + count).autocomplete( {source: data, minLength: 0
-        		});
-        			$("#supplier" + count).on("click", function(){
-        				$(this).autocomplete( "search", "" );
-        			});
-        		if(data){
-        			$("#supplier" + count).val(data[0]);
-        		}
-        	});
         	
-        	$.post("/invoice/getCalculatedCandidatePhrase", {'type':'description', 'invoice_id':invoice_id}, function(data){
-        		console.log("hello");
-        		var autocomplete = $("#description" + count).autocomplete( {source: data, minLength: 0
-        		});
-        			$("#description" + count).on("click", function(){
-        				$(this).autocomplete( "search", "" );
-        			});
-        		if(data){
-        			$("#description" + count).val(data[0]);
-        		}
-        	});
         });
         
         $("#invoice tbody").on('click', '.delete', function (){
@@ -205,128 +192,93 @@
         var id = "";
         var invoice_id = "";
         var companyName = "";
-        $.post('/invoice/getInvoiceForUser', {"status":"UNRECOGNIZED_INVOICE"}, function(data){
-        	console.log("hola");
-        	var isImageExisted = true;
-        	if(data.status == "nok"){
-        		alert("您的访问超时，请重新登录！");
-        		window.location.href = "/views/frontviews/index.html";
-        	}
-        	if(data.data == ""){
-        		isImageExisted = false;
-        	}
-        	if(isImageExisted == false){
-        		var invoicePath = "/img/webimg/not_available.jpg";
-        	}else{
-            	var result = $.parseJSON(data.data);
-        		var invoicePath = result[0]['path'];
-            	id = result[0]['id'];
-            	invoice_id = result[0]['invoice_id'];
-            	companyName = result[0]['company'];
-            	$("#company-name").html(companyName);
-            	console.log(companyName);
-            	
-            	//修改内容：用invoice_id查询artifact表，拿出识别数据
-            	$.post("/invoice/getArtifactByInvoiceId", {invoice_id:invoice_id}, function(data){
-            		var data = $.parseJSON(data.data);
-            		if(data != '') {
-            			for(var index in data) {
-                			table.row.add( ['<input id="supplier'+index+'" class="autocomplete" type="text" value="'+data[index]['supplier_name']+'"/>','<input id="type'+index+'" class="autocomplete" type="text" value="'+data[index]['type']+'"/>','<input id="amount'+index+'" class="autocomplete" type="text" value="'+data[index]['amount']+'"/>','<input id="tax'+index+'" type="text" value="'+data[index]['tax']+'"/>','<input id="number'+index+'" type="text" value="'+data[index]['number']+'"/>','<input type="button" id="'+data[index]['id']+'" class="delete" value="删除"/>' ] ).draw(false);
-                			count++;
-                		}
-            		} else {
-            			table.row.add( ['<input id="supplier'+count+'" class="autocomplete" type="text"/>','<input id="type'+count+'" class="autocomplete" type="text"/>','<input id="amount'+count+'" class="autocomplete" type="text"/>','<input id="tax'+count+'" type="text"/>','<input id="number'+count+'" type="text"/>','<input type="button" class="delete" value="删除"/>' ] ).draw(false);
-            		}
-            	});
-        	}
-        	
-        	$.post("/invoice/getCalculatedCandidatePhrase", {'type':'supplier', 'invoice_id':invoice_id}, function(data){
-        		var autocomplete = $("#supplier").autocomplete( {source: data, minLength: 0
-        		});
-        			$("#supplier").on("click", function(){
-        				$(this).autocomplete( "search", "" );
-        			});
-        		if(data){
-        			$("#supplier").val(data[0]);
-        		}
-        	});
-        	
-        	$.post("/invoice/getCalculatedCandidatePhrase", {'type':'description', 'invoice_id':invoice_id}, function(data){
-        		var autocomplete = $("#description").autocomplete( {source: data, minLength: 0
-        		});
-        			$("#description").on("click", function(){
-        				$(this).autocomplete( "search", "" );
-        			});
-        			$("#description").val(data[0]);
-        	});
-        
-        	$.post("/invoice/getCalculatedCandidatePhrase", {'type':'amount', 'invoice_id':invoice_id}, function(data){
-        		if(data){
-        			$("#amount").val(data[0]);
-        		}
-        	});
-        	
-             jQuery(function() {
-             	  var picture = $('#invoice-img')
+        (function ($) {
+            $.getUrlParam = function (name) {
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+                var r = window.location.search.substr(1).match(reg);
+                if (r != null) return unescape(r[2]); return null;
+            }
+        })(jQuery);
+		var invoiceId = $.getUrlParam('id');
+        $.ajax({
+			url: '/invoiceupload/invoiceUploadGetInvoiceByInvoiceId',
+			type: "POST",
+			data: {invoiceId:invoiceId},
+			success: function(data) {
+				if (!checkJsonIsEmpty(data)) {
+					var isFixed = false;
+					var imageFile = null;
+					for(var index in data) {
+						imageFile = "/files/company/" + data[index].file_name;
+						if(data[index].is_fixed_assets == "1") isFixed = true;
+						count = count + 1;
+			            table.row.add( ['<input id="supplier'+ count + '" class="autocomplete" type="text" value="'+data[index].supplier_name+'"/>','<input id="description'+count+'" class="autocomplete" type="text" value="'+data[index].type+'"/>','<input id="amount" class="autocomplete" type="text" value="'+data[index].amount+'"/>','<input type="text" value="'+data[index].tax+'"/>','<input type="text" value="'+data[index].number+'"/>',"<input type='button' class='delete' value='删除'/>" ] ).draw( false );
+					}
+					if(isFixed) {
+						$("#fa").attr("checked", true);
+					}
+					if(imageFile != null && imageFile != "") {
+						jQuery(function() {
+			             	  var picture = $('#invoice-img')
 
-             	  var camelize = function() {
-             	    var regex = /[\W_]+(.)/g
-             	    var replacer = function (match, submatch) { return submatch.toUpperCase() }
-             	    return function (str) { return str.replace(regex, replacer) }
-             	  }()
+			             	  var camelize = function() {
+			             	    var regex = /[\W_]+(.)/g
+			             	    var replacer = function (match, submatch) { return submatch.toUpperCase() }
+			             	    return function (str) { return str.replace(regex, replacer) }
+			             	  }()
 
-             	  var showData = function (data) {
-             	    data.scale = parseFloat(data.scale.toFixed(1))
-             	    for(var k in data) { $('#'+k).html(data[k]) }
-             	  }
+			             	  var showData = function (data) {
+			             	    data.scale = parseFloat(data.scale.toFixed(1))
+			             	    for(var k in data) { $('#'+k).html(data[k]) }
+			             	  }
 
-             	  picture.on('load', function() {
-             	    picture.guillotine({ eventOnChange: 'guillotinechange' })
-             	    picture.guillotine('fit')
-             	    //for (var i=0; i<5; i++) { picture.guillotine('zoomIn') }
+			             	  picture.on('load', function() {
+			             	    picture.guillotine({ eventOnChange: 'guillotinechange' })
+			             	    picture.guillotine('fit')
+			             	    //for (var i=0; i<5; i++) { picture.guillotine('zoomIn') }
 
-             	    // Show controls and data
-             	    $('.loading').remove()
-             	    $('.notice, #controls, #data').removeClass('hidden')
-             	    showData( picture.guillotine('getData') )
+			             	    // Show controls and data
+			             	    $('.loading').remove()
+			             	    $('.notice, #controls, #data').removeClass('hidden')
+			             	    showData( picture.guillotine('getData') )
 
-             	    // Bind actions
-             	    $('#controls a').click(function(e) {
-             	      e.preventDefault()
-             	      action = camelize(this.id)
-             	      picture.guillotine(action)
-             	    })
+			             	    // Bind actions
+			             	    $('#controls a').click(function(e) {
+			             	      e.preventDefault()
+			             	      action = camelize(this.id)
+			             	      picture.guillotine(action)
+			             	    })
 
-             	    // Update data on change
-             	    picture.on('guillotinechange', function(e, data, action) { showData(data) })
-             	  })
+			             	    // Update data on change
+			             	    picture.on('guillotinechange', function(e, data, action) { showData(data) })
+			             	  })
 
-             	  // Display random picture
-             	  picture.attr('src', invoicePath);
-                  //Double click zoom in the picture
-                  $("#invoice-img").on("dblclick", function(){
-                  	$(this).guillotine('zoomIn');
-                  	
-                  });
-             	});
-
-        });
-
+			             	  // Display random picture
+			             	  picture.attr('src', imageFile);
+			                  //Double click zoom in the picture
+			                  $("#invoice-img").on("dblclick", function(){
+			                  	$(this).guillotine('zoomIn');
+			                  	
+			                  });
+			             	});
+					}
+				}
+			},
+			error: function(status, error) {
+			}
+		});
         
         //Send the recognized data
         $("#submit").on("click", function(){
         	if($("#invalid").prop("checked")){
-        		$.post('/invoice/updateInvoiceStatus',{'id':id, 'status':'INVALID'}, function(data){
-        			if(data.status == 'ok'){
-        				alert("切换到下一张");
-        				window.location.reload();
-        			}
-        			else{
-        				alert("提交出错，请稍后再试！");
+        		$.post('/invoiceupload/invoiceUploadUpdateInvoiceStatus',{invoiceId:invoiceId, 'status':'INVALID'}, function(data){
+        			if(data.error != "0") {
+        				alert("提交失败，失败原因："+data.msg);
+        			} else {
+        				alert("提交成功！");
         			}
         		});
         	}else{
-        		
         		//Need to apply a mask since the response is a bit slow
         		$("body").mask("正在上传数据，请等待...");
         		var resultList = [];
@@ -346,39 +298,23 @@
         			FA = "yes";
         		}
         		if(resultList.length == 0) {
-        			alert("没有数据，请重新填写！");	
-        			window.location.reload();
+        			alert("没有数据，请重新填写！");
         		}
-        		$.post('/invoice/updateInvoiceContent', {"data": JSON.stringify(resultList), 'FA':FA, "id":id}, function(data){
-        			if(data.status == 'ok'){
-        				$("body").unmask();
-        				alert("切换到下一张");
+        		$.post('/invoiceupload/invoiceUploadAddInvoiceData', {"data": JSON.stringify(resultList), 'FA':FA, "id":invoiceId}, function(data){
+        			if(data.error != "0") {
+        				alert("提交失败，失败原因："+data.msg);
+        			} else {
+        				alert("提交成功！");
         				window.location.reload();
-        			}
-        			else{
-        				$("body").umask();
-        				alert("提交出错，请稍后再试！");
         			}
         		});
         	}
-        });
-        
-
-        
-        $("#logout").click(function(){
-        	$.post("/logout", {}, function(){
-        		window.location.href = '/views/frontviews/index.html';
-        	});
         });
         function imgError(image) {
             image.onerror = "";
             image.src = "/img/webimg/error.jpg";
             return true;
-        }
-        
-        
-       
-        
+        }        
 </script>
 </body>
 </html>

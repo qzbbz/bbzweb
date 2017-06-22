@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -28,6 +29,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wisdom.accounter.service.IAccounterService;
 import com.wisdom.common.model.Accounter;
 import com.wisdom.common.model.Company;
@@ -43,9 +49,13 @@ import com.wisdom.company.service.ICompanyBillService;
 import com.wisdom.company.service.ICompanyDetailService;
 import com.wisdom.company.service.ICompanyPayService;
 import com.wisdom.company.service.ICompanyService;
+import com.wisdom.dispatch.service.IDispatcherService;
+import com.wisdom.invoice.dao.IInvoiceDao;
+import com.wisdom.invoice.service.IInvoiceService;
 import com.wisdom.user.dao.IUserQueryDao;
 import com.wisdom.user.service.IUserService;
 import com.wisdom.web.api.ICompanyBillApi;
+import com.wisdom.web.utils.SessionConstant;
 
 @Controller
 public class AdminController {
@@ -53,6 +63,10 @@ public class AdminController {
 	private static final Logger logger = LoggerFactory
 			.getLogger(AdminController.class);
 
+	@Autowired IInvoiceService invoiceService;
+	
+	@Autowired IDispatcherService dispatcherService;
+	
 	@Autowired
 	private ICompanyPayService companyPayService;
 	
@@ -70,6 +84,9 @@ public class AdminController {
 	
 	@Autowired
 	private IUserQueryDao userQueryDao;
+	
+	@Autowired
+	private IInvoiceDao invoiceDao;
 	
 	@Autowired
 	private ICompanyBillApi companyBillApi;
@@ -458,12 +475,23 @@ public class AdminController {
 	@RequestMapping("/admin/modifyCompanyPayInfo")
 	@ResponseBody
 	public Map<String, String> modifyCompanyPayInfo(HttpServletRequest request) {
+		Map<String, String> retMap = new HashMap<>();
+		Object userTypeObj = request.getSession().getAttribute(SessionConstant.SESSION_USER_TYPE);
+		boolean isSuperAdmin = false;
+		try {
+			int userType = (Integer)userTypeObj;
+			if(userType == 3) isSuperAdmin = true;
+		} catch(Exception ex) {
+			logger.error(ex.toString());
+		}
+		if(!isSuperAdmin) {
+			retMap.put("result", "false");
+			return retMap;
+		}
 		String serviceTime = request.getParameter("serviceTime");
 		String serviceAmount = request.getParameter("serviceAmount");
 		Long companyId = Long.valueOf(request.getParameter("companyId"));
 		String serviceExpiredTime = request.getParameter("expiredTime");
-		
-		Map<String, String> retMap = new HashMap<>();
 		CompanyPay cp = companyPayService.getCompanyPayByCompanyId(companyId);
 		boolean success = false;
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -582,6 +610,94 @@ public class AdminController {
 			retMap.put("error_code", "0");
 		} else {
 			retMap.put("error_code", "1");
+		}
+		return retMap;
+	}
+	
+	@RequestMapping("/invoiceupload/invoiceUploadGetInvoiceByInvoiceId")
+	@ResponseBody
+	public List<Map<String, Object>> invoiceUploadGetInvoiceByInvoiceId(HttpServletRequest request) {
+		List<Map<String, Object>> listMap = null;
+		String id = (String) request.getParameter("invoiceId");
+		long invoiceId = -1;
+		try {
+			invoiceId = Long.valueOf(id);
+		} catch(Exception ex) {
+			logger.error(ex.toString());
+		}
+		if(invoiceId == -1) return listMap;
+		listMap = invoiceDao.getInvoiceByInvoiceId(invoiceId);
+		return listMap;
+	}
+	
+	@RequestMapping("/invoiceupload/invoiceUploadUpdateInvoiceStatus")
+	@ResponseBody
+	public Map<String, String> invoiceUploadUpdateInvoiceStatus(HttpServletRequest request) {
+		String status = "INVALID";
+		String id = (String) request.getParameter("invoiceId");
+		Map<String, String> retMap = new HashMap<>();
+		long invoiceId = -1;
+		try {
+			invoiceId = Long.valueOf(id);
+		} catch(Exception ex) {
+			logger.error(ex.toString());
+		}
+		if(invoiceId == -1) {
+			retMap.put("error", "1");
+			retMap.put("msg", "invoice id 不正确！");
+			return retMap;
+		}
+		if(invoiceService.updateInvoiceStatus(invoiceId, status)) {
+			retMap.put("error", "0");
+			retMap.put("msg", "");
+			return retMap;
+		} else {
+			retMap.put("error", "1");
+			retMap.put("msg", "更新数据库失败！");
+			return retMap;
+		}
+	}
+	
+	@RequestMapping("/invoiceupload/invoiceUploadAddInvoiceData")
+	@ResponseBody
+	public Map<String, String> invoiceUploadAddInvoiceData(HttpServletRequest request) {
+		String dataStr = request.getParameter("data");
+		String fa = request.getParameter("FA");
+		String invoiceIdStr = request.getParameter("id");
+		Map<String, String> retMap = new HashMap<>();
+        boolean fA = false;
+        if(("yes").equals(fa)){
+        	fA = true;
+        }		
+        long invoiceId = -1;
+        try {
+        	invoiceId = Long.parseLong(invoiceIdStr);
+        } catch(Exception ex) {
+        	logger.error(ex.toString());
+        }
+        if(invoiceId == -1) {
+        	retMap.put("error", "1");
+			retMap.put("msg", "invoice id 不正确！");
+			return retMap;
+        }
+	    JsonFactory factory2 = new JsonFactory();        
+	    ObjectMapper mapper2 = new ObjectMapper(factory2);
+        String contentStr = dataStr;
+        TypeReference<List<HashMap<String,Object>>> typeRef = new TypeReference<List<HashMap<String,Object>>>() {};
+        List<Map<String, String>> content;
+		try {
+			content = mapper2.readValue(contentStr, typeRef);
+			 String requestId = UUID.randomUUID().toString();
+		     logger.debug("invoiceId, fA, requestId : {},{},{}", invoiceId, fA, requestId);
+		     invoiceService.setIsFAOfInvoice(invoiceId, fA, requestId);
+			 invoiceService.addInvoiceArtifact(invoiceId, content, requestId);
+			 dispatcherService.updateDispatcherStatus(invoiceId, 0);
+			 retMap.put("error", "0");
+				retMap.put("msg", "提交成功！");
+		} catch (IOException ex) {
+			logger.error(ex.toString());
+			retMap.put("error", "1");
+			retMap.put("msg", "提交失败！错误原因：" + ex.toString());
 		}
 		return retMap;
 	}

@@ -191,7 +191,7 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 			if (!checkJsonIsEmpty(data)) {
 				companyData = data;
 				for(var index in data) {
-					$("#companylist").append("<option value='"+data[index].id+"'>" + data[index].name + "</option>");
+					$("#companylist").append("<option value='"+data[index].id+"'>("+data[index].id+")" + data[index].name + "</option>");
 				}
 			}
 		},
