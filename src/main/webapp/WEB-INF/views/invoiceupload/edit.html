@@ -212,7 +212,7 @@
 						imageFile = "/files/company/" + data[index].file_name;
 						if(data[index].is_fixed_assets == "1") isFixed = true;
 						count = count + 1;
-			            table.row.add( ['<input id="supplier'+ count + '" class="autocomplete" type="text" value="'+data[index].supplier_name+'"/>','<input id="description'+count+'" class="autocomplete" type="text" value="'+data[index].type+'"/>','<input id="amount" class="autocomplete" type="text" value="'+data[index].amount+'"/>','<input type="text" value="'+data[index].tax+'"/>','<input type="text" value="'+data[index].number+'"/>',"<input type='button' class='delete' value='删除'/>" ] ).draw( false );
+			            table.row.add( ['<input id="supplier'+ count + '" class="autocomplete" type="text" value="'+(data[index].supplier_name == null ? "" : data[index].supplier_name)+'"/>','<input id="description'+count+'" class="autocomplete" type="text" value="'+(data[index].type==null?"":data[index].type)+'"/>','<input id="amount" class="autocomplete" type="text" value="'+(data[index].amount==null?"":data[index].amount)+'"/>','<input type="text" value="'+(data[index].tax==null?"":data[index].tax)+'"/>','<input type="text" value="'+(data[index].number==null?"":data[index].number)+'"/>',"<input type='button' class='delete' value='删除'/>" ] ).draw( false );
 					}
 					if(isFixed) {
 						$("#fa").attr("checked", true);

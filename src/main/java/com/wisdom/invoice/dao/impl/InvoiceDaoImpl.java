@@ -419,7 +419,7 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 	public List<Map<String, Object>> getInvoiceByInvoiceId(long invoiceId) {
 		List<Map<String, Object>> listMap = null;
 		try {
-			String sql = "select ti.company_id, ti.file_name, ti.bill_date, ti.is_fixed_assets, tia.*  from test_invoice as ti RIGHT JOIN test_invoice_artifact as tia on ti.id = tia.invoice_id and ti.item_id = tia.item_id where ti.id=?";
+			String sql = "select ti.company_id, ti.file_name, ti.bill_date, ti.is_fixed_assets, tia.*  from test_invoice as ti LEFT JOIN test_invoice_artifact as tia on ti.id = tia.invoice_id and ti.item_id = tia.item_id where ti.id=?";
 			listMap = jdbcTemplate.queryForList(sql, new Object[]{invoiceId});
 		} catch (Exception e) {
 			logger.error(e.toString());
