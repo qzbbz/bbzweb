@@ -289,7 +289,9 @@
         			var amount = $(this).children().eq(2).find('input');
         			if(amount.val() == '') return;
         			var tax = $(this).children().eq(3).find('input');
+        			if(tax.val() == '') tax.val('0');
         			var number = $(this).children().eq(4).find('input');
+        			if(number.val() == '') number.val('1');
         			var id = $(this).children().eq(5).find('input');
         			resultList.push({'supplier': supplier.val(), 'description':description.val(), 'amount':amount.val(), 'tax':tax.val(), 'number':number.val(), 'id':id.attr('id')});
         		});

@@ -344,6 +344,10 @@ document.getElementById("fapiaoluru_addInvoiceImage").onchange = function(event)
 
 
 function bindRightSliderEvent() {
+	mui('.mui-table-view').on('tap', '.mui-slider-right', function(event) {
+		alert(111);
+	});
+	return;
 	mui('.mui-table-view').on('slideleft', '.mui-table-view-cell', function(event) {
 		console.log($(this).find("img"));
 		try{

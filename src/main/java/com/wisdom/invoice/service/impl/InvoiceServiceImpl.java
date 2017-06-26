@@ -927,11 +927,15 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		// invoiceDao.deleteInvoiceArtifactByInvoiceId(invoiceId, itemId);
 		for (Map<String, String> row : content) {
 			String type = row.get("description");
+			try {
 			double amount = Double.parseDouble(row.get("amount"));
 			String supplierName = row.get("supplier");
 			double tax = Double.parseDouble(row.get("tax"));
 			Integer number = Integer.parseInt(row.get("number"));
 			invoiceDao.addInvoiceArtifact(invoiceId, amount, type, supplierName, tax, itemId, number);
+			} catch(Exception ex) {
+				logger.error(ex.toString());
+			}
 		}
 		return true;
 	}
