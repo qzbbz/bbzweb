@@ -134,12 +134,12 @@ public class AccounterDaoImpl implements IAccounterDao {
 	}
 
 	@Override
-	public List<CustomerManagement> getAllCustomer() {
+	public List<CustomerManagement> getAllCustomer(String accounterId) {
 		List<CustomerManagement> list = null;
 		try {
 			//String sql = "SELECT * from(SELECT c1.id,c1.name,s.create_time,c1.tax_status,c2.expired_time,u.user_name FROM company AS c1 LEFT JOIN company_pay AS c2 ON c1.id = c2.company_id LEFT JOIN sheet_balance AS s ON c1.id = s.company_id LEFT JOIN `user` AS u ON c1.accounter_id = u.user_id WHERE LENGTH(c1.accounter_id)<>0  ORDER  BY s.create_time DESC ) AS ss  GROUP BY ss.name";
-			String sql = "select * from (SELECT * from(SELECT c1.id,c1.name,s.create_time,c1.tax_status,c2.expired_time,u.user_name FROM company AS c1 LEFT JOIN company_pay AS c2 ON c1.id = c2.company_id LEFT JOIN sheet_balance AS s ON c1.id = s.company_id LEFT JOIN `user` AS u ON c1.accounter_id = u.user_id WHERE LENGTH(c1.accounter_id)<>0  ORDER  BY s.create_time DESC ) AS ss  GROUP BY ss.name) as final LEFT JOIN (select *, count(ctb.company_id) as comment_count from customer_taobao as ctb where date_format(ctb.create_time, '%Y-%m-%d') >= date_format(date_sub(sysdate(), interval 1 month), '%Y-%m-%d') group by ctb.company_id) as tmp on final.id=tmp.company_id";
-			list = jdbcTemplate.query(sql,
+			String sql = "select * from (SELECT * from(SELECT c1.id,c1.name,s.create_time,c1.tax_status,c2.expired_time,u.user_name FROM company AS c1 LEFT JOIN company_pay AS c2 ON c1.id = c2.company_id LEFT JOIN sheet_balance AS s ON c1.id = s.company_id LEFT JOIN `user` AS u ON c1.accounter_id = u.user_id WHERE c1.accounter_id=? and LENGTH(c1.accounter_id)<>0  ORDER  BY s.create_time DESC ) AS ss  GROUP BY ss.name) as final LEFT JOIN (select *, count(ctb.company_id) as comment_count from customer_taobao as ctb where date_format(ctb.create_time, '%Y-%m-%d') >= date_format(date_sub(sysdate(), interval 1 month), '%Y-%m-%d') group by ctb.company_id) as tmp on final.id=tmp.company_id";
+			list = jdbcTemplate.query(sql, new Object[]{accounterId},
 					new RowMapperResultSetExtractor<CustomerManagement>(
 							new CustomerManagementMapper()));
 		} catch (Exception e) {

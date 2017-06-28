@@ -48,7 +48,7 @@ public interface IAccounterService {
 	
 	public Map<String, String> getTakeBillWay(String companyId);
 	
-	public List<Map<String, String>>  getAllCustomer();
+	public List<Map<String, String>>  getAllCustomer(String accounterId);
 
 	public List<Map<String, Object>> getAllCompanyExpenseDataTable(String userId, int start, int length);
 

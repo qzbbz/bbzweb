@@ -156,7 +156,9 @@ public class AccounterController {
 	@ResponseBody
 	public List<Map<String, String>> getCustomerManagementDetails(HttpServletRequest request) {
 		logger.debug("enter getCustomerManagementDetails");
-		List<Map<String, String>> retMap = accounterService.getAllCustomer();
+		String userId = (String) request.getSession().getAttribute(
+				SessionConstant.SESSION_USER_ID);
+		List<Map<String, String>> retMap = accounterService.getAllCustomer(userId);
 		logger.debug("returen CustomerManagementDetails list size: {}", retMap.size());
 		return retMap;
 		

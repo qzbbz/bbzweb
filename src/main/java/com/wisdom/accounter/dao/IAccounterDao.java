@@ -26,7 +26,7 @@ public interface IAccounterDao {
 	
 	public boolean isAccounterExistByUserId(String userId);
 	
-	public List<CustomerManagement> getAllCustomer();
+	public List<CustomerManagement> getAllCustomer(String accounterId);
 
 	public List<Map<String, Object>> getAllCompanyExpense(String userId, int start, int length);
 

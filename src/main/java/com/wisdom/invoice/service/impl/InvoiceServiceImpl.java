@@ -244,7 +244,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		Invoice invoice = new Invoice();
 		invoice.setCostCenter(costCenterCode);
 		invoice.setStatus(InvoiceStatus.DRAFT); // 微信上传默认为草稿
-
+		
 		log.debug("addInvoiceRevord");
 		Long invoiceId = singleInvoiceService.addInvoiceRecord(invoice);
 		if (null == invoiceId || invoiceId.longValue() == -1) {

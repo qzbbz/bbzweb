@@ -746,10 +746,10 @@ public class AccounterServiceImpl implements IAccounterService {
 	}
 
 	@Override
-	public List<Map<String, String>>  getAllCustomer() {
+	public List<Map<String, String>>  getAllCustomer(String accounterId) {
 		List<Map<String, String>> retList = new ArrayList<>();
 		Map<String, String> map = new HashMap<>();
-		List<CustomerManagement> list = accounterDao.getAllCustomer();
+		List<CustomerManagement> list = accounterDao.getAllCustomer(accounterId);
 		for (CustomerManagement c : list) {
 			retList.add(customerToMap(c));
 		}
