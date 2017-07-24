@@ -249,9 +249,9 @@
 						<p style="margin-top: -5px;margin-left: 10px;">添加发票图像</p>
 					</div>
 				</div>
-				<div class="mui-pull-right" style="margin-top:5px;">
-					<input id="fapiaoluru_addInvoiceImage" type="file" accept="image/*" multiple="true" hidefocus='true' style="position: absolute;float:right;width:50px;height:50px;opacity: 0;">
-					<span class="mui-icon iconfont icon-tianjia" style="font-size: 70px;color:#C3C3C6;margin-top:-10px;margin-right:5px;"></span>
+				<div class="mui-pull-right" style="margin-top:5px;" id="os_andr">
+					<!-- <input id="fapiaoluru_addInvoiceImage" type="file" accept="image/*;capture=camera" multiple="true" hidefocus='true' style="position: absolute;float:right;width:50px;height:50px;opacity: 0;"> -->
+					<!-- <span class="mui-icon iconfont icon-tianjia" style="font-size: 70px;color:#C3C3C6;margin-top:-10px;margin-right:5px;"></span> -->
 				</div>
 			</div>
 			<div id="tips_image" class="mui-control-content mui-active" style="display:none;height:260px;">
@@ -280,6 +280,7 @@
 	<script src="/js/weixinjs/mui.poppicker.min.js"></script>
 	<!-- <script src="../../js/weixinjs/person_upload_invoice.js?201806260945"></script> -->
 	<script>
+	
 	var companyPicker = new mui.PopPicker();
 	function checkJsonIsEmpty(json) {
 		var isEmpty = true;
@@ -502,127 +503,7 @@
 	});
 
 	var inputIndex = 0;
-	document.getElementById("fapiaoluru_addInvoiceImage").onchange = function(event) {
-		inputIndex = inputIndex + 1;
-		document.getElementById('tips_image').style.display = 'none';
-		document.getElementById('invoice_img_list_root_div').style.display = '';
-		/*document.getElementById('invoice_img_list_root_div').style.height = window.screen.availHeight - 198 + "px";*/
-		var imageRootNode = document.getElementById('invoice_img_list_ul');	
-		/*var liNode = document.createElement('li');
-		liNode.setAttribute("class", "mui-media mui-table-view-cell");
-		var imgNode = document.createElement('img');
-		imgNode.setAttribute('class', 'mui-pull-left');
-		imgNode.setAttribute('data-preview-group', '1');
-		imgNode.setAttribute('data-preview-src', '');
-		imgNode.style.width = '100px';
-		imgNode.style.height = '80px';
-		imgNode.style.maxWidth = '100px';
-		liNode.appendChild(imgNode);
-		var inputRootNode = document.createElement('div');
-		inputRootNode.setAttribute('class', 'mui-media-body');
-		var inputAmountNode = document.createElement('div');
-		inputAmountNode.style.marginTop = "0px";
-		inputAmountNode.style.marginLeft = "5px";
-		inputAmountNode.style.height = "45px";
-		inputAmountNode.style.color = "#8f8f94";
-		//inputAmountNode.innerHTML = "发票金额:<span class='mui-pull-right' ><span class='fapiaoluru_amount' id='fapiaoluru_amount_"+inputIndex+"'>0</span><span class='mui-icon mui-icon-arrowright' style='font-size: 20px;margin-top:0px;display:inline-block'></span></span>";
-		inputAmountNode.innerHTML = "<span>发票金额:</span><span class='mui-pull-right' style='height:20px;'><input class='fapiaoluru_amount' type='text' style='width:100%;height:20px;padding-top:0px;padding-bottom:0px;'/></span>";
-		var inputTypeNode = document.createElement('div');
-		inputTypeNode.style.marginTop = "5px";
-		inputTypeNode.style.marginLeft = "5px";
-		inputTypeNode.style.color = "#8f8f94";
-		inputTypeNode.innerHTML = "发票类型:<span class='mui-pull-right' ><span class='fapiaoluru_type' id='fapiaoluru_type_"+inputIndex+"'>选择</span><span class='mui-icon mui-icon-arrowright' style='font-size: 20px;margin-top:0px;display:inline-block'></span></span>";
-		inputRootNode.appendChild(inputAmountNode);
-		inputRootNode.appendChild(inputTypeNode);
-		liNode.appendChild(inputRootNode);
-		inputTypeNode.addEventListener('tap', function(event) {
-			var ele = this.childNodes[1].childNodes[0];
-			invoiceTypePicker.show(function(items) {
-				ele.innerText = items[0].text;
-			});
-		}, false);
-		imageRootNode.appendChild(liNode);*/
-		var files = event.target.files,
-			file;
-		if (files && files.length > 0) {
-			for(var i=0; i<files.length; i++) {
-				var liNode = document.createElement('li');
-				liNode.setAttribute("class", "mui-media mui-table-view-cell");
-				liNode.innerHTML = "<div class='mui-slider-right mui-disabled invoice_cancel'><a class='mui-btn mui-btn-red'>作废</a></div>";
-				var slideNode = document.createElement('div');
-				slideNode.setAttribute('class', 'mui-slider-handle');
-				var imgNode = document.createElement('img');
-				imgNode.setAttribute('class', 'mui-pull-left');
-				imgNode.setAttribute('data-preview-group', '1');
-				imgNode.setAttribute('data-preview-src', '');
-				imgNode.style.width = '100px';
-				imgNode.style.height = '80px';
-				imgNode.style.maxWidth = '100px';
-				slideNode.appendChild(imgNode);
-				var inputRootNode = document.createElement('div');
-				inputRootNode.setAttribute('class', 'mui-media-body');
-				var inputAmountNode = document.createElement('div');
-				inputAmountNode.style.marginTop = "0px";
-				inputAmountNode.style.marginLeft = "5px";
-				inputAmountNode.style.height = "45px";
-				inputAmountNode.style.color = "#8f8f94";
-				//inputAmountNode.innerHTML = "发票金额:<span class='mui-pull-right' ><span class='fapiaoluru_amount' id='fapiaoluru_amount_"+inputIndex+"'>0</span><span class='mui-icon mui-icon-arrowright' style='font-size: 20px;margin-top:0px;display:inline-block'></span></span>";
-				inputAmountNode.innerHTML = "<span>发票金额:</span><span class='mui-pull-right' style='height:30px;'><input class='fapiaoluru_amount' type='text' style='width:100px;height:30px;padding-top:0px;padding-bottom:0px;'/></span>";
-				var inputTypeNode = document.createElement('div');
-				inputTypeNode.style.marginTop = "5px";
-				inputTypeNode.style.marginLeft = "5px";
-				inputTypeNode.style.color = "#8f8f94";
-				inputTypeNode.innerHTML = "发票类型:<span class='mui-pull-right' ><span class='fapiaoluru_type' id='fapiaoluru_type_"+inputIndex+"'>选择</span><span class='mui-icon mui-icon-arrowright' style='font-size: 20px;margin-top:0px;display:inline-block'></span></span>";
-				inputRootNode.appendChild(inputAmountNode);
-				inputRootNode.appendChild(inputTypeNode);
-
-				slideNode.appendChild(inputRootNode);
-				//liNode.innerHTML += "</div>";
-				liNode.appendChild(slideNode);
-				inputTypeNode.addEventListener('tap', function(event) {
-					var ele = this.childNodes[1].childNodes[0];
-					invoiceTypePicker.show(function(items) {
-						ele.innerText = items[0].text;
-					});
-				}, false);
-				imageRootNode.appendChild(liNode);				
-				file = files[i];
-				$(".fapiaoluru_amount").keyup(function(){
-					var amount = 0;
-					$(".fapiaoluru_amount").each(function(){
-						var elem = parseFloat($(this).val());
-						
-						if(!isNaN(elem)){
-							amount += elem;
-						}
-
-					});
-					amount = amount.toFixed(2);
-					$("#total_amount").html("发票总额： " + amount + "元");
-				});
-				try {
-					var URL = window.URL || window.webkitURL;
-					imgURL = URL.createObjectURL(file);
-					imgNode.src = imgURL;
-					invoiceList[imgURL] = file;//document.getElementById('fapiaoluru_addInvoiceImage').files[0];
-					//URL.revokeObjectURL(imgURL);
-				} catch (e) {
-					try {
-						var fileReader = new FileReader();
-						fileReader.onload = function(event) {
-							imgNode.src = event.target.result;
-							invoiceList[imgNode.src] = file;//document.getElementById('fapiaoluru_addInvoiceImage').files[0];
-						};
-						fileReader.readAsDataURL(file);
-					} catch (e) {
-						alert("Neither createObjectURL or FileReader are supported");
-					}
-				}
-			}
-		}
-		console.log(invoiceList);
-		bindRightSliderEvent();
-	}
+	
 
 
 	function bindRightSliderEvent() {
@@ -781,6 +662,138 @@
 	    	document.getElementById("tips_info").style.display = "";
 	    } 
 	});
+	window.onload = function () {
+	    var u = navigator.userAgent;
+	    if (u.indexOf('Android') > -1 || u.indexOf('Linux') > -1) {//安卓手机
+	    	$("#os_andr").prepend("<input id='fapiaoluru_addInvoiceImage' type='file' capture='camera' accept='image/*' multiple='true' hidefocus='true' style='position: absolute;float:right;width:50px;height:50px;opacity: 0;'><span class='mui-icon iconfont icon-tianjia' style='font-size: 70px;color:#C3C3C6;margin-top:0px;margin-right:5px;'></span>");
+	    // window.location.href = "mobile/index.html";
+	    } else if (u.indexOf('iPhone') > -1) {//苹果手机
+	    // window.location.href = "mobile/index.html";
+	    	$("#os_andr").prepend("<input id='fapiaoluru_addInvoiceImage' type='file' accept='image/*;capture=camera' multiple='true' hidefocus='true' style='position: absolute;float:right;width:50px;height:50px;opacity: 0;'><span class='mui-icon iconfont icon-tianjia' style='font-size: 70px;color:#C3C3C6;margin-top:-10px;margin-right:5px;'></span>");
+	    } else if (u.indexOf('Windows Phone') > -1) {//winphone手机
+	    	$("#os_andr").prepend("<input id='fapiaoluru_addInvoiceImage' type='file' capture='camera' accept='image/*;' multiple='true' hidefocus='true' style='position: absolute;float:right;width:50px;height:50px;opacity: 0;'>");
+	    }
+	    document.getElementById("fapiaoluru_addInvoiceImage").onchange = function(event) {
+			inputIndex = inputIndex + 1;
+			document.getElementById('tips_image').style.display = 'none';
+			document.getElementById('invoice_img_list_root_div').style.display = '';
+			/*document.getElementById('invoice_img_list_root_div').style.height = window.screen.availHeight - 198 + "px";*/
+			var imageRootNode = document.getElementById('invoice_img_list_ul');	
+			/*var liNode = document.createElement('li');
+			liNode.setAttribute("class", "mui-media mui-table-view-cell");
+			var imgNode = document.createElement('img');
+			imgNode.setAttribute('class', 'mui-pull-left');
+			imgNode.setAttribute('data-preview-group', '1');
+			imgNode.setAttribute('data-preview-src', '');
+			imgNode.style.width = '100px';
+			imgNode.style.height = '80px';
+			imgNode.style.maxWidth = '100px';
+			liNode.appendChild(imgNode);
+			var inputRootNode = document.createElement('div');
+			inputRootNode.setAttribute('class', 'mui-media-body');
+			var inputAmountNode = document.createElement('div');
+			inputAmountNode.style.marginTop = "0px";
+			inputAmountNode.style.marginLeft = "5px";
+			inputAmountNode.style.height = "45px";
+			inputAmountNode.style.color = "#8f8f94";
+			//inputAmountNode.innerHTML = "发票金额:<span class='mui-pull-right' ><span class='fapiaoluru_amount' id='fapiaoluru_amount_"+inputIndex+"'>0</span><span class='mui-icon mui-icon-arrowright' style='font-size: 20px;margin-top:0px;display:inline-block'></span></span>";
+			inputAmountNode.innerHTML = "<span>发票金额:</span><span class='mui-pull-right' style='height:20px;'><input class='fapiaoluru_amount' type='text' style='width:100%;height:20px;padding-top:0px;padding-bottom:0px;'/></span>";
+			var inputTypeNode = document.createElement('div');
+			inputTypeNode.style.marginTop = "5px";
+			inputTypeNode.style.marginLeft = "5px";
+			inputTypeNode.style.color = "#8f8f94";
+			inputTypeNode.innerHTML = "发票类型:<span class='mui-pull-right' ><span class='fapiaoluru_type' id='fapiaoluru_type_"+inputIndex+"'>选择</span><span class='mui-icon mui-icon-arrowright' style='font-size: 20px;margin-top:0px;display:inline-block'></span></span>";
+			inputRootNode.appendChild(inputAmountNode);
+			inputRootNode.appendChild(inputTypeNode);
+			liNode.appendChild(inputRootNode);
+			inputTypeNode.addEventListener('tap', function(event) {
+				var ele = this.childNodes[1].childNodes[0];
+				invoiceTypePicker.show(function(items) {
+					ele.innerText = items[0].text;
+				});
+			}, false);
+			imageRootNode.appendChild(liNode);*/
+			var files = event.target.files,
+				file;
+			if (files && files.length > 0) {
+				for(var i=0; i<files.length; i++) {
+					var liNode = document.createElement('li');
+					liNode.setAttribute("class", "mui-media mui-table-view-cell");
+					liNode.innerHTML = "<div class='mui-slider-right mui-disabled invoice_cancel'><a class='mui-btn mui-btn-red'>作废</a></div>";
+					var slideNode = document.createElement('div');
+					slideNode.setAttribute('class', 'mui-slider-handle');
+					var imgNode = document.createElement('img');
+					imgNode.setAttribute('class', 'mui-pull-left');
+					imgNode.setAttribute('data-preview-group', '1');
+					imgNode.setAttribute('data-preview-src', '');
+					imgNode.style.width = '100px';
+					imgNode.style.height = '80px';
+					imgNode.style.maxWidth = '100px';
+					slideNode.appendChild(imgNode);
+					var inputRootNode = document.createElement('div');
+					inputRootNode.setAttribute('class', 'mui-media-body');
+					var inputAmountNode = document.createElement('div');
+					inputAmountNode.style.marginTop = "0px";
+					inputAmountNode.style.marginLeft = "5px";
+					inputAmountNode.style.height = "45px";
+					inputAmountNode.style.color = "#8f8f94";
+					//inputAmountNode.innerHTML = "发票金额:<span class='mui-pull-right' ><span class='fapiaoluru_amount' id='fapiaoluru_amount_"+inputIndex+"'>0</span><span class='mui-icon mui-icon-arrowright' style='font-size: 20px;margin-top:0px;display:inline-block'></span></span>";
+					inputAmountNode.innerHTML = "<span>发票金额:</span><span class='mui-pull-right' style='height:30px;'><input class='fapiaoluru_amount' type='text' style='width:100px;height:30px;padding-top:0px;padding-bottom:0px;'/></span>";
+					var inputTypeNode = document.createElement('div');
+					inputTypeNode.style.marginTop = "5px";
+					inputTypeNode.style.marginLeft = "5px";
+					inputTypeNode.style.color = "#8f8f94";
+					inputTypeNode.innerHTML = "发票类型:<span class='mui-pull-right' ><span class='fapiaoluru_type' id='fapiaoluru_type_"+inputIndex+"'>选择</span><span class='mui-icon mui-icon-arrowright' style='font-size: 20px;margin-top:0px;display:inline-block'></span></span>";
+					inputRootNode.appendChild(inputAmountNode);
+					inputRootNode.appendChild(inputTypeNode);
 
+					slideNode.appendChild(inputRootNode);
+					//liNode.innerHTML += "</div>";
+					liNode.appendChild(slideNode);
+					inputTypeNode.addEventListener('tap', function(event) {
+						var ele = this.childNodes[1].childNodes[0];
+						invoiceTypePicker.show(function(items) {
+							ele.innerText = items[0].text;
+						});
+					}, false);
+					imageRootNode.appendChild(liNode);				
+					file = files[i];
+					$(".fapiaoluru_amount").keyup(function(){
+						var amount = 0;
+						$(".fapiaoluru_amount").each(function(){
+							var elem = parseFloat($(this).val());
+							
+							if(!isNaN(elem)){
+								amount += elem;
+							}
+
+						});
+						amount = amount.toFixed(2);
+						$("#total_amount").html("发票总额： " + amount + "元");
+					});
+					try {
+						var URL = window.URL || window.webkitURL;
+						imgURL = URL.createObjectURL(file);
+						imgNode.src = imgURL;
+						invoiceList[imgURL] = file;//document.getElementById('fapiaoluru_addInvoiceImage').files[0];
+						//URL.revokeObjectURL(imgURL);
+					} catch (e) {
+						try {
+							var fileReader = new FileReader();
+							fileReader.onload = function(event) {
+								imgNode.src = event.target.result;
+								invoiceList[imgNode.src] = file;//document.getElementById('fapiaoluru_addInvoiceImage').files[0];
+							};
+							fileReader.readAsDataURL(file);
+						} catch (e) {
+							alert("Neither createObjectURL or FileReader are supported");
+						}
+					}
+				}
+			}
+			console.log(invoiceList);
+			bindRightSliderEvent();
+		}
+	}
 	</script>
 </html>
