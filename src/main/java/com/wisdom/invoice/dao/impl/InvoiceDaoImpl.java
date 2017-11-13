@@ -340,7 +340,7 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 	public List<TestInvoiceRecord> getAllInvoicesByCompanyId(long companyId) {
 			List<TestInvoiceRecord> list = null;
 			try {
-				String sql = "select i.id as invoice_id, i.company_id as company_id, group_concat(a.type separator ', ') as type, sum(a.amount) as amount, sum(a.tax) as tax, i.created_time as created_time, i.is_fixed_assets as is_fixed_assets, i.bill_date as bill_date, a.supplier_name as supplier_name , i.file_name as file_name, i.status as status, a.number as number from test_invoice_artifact a  right join test_invoice i on i.item_id = a.item_id where  i.company_id = ?  group by i.id order by create_time desc";
+				String sql = "select i.id as invoice_id, i.company_id as company_id, group_concat(a.type separator ', ') as type, sum(a.amount) as amount, sum(a.tax) as tax, i.created_time as created_time, i.is_fixed_assets as is_fixed_assets, i.bill_date as bill_date, a.supplier_name as supplier_name , i.file_name as file_name, i.status as status, a.number as number from test_invoice_artifact a  right join test_invoice i on i.item_id = a.item_id where  i.company_id = ?  group by i.id order by created_time desc";
 				list = jdbcTemplate.query(sql, new Object[]{companyId}, 
 						new RowMapperResultSetExtractor<TestInvoiceRecord>(
 								new TestInvoiceRecordMapper()));
