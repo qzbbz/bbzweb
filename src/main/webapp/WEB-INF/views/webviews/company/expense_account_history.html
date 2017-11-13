@@ -377,7 +377,7 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 			if(data == null || data == '') return;
 			data.sort(function(a,b){return a.date<b.date?1:-1});
 			$('#retData').html("");
-			if(data[0]['file_name'].indexOf("1383838438@qq.com") > -1){
+			/* if(data[0]['file_name'].indexOf("1383838438@qq.com") > -1){
 
 				data.sort(function(a,b){return a.id< b.id?1:-1});
 				//console.log(data);
@@ -419,7 +419,7 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 
 				
 				
-			}
+			} */
 			for(var i=0; i<data.length; i++) {
 				var container = $('#retData');
 				var trNode = $("<tr></tr>");
