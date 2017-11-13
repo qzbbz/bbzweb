@@ -375,7 +375,7 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 		var hitList = [];
 		function createDataList(data) {
 			if(data == null || data == '') return;
-			data.sort(function(a,b){return a.date<b.date?1:-1});
+			/* data.sort(function(a,b){return a.date<b.date?1:-1}); */
 			$('#retData').html("");
 			/* if(data[0]['file_name'].indexOf("1383838438@qq.com") > -1){
 
@@ -448,11 +448,10 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 			    if(data[i].status == "INVALID"){
 			    	operateNode3.appendTo(tdNode3);
 			    }
-			    else if(data[i].expense_type == null || data[i].expense_type == "") {
-			    	globalRefresh = true;
-			    	operateNode1.appendTo(tdNode3);
-			    } else {
+			    else if(data[i].status == "RECOGNIZED") {
 			    	operateNode2.appendTo(tdNode3);
+			    } else {
+			    	operateNode1.appendTo(tdNode3);
 			    }			    
 			    checkNode.appendTo(trNode);
 			    tdNode1.appendTo(trNode);
@@ -476,7 +475,7 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 		
 		
 		
-			setTimeout(		
+			/* setTimeout(		
 		function getAllInvoices(){		
 			$.ajax({
 		
@@ -491,7 +490,7 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 		});
 			setTimeout(getAllInvoices,5000); 
 		
-		},5000);
+		},5000); */
 
 		
 		$('#searchData').click(function(){
