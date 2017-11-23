@@ -1,0 +1,1492 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh_cn" lang="zh">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1" />
+<meta name="description" content="">
+<link href="style/css/screen.css" rel="stylesheet" type="text/css"
+	media="screen, projection" />
+<link rel="stylesheet" type="text/css"
+	href="../../css/webcss/youngwisdom.css">
+<link rel="stylesheet" type="text/css"
+	href="../../css/webcss/bootstrap.css">
+<link rel="stylesheet" href="../../css/webcss/jquery-ui.css">
+<link rel="stylesheet" href="../../css/webcss/style.css">
+
+<link rel="shortcut icon" href="style/favicon.ico">
+<title>帮帮账</title>
+
+
+<style>
+.deks u:hover {
+	color: #ED555F;
+}
+
+.deksa {
+	width: 220px;
+	height: 140px;
+	background-image: url(style/image/taili.png);
+	background-repeat: no-repeat;
+	float: right;
+	margin-right: 20%;
+	display: none;
+}
+
+.customer {
+	color: rgb(50, 50, 50);
+	text-decoration: none;
+}
+
+.customer:visited, .customer:link {
+	color: rgb(50, 50, 50);
+	text-decoration: none;
+}
+
+.new-home__clients__container__half {
+	margin-top: 5%;
+	margin-bottom: 5%;
+}
+
+.bottom-company-name {
+	white-space: nowrap;
+}
+
+.js-account-form-email {
+	width: 100%;
+}
+
+.js-account-form-password {
+	width: 100%;
+}
+
+.new-home__clients__container {
+	margin-bottom: 4em;
+}
+
+.glyphicon {
+	transform: none !important;
+}
+
+.logo {
+	margin-top: 0.7em;
+	margin-left: 0.7em;
+}
+
+.footer-new__copyright p {
+	max-width: none;
+}
+
+#sign-up-btn {
+	display: inline-block !important;
+	outline: 0 !important;
+	padding: 1em 1em 15px !important;
+	text-shadow: 0 1px 1px rgba(0, 0, 0, .2) !important;
+	border-bottom: 2px solid #a4523c !important;
+	font-weight: 600 !important;
+	background-color: #f16549 !important;
+	background-image: linear-gradient(to bottom, rgba(255, 255, 255, .075) 0,
+		rgba(0, 0, 0, .075) 100%) !important;
+	color: #FFF !important;
+	width: 100% !important;
+	border-radius: 4px !important;
+	background-clip: padding-box !important;
+	transition: .2s all ease !important;
+	font-family: LLCircularWeb, "Helvetica Neue", Helvetica, Arial,
+		sans-serif !important;
+	border: 0 !important;
+	font-size: 16px !important;
+	cursor: pointer !important;
+	align-items: flex-start !important;
+	text-align: center !important;
+	margin: 0em !important;
+}
+
+#sign-up-bottom-btn {
+	margin-top: 16px !important;
+	display: inline-block !important;
+	outline: 0 !important;
+	padding: 1em 1em 15px !important;
+	text-shadow: 0 1px 1px rgba(0, 0, 0, .2) !important;
+	border-bottom: 2px solid #a4523c !important;
+	font-weight: 600 !important;
+	background-color: #f16549 !important;
+	background-image: linear-gradient(to bottom, rgba(255, 255, 255, .075) 0,
+		rgba(0, 0, 0, .075) 100%) !important;
+	color: #FFF !important;
+	width: 100% !important;
+	border-radius: 4px !important;
+	background-clip: padding-box !important;
+	transition: .2s all ease !important;
+	font-family: LLCircularWeb, "Helvetica Neue", Helvetica, Arial,
+		sans-serif !important;
+	border: 0 !important;
+	font-size: 16px !important;
+	cursor: pointer !important;
+	align-items: flex-start !important;
+	text-align: center !important;
+}
+
+#mobile-signup-btn {
+	margin-top: 16px !important;
+	display: inline-block !important;
+	outline: 0 !important;
+	padding: 1em 1em 15px !important;
+	text-shadow: 0 1px 1px rgba(0, 0, 0, .2) !important;
+	border-bottom: 2px solid #a4523c !important;
+	font-weight: 600 !important;
+	background-color: #f16549 !important;
+	background-image: linear-gradient(to bottom, rgba(255, 255, 255, .075) 0,
+		rgba(0, 0, 0, .075) 100%) !important;
+	color: #FFF !important;
+	width: 100% !important;
+	border-radius: 4px !important;
+	background-clip: padding-box !important;
+	transition: .2s all ease !important;
+	font-family: LLCircularWeb, "Helvetica Neue", Helvetica, Arial,
+		sans-serif !important;
+	border: 0 !important;
+	font-size: 16px !important;
+	cursor: pointer !important;
+	align-items: flex-start !important;
+	text-align: center !important;
+}
+
+#mobile-signup-btn-bottom {
+	margin-top: 16px !important;
+	display: inline-block !important;
+	outline: 0 !important;
+	padding: 1em 1em 15px !important;
+	text-shadow: 0 1px 1px rgba(0, 0, 0, .2) !important;
+	border-bottom: 2px solid #a4523c !important;
+	font-weight: 600 !important;
+	background-color: #f16549 !important;
+	background-image: linear-gradient(to bottom, rgba(255, 255, 255, .075) 0,
+		rgba(0, 0, 0, .075) 100%) !important;
+	color: #FFF !important;
+	width: 100% !important;
+	border-radius: 4px !important;
+	background-clip: padding-box !important;
+	transition: .2s all ease !important;
+	font-family: LLCircularWeb, "Helvetica Neue", Helvetica, Arial,
+		sans-serif !important;
+	border: 0 !important;
+	font-size: 16px !important;
+	cursor: pointer !important;
+	align-items: flex-start !important;
+	text-align: center !important;
+}
+
+#SvgjsSvg1000 {
+	width: 100% !important;
+}
+
+.header-new__links a {
+	color: #CCCCCC;
+}
+
+.step h4 {
+	font-weight: 900;
+}
+
+#modular__signup_name {
+	padding: 14px 14px 10px 28px;
+}
+
+#modular__signup_phone {
+	padding: 14px 14px 10px 28px;
+}
+
+#modular__signup_email {
+	padding: 14px 14px 10px 28px;
+}
+
+#modular__signup_email_btn {
+	padding: 14px 14px 10px 28px;
+}
+
+#modular__signup_password {
+	padding: 14px 14px 10px 28px;
+}
+
+#mobile-modular__signup_name {
+	padding: 14px 14px 10px 28px;
+}
+
+#mobile-modular__signup_phone {
+	padding: 14px 14px 10px 28px;
+}
+
+#mobile-modular__signup_email {
+	padding: 14px 14px 10px 28px;
+}
+
+#mobile-modular__signup_email_btn {
+	padding: 14px 14px 10px 28px;
+}
+
+#mobile-modular__signup_password {
+	padding: 14px 14px 10px 28px;
+}
+
+.cta-signup-footer__icons span {
+	color: #FFFFFF;
+}
+
+.header-white {
+	position: fixed;
+	height: 66px; #
+	line-height: 66px;
+	background-color: rgba(255, 255, 255, 0.95);
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+#index-header>nav>ul>li>a {
+	color: white;
+}
+
+nav a {
+	position: relative;
+	color: #ff3296;
+}
+
+nav a:after {
+	display: block;
+	position: absolute;
+	left: 0;
+	bottom: -10px;
+	width: 0;
+	height: 2px;
+	background-color: #ccc;
+	content: "";
+	transition: width 0.2s;
+}
+
+nav a:hover {
+	color: #ccc;
+}
+
+nav a:hover:after {
+	width: 100%;
+}
+
+::-webkit-scrollbar-thumb {
+	background-color: #FB4446;
+	height: 50px;
+	outline-offset: -2px;
+	outline: 2px solid #fff;
+	-webkit-border-radius: 4px;
+	border: 2px solid #fff;
+}
+</style>
+<script>
+	var _hmt = _hmt || [];
+	(function() {
+		var hm = document.createElement("script");
+		hm.src = "//hm.baidu.com/hm.js?854ba56143ecfad6d4dafde971f96770";
+		var s = document.getElementsByTagName("script")[0];
+		s.parentNode.insertBefore(hm, s);
+	})();
+</script>
+
+</head>
+<body class="new-home video-bg">
+	<header id="index-header" class="header-new js-header-new">
+
+		<nav>
+			<a href="index.html" class="header-new__links" style="float: left;">
+				<img class="logo" src="style/image/logo-white1.png" title="帮帮账">
+			</a>
+
+			<ul class="header-new__links">
+				<li><a href="index.html"><span>主页</span></a></li>
+				<li><a href="features.html"><span>特点</span></a></li>
+				<li><a href="about.html"><span>团队</span></a></li>
+				<li><a href="Login.html"><span>登录</span></a></li>
+				<li><a href="Signup.html" class="header-new__links__signup">人才注册</a></li>
+			</ul>
+		</nav>
+	</header>
+	<header class="header-mobile-new">
+		<a href="index.html" class="header-new__links" style="float: left;">
+			<img src="style/image/logo-black1.png" title="帮帮账">
+		</a>
+		<div class="header-mobile-new__menu">
+			<span class="header-mobile-new__menu__button js-mobile-navigation">
+				<span class="header-mobile-new__menu__button--one">|</span> <span
+				class="header-mobile-new__menu__button--two">|</span> <span
+				class="header-mobile-new__menu__button--three">|</span>
+			</span>
+			<div class="clear"></div>
+		</div>
+
+		<nav class="header-mobile-new__navigation">
+			<ul class="header-mobile-new__navigation__links">
+				<a href="index.html"><li>主页</li></a>
+				<a href="features.html"><li>特点</li></a>
+				<a href="about.html"><li>团队</li></a>
+				<a href="Login.html"><li>登录</li></a>
+				<a href="Signup.html" class="header-mobile-new__navigation__signup"><li>人才注册</li></a>
+			</ul>
+		</nav>
+	</header>
+	<div class="new-home__hero hero-video hero-cta-new">
+		<video preload="auto" autoplay loop id="broll-video"
+			class="hero-video-broll hide-for-small">
+			<source src="style/background.mp4" type="video/mp4">
+			<!--   <source src="style/B-Roll_Cropped.webm" type="video/webm">
+    <source src="style/B-Roll_Cropped.ogg" type="video/ogg">-->
+		</video>
+
+		<div id="chart" class="new-home__hero__overlay">
+			<div class="linechart" yw-chart-anim>
+				<svg id="SvgjsSvg1000" xmlns="http://www.w3.org/2000/svg"
+					version="1.1" width="1340" height="250"
+					xmlns:xlink="http://www.w3.org/1999/xlink">
+		<polygon id="SvgjsPolygon1009"
+						points="-150,222 150,203 450,179 750,177 1050,75 1350,187 1650,133 1950,40 2250,15 2550,250 -150,250"
+						fill="url(#SvgjsLinearGradient1006)" stroke="none">
+		</polygon>
+		<polyline id="SvgjsPolyline1010"
+						points="-150,219 150,205 450,129 750,155 1050,158 1350,140 1650,166 1950,43 2250,10"
+						fill="none" stroke="#e57958" stroke-width="2">
+		</polyline>
+		<ellipse class="ellipse" rx="8" ry="8" cx="-150" cy="222"
+						fill="#f6f6f6" stroke="#e57958" stroke-width="2"></ellipse>
+		<ellipse class="ellipse" rx="8" ry="8" cx="150" cy="203"
+						fill="#f6f6f6" stroke="#e57958" stroke-width="2"></ellipse>
+		<ellipse class="ellipse" rx="8" ry="8" cx="450" cy="179"
+						fill="#f6f6f6" stroke="#e57958" stroke-width="2"></ellipse>
+		<ellipse class="ellipse" rx="8" ry="8" cx="750" cy="177"
+						fill="#f6f6f6" stroke="#e57958" stroke-width="2"></ellipse>
+		<ellipse class="ellipse" rx="8" ry="8" cx="1050" cy="75"
+						fill="#f6f6f6" stroke="#e57958" stroke-width="2"></ellipse>
+		<ellipse class="ellipse" rx="8" ry="8" cx="1350" cy="187"
+						fill="#f6f6f6" stroke="#e57958" stroke-width="2"></ellipse>
+		<ellipse class="ellipse" rx="8" ry="8" cx="1650" cy="133"
+						fill="#f6f6f6" stroke="#e57958" stroke-width="2"></ellipse>
+		<ellipse class="ellipse" rx="8" ry="8" cx="1950" cy="110"
+						fill="#f6f6f6" stroke="#e57958" stroke-width="2"></ellipse>
+		<ellipse class="ellipse" rx="8" ry="8" cx="2250" cy="75"
+						fill="#f6f6f6" stroke="#e57958" stroke-width="2"></ellipse>
+		<ellipse class="ellipse" rx="8" ry="8" cx="2550" cy="55"
+						fill="#f6f6f6" stroke="#e57958" stroke-width="2"></ellipse>
+		<ellipse class="ellipse" rx="8" ry="8" cx="2850" cy="15"
+						fill="#f6f6f6" stroke="#e57958" stroke-width="2"></ellipse>
+		<defs id="SvgjsDefs1001">
+			<linearGradient id="SvgjsLinearGradient1006" x1="0" y1="0" x2="0"
+						y2="1">
+				<stop id="SvgjsStop1007" stop-opacity="0.5" stop-color="#f6f6f6"
+						offset="0"></stop>
+				<stop id="SvgjsStop1008" stop-opacity="1" stop-color="#f6f6f6"
+						offset="1"></stop>
+			</linearGradient>
+		</defs>
+	</svg>
+			</div>
+		</div>
+		<div class="new-home__hero__content signup-new hero-cta-new"
+			style="background-color: transparent;">
+			<div id="account-form_container"
+				class="home-video-form hide-for-small signup-form_container ">
+				<div id="home-introduction">
+					<!-- <h1 style="color:white">元升专业服务</h1>
+			        <p>元升是一家互联网+科技创新公司
+			        旗下的帮帮账产品是为您提供财务和税务解决方案的线上服务平台</p>
+			        <p class="deks"><strong><u>注册成功即送台历一份</u></strong></p>
+					<div class="deksa"></div>
+			        <div class="play-btn hide-for-small" id="movieclick">
+			          <div class="play-btn-arrow"></div>
+			        </div>	-->
+					<div>
+						<div style="width: 30%;display: inline-block;margin-right:20px">
+							<p style="text-align:left;font-size: 20px; margin-bottom: 20px; font-family: helvetica, arial, sans-serif; color: white; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;"><span style="font-size:50px">100%</span>帮帮账商务服务</p>
+							<hr style="color:white" />
+							<p style="text-align:justify;font-size: 20px; margin-bottom: 20px; font-family: helvetica, arial, sans-serif; color: white; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;">现在下单，立减二百！！</p>
+						</div>
+						<div style="width: 15%; display: inline-block;margin-right:20px">
+							<a href="https://detail.tmall.com/item.htm?spm=a230r.1.14.6.1380d6d1oTQwfN&id=557721669841&cm_id=140105335569ed55e27b&abbucket=7"
+								target="_blank"> <img src="/img/webimg/kada.jpg">
+							</a>
+							<p style="font-family: helvetica, arial, sans-serif; color: white; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;">天猫旗舰店</p>
+						</div>
+						<div style="width: 15%; display: inline-block">
+							<a href="https://item.jd.com/15106938753.html" target="_blank">
+								<img src="/img/webimg/jd.jpg">
+							</a>
+							<p style="font-family: helvetica, arial, sans-serif; color: white; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;">京东旗舰店</p>
+						</div>
+					</div>
+
+				</div>
+				
+				
+				<div class="new-home__clients__container">
+				<div
+					class="new-home__clients__container__half new-home__clients__container__half--left">
+					<!--<div class="new-home__clients__client">
+        <div class="new-home__clients__client__bubble">
+          <span>没有帮帮账的帮助，不像在运营我自己的公司。</span>
+        </div>
+        <img class="new-home__clients__client__head" src="style/images/customer1.jpg" />
+        <div class="new-home__clients__client__info">
+          <span class="new-home__clients__client__info__name"><a class="customer">赖跃如</a></span>
+          <span class="new-home__clients__client__info__company">闪蝶科技</span>
+          
+        </div>
+      </div>-->
+					<div class="new-home__clients__client">
+						<div class="new-home__clients__client__bubble">
+							<span style="color:white">我从来没有遇到一个团队对记账报税服务如此热情，帮帮账轻松为我们解决了大问题。</span>
+						</div>
+						<img class="new-home__clients__client__head"
+							src="style/images/customer3.jpg" />
+						<div class="new-home__clients__client__info">
+							<span class="new-home__clients__client__info__name"><a
+								target="_blank" class="customer" href="http://woyoli.com">Piano
+									Chen</a></span> <span class="new-home__clients__client__info__company">我有礼</span>
+						</div>
+					</div>
+					<div class="new-home__clients__client">
+						<div class="new-home__clients__client__bubble">
+							<span style="color:white">没有帮帮账的帮助，不像在运营我自己的公司。</span>
+						</div>
+						<img class="new-home__clients__client__head"
+							src="style/images/customer4.jpg" />
+						<div class="new-home__clients__client__info">
+							<span class="new-home__clients__client__info__name"><a
+								class="customer">邓佳慰</a></span> <span
+								class="new-home__clients__client__info__company">上海波启餐饮管理有限公司</span>
+						</div>
+					</div>
+				</div>
+				<div
+					class="new-home__clients__container__half new-home__clients__container__half--right">
+					<div class="new-home__clients__client">
+						<div class="new-home__clients__client__bubble">
+							<span style="color:white">作为公司的创业者，我业务十分繁忙，帮帮账在财税方面提供给了我十分到位的帮助和支持。</span>
+						</div>
+						<img class="new-home__clients__client__head"
+							src="style/images/customer2.jpg" />
+						<div class="new-home__clients__client__info">
+							<span class="new-home__clients__client__info__name"><a
+								target="_blank" class="customer"
+								href="http://www.shiquanshemei.cn">Minhao Chen</a></span> <span
+								class="new-home__clients__client__info__company">食全舌美</span>
+						</div>
+					</div>
+					<div class="new-home__clients__client">
+						<div class="new-home__clients__client__bubble">
+							<span style="color:white">我爱上了帮帮账，也推荐给了我身边创业的朋友。 我感到我的账本交给帮帮账十分放心。</span>
+						</div>
+						<img class="new-home__clients__client__head"
+							src="style/images/customer1.jpg" />
+						<div class="new-home__clients__client__info">
+							<span class="new-home__clients__client__info__name"><a
+								class="customer">赖跃如</a></span> <span
+								class="new-home__clients__client__info__company">闪蝶科技</span>
+						</div>
+					</div>
+				</div>
+			</div>
+				
+				
+				
+				
+				<div id="signup-error-msg"></div>
+			</div>
+			<div id="account-form_container"
+				class=" hide-for-small-and-up signup-form_container ">
+				<div id="home-introduction">
+					<div style="width: 80%;margin:0 auto;text-align:center">
+							<a href="https://detail.tmall.com/item.htm?spm=a230r.1.14.6.1380d6d1oTQwfN&id=557721669841&cm_id=140105335569ed55e27b&abbucket=7"
+								target="_blank"> <img src="/img/webimg/kada.jpg">
+							</a>
+							<p style="font-size: 20px;font-family: helvetica, arial, sans-serif; color: white; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;">天猫旗舰店</p>
+						</div>
+						<div style="width: 80%;margin:0 auto;text-align:center">
+							<a href="https://item.jd.com/15106938753.html" target="_blank">
+								<img src="/img/webimg/jd.jpg">
+							</a>
+							<p style="font-size: 20px;font-family: helvetica, arial, sans-serif; color: white; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;">京东旗舰店</p>
+						</div>
+				</div>
+				<form id="account-form_form"
+					class="account-form signup-form js-form-show-mobile"
+					data-validate="parsley">
+
+					<div class="account-form__field account-form--email">
+						<label class="js-account-form-email"> <img
+							data-state="closed" src="style/image/shuxin.png"
+							style="height: 20px; width: 20px;"
+							class="iconic iconic-sm  email-icon" /> <input
+							id="mobile-account-form_email" class="js-signup-email"
+							name="email" type="text" placeholder="邮箱" data-trigger="change"
+							data-required="true" data-type="email" />
+						</label>
+					</div>
+					<div class="account-form__field account-form--phone">
+						<label class="js-account-form-password"> <img
+							data-state="closed" src="style/image/as (5).png"
+							style="height: 20px; width: 20px;"
+							class="iconic iconic-sm  phone-icon" /> <input
+							id="mobile-account-form_password" class="js-signup-password"
+							name="password" type="password" placeholder="密码"
+							data-type="password" data-required="true"
+							data-error-message="请输入您的密码" />
+						</label>
+					</div>
+					<div class="account-form__buttons">
+						<div
+							class="account-form__buttons__button account-form__buttons__button--left"
+							style="width: 100%;">
+							<input id="mobile-signup-btn" type="button"
+								class="js-signup-submit-phone js-account-button" value="注册" />
+						</div>
+						<div
+							class="account-form__buttons__button account-form__buttons__button--right">
+							<div
+								class="account-form__buttons__button__questions js-questions-button">
+								<span>问题</span> <span
+									class="account-form__buttons__button__questions__circle">
+									<img src="style/images/question-mark.svg"
+									class="iconic iconic-sm" />
+								</span>
+							</div>
+							<div
+								class="account-form__buttons__button__forgot js-forgot-button">
+								<span>忘记密码?</span>
+							</div>
+							<div
+								class="account-form__buttons__button__forgot js-forgot-back-button">
+								<span>返回登录</span>
+							</div>
+							<div class="overlay-video-btn">
+								<div class="overlay-video-btn__icon hide-for-small">
+									<img src="style/images/media.svg"
+										class="iconic iconic-md icon-white" />
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="clear" style="clear: both;"></div>
+				</form>
+				<div id="mobile-signup-error-msg"></div>
+			</div>
+		</div>
+	</div>
+	<div class="new-home__section new-home__section--no-top-padding">
+		<h2>通过帮帮账</h2>
+		<p style="font-size: 120%;">您可以获得专业的线上与线下的会计和税务人员为您准备财务和税务报表。</p>
+		<p style="font-size: 120%;">您可以通过简洁易用的软件直接审阅报表。</p>
+		<div class="new-home__section__background"></div>
+
+		<div id="screen-intro">
+			<div class="timeline-section" style='margin-top: 70px;'>
+				<div class="timeline">
+					<div class="anim-timeline"></div>
+					<div class="line-dot" style="left: 0"></div>
+					<div class="line-dot" style="left: 33%"></div>
+					<div class="line-dot" style="left: 67%"></div>
+					<div class="line-dot" style="left: 100%"></div>
+				</div>
+
+			</div>
+			<div class="steps">
+				<div class="step">
+					<h4>
+						<i class="glyphicon glyphicon-heart-empty"></i>付费折扣
+					</h4>
+					<br />
+					<p style="font-size: 14px; margin-top: -10px; margin-left: 80px;">年度付费（在一个合同周期内），免一次工商年检费用！</p>
+				</div>
+				<div class="step">
+					<h4>
+						<i class="glyphicon glyphicon-user"></i>专属人员
+					</h4>
+					<br />
+					<p style="font-size: 14px; margin-top: -10px; margin-left: 80px;">将有您的专属财税人员深入了解您的业务、及时解决您的疑问，为您记账和报税。</p>
+				</div>
+				<div class="step">
+					<h4>
+						<i class="glyphicon glyphicon-refresh"></i>操作简便
+					</h4>
+					<br />
+					<p style="font-size: 14px; margin-top: -10px; margin-left: 80px;">员工通过微信平台手机拍照上传发票报销，企业主通过我们的网站微信端审批，搞定财税就是那么简单。</p>
+				</div>
+				<div class="step">
+					<h4>
+						<i class="glyphicon glyphicon-saved"></i>为您解忧
+					</h4>
+					<br />
+					<p style="font-size: 14px; margin-top: -10px; margin-left: 80px;">不用再为财税烦恼，我们将保证您获得及时准确的财务报表，做好纳税申报。</p>
+				</div>
+			</div>
+		</div>
+
+
+
+		<div class="new-home__section"
+			style="background-color: #FFF; padding-bottom: 0">
+			<h2>我们为您提供的服务</h2>
+		</div>
+		<div
+			class="new-home__section new-home__what-we-do js-background-replace"
+			data-background-src="style/images/desk_background.jpg"
+			style="background-color: #FFF">
+			<div class="row">
+				<div class="columns large-4 padding-start">
+					<p>
+						<img src="style/image/briefcase.png"
+							style="height: 16px; width: 16px;"
+							class="iconic iconic-sm icon-blue" /><strong>专业记账</strong>
+					</p>
+					<p>记账不仅仅是依靠软件即可完成的，帮帮账为您提供专业会计人员的记账服务。</p>
+				</div>
+				<div class="columns large-4 padding-middle">
+					<p>
+						<img src="style/image/list.png" style="height: 16px; width: 16px;"
+							class="iconic iconic-sm icon-brown" /><strong>即时财务数据</strong>
+					</p>
+					<p>通过帮帮账客户端的报告，您可及时分析您的费用明细。您可以随时查看从银行对账单到原始发票凭证。</p>
+				</div>
+				<div class="columns large-4 padding-end">
+					<p>
+						<img src="style/image/lock-locked-red.png"
+							style="height: 16px; width: 16px;"
+							class="iconic iconic-sm icon-green" /><strong>银行级数据安全</strong>
+					</p>
+					<p>帮帮账采用高级别的加密文件来保护您的财务数据，确保您的数据安全不受侵害。</p>
+				</div>
+			</div>
+			<div class="row padding-top">
+				<div class="columns large-4 padding-start">
+					<p>
+						<img src="style/image/laptop1.png"
+							style="height: 16px; width: 16px;"
+							class="iconic iconic-sm icon-red" /><strong>无纸化记账</strong>
+					</p>
+					<p>通过邮件照片或者快递的形式将您的凭证寄给帮帮账，我们将为您扫描并上传到你的账户。</p>
+				</div>
+				<div class="columns large-4 padding-middle">
+					<p>
+						<img src="style/image/person-genderless-red-(1).png"
+							style="height: 16px; width: 16px;"
+							class="iconic iconic-sm icon-blue" /><strong>财务专家</strong>
+					</p>
+					<p>无论你是对报税、最新的会计准则，或是对投资者的尽职调查与审计有疑问与困惑，帮帮账有最专业的人士为您提供帮助与辅导。</p>
+				</div>
+				<div class="columns large-4 padding-end">
+					<p>
+						<img src="style/image/timer.png"
+							style="height: 16px; width: 16px;"
+							class="iconic iconic-sm icon-brown" /><strong>税务专家</strong>
+					</p>
+					<p>帮帮账的专业人士将会与你们一起合作，高效率、高质量地完成你们的纳税申报。</p>
+				</div>
+			</div>
+		</div>
+		<div class="new-home__section new-home__clients testimonials"
+			style="background-color: #FFF; padding-top: 20px">
+			<h2>我们的客户都这样说</h2>
+			<div class="new-home__clients__container">
+				<div
+					class="new-home__clients__container__half new-home__clients__container__half--left">
+					<!--<div class="new-home__clients__client">
+        <div class="new-home__clients__client__bubble">
+          <span>没有帮帮账的帮助，不像在运营我自己的公司。</span>
+        </div>
+        <img class="new-home__clients__client__head" src="style/images/customer1.jpg" />
+        <div class="new-home__clients__client__info">
+          <span class="new-home__clients__client__info__name"><a class="customer">赖跃如</a></span>
+          <span class="new-home__clients__client__info__company">闪蝶科技</span>
+          
+        </div>
+      </div>-->
+					<div class="new-home__clients__client">
+						<div class="new-home__clients__client__bubble">
+							<span>我从来没有遇到一个团队对记账报税服务如此热情，帮帮账轻松为我们解决了大问题。</span>
+						</div>
+						<img class="new-home__clients__client__head"
+							src="style/images/customer3.jpg" />
+						<div class="new-home__clients__client__info">
+							<span class="new-home__clients__client__info__name"><a
+								target="_blank" class="customer" href="http://woyoli.com">Piano
+									Chen</a></span> <span class="new-home__clients__client__info__company">我有礼</span>
+						</div>
+					</div>
+					<div class="new-home__clients__client">
+						<div class="new-home__clients__client__bubble">
+							<span>没有帮帮账的帮助，不像在运营我自己的公司。</span>
+						</div>
+						<img class="new-home__clients__client__head"
+							src="style/images/customer4.jpg" />
+						<div class="new-home__clients__client__info">
+							<span class="new-home__clients__client__info__name"><a
+								class="customer">邓佳慰</a></span> <span
+								class="new-home__clients__client__info__company">上海波启餐饮管理有限公司</span>
+						</div>
+					</div>
+				</div>
+				<div
+					class="new-home__clients__container__half new-home__clients__container__half--right">
+					<div class="new-home__clients__client">
+						<div class="new-home__clients__client__bubble">
+							<span>作为公司的创业者，我业务十分繁忙，帮帮账在财税方面提供给了我十分到位的帮助和支持。</span>
+						</div>
+						<img class="new-home__clients__client__head"
+							src="style/images/customer2.jpg" />
+						<div class="new-home__clients__client__info">
+							<span class="new-home__clients__client__info__name"><a
+								target="_blank" class="customer"
+								href="http://www.shiquanshemei.cn">Minhao Chen</a></span> <span
+								class="new-home__clients__client__info__company">食全舌美</span>
+						</div>
+					</div>
+					<div class="new-home__clients__client">
+						<div class="new-home__clients__client__bubble">
+							<span>我爱上了帮帮账，也推荐给了我身边创业的朋友。 我感到我的账本交给帮帮账十分放心。</span>
+						</div>
+						<img class="new-home__clients__client__head"
+							src="style/images/customer1.jpg" />
+						<div class="new-home__clients__client__info">
+							<span class="new-home__clients__client__info__name"><a
+								class="customer">赖跃如</a></span> <span
+								class="new-home__clients__client__info__company">闪蝶科技</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+
+
+		<section class="fixed-overlay table hide">
+			<div class="cell-center">
+				<div class="confirmation-overlay">
+					<div class="confirmation-top">
+						<h2>
+							<svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+								data-icon="check" width="128" height="128"
+								class="iconic iconic-check iconic-injected-svg iconic iconic-lg icon-white checkmark"
+								viewbox="0 0 128 128">
+            <g class="iconic-metadata">
+              <title>Check</title>
+            </g>
+            <g data-width="124" data-height="98"
+									class="iconic-container iconic-lg" display="inline"
+									transform="translate(2 15)">
+              <path stroke="#000" stroke-width="16"
+									stroke-linecap="square" stroke-miterlimit="10"
+									class="iconic-property-stroke"
+									d="M112.5 11.5l-70.5 74.9-30-29.4" fill="none"></path>
+            </g>
+            <g data-width="32" data-height="27"
+									class="iconic-container iconic-md" display="none"
+									transform="scale(4) translate(0 2)">
+              <path stroke="#000" stroke-width="6"
+									stroke-linecap="square" stroke-miterlimit="10"
+									class="iconic-property-stroke" d="M27.5 4.5l-16.5 17.5-6.5-6.5"
+									fill="none"></path>
+            </g>
+            <g data-width="16" data-height="13"
+									class="iconic-container iconic-sm" display="none"
+									transform="scale(8) translate(0 1)">
+              <path stroke="#000" stroke-width="4"
+									stroke-linecap="square" stroke-miterlimit="10"
+									class="iconic-property-stroke" d="M13 3l-7 7-3-3" fill="none"></path>
+            </g>
+          </svg>
+							Thanks for signing up for Bench!
+						</h2>
+						<span class="close-btn"><img src="style/images/x.svg"
+							class="iconic iconic-sm icon-white" /></span>
+					</div>
+					<div class="confirmation-bottom">
+						<p>We’ll be in touch within one business day to get your free
+							trial started.</p>
+					</div>
+				</div>
+			</div>
+		</section>
+		<div id="modular__signup_container"
+			class="modular__signup hide-for-small-and-up signup-form_container  cta-signup-footer cta-signup-footer--dark-image ">
+			<div id="home-introduction"></div>
+			<h2>准备开始?</h2>
+			<form id="modular__signup_form"
+				class="cta-signup-footer__form signup-form js-form-show-mobile"
+				data-validate="parsley">
+				<div
+					class="cta-signup-footer__form__field cta-signup-footer__form--email">
+					<label class="js-account-form-email"> <img
+						data-state="closed" src="style/image/envelope.png"
+						style="height: 16px; width: 16px;"
+						class="iconic iconic-sm  email-icon" /> <input
+						id="mobile-modular__signup_email" class="js-signup-email"
+						name="email" type="text" placeholder="邮箱" data-trigger="change"
+						data-required="true" data-type="email" />
+					</label>
+				</div>
+				<div
+					class="cta-signup-footer__form__field cta-signup-footer__form--phone">
+					<label class="js-account-form-password"> <img
+						data-state="closed" src="style/image/lock.png"
+						style="height: 16px; width: 16px;"
+						class="iconic iconic-sm  password-icon" /> <input
+						id="mobile-modular__signup_password" class="js-signup-password"
+						name="password" type="password" placeholder="密码"
+						data-type="password" data-required="true"
+						data-error-message="请输入您的密码。" data-trigger="change" />
+					</label>
+				</div>
+				<div class="cta-signup-footer__form__submit">
+					<input id="mobile-signup-btn-bottom" type="button"
+						class="js-signup-submit-phone js-account-button" id="btn--login"
+						value="注册" />
+				</div>
+				<div class="clear" style="clear: both;"></div>
+			</form>
+			<div id="mobile-signup-error-msg-btn"></div>
+		</div>
+		<div id="modular__signup_container"
+			class="modular__signup hide-for-small signup-form_container  cta-signup-footer cta-signup-footer--dark-image ">
+			<div id="home-introduction"></div>
+			<h2></h2>
+			<div class="cta-signup-footer__icons">
+				<div class="cta-signup-footer__icon">
+					<img data-gender="genderless" src="style/images/footerPeo.jpg"
+						class="iconic iconic-md iconic-one" /> <span>注册一个帐号</span>
+				</div>
+				<div class="cta-signup-footer__dots cta-signup-footer__dots--one">
+					<svg width="36" height="6" viewbox="0 0 36 6" version="1.1"
+						xmlns="http://www.w3.org/2000/svg">
+        <g fill="#000">
+          <circle class="icon-dots icon-dots--one" cx="3" cy="3" r="3" />
+          <circle class="icon-dots icon-dots--two" cx="18" cy="3" r="3" />
+          <circle class="icon-dots icon-dots--three" cx="33" cy="3"
+							r="3" />
+        </g>
+      </svg>
+				</div>
+				<div class="cta-signup-footer__icon">
+					<img src="style/images/footerWin.jpg"
+						style="width: 40px; height: 40px; margin-bottom: 11px"
+						class="iconic iconic-md iconic-two" /> <span>见一下你的会计师</span>
+				</div>
+				<div class="cta-signup-footer__dots cta-signup-footer__dots--two">
+					<svg width="36" height="6" viewbox="0 0 36 6" version="1.1"
+						xmlns="http://www.w3.org/2000/svg">
+        <g fill="#000">
+          <circle class="icon-dots icon-dots--one" cx="3" cy="3" r="3" />
+          <circle class="icon-dots icon-dots--two" cx="18" cy="3" r="3" />
+          <circle class="icon-dots icon-dots--three" cx="33" cy="3"
+							r="3" />
+        </g>
+      </svg>
+				</div>
+				<div class="cta-signup-footer__icon">
+					<img src="style/images/footerDia.jpg"
+						style="width: 58px; height: 58px; margin-top: -10px; margin-bottom: 3px"
+						class="iconic iconic-md iconic-three" /> <span>一份免费的账目</span>
+				</div>
+			</div>
+			<form id="modular__signup_form"
+				class="cta-signup-footer__form signup-form js-form-show-mobile"
+				data-validate="parsley">
+				<div
+					class="cta-signup-footer__form__field cta-signup-footer__form--email">
+					<label class="js-account-form-email register-form-bottom">
+						<img data-state="closed" src="style/image/envelope.png"
+						style="height: 20px; width: 20px;"
+						class="iconic iconic-sm  email-icon" /> <input
+						id="modular__signup_email_btn" class="js-signup-email"
+						name="email" type="text" placeholder="邮箱" data-trigger="change"
+						data-required="true" data-type="email"
+						style="border-bottom: 1px solid #FFF" />
+					</label>
+				</div>
+				<div
+					class="cta-signup-footer__form__field cta-signup-footer__form__form__field--password">
+					<div id="show-password-bottom"
+						class="cta-signup-footer__form__field__show js-toggle-password register-form-bottom"
+						style="border-bottom: 1px solid #FFF">
+						<img src="style/image/eye.png" style="height: 20px; width: 20px;"
+							class="iconic iconic-sm " /> <span id="password-status-bottom">显示</span>
+					</div>
+					<label class="js-account-form-password register-form-bottom">
+						<img data-state="locked" src="style/image/lock.png"
+						style="height: 20px; width: 20px;" class="iconic iconic-sm " /> <input
+						class="password_visible" name="show-password" type="text"
+						placeholder="密码"
+						style="display: none; border-bottom: 1px solid #FFF" /> <input
+						id="modular__signup_password"
+						class="js-signup-password password_masked" name="password"
+						type="password" placeholder="密码" data-required="true"
+						data-trigger="keyup" data-error-message="请输入密码。"
+						style="border-bottom: 1px solid #FFF" />
+					</label>
+				</div>
+				<div class="cta-signup-footer__form__submit">
+					<input id="sign-up-bottom-btn" type="button"
+						class="js-signup-submit-new js-account-button" id="btn--login"
+						value="注册" />
+				</div>
+				<div class="clear" style="clear: both;"></div>
+			</form>
+			<div id="signup-error-msg-bottom"></div>
+		</div>
+
+		<div class="new-home__logos__border">
+			<div class="new-home__logos">
+				<div class="new-home__logos__container">
+					<a href="http://www.cctv.com/" target="_blank"><img
+						class="new-home__logos__logo" src="style/image/logo/cctv.png" /></a>
+					<a href="http://www.newjobs.com.cn/" target="_blank"><img
+						class="new-home__logos__logo" src="style/image/logo/jobs.png" /></a>
+					<a href="http://www.lieyunwang.com/" target="_blank"><img
+						class="new-home__logos__logo"
+						src="style/image/logo/lieyunlogo.png" /></a> <a
+						href="http://www.labour-daily.cn/" target="_blank"><img
+						class="new-home__logos__logo" src="style/image/logo/logo.gif" /></a>
+					<a href="http://www.xinhuanet.com/" target="_blank"><img
+						class="new-home__logos__logo" src="style/image/logo/news.png" /></a>
+					<a href="http://www.qq.com/" target="_blank"><img
+						class="new-home__logos__logo" src="style/image/logo/qq.png" /></a> <a
+						href="http://www.sina.com.cn/" target="_blank"><img
+						class="new-home__logos__logo" src="style/image/logo/sina.png" /></a>
+					<a href="http://www.youku.com/" target="_blank"><img
+						class="new-home__logos__logo" src="style/image/logo/youku.png" /></a>
+					<a href="http://jobtone.com/" target="_blank"><img
+						class="new-home__logos__logo" style="width: 125px; height: 22px;"
+						src="style/image/logo/JobtoneLogo_124px.png" /></a>
+				</div>
+			</div>
+		</div>
+
+
+		<div id="screen-contact" class="screen" ng-hide="hideContactScreen">
+			<span class="left">
+				<h3 class="bottom-company-name">上海元升财务咨询有限公司</h3>
+			</span><span class="right"> <span class="col"><i
+					class="glyphicon glyphicon-home"></i>
+					<div class="feature-info">中国上海市杨浦区</div> </span><span class="col"><i
+					class="glyphicon glyphicon-phone"></i>
+					<div class="feature-info">4000-866-018</div> </span><span class="col"><i
+					class="glyphicon glyphicon-envelope"></i>
+					<div class="feature-info">info@bangbangzhang.com</div> </span>
+			</span>
+		</div>
+
+		<div class="footer-new__under">
+			<div class="row">
+				<div class="large-12 columns">
+					<div class="footer-new__copyright">
+						<p>沪ICP备15012848号 | COPYRIGHT © 2014-2015, BANGBANGZHANG, ALL
+							RIGHTS RESERVED</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="movie-show" style="display: none;">
+
+			<embed height=480 width=640 src="../../img/webimg/qz.swf"
+				style="margin-left: 5%;">
+		</div>
+		<!--      <script type="text/javascript" src="../../js/webjs/main.page.utils.js"></script>
+                <script type="text/javascript" src="../../js/webjs/jquery-1.11.1.js"></script> 
+               <script type="text/javascript" src="../../js/webjs/jquery-1.8.1.min.js"></script>-->
+		<script type="text/javascript" src="../../js/webjs/jquery-1.10.2.js"></script>
+		<script type="text/javascript"
+			src="../../js/webjs/jquery-ui-1.11.4.js"></script>
+		<script type="text/javascript"
+			src="../../js/webjs/modernizr.custom.87166.js"></script>
+		<script type="text/javascript"
+			src="../../js/webjs/angularjs/angular.min.js"></script>
+		<script type="text/javascript"
+			src="../../js/webjs/angularjs/angular-route.min.js"></script>
+		<script type="text/javascript"
+			src="../../js/webjs/angularjs/angular-animate.min.js"></script>
+		<script type="text/javascript" src="../../js/webjs/i18n/text-zh-CN.js"></script>
+		<script type="text/javascript" src="../../js/webjs/lodash.min.js"></script>
+		<script type="text/javascript" src="../../js/webjs/TweenMax.min.js"></script>
+		<script type="text/javascript"
+			src="../../js/webjs/greensock/ScrollToPlugin.min.js"></script>
+		<script type="text/javascript" src="../../js/webjs/youngwisdom.js"></script>
+
+		<script src="/js/webjs/jquery.easing-1.3.pack.js"></script>
+
+		<script src="/js/webjs/jquery.mousewheel-3.0.4.pack.js"></script>
+
+		<script type="text/javascript">
+				var mainapp_offline = false;
+			</script>
+		<script>
+				/* $("#movieclick").click(function(){
+
+				  $("#movie-show").dialog({
+					  modal: true,
+					  height:580,
+					  width: 770,
+					 // autoOpen: false,
+					  
+				  });
+
+				 //  movieShow.style.display="block";
+				//    movieV.play();
+				 });
+				 
+				/* $(".ui-dialog-titlebar-close").click(function(){
+
+				  $("#movie-show").dialog("close");
+				 });*/
+				/* movieDet.onclick = function(){
+				//   movieShow.style.display="none";
+				console.log("click")
+				$("#movieshow").dialog("close");
+				 //  movieV.pause();
+				 }*/
+				$(document).ready(function() {
+					$(".deks").hover(function() {
+						$(".deksa").toggle();
+
+					});
+				});
+				var code = window.location.search.substring(1);
+				if (code) {
+					$.post("/recommend/addRecomendInfo", {
+						"code" : code
+					}, function(data) {
+						console.log(code);
+					});
+				}
+				function signUp(email, pwd, errorMsgObj) {
+
+					var type = 2;
+
+					$
+							.ajax({
+								url : '/checkUserRegister',
+								type : "POST",
+								data : {
+									userId : email,
+									userPwd : pwd,
+									userTypeId : type
+								},
+								cache : false,
+								success : function(data) {
+									if (data.error_code == '-1') {
+										errorMsgObj
+												.html("<p style='color: #FD7A50;'>用户名或密码不能为空！</p>");
+									} else if (data.error_code == '0') {
+										if (type == 2) {
+											errorMsgObj.hide();
+											//Add recommender information
+											var code = window.location.search
+													.substring(1);
+											if (code != "") {
+												$
+														.post(
+																"/recommend/addRecommendRecord",
+																{
+																	"email" : email,
+																	"code" : code
+																},
+																function(data) {
+																	var info = data;
+
+																});
+											}
+											window.location.href = "/views/frontviews/signup-steps.html";
+										} else if (type == 1) {
+											errorMsgObj
+													.html("<p style='color: #419088;'>注册成功！3秒后系统将自动转向登陆界面......</p>");
+											setTimeout(function() {
+												$location.path('/signin');
+												$scope.$apply();
+												errorMsgObj.hide();
+											}, 3000);
+										}
+									} else {
+										errorMsgObj
+												.html("<p style='color: #FD7A50;'>"
+														+ data.error_message
+														+ "</p>");
+										errorMsgObj.show();
+									}
+								},
+								error : function() {
+									errorMsgObj
+											.html("<p style='color: #FD7A50;'>服务器暂时不可用，请稍后重试！</p>");
+								}
+							});
+
+				}
+				$("#sign-up-btn").click(
+						function() {
+
+							var email = $("#account-form_email").val();
+							var pwd = $("#account-form_password").val();
+							var errorMsgObj = $('#signup-error-msg');
+							var valid = false;
+							valid = checkInput($("#account-form_email"),
+									$("#account-form_password"), errorMsgObj);
+							if (valid) {
+								signUp(email, pwd, errorMsgObj);
+							}
+
+						});
+
+				$("#sign-up-bottom-btn")
+						.click(
+								function() {
+									var email = $("#modular__signup_email_btn")
+											.val();
+									var pwd = $("#modular__signup_password")
+											.val();
+									var errorMsgObj = $("#signup-error-msg-bottom");
+									var valid = false;
+									valid = checkInput(
+											$("#modular__signup_email_btn"),
+											$("#modular__signup_password"),
+											errorMsgObj);
+									if (valid) {
+										signUp(email, pwd, errorMsgObj);
+									}
+								});
+
+				$("#mobile-signup-btn").click(
+						function() {
+							var email = $("#mobile-account-form_email").val();
+							var pwd = $("#mobile-account-form_password").val();
+							var errorMsgObj = $("#mobile-signup-error-msg");
+							var valid = false;
+							valid = checkInput($("#mobile-account-form_email"),
+									$("#mobile-account-form_password"),
+									errorMsgObj);
+							if (valid) {
+								signUp(email, pwd, errorMsgObj);
+							}
+						});
+
+				$("#mobile-signup-btn-bottom")
+						.click(
+								function() {
+									var email = $(
+											"#mobile-modular__signup_email")
+											.val();
+									var pwd = $(
+											"#mobile-modular__signup_password")
+											.val();
+									var errorMsgObj = $("#mobile-signup-error-msg-btn");
+									var valid = false;
+									valid = checkInput(
+											$("#mobile-modular__signup_email"),
+											$("#mobile-modular__signup_email"),
+											errorMsgObj);
+									if (valid) {
+										signUp(email, pwd, errorMsgObj);
+									}
+
+								});
+				function isEmail(email) {
+					var result = email
+							.match(/^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/);
+					if (result == null)
+						return false;
+					return true;
+				}
+
+				function checkInput(emailObj, pwdObj, errorMsgObj) {
+					var userEmail = emailObj.val();
+					var userPwd = pwdObj.val();
+
+					if (userEmail == null || userEmail == "") {
+
+						errorMsgObj
+								.html("<p style='color: #FD7A50;'>用户名或密码不能为空！</p>");
+						return false;
+					} else if (!isEmail(userEmail)) {
+
+						errorMsgObj
+								.html("<p style='color: #FD7A50;'>邮箱格式错误！</p>");
+						return false;
+					} else {
+						errorMsgObj.html("");
+					}
+
+					if (userPwd == null || userPwd == '') {
+						errorMsgObj
+								.html("<p style='color: #FD7A50;'>用户名或密码不能为空！</p>");
+						return false;
+					} else {
+						errorMsgObj.html("");
+					}
+					return true
+				}
+
+				// --- chart animation ---
+				var chartPolygon = $('#SvgjsPolygon1009');
+				var line = $('#SvgjsPolyline1010');
+				var ellipse = $('ellipse');
+
+				var chartTimeline = new TimelineLite({
+					paused : true
+				});
+				chartTimeline
+						.to(
+								chartPolygon,
+								1.0,
+								{
+									callback : function(ratio) {
+										var v = 129 - 60 * ratio;
+										var v2 = 130 + 30 * ratio;
+										var v4 = 65 + 70 * ratio;
+										var points = '-150,222 150,203 450,'
+												+ v2
+												+ ' 750,'
+												+ v
+												+ ' 1050,'
+												+ v4
+												+ ' 1350,187 1650,133 1950,110 2250,75 2550,55 2850,15';
+										line.attr('points', points);
+										chartPolygon.attr('points', points
+												+ ' 2850,250 -150,250');
+										ellipse[3].setAttribute('cy', v);
+										ellipse[2].setAttribute('cy', v2);
+										ellipse[4].setAttribute('cy', v4);
+									},
+									ease : Power2.EaseInOut
+								});
+				chartTimeline.to(chartPolygon, 1.0, {
+					callback : function(ratio) {
+						var v4 = 135 - 30 * ratio;
+						var v5 = 187 + 50 * ratio;
+						var points = '-150,222 150,203 450,' + '160' + ' 750,'
+								+ '69' + ' 1050,' + v4 + ' 1350,' + v5
+								+ ' 1650,133 1950,110 2250,75 2550,55 2850,15';
+						line.attr('points', points);
+						chartPolygon.attr('points', points
+								+ ' 2850,250 -150,250');
+						ellipse[4].setAttribute('cy', v4);
+						ellipse[5].setAttribute('cy', v5);
+					},
+					ease : Power2.EaseInOut
+				}, '+=3');
+
+				chartTimeline.play();
+				setInterval(function() {
+					if (chartTimeline.reversed())
+						chartTimeline.restart();
+					else
+						chartTimeline.reverse();
+				}, 6500, 0, false);
+
+				var scrollable = new ScrollableAnim($(window));
+				// --- step animation ---
+				var stepTimeline = new TimelineLite({
+					paused : true
+				});
+				var animLine = $('.anim-timeline');
+				var dots = $('.line-dot');
+				var steps = $('.step');
+				var icons = $('.glyphicon');
+
+				//stepTimeline.to(dots[0], .2, {className: '+=lightened'});
+				//stepTimeline.to(steps[0], .2, {color: '#323232'}, 0);
+				stepTimeline.to(animLine, 2.1, {
+					width : '100%',
+					ease : Linear.easeNone
+				});
+				stepTimeline.staggerTo(dots, .2, {
+					className : '+=lightened'
+				}, 0.7, 0);
+				stepTimeline.staggerTo(steps, .2, {
+					color : '#323232'
+				}, 0.7, 0);
+				stepTimeline.staggerFromTo(icons, .7, {
+					scaleX : 0,
+					scaleY : 0
+				}, {
+					scaleX : 1,
+					scaleY : 1,
+					ease : Elastic.easeOut
+				}, 0.7, 0);
+
+				scrollable.scene({
+					triggerElement : '.steps',
+					delayPercent : 0,
+					startup : function(rev) {
+						if (!rev) {
+							stepTimeline.restart();
+						}
+					}
+				});
+
+				//-----Show or hide password
+
+				$(".js-toggle-password")
+						.click(
+								function() {
+									var pwdObj = $("#account-form_password");
+									var pwd = pwdObj.val();
+									if (pwdObj.attr("type") == 'text') {
+										$("#password-status").html("显示");
+										pwdObj = $("#account-form_password");
+										$(
+												'<input id="account-form_password" class="js-signup-password password_masked" name="password" type="password" placeholder="密码" data-required="true" data-trigger="keyup" data-error-message="请输入密码。" />')
+												.val(pwd).insertBefore(pwdObj);
+										pwdObj.remove();
+
+									} else {
+										$(
+												'<input id="account-form_password" class="js-signup-password password_masked" name="password" type="text" placeholder="密码" data-required="true" data-trigger="keyup" data-error-message="请输入密码。" />')
+												.val(pwd).insertBefore(pwdObj);
+										pwdObj.remove();
+										$("#password-status").html("隐藏");
+
+									}
+
+								});
+
+				// ---- Show comments ----
+				var t = 1e4, e = 0, n = 0;
+						$(".new-home__clients__container__half")
+								.each(
+										function() {
+											var r = 0, o = [], s = $(this);
+													e++,
+													$(this)
+															.children(
+																	".new-home__clients__client")
+															.each(
+																	function() {
+																				r++,
+																				$(
+																						this)
+																						.hide();
+																		var t = $(this);
+																				o
+																						.push([
+																								t,
+																								r ]),
+																				$(
+																						this)
+																						.height() > n
+																						&& (n = $(
+																								this)
+																								.height());
+																	});
+											var a = function(e, n) {
+												setTimeout(function() {
+													e.show(), e.css({
+														y : "-60px",
+														opacity : 0
+													}), e.animate({
+														//y: "0px",
+														opacity : 1
+													}), setTimeout(function() {
+														e.animate({
+															bottom : "0%",
+															opacity : 0
+														}, function() {
+															e.hide();
+														});
+													}, t - 500);
+												}, (n - 1) * t);
+											};
+											setTimeout(
+													function() {
+														for (i = 0; i < o.length; i++)
+															a(o[i][0], o[i][1]);
+														setInterval(
+																function() {
+																	for (i = 0; i < o.length; i++)
+																		a(
+																				o[i][0],
+																				o[i][1]);
+																},
+																s
+																		.children(".new-home__clients__client").length
+																		* t);
+													}, (e - 1) * (t / 2), o, a,
+													s);
+										}), $(
+								".new-home__clients__container__half")
+								.height(n);
+
+				if ($(window).width() <= 960) {
+					$("#chart").css("display", "none");
+				} else {
+					$("#chart").css("display", "block");
+				}
+
+				$(window).on("resize", function() {
+					if ($(window).width() <= 960) {
+						$("#chart").css("display", "none");
+					} else {
+						$("#chart").css("display", "block");
+					}
+
+				});
+
+				$("#show-password-bottom")
+						.click(
+								function() {
+									var pwdObj = $("#modular__signup_password");
+									var pwd = pwdObj.val();
+
+									if (pwdObj.attr("type") == 'text') {
+										$("#password-status-bottom").html("显示");
+										pwdObj = $("#modular__signup_password");
+
+										$(
+												'<input id="modular__signup_password" class="js-signup-password password_masked" name="password" type="password" placeholder="密码" data-required="true" data-trigger="keyup" data-error-message="请输入密码。" style="border-bottom:1px solid #FFF;" />')
+												.val(pwd).insertBefore(pwdObj);
+										pwdObj.remove();
+
+									} else {
+										$(
+												'<input id="modular__signup_password" class="js-signup-password password_masked" name="password" type="text" placeholder="密码" data-required="true" data-trigger="keyup" data-error-message="请输入密码。" style="border-bottom:1px solid #FFF;" />')
+												.val(pwd).insertBefore(pwdObj);
+										pwdObj.remove();
+										$("#password-status-bottom").html("隐藏");
+
+									}
+
+								});
+
+				$(window).scroll(function() {
+					if ($(window).scrollTop() > 0) {
+						$("#index-header").addClass("header-white");
+						$(".logo").each(function() {
+							$(this).attr("src", "style/image/logo-black1.png");
+
+						});
+						$("#index-header > nav > ul > li > a").each(function() {
+							$(this).css("color", "black");
+						});
+
+					} else {
+						$("#index-header").removeClass("header-white");
+						$(".logo").each(function() {
+							$(this).attr("src", "style/image/logo-white1.png");
+						});
+						$("#index-header > nav > ul > li > a").each(function() {
+							$(this).css("color", "white");
+						});
+					}
+
+				});
+
+				$(".js-mobile-navigation").click(function() {
+					var t = $(".header-mobile-new");
+					t.toggleClass("menu-open");
+				});
+				$(".gb_all").click(function(event) {
+					$("#bao").hide();
+				})
+			</script>
+</body>
+</html>

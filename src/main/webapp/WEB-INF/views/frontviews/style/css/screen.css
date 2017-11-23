@@ -7085,7 +7085,7 @@ transform:scale(1.2)
 	box-sizing: content-box;
 	-moz-box-sizing: content-box;
 	-webkit-box-sizing: content-box;
-	max-width: 380px;
+	max-width: 580px;
 	overflow: auto;
 	margin: auto;
 	padding-top: 200px;
@@ -7105,12 +7105,12 @@ transform:scale(1.2)
 	top: 0
 }
 .new-home__hero__content {
-	padding-left: 1em;
-	padding-right: 1em;
+	padding-left: 0;
+	padding-right: 0;
 	padding-top: 25px
 }
 .new-home__hero__content.hero-cta-new {
-	padding-top: 25px
+	padding-top: 0px
 }
 }
 .new-home__hero__content h1 {
