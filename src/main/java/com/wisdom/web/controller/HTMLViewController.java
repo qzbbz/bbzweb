@@ -27,6 +27,11 @@ public class HTMLViewController {
 		return "redirect:/views/frontviews/error.html";
 	}
 	
+	@RequestMapping("/mobileocr")
+	public String mobileocr() {
+		return "redirect:http://120.132.27.211:8080/views/webviews/mobileinvoice.html";
+	}
+	
 	//后台网站	
 	@RequestMapping("/logout")
 	public String logout(HttpSession httpSession) {
