@@ -326,6 +326,7 @@ public class CompanyBillApiImpl implements ICompanyBillApi {
 			map.put("file_name", invoiceRecord.getFileName() == null ? "" : invoiceRecord.getFileName());
 			map.put("supplyName", invoiceRecord.getSupplierName());
 			map.put("isFixedAssets", String.valueOf(invoiceRecord.getIsFa()));
+			map.put("invoice_type", invoiceRecord.getInvoice_type()==null?"":invoiceRecord.getInvoice_type());
 			map.put("status", invoiceRecord.getStatus());
 			map.put("number", invoiceRecord.getNumber() == null ? "1":String.valueOf(invoiceRecord.getNumber()));
 			map.put("bill_date", invoiceRecord.getBillDate() == null ? "":invoiceRecord.getBillDate());

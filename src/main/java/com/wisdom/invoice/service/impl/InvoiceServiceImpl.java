@@ -166,7 +166,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		if (type.equals("wechat")) {
 			String itemId = UUID.randomUUID().toString();
 			invoiceDao.addInvoiceArtifact(newInvoiceId, Double.parseDouble(params.get("amount").toString()),
-					params.get("type").toString(), params.get("type").toString(), 0, itemId, 1);
+					params.get("type").toString(), params.get("type").toString(), 0, itemId, 1, "");
 			invoiceDao.setIsFAOfInvoice(newInvoiceId, false, itemId);
 			expenseTypeDao.increaseExpenseTypeHit(params.get("type").toString());
 
@@ -931,8 +931,9 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			double amount = Double.parseDouble(row.get("amount"));
 			String supplierName = row.get("supplier");
 			double tax = Double.parseDouble(row.get("tax"));
+			String invoice_type = row.get("invoice_type");
 			Integer number = Integer.parseInt(row.get("number"));
-			invoiceDao.addInvoiceArtifact(invoiceId, amount, type, supplierName, tax, itemId, number);
+			invoiceDao.addInvoiceArtifact(invoiceId, amount, type, supplierName, tax, itemId, number, invoice_type);
 			} catch(Exception ex) {
 				logger.error(ex.toString());
 			}

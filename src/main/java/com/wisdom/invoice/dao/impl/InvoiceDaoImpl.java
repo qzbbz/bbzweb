@@ -257,8 +257,8 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 		return false;
 	}
 	@Override
-	public boolean addInvoiceArtifact(long invoiceId, double amount, String type, String supplierName, double tax, String itemId, Integer number) {
-		String sql = "insert into test_invoice_artifact (invoice_id, amount, tax, type, supplier_name, item_id, created_time, number) values (?, ?, ?, ?, ?, ?, NOW(), ?)";
+	public boolean addInvoiceArtifact(long invoiceId, double amount, String type, String supplierName, double tax, String itemId, Integer number, String invoice_type) {
+		String sql = "insert into test_invoice_artifact (invoice_id, amount, tax, type, supplier_name, item_id, created_time, number, invoice_type) values (?, ?, ?, ?, ?, ?, NOW(), ?, ?)";
 		try {
 			int affectedRows = jdbcTemplate
 					.update(sql,
@@ -268,7 +268,7 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 							type,
 							supplierName,
 							itemId,
-							number);
+							number, invoice_type);
 			logger.debug("addInvoiceArtifact result : {}", affectedRows);
 			return affectedRows != 0;
 		} catch (Exception e) {
@@ -340,7 +340,7 @@ public class InvoiceDaoImpl implements IInvoiceDao {
 	public List<TestInvoiceRecord> getAllInvoicesByCompanyId(long companyId) {
 			List<TestInvoiceRecord> list = null;
 			try {
-				String sql = "select i.id as invoice_id, i.company_id as company_id, group_concat(a.type separator ', ') as type, sum(a.amount) as amount, sum(a.tax) as tax, i.created_time as created_time, i.is_fixed_assets as is_fixed_assets, i.bill_date as bill_date, a.supplier_name as supplier_name , i.file_name as file_name, i.status as status, a.number as number from test_invoice_artifact a  right join test_invoice i on i.item_id = a.item_id where  i.company_id = ?  group by i.id order by created_time desc";
+				String sql = "select i.id as invoice_id, i.company_id as company_id, group_concat(a.type separator ', ') as type, sum(a.amount) as amount, sum(a.tax) as tax, i.created_time as created_time, i.is_fixed_assets as is_fixed_assets, i.bill_date as bill_date, a.supplier_name as supplier_name , i.file_name as file_name, i.status as status, a.number as number, a.invoice_type as invoice_type from test_invoice_artifact a  right join test_invoice i on i.item_id = a.item_id where  i.company_id = ?  group by i.id order by created_time desc";
 				list = jdbcTemplate.query(sql, new Object[]{companyId}, 
 						new RowMapperResultSetExtractor<TestInvoiceRecord>(
 								new TestInvoiceRecordMapper()));
