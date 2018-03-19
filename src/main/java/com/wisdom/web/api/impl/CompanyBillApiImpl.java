@@ -352,7 +352,49 @@ public class CompanyBillApiImpl implements ICompanyBillApi {
 		return true;
 	}
 
-
+	@Override
+	public Map<String, Object> accounterUploadCompanyBill(Map<String, String> params, MultipartFile file) {
+		Map<String, Object> retMap = new HashMap<>();
+		try {
+			String userId = params.get("userId");
+			String date=params.get("date");
+			long companyId = -1;
+			try {
+				companyId = Long.valueOf(params.get("companyId"));
+			} catch(Exception ex) {
+				logger.error(ex.toString());
+			}
+			String fileName = getGernarateFileName(file, userId);
+			FileUtils.copyInputStreamToFile(file.getInputStream(),
+					new File(params.get("realPath"), fileName));
+			CompanyBill cb = new CompanyBill();
+			cb.setCompanyId(companyId);
+			cb.setFileName(fileName);
+			cb.setBillDate(date);
+			cb.setCreateTime(new Timestamp(System.currentTimeMillis()));
+			companyBillService.addCompanyBill(cb);
+			
+			//Create invoice
+			long invoiceId = invoiceService.addInvoice(companyId, fileName, date, 0, "company");
+			Company company = companyService.getCompanyByCompanyId(companyId);
+			
+			logger.debug("Thread has start");
+			final long comId = companyId;
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					invoiceService.publishMobileUnrecognizedInvoive(invoiceId, comId, fileName, company.getName());
+				}
+			}).start();
+			
+			retMap.put("error_code", "0");
+		} catch (Exception e) {
+			logger.debug("uploadCompanyBill exception : {}", e.toString());
+			retMap.put("error_code", "1");
+			retMap.put("error_message", "上传发票失败，请稍后重试！");
+		}
+		return retMap;
+	}
 	
 	
 }

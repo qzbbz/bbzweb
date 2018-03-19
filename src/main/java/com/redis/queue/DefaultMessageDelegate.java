@@ -43,7 +43,6 @@ public class DefaultMessageDelegate implements MessageDelegate {
 		System.out.println(message);
 		logger.debug("default handle message : {}", message);
 		
-		
 		JsonFactory factory = new JsonFactory(); 
 	    ObjectMapper mapper = new ObjectMapper(factory);
 	    TypeReference<List<HashMap<String,Object>>> typeRef 

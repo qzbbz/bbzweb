@@ -100,6 +100,8 @@ public interface IInvoiceService {
     //新增接口方法 publishUnrecognizedInvoive 多态
     public void publishUnrecognizedInvoive(long invoiceId, long companyId, String fileName, String companyName,
 			List<Map<String, Object>> content);
+
+	public void publishMobileUnrecognizedInvoive(long invoiceId, long comId, String fileName, String name);
     
     
 }

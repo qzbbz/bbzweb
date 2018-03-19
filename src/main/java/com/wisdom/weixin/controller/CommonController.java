@@ -1,5 +1,6 @@
 package com.wisdom.weixin.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,9 +17,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import com.wisdom.common.model.Company;
 import com.wisdom.common.model.ContactUs;
 import com.wisdom.common.model.UserOpenid;
 import com.wisdom.contactus.utils.ContactUsDaoImpl;
+import com.wisdom.company.service.ICompanyService;
 import com.wisdom.company.service.ISheetIncomeDetailService;
 import com.wisdom.contactus.utils.IContactUsDao;
 import com.wisdom.user.service.IUserService;
@@ -34,6 +37,9 @@ public class CommonController {
 
 	private static final Logger logger = LoggerFactory.getLogger(CommonController.class);
 
+	@Autowired
+	private ICompanyService companyService;
+	
 	@Autowired
 	private ITokenCheckService tokenCheckService;
 
@@ -186,4 +192,51 @@ public class CommonController {
 		return result;
 	}
 	
+	@RequestMapping("/getUserOpenIdAndBindCompanys")
+	@ResponseBody
+	public Map<String, Object> getUserOpenIdAndBindCompanys(HttpSession session, HttpServletRequest request) {
+		logger.debug("getUserOpenIdAndBindCompanys");
+		Map<String, Object> result = new HashMap<>();
+		String openId = (String)session.getAttribute("userOpenId");
+		result.put("openId", openId);
+		if (openId == null || openId.isEmpty()) {
+			result.put("error_code", String.valueOf(WeixinJsonCode.NO_OPENID_ERROR_CODE));
+			result.put("error_message", WeixinJsonCode.NO_OPENID_ERROR_MESSAGE);
+		} else {
+			List<UserOpenid> openidList = userService.getUserIdByOpenId(openId);
+			if(openidList == null || openidList.size() == 0) {
+				result.put("error_code", 100400);
+				result.put("error_message", "您还没有绑定公司，<br/>请先在账号设置中绑定您的公司！");
+			} else {
+				for (UserOpenid uoi : openidList) {
+					int typeId = userService.getUserTypeIdByUserId(uoi.getUserId());
+					logger.debug("getUserOpenIdAndBindCompanys typeId : {}", typeId);
+					result.put("typeId", typeId);
+					if(typeId != 1) {
+						result.put("error_code", 100300);
+						result.put("error_message", "您不是会计，不能上传公司发票!");
+					} else {
+						List<Company> companyList = companyService.getCompanyListByAccounterId(uoi.getUserId());
+						if(companyList == null || companyList.size() == 0) {
+							result.put("error_code", 100500);
+							result.put("error_message", "抱歉，您暂时还未负责公司!");
+						} else {
+							List<Map<String, Object>> companyBriefInfoList = new ArrayList<>();
+							for(Company company : companyList) {
+								Map<String, Object> item = new HashMap<>();
+								item.put("value", company.getId());
+								item.put("text", company.getName());
+								companyBriefInfoList.add(item);
+							}
+							result.put("companyBriefInfoList", companyBriefInfoList);
+							result.put("error_code", String.valueOf(WeixinJsonCode.NO_ERROR_CODE));
+							result.put("error_message", WeixinJsonCode.NO_ERROR_MESSAGE);
+						}
+					}
+				}
+			}
+		}
+		logger.debug("getUserOpenIdAndBindCompanys resultMap :{}", result.toString());
+		return result;
+	}
 }

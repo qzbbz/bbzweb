@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
 import com.wisdom.common.model.TestInvoice;
+import com.wisdom.common.model.UserOpenid;
 import com.wisdom.invoice.service.IInvoiceService;
 import com.wisdom.user.service.IUserService;
 import com.wisdom.web.api.ICompanyBillApi;
@@ -198,6 +200,57 @@ public class CompanyBillController {
 			retMap.put("error_code", "0");
 		} else {
 			retMap.put("error_code", "1");
+		}
+		return retMap;
+	}
+	
+	@RequestMapping("/accounterUploadCompanyInvoice")
+	@ResponseBody
+	public Map<String, Object> accounterUploadCompanyInvoice(@RequestParam MultipartFile[] files,
+			HttpServletRequest request, HttpSession session) {
+		logger.debug("entrance accounterUploadCompanyInvoice");
+		Map<String, Object> retMap = new HashMap<>();
+		String openId = (String)session.getAttribute("userOpenId");
+		List<UserOpenid> openidList = userService.getUserIdByOpenId(openId);
+		String userId = openidList.get(0).getUserId();
+		String date = request.getParameter("bill_date");
+		long companyId = -1;
+		try {
+			companyId = Long.valueOf(request.getParameter("companyId"));
+		} catch(Exception ex) {
+			logger.error(ex.toString());
+		}
+		logger.debug("accounterUploadCompanyInvoice params : userId={}, companyId={}", userId, companyId);
+		if(companyId == -1) {
+			retMap.put("error_code", 1001);
+			retMap.put("error_message", "上传公司ID为空，请重试！");
+			return retMap;
+		}
+		String realPath = request.getSession().getServletContext()
+				.getRealPath("/WEB-INF").substring(0);
+		//supplyName 和 isFixedAssets 为NULL
+		String supplyName = request.getParameter("supplyName");
+		String isFixedAssets = request.getParameter("isFixedAssets");
+		
+		realPath = "/home/files/company";
+		logger.debug("accounterUploadCompanyInvoice realPath : {}", realPath);
+		Map<String, String> params = new HashMap<>();
+		params.put("userId", userId);
+		params.put("realPath", realPath);
+		params.put("date", date);
+		params.put("supplyName", supplyName);
+		params.put("isFixedAssets", isFixedAssets);
+		params.put("companyId", String.valueOf(companyId));
+		logger.debug("params : {}", params.toString());
+		if (files != null) {
+			for(MultipartFile file : files ) {
+				logger.debug("multipartRequest has next..");
+				retMap = companyBillApi.accounterUploadCompanyBill(params, file);
+				if(!"0".equals(String.valueOf(retMap.get("error_code")))) {
+					return retMap;
+				}
+				logger.debug("upload complete!!");
+			}
 		}
 		return retMap;
 	}

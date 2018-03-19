@@ -1194,7 +1194,24 @@ public class InvoiceServiceImpl implements IInvoiceService {
 
 			}
 		});
+	}
+	
+	@Override
+	public void publishMobileUnrecognizedInvoive(long invoiceId, long companyId, String fileName, String companyName) {
+		System.out.println("Start to publish");
+		Map<String, String> exportedData = new HashMap<>();
+		exportedData.put("invoice_id", Long.toString(invoiceId));
+		exportedData.put("company_id", Long.toString(companyId));
+		exportedData.put("path", fileName);
+		exportedData.put("company", companyName);
+		String exportDataStr = JSONObject.fromObject(exportedData).toString();
 
+		Jedis jedis = new Jedis("139.196.40.99", 6379);
+		jedis.auth("T4729VT95%XsIvM");
+		logger.debug("begin publishMobileUnrecognizedInvoive");
+		long k_ = jedis.rpush("mobile_invoice_identify_task", exportDataStr);
+		logger.debug("end publishMobileUnrecognizedInvoive, publish return value : {}", k_);
+		jedis.close();
 	}
 
 }
