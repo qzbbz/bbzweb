@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -193,7 +194,7 @@ public class CompanyDaoImpl implements ICompanyDao {
 		List<Company> companyList = null;
 		String sql="select * from company where name = ?";
 		try{
-			companyList=jdbcTemplate.query(sql, 	new Object[]{companyName},
+			companyList=jdbcTemplate.query(sql, new Object[]{companyName},
 					new RowMapperResultSetExtractor<Company>(
 							new CompanyMapper()));
 		}catch(Exception e){
@@ -211,6 +212,54 @@ public class CompanyDaoImpl implements ICompanyDao {
 					new RowMapperResultSetExtractor<CompanyInfo>(
 							new CompanyInfoMapper()));
 		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return companyList;
+	}
+
+	@Override
+	public List<Map<String, Object>> getCompanyAndAccounterByKey(String key) {
+		List<Map<String, Object>> companyList = null;
+		String sql="select * from company c left join user u on c.id = u.company_id where u.type_id = 2 and c.name like '%"+key+"%' order by c.create_time desc";
+		try{
+			companyList=jdbcTemplate.queryForList(sql);
+		}catch(Exception e){
+			logger.error(e.toString());
+		}
+		return companyList;
+	}
+
+	@Override
+	public List<Map<String, Object>> getComByIndexAndKey(int i, int length, String key) {
+		List<Map<String, Object>> companyList = null;
+		String sql="select tmp.*, user.user_name from (select c.* from company c left join user u on c.id = u.company_id where u.type_id = 2 and (c.name like '%"+key+"%' or c.id like '%"+key+"%') order by c.create_time desc limit ?,?) as tmp left join user on tmp.accounter_id=user.user_id";
+		try{
+			companyList=jdbcTemplate.queryForList(sql, i, length);
+		}catch(Exception e){
+			logger.error(e.toString());
+		}
+		return companyList;
+	}
+
+	@Override
+	public List<Map<String, Object>> getComPayTotalPageByKey(String key) {
+		List<Map<String, Object>> companyList = null;
+		String sql="select a.id, a.name, b.pay_amount, b.service_time, b.create_time, b.expired_time from company a left join company_pay b on a.id = b.company_id where a.parent_id = -1 and (a.name like '%"+key+"%' or a.id like '%" + key + "%')";
+		try{
+			companyList=jdbcTemplate.queryForList(sql);
+		}catch(Exception e){
+			logger.error(e.toString());
+		}
+		return companyList;
+	}
+
+	@Override
+	public List<Map<String, Object>> getComPayInfoByIndexAndKey(int i, int length, String key) {
+		List<Map<String, Object>> companyList = null;
+		String sql="select a.id, a.name, b.pay_amount, b.service_time, b.create_time, DATE_FORMAT(b.expired_time,'%Y-%m-%d') as expired_time from company a left join company_pay b on a.id = b.company_id where a.parent_id = -1 and (a.name like '%"+key+"%' or a.id like '%"+key+"%') order by a.create_time desc limit ?,?";
+		try{
+			companyList=jdbcTemplate.queryForList(sql, i, length);
+		}catch(Exception e){
 			logger.error(e.toString());
 		}
 		return companyList;

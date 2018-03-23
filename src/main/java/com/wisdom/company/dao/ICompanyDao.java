@@ -1,6 +1,7 @@
 package com.wisdom.company.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.wisdom.common.model.Company;
 import com.wisdom.common.model.CompanyInfo;
@@ -35,5 +36,13 @@ public interface ICompanyDao {
 	List<Company> getAllCompany();
 	
 	List<CompanyInfo> getCompanyInfoAndUserIDAndPhone();
+
+	public List<Map<String, Object>> getCompanyAndAccounterByKey(String key);
+
+	public List<Map<String, Object>> getComByIndexAndKey(int i, int length, String key);
+
+	public List<Map<String, Object>> getComPayTotalPageByKey(String key);
+
+	public List<Map<String, Object>> getComPayInfoByIndexAndKey(int i, int length, String key);
 		
 }

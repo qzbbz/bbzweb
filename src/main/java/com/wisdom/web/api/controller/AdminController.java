@@ -398,79 +398,60 @@ public class AdminController {
 		return companyList;
 	}
 	// get company Info by company_id and user_type
-		@RequestMapping("/admin/getAccounterIdInfo")
-		@ResponseBody
-		public List<Accounter> getAccounterIdInfo(HttpServletRequest request) {
-			List<Accounter> accounterList = new ArrayList<>();
-			try{
-				accounterList =accounterService.getAllAccounterList();
-			}catch(Exception e){
-				logger.debug("getAccounterIdInfo exception : {}", e.toString());
-			}
-			
-			return accounterList;
+	@RequestMapping("/admin/getAccounterIdInfo")
+	@ResponseBody
+	public List<Accounter> getAccounterIdInfo(HttpServletRequest request) {
+		List<Accounter> accounterList = new ArrayList<>();
+		try{
+			accounterList =accounterService.getAllAccounterList();
+		}catch(Exception e){
+			logger.debug("getAccounterIdInfo exception : {}", e.toString());
 		}
 		
-		// update company with accounter_id by company_id and user_type 
-				@RequestMapping("/admin/updatCompanyAccounterIdInfo")
-				@ResponseBody
-				public Map<String, String> updatCompanyAccounterIdInfo(HttpServletRequest request) {
-					Map<String, String> retMap = new HashMap<>();
-					boolean updateBoolean = false;
-					try{
-						String companyId=request.getParameter("globalCompanyId");
-						String accounterId=request.getParameter("selectValue");
-						updateBoolean = companyService.updateAccounterForCompany(Long.parseLong(companyId), accounterId);
-					}catch(Exception e){
-						logger.debug("getAccounterIdInfo exception : {}", e.toString());
-					}
-					if(updateBoolean) {
-						retMap.put("error_code", "0");
-					} else {
-						retMap.put("error_code", "1");
-						retMap.put("error_message", "更新accounterId失败！");
-					}
-					return retMap;
-				}	
-				
-				// get company by name
-				@RequestMapping("/admin/getCompanyInfoByName")
-				@ResponseBody
-				public List<Company> getCompanyInfoByName(HttpServletRequest request) {
-					List<Company>companyList = new ArrayList<>();
-					try{
-						String companyName=request.getParameter("company_name");
-						companyList = companyService.getCompanyByName(companyName);
-						for(int i = 0;i < companyList.size();i ++){
-							System.out.println(companyList.get(i).getAccounterId());
-							if(companyList.get(i).getAccounterId()==null){
-								companyList.get(i).setAccounterId("");;
-							}
-						}
-					}catch(Exception e){
-						logger.debug("getAccounterIdInfo exception : {}", e.toString());
-					}
-					return companyList;
-				}	
-	
-	@RequestMapping("/admin/getAllCompanyPayInfo")
-	@ResponseBody
-	public List<Map<String, String>> getAllCompanyPayInfo(HttpServletRequest request) {
-		List<CompanyAndPayModel> companyAndPayModelList = companyPayService.getCompanyAndPayModel();
-		List<Map<String, String>> retList = new ArrayList<>();
-		if(companyAndPayModelList != null && companyAndPayModelList.size() != 0) {
-			for(CompanyAndPayModel companyAndPayModel : companyAndPayModelList) {
-				Map<String, String> itemMap = new HashMap<>();
-				itemMap.put("company_id", String.valueOf(companyAndPayModel.getCompanyId()));
-				itemMap.put("company_name", companyAndPayModel.getCompanyName());
-				itemMap.put("company_service_time", companyAndPayModel.getServiceTime() == null ? "" : String.valueOf(companyAndPayModel.getServiceTime()));
-				itemMap.put("company_service_amount", companyAndPayModel.getPayAmount() == null ? "" : String.valueOf(companyAndPayModel.getPayAmount()));
-				itemMap.put("company_expired_time", companyAndPayModel.getExpiredTime() == null ? "" : String.valueOf(companyAndPayModel.getExpiredTime().toString().substring(0, 11)));
-				retList.add(itemMap);
-			}
-		}
-		return retList;
+		return accounterList;
 	}
+	
+	// update company with accounter_id by company_id and user_type 
+	@RequestMapping("/admin/updatCompanyAccounterIdInfo")
+	@ResponseBody
+	public Map<String, String> updatCompanyAccounterIdInfo(HttpServletRequest request) {
+		Map<String, String> retMap = new HashMap<>();
+		boolean updateBoolean = false;
+		try{
+			String companyId=request.getParameter("globalCompanyId");
+			String accounterId=request.getParameter("selectValue");
+			updateBoolean = companyService.updateAccounterForCompany(Long.parseLong(companyId), accounterId);
+		}catch(Exception e){
+			logger.debug("getAccounterIdInfo exception : {}", e.toString());
+		}
+		if(updateBoolean) {
+			retMap.put("error_code", "0");
+		} else {
+			retMap.put("error_code", "1");
+			retMap.put("error_message", "更新accounterId失败！");
+		}
+		return retMap;
+	}	
+	
+	// get company by name
+	@RequestMapping("/admin/getCompanyInfoByName")
+	@ResponseBody
+	public List<Company> getCompanyInfoByName(HttpServletRequest request) {
+		List<Company>companyList = new ArrayList<>();
+		try{
+			String companyName=request.getParameter("company_name");
+			companyList = companyService.getCompanyByName(companyName);
+			for(int i = 0;i < companyList.size();i ++){
+				System.out.println(companyList.get(i).getAccounterId());
+				if(companyList.get(i).getAccounterId()==null){
+					companyList.get(i).setAccounterId("");;
+				}
+			}
+		}catch(Exception e){
+			logger.debug("getAccounterIdInfo exception : {}", e.toString());
+		}
+		return companyList;
+	}	
 	
 	@RequestMapping("/admin/modifyCompanyPayInfo")
 	@ResponseBody
@@ -700,5 +681,106 @@ public class AdminController {
 			retMap.put("msg", "提交失败！错误原因：" + ex.toString());
 		}
 		return retMap;
+	}
+	
+	@RequestMapping("/admin/getComTotalPageByKey")
+	@ResponseBody
+	public int getComTotalPageByKey(HttpServletRequest request) {
+		int length = 10;
+		int total = 0;
+		int totalPage = 0;
+		String key = "";
+		try {
+			length = Integer.valueOf(request.getParameter("length"));
+			key = request.getParameter("key");
+			total = companyService.getCompanyAndAccounterByKey(key).size();
+			if(total != 0) {
+				if((total%length) == 0) {
+					totalPage = (total/length);
+				} else {
+					totalPage = (total/length) + 1;
+				}
+			}
+		} catch(Exception e) {
+			e.toString();
+		}
+		return totalPage;
+	}
+	
+	@RequestMapping("/admin/getComByIndexAndKey")
+	@ResponseBody
+	public List<Map<String, Object>> getComByIndexAndKey(HttpServletRequest request) {
+		int index = 1;
+		int length = 10;
+		String key = "";
+		List<Map<String, Object>> companyList = null;
+		try {
+			index = Integer.valueOf(request.getParameter("index"));
+			key = request.getParameter("key");
+			companyList = companyService.getComByIndexAndKey((index-1)*length, length, key);
+		} catch (Exception e) {
+			logger.error("getComByIndexAndKey error : {}", e.toString());
+		}
+		return companyList;
+	}
+	
+	@RequestMapping("/admin/getComPayTotalPageByKey")
+	@ResponseBody
+	public int getComPayTotalPageByKey(HttpServletRequest request) {
+		int length = 10;
+		int total = 0;
+		int totalPage = 0;
+		String key = "";
+		try {
+			length = Integer.valueOf(request.getParameter("length"));
+			key = request.getParameter("key");
+			total = companyService.getComPayTotalPageByKey(key).size();
+			if(total != 0) {
+				if((total%length) == 0) {
+					totalPage = (total/length);
+				} else {
+					totalPage = (total/length) + 1;
+				}
+			}
+		} catch(Exception e) {
+			e.toString();
+		}
+		return totalPage;
+	}
+	
+	@RequestMapping("/admin/getComPayInfoByIndexAndKey")
+	@ResponseBody
+	public List<Map<String, Object>> getComPayInfoByIndexAndKey(HttpServletRequest request) {
+		int index = 1;
+		int length = 10;
+		String key = "";
+		List<Map<String, Object>> companyList = null;
+		try {
+			index = Integer.valueOf(request.getParameter("index"));
+			key = request.getParameter("key");
+			companyList = companyService.getComPayInfoByIndexAndKey((index-1)*length, length, key);
+		} catch (Exception e) {
+			logger.error("getComByIndexAndKey error : {}", e.toString());
+		}
+		return companyList;
+	}
+	
+	@RequestMapping("/admin/getAllCompanyPayInfo")
+	@ResponseBody
+	public List<Map<String, String>> getAllCompanyPayInfo(HttpServletRequest request) {
+		List<CompanyAndPayModel> companyAndPayModelList = companyPayService.getCompanyAndPayModel();
+		List<Map<String, String>> retList = new ArrayList<>();
+		if(companyAndPayModelList != null && companyAndPayModelList.size() != 0) {
+			for(CompanyAndPayModel companyAndPayModel : companyAndPayModelList) {
+				Map<String, String> itemMap = new HashMap<>();
+				itemMap.put("company_id", String.valueOf(companyAndPayModel.getCompanyId()));
+				itemMap.put("company_name", companyAndPayModel.getCompanyName());
+				itemMap.put("company_service_time", companyAndPayModel.getServiceTime() == null ? "" : String.valueOf(companyAndPayModel.getServiceTime()));
+				itemMap.put("company_service_amount", companyAndPayModel.getPayAmount() == null ? "" : String.valueOf(companyAndPayModel.getPayAmount()));
+				itemMap.put("company_expired_time", companyAndPayModel.getExpiredTime() == null ? "" : String.valueOf(companyAndPayModel.getExpiredTime().toString().substring(0, 11)));
+				retList.add(itemMap);
+			}
+		}
+		return retList;
 	}
 }

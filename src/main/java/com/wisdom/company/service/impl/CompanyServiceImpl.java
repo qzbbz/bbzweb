@@ -169,6 +169,26 @@ public class CompanyServiceImpl implements ICompanyService {
 		return companyDao.getCompanyInfoAndUserIDAndPhone();
 	}
 
+	@Override
+	public List<Map<String, Object>> getCompanyAndAccounterByKey(String key) {
+		return companyDao.getCompanyAndAccounterByKey(key);
+	}
+
+	@Override
+	public List<Map<String, Object>> getComByIndexAndKey(int i, int length, String key) {
+		return companyDao.getComByIndexAndKey(i, length, key);
+	}
+
+	@Override
+	public List<Map<String, Object>> getComPayTotalPageByKey(String key) {
+		return companyDao.getComPayTotalPageByKey(key);
+	}
+
+	@Override
+	public List<Map<String, Object>> getComPayInfoByIndexAndKey(int i, int length, String key) {
+		return companyDao.getComPayInfoByIndexAndKey(i, length, key);
+	}
+
 	
 	
 }

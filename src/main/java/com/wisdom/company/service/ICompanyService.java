@@ -3,6 +3,8 @@ package com.wisdom.company.service;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.HttpHeaders;
+
 import com.wisdom.common.model.Company;
 import com.wisdom.common.model.CompanyInfo;
 import com.wisdom.common.utils.Result;
@@ -41,4 +43,12 @@ public interface ICompanyService {
 	public List<Company> getCompanyByName(String companyName);
 	
 	public List<CompanyInfo> getCompanyInfoAndUserIDAndPhone();
+
+	public List<Map<String, Object>> getCompanyAndAccounterByKey(String key);
+
+	public List<Map<String, Object>> getComByIndexAndKey(int i, int length, String key);
+
+	public List<Map<String, Object>> getComPayTotalPageByKey(String key);
+
+	public List<Map<String, Object>> getComPayInfoByIndexAndKey(int i, int length, String key);
 }

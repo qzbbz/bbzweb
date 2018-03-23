@@ -164,7 +164,7 @@ angular.module('ywLanding')
 		
 	};
 	
-	$scope.companyDetailReg = function(email, pwd, type) {
+	/*$scope.companyDetailReg = function(email, pwd, type) {
 		$('#company_detail_reg_msg').html("<p style='color: #419088;'>正在向服务器提交您的信息，请稍后......</p>");
 		$('#company_detail_reg_msg').show();
 		var userName = $('#userName').val();
@@ -198,7 +198,7 @@ angular.module('ywLanding')
 				$('#company_detail_reg_msg').html("<p style='color: #FD7A50;'>服务器暂时不可用，请稍后重试！</p>");
 			}
 		});
-	};
+	};*/
 	
 	$scope.emailFormat = /[a-zA-Z0-9_.]+@[a-zA-Z0-9_.]+/;
 }])
