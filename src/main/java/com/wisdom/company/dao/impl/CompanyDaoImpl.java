@@ -182,9 +182,9 @@ public class CompanyDaoImpl implements ICompanyDao {
 	}
 	//update accounter_id from company table
 	@Override
-	public boolean updateAccounterForCompany(long companyId, String accounterId) {
-		String sql="update company set accounter_id=? where id=?";
-		int affectedRows = jdbcTemplate.update(sql, accounterId, companyId);
+	public boolean updateAccounterForCompany(long companyId, String accounterId, String taxpayer_type, String invoice_amount) {
+		String sql="update company set accounter_id=?, taxpayer_type=?, invoice_amount=? where id=?";
+		int affectedRows = jdbcTemplate.update(sql, accounterId, taxpayer_type, invoice_amount,  companyId);
 		logger.debug("updateCompanyAccounter accounter_id result : {}", affectedRows);
 		return  affectedRows != 0;
 	}

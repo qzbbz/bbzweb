@@ -156,8 +156,8 @@ public class CompanyServiceImpl implements ICompanyService {
 	}
 
 	@Override
-	public boolean updateAccounterForCompany(long companyId, String accounterId) {
-		return companyDao.updateAccounterForCompany(companyId, accounterId);
+	public boolean updateAccounterForCompany(long companyId, String accounterId, String taxpayer_type, String invoice_amount) {
+		return companyDao.updateAccounterForCompany(companyId, accounterId, taxpayer_type, invoice_amount);
 	}
 
 	@Override

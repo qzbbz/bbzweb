@@ -418,9 +418,11 @@ public class AdminController {
 		Map<String, String> retMap = new HashMap<>();
 		boolean updateBoolean = false;
 		try{
-			String companyId=request.getParameter("globalCompanyId");
-			String accounterId=request.getParameter("selectValue");
-			updateBoolean = companyService.updateAccounterForCompany(Long.parseLong(companyId), accounterId);
+			String companyId = request.getParameter("globalCompanyId");
+			String accounterId = request.getParameter("selectValue");
+			String taxpayer_type = request.getParameter("taxpayer_type");
+			String invoice_amount = request.getParameter("invoice_amount");
+			updateBoolean = companyService.updateAccounterForCompany(Long.parseLong(companyId), accounterId, taxpayer_type, invoice_amount);
 		}catch(Exception e){
 			logger.debug("getAccounterIdInfo exception : {}", e.toString());
 		}
