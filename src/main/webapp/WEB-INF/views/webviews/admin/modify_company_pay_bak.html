@@ -123,6 +123,15 @@
 <script src="/js/webjs/menuTree.js"></script>
 <script type="text/javascript">
 var currentSelectedCompanyId;
+var reg = /^[1-9]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/;
+	var regExp = new RegExp(reg);
+	function checkDateFormat(value){
+		if(!regExp.test(value)){
+		　　return false;
+		} else {
+			return true;
+		}
+	}
 BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 	var modifyPwdForm = new Overlay.Dialog({
         title:'密码修改',
@@ -197,6 +206,10 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 				var serviceExpiredTime = $('#service_expired_date').val();
 				if(serviceTime == null || serviceTime == "") {
 					BUI.Message.Alert('请输入服务期限！','warning');
+					return;
+				}
+				if(!checkDateFormat(serviceExpiredTime)){
+					BUI.Message.Alert('服务期限日期格式不正确，正确格式为：YYYY-MM-DD','warning');
 					return;
 				}
 				if(serviceAmount == null || serviceAmount == "") {

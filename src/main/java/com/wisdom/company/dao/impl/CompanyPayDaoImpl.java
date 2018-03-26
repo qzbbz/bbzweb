@@ -58,15 +58,16 @@ public class CompanyPayDaoImpl implements ICompanyPayDao {
 
 	@Override
 	public long addCompanyPay(CompanyPay companyPay) {
-		String sql = "insert into company_pay (company_id, pay_status, pay_amount, service_time, order_no, create_time)"
-				+ " values (?, ?, ?, ?, ?, ?)";
+		String sql = "insert into company_pay (company_id, pay_status, pay_amount, service_time, order_no, create_time, expired_time)"
+				+ " values (?, ?, ?, ?, ?, ?,?)";
 		int affectedRows = jdbcTemplate.update(sql, 
 				companyPay.getCompanyId() == null ? 0 : companyPay.getCompanyId(),
 				companyPay.getPayStatus() == null ? 0 : companyPay.getPayStatus(),
 				companyPay.getPayAmount() == null ? "" : companyPay.getPayAmount(),
 				companyPay.getServiceTime() == null ? "" : companyPay.getServiceTime(),
 				companyPay.getOrderNo() == null ? "" : companyPay.getOrderNo(),
-				companyPay.getCreateTime() == null ? new Timestamp(System.currentTimeMillis()) : companyPay.getCreateTime());
+				companyPay.getCreateTime() == null ? new Timestamp(System.currentTimeMillis()) : companyPay.getCreateTime(),
+				companyPay.getExpiredTime());
 		logger.debug("addCompanyPay result : {}", affectedRows);
 		return affectedRows;
 	}
