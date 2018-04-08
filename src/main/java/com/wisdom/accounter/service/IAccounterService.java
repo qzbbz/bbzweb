@@ -62,4 +62,5 @@ public interface IAccounterService {
 	
 	public int getCustomerTaoBaoCountByMonth(long companyId, int type);
 	
+	public List<Map<String, Object>> getAllAccounterListMap();
 }

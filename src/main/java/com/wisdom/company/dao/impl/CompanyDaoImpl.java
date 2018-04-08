@@ -182,9 +182,9 @@ public class CompanyDaoImpl implements ICompanyDao {
 	}
 	//update accounter_id from company table
 	@Override
-	public boolean updateAccounterForCompany(long companyId, String accounterId, String taxpayer_type, String invoice_amount) {
-		String sql="update company set accounter_id=?, taxpayer_type=?, invoice_amount=? where id=?";
-		int affectedRows = jdbcTemplate.update(sql, accounterId, taxpayer_type, invoice_amount,  companyId);
+	public boolean updateAccounterForCompany(long companyId, String accounterId, String taxpayer_type, String invoice_amount, String vice_accounter_id) {
+		String sql="update company set accounter_id=?, taxpayer_type=?, invoice_amount=?, vice_accounter_id=? where id=?";
+		int affectedRows = jdbcTemplate.update(sql, accounterId, taxpayer_type, invoice_amount, vice_accounter_id, companyId);
 		logger.debug("updateCompanyAccounter accounter_id result : {}", affectedRows);
 		return  affectedRows != 0;
 	}
@@ -232,7 +232,7 @@ public class CompanyDaoImpl implements ICompanyDao {
 	@Override
 	public List<Map<String, Object>> getComByIndexAndKey(int i, int length, String key) {
 		List<Map<String, Object>> companyList = null;
-		String sql="select tmp.*, user.user_name from (select c.* from company c left join user u on c.id = u.company_id where u.type_id = 2 and (c.name like '%"+key+"%' or c.id like '%"+key+"%') order by c.create_time desc limit ?,?) as tmp left join user on tmp.accounter_id=user.user_id";
+		String sql="select tmp.*, user.user_name, user2.user_name as vice_accounter from (select c.* from company c left join user u on c.id = u.company_id where u.type_id = 2 and (c.name like '%"+key+"%' or c.id like '%"+key+"%') order by c.create_time desc limit ?,?) as tmp left join user on tmp.accounter_id=user.user_id left join user user2 on tmp.vice_accounter_id=user2.user_id";
 		try{
 			companyList=jdbcTemplate.queryForList(sql, i, length);
 		}catch(Exception e){
@@ -256,7 +256,7 @@ public class CompanyDaoImpl implements ICompanyDao {
 	@Override
 	public List<Map<String, Object>> getComPayInfoByIndexAndKey(int i, int length, String key) {
 		List<Map<String, Object>> companyList = null;
-		String sql="select a.id, a.name, b.pay_amount, b.service_time, b.create_time, DATE_FORMAT(b.expired_time,'%Y-%m-%d') as expired_time from company a left join company_pay b on a.id = b.company_id where a.parent_id = -1 and (a.name like '%"+key+"%' or a.id like '%"+key+"%') order by a.create_time desc limit ?,?";
+		String sql="select a.id, a.name, b.pay_amount, b.service_time, b.create_time, DATE_FORMAT(b.expired_time,'%Y-%m-%d') as expired_time, b.gongshangnianjian, b.gongshangnianjian_expired_time, b.huisuanqingjiao, b.huisuanqingjiao_expired_time from company a left join company_pay b on a.id = b.company_id where a.parent_id = -1 and (a.name like '%"+key+"%' or a.id like '%"+key+"%') order by a.create_time desc limit ?,?";
 		try{
 			companyList=jdbcTemplate.queryForList(sql, i, length);
 		}catch(Exception e){

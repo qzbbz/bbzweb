@@ -14,7 +14,7 @@ public interface ICompanyDao {
 	
 	public List<Company> getCompanyAndAccounter();
 	
-	public boolean updateAccounterForCompany(long companyId,String accounterId, String taxpayer_type, String invoice_amount);
+	public boolean updateAccounterForCompany(long companyId,String accounterId, String taxpayer_type, String invoice_amount, String vice_accounter_id);
 	
 	public long addCompany(Company company);
 	

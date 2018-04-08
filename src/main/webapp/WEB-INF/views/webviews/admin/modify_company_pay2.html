@@ -39,27 +39,19 @@
 			<div id="currentTips" class="tips tips-warning" style="display: none;"></div>
 			<table class="table center">
 	    		<colgroup>
-	    			<col style="width:5%;">
-	    			<col style="width:25%;">
-	    			<col style="width:7%;">
-	    			<col style="width:7%;">
 	    			<col style="width:10%;">
-	    			<col style="width:7%;">
+	    			<col style="width:50%;">
 	    			<col style="width:10%;">
-	    			<col style="width:7%;">
+	    			<col style="width:10%;">
 	    			<col style="width:10%;">
 	    			<col style="width:10%;">
 	    		</colgroup>
 	    		<thead id="records">
 	    			<tr>
-	    				<th>ID</th>
+	    				<th>公司ID</th>
 	    				<th>公司名称</th>
 	    				<th>服务时长</th>
 	    				<th>服务费用</th>
-	    				<th>服务期至</th>
-	    				<th>工商年检</th>
-	    				<th>有效期至</th>
-	    				<th>汇算清缴</th>
 	    				<th>有效期至</th>
 	    				<th>操作</th>
 	    			</tr>
@@ -122,40 +114,10 @@
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label">服务到期期限：</label>
+				<label class="control-label">服务到期期限（YYYY-MM-DD）：</label>
 				<div class="controls control-row-auto">
 					<input id="service_expired_date" type="text" class="input-large"
 						data-rules="{required : true}" style="width:250px;">
-				</div>
-			</div>
-			<div class="control-group">
-				<label class="control-label">是否包含工商年检：</label>
-				<div class="controls control-row-auto">
-					<select class="input-large" style="width:262px;" id="gongshangnianjian">
-						<option value="0">否</option>
-						<option value="1">是</option>
-					</select>
-				</div>
-			</div>
-			<div class="control-group" id="gongshang_expired" style="display:none">
-				<label class="control-label">工商年检到期时间：</label>
-				<div class="controls control-row-auto">
-					<input id="gongshang_expired_date" type="text" class="input-large" style="width:250px;">
-				</div>
-			</div>
-			<div class="control-group">
-				<label class="control-label">是否包含汇算清缴：</label>
-				<div class="controls control-row-auto">
-					<select class="input-large" style="width:262px;" id="huisuanqingjiao">
-						<option value="0">否</option>
-						<option value="1">是</option>
-					</select>
-				</div>
-			</div>
-			<div class="control-group" id="huisuan_expired" style="display:none">
-				<label class="control-label">汇算清缴到期时间：</label>
-				<div class="controls control-row-auto">
-					<input id="huisuan_expired_date" type="text" class="input-large" style="width:250px;">
 				</div>
 			</div>
 			<div class="control-group control-btn">
@@ -238,9 +200,9 @@
 		});
 		$("#mask").css("z-index", 99);
 		var modifyCompanyPay = new Overlay.Dialog({
-	        title:'修改服务时间和费用（日期格式为（YYYY-MM-DD））',
+	        title:'修改服务时间和费用',
 	        width:600,
-	        height:430,
+	        height:280,
 	        contentId:'modifyCompanyPay',
 	        success:function () {
 	          	this.close();
@@ -252,10 +214,6 @@
 			var serviceTime = $('#service_time').val();
 			var serviceAmount = $('#service_amount').val();
 			var serviceExpiredTime = $('#service_expired_date').val();
-			var gongshangnianjian = $('#gongshangnianjian option:selected').val();
-			var gongshang_expired = $('#gongshang_expired_date').val();
-			var huisuanqingjiao = $('#gongshangnianjian option:selected').val();
-			var huisuan_expired = $('#huisuan_expired_date').val();
 			if(serviceTime == null || serviceTime == "") {
 				BUI.Message.Alert('请输入服务期限！','warning');
 				return;
@@ -268,27 +226,11 @@
 				BUI.Message.Alert('请输入服务费用！','warning');
 				return;
 			}
-			if(gongshangnianjian == '1' && !checkDateFormat(gongshang_expired)){
-				BUI.Message.Alert('工商年检到期时间日期格式不正确，正确格式为：YYYY-MM-DD','warning');
-				return;
-			}
-			if(huisuanqingjiao == '1' && !checkDateFormat(serviceExpiredTime)){
-				BUI.Message.Alert('汇算清缴到期时间日期格式不正确，正确格式为：YYYY-MM-DD','warning');
-				return;
-			}
+
 			$.ajax({
 				url : '/admin/modifyCompanyPayInfo',
 				type : "POST",
-				data : {
-					serviceTime : serviceTime,
-					serviceAmount : serviceAmount,
-					expiredTime : serviceExpiredTime,
-					gongshangnianjian : gongshangnianjian,
-					gongshang_expired : gongshang_expired,
-					huisuanqingjiao : huisuanqingjiao,
-					huisuan_expired : huisuan_expired,
-					companyId : currentSelectedCompanyId
-				},
+				data : {serviceTime:serviceTime,serviceAmount:serviceAmount,expiredTime:serviceExpiredTime,companyId:currentSelectedCompanyId},
 				success : function(data) {
 					modifyCompanyPay.close();
 					if(data.result == "false") {
@@ -314,12 +256,8 @@
 						+"<td>"+data[i].name+"</td>"
 						+"<td>"+(data[i].service_time == null?'':data[i].service_time)+"</td>"
 						+"<td>"+(data[i].pay_amount == null?'':data[i].pay_amount)+"</td>"
-						+"<td>"+(data[i].expired_time == null?'':data[i].expired_time)+"</td>"
-						+"<td>"+(data[i].gongshangnianjian == null?'':(data[i].gongshangnianjian=='0'?'否':'是'))+"</td>"
-						+"<td>"+(data[i].gongshangnianjian_expired_time == null?'':data[i].gongshangnianjian_expired_time)+"</td>"
-						+"<td>"+(data[i].huisuanqingjiao == null?'':(data[i].huisuanqingjiao=='0'?'否':'是'))+"</td>"
-						+"<td>"+(data[i].huisuanqingjiao_expired_time == null?'':data[i].huisuanqingjiao_expired_time)+"</td>");
-			    var operateNode = $("<td><a href='javascript:void(0);'>修改</a></td>");
+						+"<td>"+(data[i].expired_time == null?'':data[i].expired_time)+"</td>");
+			    var operateNode = $("<td><a href='javascript:void(0);'>修改服务时间和费用</a></td>");
 			    operateNode.attr("company_id", data[i].id);
 			    operateNode.click(function(event) {
 			    	currentSelectedCompanyId = $(this).attr("company_id");
@@ -393,21 +331,6 @@
     function defaultSelect(id){ 
         $("#"+id).parent().addClass("bui-menu-item-selected")
     }
-    
-    $('#gongshangnianjian').change(function() {
-    	if($('#gongshangnianjian option:selected').val() == '1') {
-    		$('#gongshang_expired').css('display','');
-    	} else {
-    		$('#gongshang_expired').css('display','none');
-    	}
-    });
-    $('#huisuanqingjiao').change(function() {
-    	if($('#huisuanqingjiao option:selected').val() == '1') {
-    		$('#huisuan_expired').css('display','');
-    	} else {
-    		$('#huisuan_expired').css('display','none');
-    	}
-    });
 </script>
 </body>
 </html>

@@ -283,4 +283,16 @@ public class AccounterDaoImpl implements IAccounterDao {
 		return count;
 	}
 
+	@Override
+	public List<Map<String, Object>> getAllAccounterListMap() {
+		List<Map<String, Object>> list = null;
+		try {
+			String sql = "select accounter.*, user.user_name from accounter left join user on accounter.user_id=user.user_id";
+			list = jdbcTemplate.queryForList(sql);
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return list;
+	}
+
 }

@@ -203,4 +203,37 @@ public class CompanyPayDaoImpl implements ICompanyPayDao {
 		return list;
 	}
 
+	@Override
+	public int addCompanyPayDetail(CompanyPay companyPay, String huisuanqingjiao, String huisuanqingjiao_expired_time,
+			String gongshangnianjian, String gongshangnianjian_expired_time) {
+		String sql = "insert into company_pay (company_id, pay_status, pay_amount, service_time, order_no, create_time, expired_time, huisuanqingjiao, huisuanqingjiao_expired_time, gongshangnianjian, gongshangnianjian_expired_time)"
+				+ " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		int affectedRows = jdbcTemplate.update(sql, 
+				companyPay.getCompanyId() == null ? 0 : companyPay.getCompanyId(),
+				companyPay.getPayStatus() == null ? 0 : companyPay.getPayStatus(),
+				companyPay.getPayAmount() == null ? "" : companyPay.getPayAmount(),
+				companyPay.getServiceTime() == null ? "" : companyPay.getServiceTime(),
+				companyPay.getOrderNo() == null ? "" : companyPay.getOrderNo(),
+				companyPay.getCreateTime() == null ? new Timestamp(System.currentTimeMillis()) : companyPay.getCreateTime(),
+				companyPay.getExpiredTime(), huisuanqingjiao, huisuanqingjiao_expired_time, gongshangnianjian, gongshangnianjian_expired_time);
+		logger.debug("addCompanyPay result : {}", affectedRows);
+		return affectedRows;
+	}
+
+	@Override
+	public boolean updateCompanyPayDetailByCompanyId(Long companyId, Integer payStatus, Double amount, String orderNo,
+			int serviceTime, Timestamp newExpiredTime, String location, Integer perMonth, String taxType,
+			String huisuanqingjiao, String huisuanqingjiao_expired_time, String gongshangnianjian,
+			String gongshangnianjian_expired_time) {
+		String sql = "update company_pay set pay_status=?, pay_amount=?, service_time=?, "
+				+ "order_no=?, create_time=NOW(), expired_time=?, location=?, per_month=?, "
+				+ "type=?, huisuanqingjiao=?, huisuanqingjiao_expired_time=?, gongshangnianjian=?, "
+				+ "gongshangnianjian_expired_time=? where company_id=?";
+		int affectedRows = jdbcTemplate.update(sql, payStatus, amount, serviceTime, orderNo, newExpiredTime, 
+				location, perMonth, taxType, huisuanqingjiao, huisuanqingjiao_expired_time, 
+				gongshangnianjian, gongshangnianjian_expired_time, companyId);
+		logger.debug("updateCompanyPay result : {}", affectedRows);
+		return affectedRows != 0;
+	}
+
 }

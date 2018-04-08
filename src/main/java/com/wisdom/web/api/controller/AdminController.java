@@ -400,10 +400,10 @@ public class AdminController {
 	// get company Info by company_id and user_type
 	@RequestMapping("/admin/getAccounterIdInfo")
 	@ResponseBody
-	public List<Accounter> getAccounterIdInfo(HttpServletRequest request) {
-		List<Accounter> accounterList = new ArrayList<>();
+	public List<Map<String, Object>> getAccounterIdInfo(HttpServletRequest request) {
+		List<Map<String, Object>> accounterList = new ArrayList<>();
 		try{
-			accounterList =accounterService.getAllAccounterList();
+			accounterList = accounterService.getAllAccounterListMap();
 		}catch(Exception e){
 			logger.debug("getAccounterIdInfo exception : {}", e.toString());
 		}
@@ -420,9 +420,10 @@ public class AdminController {
 		try{
 			String companyId = request.getParameter("globalCompanyId");
 			String accounterId = request.getParameter("selectValue");
+			String vice_accounter_id = request.getParameter("vice_accounter");
 			String taxpayer_type = request.getParameter("taxpayer_type");
 			String invoice_amount = request.getParameter("invoice_amount");
-			updateBoolean = companyService.updateAccounterForCompany(Long.parseLong(companyId), accounterId, taxpayer_type, invoice_amount);
+			updateBoolean = companyService.updateAccounterForCompany(Long.parseLong(companyId), accounterId, taxpayer_type, invoice_amount, vice_accounter_id);
 		}catch(Exception e){
 			logger.debug("getAccounterIdInfo exception : {}", e.toString());
 		}
@@ -475,6 +476,10 @@ public class AdminController {
 		String serviceAmount = request.getParameter("serviceAmount");
 		Long companyId = Long.valueOf(request.getParameter("companyId"));
 		String serviceExpiredTime = request.getParameter("expiredTime");
+		String huisuanqingjiao = request.getParameter("huisuanqingjiao");
+		String huisuanqingjiao_expired_time = request.getParameter("huisuan_expired");
+		String gongshangnianjian = request.getParameter("gongshangnianjian");
+		String gongshangnianjian_expired_time = request.getParameter("gongshang_expired");
 		CompanyPay cp = companyPayService.getCompanyPayByCompanyId(companyId);
 		boolean success = false;
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -494,13 +499,15 @@ public class AdminController {
 				Timestamp expiredTimestamp = new java.sql.Timestamp(parsedDate.getTime());
 				cp.setExpiredTime(expiredTimestamp);
 			}
-			success = companyPayService.addCompanyPay(cp) != 0;
+			success = companyPayService.addCompanyPayDetail(cp, huisuanqingjiao, huisuanqingjiao_expired_time, gongshangnianjian, gongshangnianjian_expired_time) != 0;
 		} else {
 			Timestamp expiredTimestamp = null;
 			if(parsedDate != null){
 				expiredTimestamp = new java.sql.Timestamp(parsedDate.getTime());
 			}
-			success = companyPayService.updateCompanyPayByCompanyId(companyId, 0, Double.valueOf(serviceAmount), "", Integer.valueOf(serviceTime), expiredTimestamp, cp.getLocation(),cp.getPerMonth(),cp.getType());
+			success = companyPayService.updateCompanyPayDetailByCompanyId(companyId, 0, Double.valueOf(serviceAmount), "", 
+					Integer.valueOf(serviceTime), expiredTimestamp, cp.getLocation(), cp.getPerMonth(), cp.getType(),
+					huisuanqingjiao, huisuanqingjiao_expired_time, gongshangnianjian, gongshangnianjian_expired_time);
 		}
 		if(success) {
 			retMap.put("result", "true");

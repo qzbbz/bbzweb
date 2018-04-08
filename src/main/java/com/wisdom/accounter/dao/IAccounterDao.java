@@ -40,4 +40,6 @@ public interface IAccounterDao {
 	public boolean addCustomerComment(CustomerTaoBao ctb);
 	
 	public int getCustomerTaoBaoCountByMonth(long companyId, int type);
+
+	public List<Map<String, Object>> getAllAccounterListMap();
 }

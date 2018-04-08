@@ -802,4 +802,9 @@ public class AccounterServiceImpl implements IAccounterService {
 	public int getCustomerTaoBaoCountByMonth(long companyId, int type) {
 		return accounterDao.getCustomerTaoBaoCountByMonth(companyId, type);
 	}
+
+	@Override
+	public List<Map<String, Object>> getAllAccounterListMap() {
+		return accounterDao.getAllAccounterListMap();
+	}
 }

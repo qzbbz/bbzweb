@@ -36,5 +36,13 @@ public interface ICompanyPayService {
 	public List<CompanyAndPayModel> getCompanyAndPayModel();
 	
 	public List<CompanyAndPayModel> getCompanyAndPayModelByCompanyName(String companyName);
+
+	public int addCompanyPayDetail(CompanyPay cp, String huisuanqingjiao, String huisuanqingjiao_expired_time,
+			String gongshangnianjian, String gongshangnianjian_expired_time);
+
+	public boolean updateCompanyPayDetailByCompanyId(Long companyId, Integer payStatus, 
+			Double amount, String orderNo, int serviceTime, Timestamp expiredTime, String location, 
+			Integer perMonth, String taxType, String huisuanqingjiao, String huisuanqingjiao_expired_time, 
+			String gongshangnianjian, String gongshangnianjian_expired_time);
 	
 }

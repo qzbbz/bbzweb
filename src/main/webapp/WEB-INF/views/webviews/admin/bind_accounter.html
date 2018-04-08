@@ -41,22 +41,24 @@
 			</div>
 			<div id="currentTips" class="tips tips-warning"
 				style="display: none;"></div>
-			<table class="table center">
+			<table class="table center" style="word-wrap:break-word; word-break:break-all;">
 				<colgroup>
 					<col style="width: 5%;">
-					<col style="width: 25%;">
-					<col style="width: 25%;">
-					<col style="width: 10%;">
+					<col style="width: 20%;">
+					<col style="width: 7%;">
+					<col style="width: 7%;">
+					<col style="width: 11%;">
 					<col style="width: 15%;">
 					<col style="width: 10%;">
 					<col style="width: 10%;">
 				</colgroup>
 				<thead>
 					<tr>
-						<th>公司ID</th>
+						<th>ID</th>
 						<th>公司名称</th>
-						<th>会计ID</th>
 						<th>会计</th>
+						<th>副会计</th>
+						<th>客户联系方式</th>
 						<th>纳税人类型</th>
 						<th>发票张数</th>
 						<th>修改</th>
@@ -120,6 +122,11 @@
 				<label class="control-label">会计：</label>
 				<div class="controls control-row-auto"
 					id="updateAccounterForm_accounterSelect"></div>
+			</div>
+			<div class="control-group" id="bindingDetail">
+				<label class="control-label">副会计：</label>
+				<div class="controls control-row-auto"
+					id="vice_accounter_list"></div>
 			</div>
 			<div class="control-group">
 				<label class="control-label">纳税人类型：</label>
@@ -222,15 +229,14 @@
 		function createAccounterList(data) {
 			if (data == null || data == "")
 				return;
-			var selectNode = $("<select id='selectTag' style=\"width:250px;\" ></select>");
+			var selectNode = $("<select style=\"width:250px;\" ></select>");
 			for (var i = 0; i < data.length; i++) {
-				var tdNode1 = $("<option value="+data[i].userId+">"
-						+ data[i].userId + "</option>  ");
+				var tdNode1 = $("<option value="+data[i].user_id+">"
+						+ data[i].user_id + "  (" + data[i].user_name + ")" + "</option>  ");
 				tdNode1.appendTo(selectNode);
 			}
-			$('#updateAccounterForm_accounterSelect').html(selectNode);
+			$('#updateAccounterForm_accounterSelect,#vice_accounter_list').html(selectNode);
 		};
-
 		$.ajax({
 			url : '/admin/getAccounterIdInfo',
 			type : "POST",
@@ -246,7 +252,7 @@
 			var updateAccounterForm = new Overlay.Dialog({
 				title : '修改绑定会计',
 				width : 600,
-				height : 300,
+				height : 340,
 				contentId : 'updateAccounterForm',
 				success : function() {
 					this.close();
@@ -254,7 +260,8 @@
 				buttons : []
 			});
 			$('#updateAccounterForm_accounter_info').click(function() {
-				var selectValue = $('#selectTag option:selected').val();
+				var selectValue = $('#updateAccounterForm_accounterSelect select option:selected').val();
+				var vice_accounter = $('#vice_accounter_list select option:selected').val();
 				var taxpayer_type = $('#taxpayer_type option:selected').val();
 				var invoice_amount = $('#invoice_amount option:selected').val();
 				if (selectValue == null || selectValue == "" ||
@@ -269,6 +276,7 @@
 				}
 				$.ajax({url : '/admin/updatCompanyAccounterIdInfo', type : "POST",data : {
 						selectValue : selectValue,
+						vice_accounter : vice_accounter,
 						globalCompanyId : globalCompanyId,
 						taxpayer_type : taxpayer_type,
 						invoice_amount : invoice_amount
@@ -297,8 +305,9 @@
 				var trNode = $("<tr></tr>");
 				var tdNode = $("<td>" + data[index].id
 						+ "</td><td>" + data[index].name
-						+ "</td><td>" + (data[index].accounter_id==null?'':data[index].accounter_id)
 						+ "</td><td>" + (data[index].user_name==null?'':data[index].user_name)
+						+ "</td><td>" + (data[index].vice_accounter==null?'':data[index].vice_accounter)
+						+ "</td><td>"
 						+ "</td><td>" + (data[index].taxpayer_type==null?'':(data[index].taxpayer_type=='1'?'小规模纳税人':'一般纳税人'))
 						+ "</td><td>" + (data[index].invoice_amount==null?'':(data[index].invoice_amount=='0'?'0张':(data[index].invoice_amount=='1'?'小于30张':'大于30张')))
 						+ "</td>");

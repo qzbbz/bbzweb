@@ -169,4 +169,43 @@ public class CompanyPayServiceImpl implements ICompanyPayService {
 		return companyPayDao.getCompanyAndPayModelByCompanyName(companyName);
 	}
 
+	@Override
+	public int addCompanyPayDetail(CompanyPay cp, String huisuanqingjiao, String huisuanqingjiao_expired_time,
+			String gongshangnianjian, String gongshangnianjian_expired_time) {
+		return companyPayDao.addCompanyPayDetail(cp, huisuanqingjiao, huisuanqingjiao_expired_time, gongshangnianjian, gongshangnianjian_expired_time);
+	}
+
+	@Override
+	public boolean updateCompanyPayDetailByCompanyId(Long companyId, Integer payStatus, Double amount, String orderNo,
+			int serviceTime, Timestamp expiredTime, String location, Integer perMonth, String taxType,
+			String huisuanqingjiao, String huisuanqingjiao_expired_time, String gongshangnianjian,
+			String gongshangnianjian_expired_time) {
+		CompanyPay companyPay = companyPayDao.getCompanyPayByCompanyId(companyId);
+		Timestamp newExpiredTime = new Timestamp(0);
+		if(payStatus == 2){
+			Timestamp currentExpiredTime = companyPay.getExpiredTime();
+			java.util.Date date= new java.util.Date();
+			Timestamp now = new Timestamp(date.getTime());
+			Calendar c = Calendar.getInstance();
+			if(currentExpiredTime != null && now.before(currentExpiredTime)){
+				c.setTime(currentExpiredTime);
+				c.add(Calendar.MONTH, serviceTime); 
+			}else{
+				c.setTime(now);
+				c.add(Calendar.MONTH, serviceTime); 
+			}
+
+			newExpiredTime.setTime(c.getTime().getTime());
+			
+		}else{
+			newExpiredTime = companyPay.getExpiredTime();
+		}
+		if(expiredTime != null){
+			newExpiredTime = expiredTime;
+		}
+		return companyPayDao.updateCompanyPayDetailByCompanyId(companyId, payStatus, amount, orderNo, 
+				serviceTime, newExpiredTime, location, perMonth, taxType, huisuanqingjiao, huisuanqingjiao_expired_time,
+				gongshangnianjian, gongshangnianjian_expired_time);
+	}
+
 }
