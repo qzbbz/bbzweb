@@ -274,7 +274,7 @@
 					BUI.Message.Alert('没有获取到公司名称！', 'warning');
 					return;
 				}
-				$.ajax({url : '/admin/updatCompanyAccounterIdInfo', type : "POST",data : {
+				$.ajax({url : '/admin/updateCompanyAccounterIdInfo', type : "POST",data : {
 						selectValue : selectValue,
 						vice_accounter : vice_accounter,
 						globalCompanyId : globalCompanyId,

@@ -412,7 +412,7 @@ public class AdminController {
 	}
 	
 	// update company with accounter_id by company_id and user_type 
-	@RequestMapping("/admin/updatCompanyAccounterIdInfo")
+	@RequestMapping("/admin/updateCompanyAccounterIdInfo")
 	@ResponseBody
 	public Map<String, String> updatCompanyAccounterIdInfo(HttpServletRequest request) {
 		Map<String, String> retMap = new HashMap<>();
