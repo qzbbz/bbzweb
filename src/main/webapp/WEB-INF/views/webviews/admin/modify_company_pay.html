@@ -324,8 +324,34 @@
 						+"<td>"+(data[i].huisuanqingjiao_expired_time == null?'':data[i].huisuanqingjiao_expired_time)+"</td>");
 			    var operateNode = $("<td><a href='javascript:void(0);'>修改</a></td>");
 			    operateNode.attr("company_id", data[i].id);
+			    operateNode.attr("service_time", data[i].service_time);
+			    operateNode.attr("pay_amount", data[i].pay_amount);
+			    operateNode.attr("expired_time", data[i].expired_time);
+			    operateNode.attr("gongshangnianjian", data[i].gongshangnianjian);
+			    operateNode.attr("gongshangnianjian_expired_time", data[i].gongshangnianjian_expired_time);
+			    operateNode.attr("huisuanqingjiao", data[i].huisuanqingjiao);
+			    operateNode.attr("huisuanqingjiao_expired_time", data[i].huisuanqingjiao_expired_time);
 			    operateNode.click(function(event) {
 			    	currentSelectedCompanyId = $(this).attr("company_id");
+			    	$('#service_time').val($(this).attr('service_time'));
+			    	$('#service_amount').val($(this).attr('pay_amount'));
+			    	$('#service_expired_date').val($(this).attr('expired_time'));
+			    	$('#gongshangnianjian').val($(this).attr('gongshangnianjian'));
+			    	$('#huisuanqingjiao').val($(this).attr('huisuanqingjiao'));
+			    	if($(this).attr('gongshangnianjian') == '1') {
+			    		$('#gongshang_expired').css('display', '');
+			    		$('#gongshang_expired_date').val($(this).attr('gongshangnianjian_expired_time'));
+			    	} else {
+			    		$('#gongshang_expired').css('display', 'none');
+			    		$('#gongshang_expired_date').val('');
+			    	}
+			    	if($(this).attr('huisuanqingjiao') == '1') {
+			    		$('#huisuan_expired').css('display', '');
+			    		$('#huisuan_expired_date').val($(this).attr('huisuanqingjiao_expired_time'));
+			    	} else {
+			    		$('#huisuan_expired').css('display', 'none');
+			    		$('#huisuan_expired_date').val('');
+			    	}
 			    	modifyCompanyPay.show();
 			    });
 			    tdNode.appendTo(trNode);
