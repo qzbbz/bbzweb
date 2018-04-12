@@ -315,10 +315,18 @@
 				companyNode.attr("company-id", data[index].id);
 				companyNode.attr("company-name",
 						data[index].name);
+				companyNode.attr('accounter_id', data[index].accounter_id);
+				companyNode.attr('vice_accounter_id', data[index].vice_accounter_id);
+				companyNode.attr('taxpayer_type', data[index].taxpayer_type);
+				companyNode.attr('invoice_amount', data[index].invoice_amount);
 				companyNode.click(function(event) {
 					globalCompanyId = $(this).attr("company-id");
 					globalCompanyName = $(this).attr("company-name");
 					var companyName = $('#updateAccounterForm_companyName').html(globalCompanyName);
+					$('#updateAccounterForm_accounterSelect select').find('option[value=\"'+$(this).attr("accounter_id")+'\"]').prop('selected', true);
+					$('#vice_accounter_list select').find('option[value=\"'+$(this).attr("vice_accounter_id")+'\"]').prop('selected', true);
+					$('#taxpayer_type').find('option[value=\"'+$(this).attr("taxpayer_type")+'\"]').prop('selected', true);
+					$('#invoice_amount').find('option[value=\"'+$(this).attr("invoice_amount")+'\"]').prop('selected', true);
 					updateAccounterForm.show();
 				});
 				tdNode.appendTo(trNode);

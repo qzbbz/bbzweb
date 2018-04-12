@@ -232,7 +232,7 @@ public class CompanyDaoImpl implements ICompanyDao {
 	@Override
 	public List<Map<String, Object>> getComByIndexAndKey(int i, int length, String key) {
 		List<Map<String, Object>> companyList = null;
-		String sql="select company.id, company.name, company.taxpayer_type, company.invoice_amount,user.user_name, vuser.user_name as vice_accounter, company_phone.phone from company left join user on company.accounter_id=user.user_id LEFT JOIN user as vuser on company.vice_accounter_id=vuser.user_id LEFT JOIN (select user_phone.phone,company.id from company LEFT JOIN user on user.type_id=2 and user.company_id=company.id LEFT JOIN user_phone on user_phone.user_id=user.user_id) as company_phone on company_phone.id=company.id where company.name like '%"+key+"%' or company.id like '%"+key+"%' ORDER BY company.create_time desc limit ?,?";
+		String sql="select company.id, company.accounter_id, company.vice_accounter_id, company.name, company.taxpayer_type, company.invoice_amount,user.user_name, vuser.user_name as vice_accounter, company_phone.phone from company left join user on company.accounter_id=user.user_id LEFT JOIN user as vuser on company.vice_accounter_id=vuser.user_id LEFT JOIN (select user_phone.phone,company.id from company LEFT JOIN user on user.type_id=2 and user.company_id=company.id LEFT JOIN user_phone on user_phone.user_id=user.user_id) as company_phone on company_phone.id=company.id where company.name like '%"+key+"%' or company.id like '%"+key+"%' ORDER BY company.create_time desc limit ?,?";
 		try{
 			companyList=jdbcTemplate.queryForList(sql, i, length);
 		}catch(Exception e){
