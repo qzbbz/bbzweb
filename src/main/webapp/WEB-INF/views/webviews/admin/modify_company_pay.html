@@ -125,7 +125,7 @@
 				<label class="control-label">服务到期期限：</label>
 				<div class="controls control-row-auto">
 					<input id="service_expired_date" type="text" class="input-large"
-						data-rules="{required : true}" style="width:250px;">
+						data-rules="{required : true}" style="width:250px;" placeholder="格式为（YYYY-MM-DD）">
 				</div>
 			</div>
 			<div class="control-group">
@@ -140,7 +140,7 @@
 			<div class="control-group" id="gongshang_expired" style="display:none">
 				<label class="control-label">工商年检到期时间：</label>
 				<div class="controls control-row-auto">
-					<input id="gongshang_expired_date" type="text" class="input-large" style="width:250px;">
+					<input id="gongshang_expired_date" type="text" class="input-large" style="width:250px;" placeholder="格式为（YYYY-MM）">
 				</div>
 			</div>
 			<div class="control-group">
@@ -155,7 +155,7 @@
 			<div class="control-group" id="huisuan_expired" style="display:none">
 				<label class="control-label">汇算清缴到期时间：</label>
 				<div class="controls control-row-auto">
-					<input id="huisuan_expired_date" type="text" class="input-large" style="width:250px;">
+					<input id="huisuan_expired_date" type="text" class="input-large" style="width:250px;" placeholder="格式为（YYYY-MM）">
 				</div>
 			</div>
 			<div class="control-group control-btn">
@@ -178,6 +178,9 @@
 		} else {
 			return true;
 		}
+	}
+	function isEmpty(value) {
+		return value == null || value == undefined || value == '';
 	}
 	var currentSelectedCompanyId;
 	BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
@@ -238,7 +241,7 @@
 		});
 		$("#mask").css("z-index", 99);
 		var modifyCompanyPay = new Overlay.Dialog({
-	        title:'修改服务时间和费用（日期格式为（YYYY-MM-DD））',
+	        title:'修改服务时间和费用',
 	        width:600,
 	        height:430,
 	        contentId:'modifyCompanyPay',
@@ -268,12 +271,12 @@
 				BUI.Message.Alert('请输入服务费用！','warning');
 				return;
 			}
-			if(gongshangnianjian == '1' && !checkDateFormat(gongshang_expired)){
-				BUI.Message.Alert('工商年检到期时间日期格式不正确，正确格式为：YYYY-MM-DD','warning');
+			if(gongshangnianjian == '1' && isEmpty(gongshang_expired)){
+				BUI.Message.Alert('工商年检到期时间日期不能为空','warning');
 				return;
 			}
-			if(huisuanqingjiao == '1' && !checkDateFormat(serviceExpiredTime)){
-				BUI.Message.Alert('汇算清缴到期时间日期格式不正确，正确格式为：YYYY-MM-DD','warning');
+			if(huisuanqingjiao == '1' && isEmpty(huisuan_expired)){
+				BUI.Message.Alert('汇算清缴到期时间日期不能为空','warning');
 				return;
 			}
 			$.ajax({
@@ -397,6 +400,11 @@
     $('#gongshangnianjian').change(function() {
     	if($('#gongshangnianjian option:selected').val() == '1') {
     		$('#gongshang_expired').css('display','');
+    		if(parseInt($('#service_time').val()) >= 12) {
+    			var val = $('#service_expired_date').val().substring(0, $('#service_expired_date').val().lastIndexOf('-'));
+    			$('#gongshang_expired_date').val(val);
+    			$('#gongshang_expired_date').attr('readonly', '');
+    		}
     	} else {
     		$('#gongshang_expired').css('display','none');
     	}
