@@ -230,6 +230,8 @@
 			if (data == null || data == "")
 				return;
 			var selectNode = $("<select style=\"width:250px;\" ></select>");
+			var blankOption = $('<option value=""></option>');
+			blankOption.appendTo(selectNode);
 			for (var i = 0; i < data.length; i++) {
 				var tdNode1 = $("<option value="+data[i].user_id+">"
 						+ data[i].user_id + "  (" + data[i].user_name + ")" + "</option>  ");
