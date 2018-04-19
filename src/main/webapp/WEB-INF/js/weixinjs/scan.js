@@ -34,60 +34,6 @@ function checkJsonIsEmpty(json) {
 	return isEmpty;
 }
 
-mui.createUploadMask = function(callback) {
-	var element = document.createElement('div');
-	element.classList.add('upload-file');	
-	element.addEventListener('touchmove', mui.preventDefault);
-	element.addEventListener('tap', function() {
-		//mask.close();
-	});
-	var progressNode = document.createElement('div');
-	progressNode.id="upload_progress";
-	progressNode.setAttribute('class', 'circle');
-	progressNode.innerHTML = "<strong></strong>";
-	element.appendChild(progressNode);
-	var mask = [element];
-	mask._show = false;
-	mask.show = function() {
-		mask._show = true;
-		element.setAttribute('style', 'opacity:1');
-		progressNode.style.marginLeft = document.body.clientWidth/2-50 + "px";
-		progressNode.style.marginTop = document.documentElement.clientHeight /2 -50 + "px";
-		document.body.appendChild(element);
-		$('#upload_progress').circleProgress({
-	    	value: 0,
-	    	emptyFill: 'rgba(74, 197, 248, 1)',
-	    	animation: false,
-	    	fill: { gradient: ["red", "blue", "green"], gradientAngle: Math.PI / 4 }	
-	    }).on('circle_progress_percent', function(event, progress) {
-	        $(this).find('strong').html(parseInt(100 * progress) + '<i>%</i>');
-	        $('#upload_progress').circleProgress('value', progress);
-	    });
-		return mask;
-	};
-	mask._remove = function() {
-		if (mask._show) {
-			mask._show = false;
-			element.setAttribute('style', 'opacity:0');
-			mui.later(function() {
-				var body = document.body;
-				element.parentNode === body && body.removeChild(element);
-			}, 350);
-		}
-		return mask;
-	};
-	mask.close = function() {
-		if (callback) {
-			if (callback() !== false) {
-				mask._remove();
-			}
-		} else {
-			mask._remove();
-		}
-	};
-	return mask;
-};
-
 mui.createTipDialog = function(info, callBack) {
 	var template = "<div style='width:80%;margin:50% 10%;border:1px solid #ddd;background-color: white;border-radius: 5px;'><div style='margin-top:20px;margin-left:20px;'>提示信息</div><hr/><div style='margin-top:20px;margin-left:20px;margin-bottom:20px;margin-right:20px;height:60px;'>{{info}}</div></div>";
 	var element = document.createElement('div');
@@ -125,45 +71,6 @@ mui.createTipDialog = function(info, callBack) {
 	return mask;
 };
 
-mui.createConfirmDialog = function(info, cancelCallBack, acceptCallBack) {
-	var template = "<div style='width:80%;margin:50% 10%;border:1px solid #ddd;background-color: white;border-radius: 5px;'><div style='margin-top:20px;margin-left:20px;'>提示信息</div><hr/><div style='margin-top:20px;margin-left:20px;margin-bottom:20px;margin-right:20px;height:60px;'>{{info}}</div><div style='text-align:right;margin-bottom:20px;margin-right:20px;'><a id='createConfirmDialog_cancel' href='javascript:void(0);' style='margin-right:20px;text-decoration:none;'>取消</a><a id='createConfirmDialog_accept' href='javascript:void(0);' style='text-decoration:none;'>确定</a></div></div>";
-	var element = document.createElement('div');
-	element.classList.add('dialog');
-	element.innerHTML = template.replace('{{info}}', info);
-	element.addEventListener('touchmove', mui.preventDefault);
-	var mask = [element];
-	mask._show = false;
-	mask.show = function() {
-		mask._show = true;
-		element.setAttribute('style', 'opacity:1');
-		document.body.appendChild(element);
-		document.getElementById('createConfirmDialog_cancel').addEventListener('tap', function() {
-			if (cancelCallBack) cancelCallBack();
-			mask.close();
-		});
-		document.getElementById('createConfirmDialog_accept').addEventListener('tap', function() {
-			if (acceptCallBack) acceptCallBack();
-			mask.close();
-		});
-		return mask;
-	};
-	mask._remove = function() {
-		if (mask._show) {
-			mask._show = false;
-			element.setAttribute('style', 'opacity:0');
-			mui.later(function() {
-				var body = document.body;
-				element.parentNode === body && body.removeChild(element);
-			}, 350);
-		}
-		return mask;
-	};
-	mask.close = function() {
-		mask._remove();
-	};
-	return mask;
-};
-
 mui.init();
 mui('.mui-scroll-wrapper').scroll();
 mui.initPreviewImage();
@@ -196,63 +103,17 @@ function getImageDataURL(img) {
 	return dataURL;
 }
 
-document.getElementById("fapiaoluru_addInvoiceImage").onchange = function(event) {
-	document.getElementById('tips_image').style.display = 'none';
-	document.getElementById('invoice_img_list_root_div').style.display = '';
-	document.getElementById('invoice_img_list_root_div').style.height = window.screen.availHeight - 198 + "px";
-	var imageRootNode = document.getElementById('invoice_img_list_ul');
-	var files = event.target.files,
-		file;
-	if (files && files.length > 0) {
-		for(var i=0; i<files.length; i++) {
-			var liNode = document.createElement('li');
-			liNode.setAttribute("class", "mui-table-view-cell mui-media mui-col-xs-6");
-			var imgNode = document.createElement('img');
-			imgNode.setAttribute("class", "mui-media-object");
-			imgNode.style.width = '300px';
-			imgNode.style.height = '200px';
-			imgNode.setAttribute('data-preview-group', '1');
-			imgNode.setAttribute('data-preview-src', '');
-			liNode.appendChild(imgNode);
-			imageRootNode.appendChild(liNode);
-			file = files[i];
-			try {
-				var URL = window.URL || window.webkitURL;
-				imgURL = URL.createObjectURL(file);
-				imgNode.src = imgURL;
-				invoiceList[imgURL] = document.getElementById('fapiaoluru_addInvoiceImage').files[0];
-			} catch (e) {
-				try {
-					var fileReader = new FileReader();
-					fileReader.onload = function(event) {
-						imgNode.src = event.target.result;
-						invoiceList[imgNode.src] = document.getElementById('fapiaoluru_addInvoiceImage').files[0];
-					};
-					fileReader.readAsDataURL(file);
-				} catch (e) {
-					alert("Neither createObjectURL or FileReader are supported");
-				}
-			}
-		}
-	}
-}
 var globalTypeId;
 var adminUserId;
-
 document.getElementById('company_select').addEventListener('tap', function() {
 	companyPicker.show(function(rs) {
 		document.getElementById('companyName').innerHTML = rs[0].text;
 		document.getElementById('userId').value = rs[0].value;
-		document.getElementById("tips_info_detail").innerHTML = "";
     	document.getElementById("tips_info").style.display = "none";
 		document.getElementById("data_loading").style.display = "none";
-		document.getElementById("select_date").style.display = "";
-		document.getElementById("add_invoice_page").style.display = "";
-		document.getElementById("tips_image").style.display = "";
-		document.getElementById("fapiaoluru_submit").style.display = "";
 	});
 }, false);
-mui.ajax({ 
+mui.ajax({
     type : "POST", 
     url  : "/getUserOpenIdAndBindCompanys",
     success : function(data) {
@@ -269,9 +130,6 @@ mui.ajax({
     		document.getElementById('userId').value = data.companyBriefInfoList[0].value;
 			document.getElementById("data_loading").style.display = "none";
 			document.getElementById("select_date").style.display = "";
-			document.getElementById("add_invoice_page").style.display = "";
-			document.getElementById("tips_image").style.display = "";
-			document.getElementById("fapiaoluru_submit").style.display = "";
 		}
     }, 
     error : function() {

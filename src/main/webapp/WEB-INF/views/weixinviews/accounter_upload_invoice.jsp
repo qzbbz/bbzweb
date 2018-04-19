@@ -223,30 +223,25 @@
 			<h1 class="mui-title">公司发票上传</h1>
 		</header>
 		<div class="mui-content">
-			<!-- <div id="company_select" class="mui-input-row" style="background-color:white;width:96%;height:40px;margin-top:15px;margin-left:5px;margin-right:5px;">
-                <label style="width:25%;margin-top:3px;">公司:</label>
-                <input id="companyName" type="text" class="mui-input-clear" style="width:75%;" value="" placeholder="" readOnly>
-            	<input id="userId" type="hidden" class="mui-input-clear" value="">
-            </div> -->
             <div class="mui-card" id="company_select" style="margin:10px 5px;height:40px;line-height:40px;">
 				<div class="mui-pull-left"><p style="margin-left: 15px;">公司名称</p></div>
 				<div class="mui-pull-right">
 					<span id="companyName" style="color:#8f8f94;"></span><span class="mui-icon mui-icon-arrowright" style="font-size: 20px;margin-top:0px;color:#8f8f94;display:inline-block"></span>
 					<input id="userId" type="hidden" class="mui-input-clear" value="">
 				</div>
-			</div>	
+			</div>
+			<div class="mui-card" id="select_date" style="margin:10px 5px;height:40px;line-height:40px;">
+				<div class="mui-pull-left"><p style="margin-left: 15px;">发票日期</p></div>
+				<div class="mui-pull-right">
+					<span id="invoice_date" style="color:#8f8f94;">选择</span><span class="mui-icon mui-icon-arrowright" style="font-size: 20px;margin-top:0px;color:#8f8f94;display:inline-block"></span>
+				</div>
+			</div>
 			<div id="data_loading" class="mui-loading" style="margin-top:50%;">
 				<div class="mui-spinner"></div>
 				<div style="text-align: center;">正在加载数据</div>
 			</div>
 			<div id="tips_info" style="display:none;margin-top:50%;">
 				<div style="text-align: center;" id="tips_info_detail">服务器暂时无法处理请求，<br/>请稍后重试！</div>
-			</div>	
-			<div class="mui-card" id="select_date" style="display:none;margin:10px 5px;height:40px;line-height:40px;">
-				<div class="mui-pull-left"><p style="margin-left: 15px;">发票日期</p></div>
-				<div class="mui-pull-right">
-					<span id="invoice_date" style="color:#8f8f94;">选择</span><span class="mui-icon mui-icon-arrowright" style="font-size: 20px;margin-top:0px;color:#8f8f94;display:inline-block"></span>
-				</div>
 			</div>
 		</div>
 		<footer id="fapiaoluru_submit" class="mui-bar mui-bar-footer" style="display:none;"><h1 class="mui-title">上传发票</h1></footer>
@@ -272,14 +267,26 @@
 			'scanQRCode'
 		]
 	});
-	document.querySelector('#scanQRCode1').onclick = function () {
+	document.querySelector('#scanQRCode1').onclick = function() {
+		var companyId = document.getElementById('userId').value;
+		var date = document.getElementById('invoice_date').innerText;
+		if(companyId == '' || companyId == undefined) {
+			mui.createTipDialog('请选择公司!',null).show();
+		}
+		if(date == '' || date == undefined) {
+			mui.createTipDialog('请选择日期!',null).show();
+		}
 	    wx.scanQRCode({
-	      needResult: 1,
-	      desc: 'scanQRCode desc',
-	      success: function (res) {
-	        alert(JSON.stringify(res));
-	      }
+			needResult: 1,
+	    	desc: 'scanQRCode desc',
+	    	success: function (res) {
+	    		var data = res.resultStr;
+	    		alert('data=' + data);
+	    		$.post('/xxxx', { data : data }, function() {
+	    			alert('扫描已完成！');
+	    		});
+	    	}
 	    });
-	  };
-	</script>
+	};
+</script>
 </html>
