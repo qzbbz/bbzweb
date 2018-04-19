@@ -123,7 +123,11 @@ public class CommonController {
 		}
 		logger.debug("finishGetOpenIdRedirect");
 		logger.debug("code :{}, openId :{}, view :{}", code, openId, view);
-		return "redirect:/views/weixinviews/" + view;
+		if(view != null && !view.endsWith(".html")) {
+			return "views/weixinviews/" + view;
+		} else {
+			return "redirect:/views/weixinviews/" + view;
+		}
 	}
 
 	@RequestMapping("/getUserOpenId")
