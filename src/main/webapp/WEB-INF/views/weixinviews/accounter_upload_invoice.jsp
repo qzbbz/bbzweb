@@ -280,6 +280,9 @@
 			needResult: 1,
 	    	desc: 'scanQRCode desc',
 	    	success: function (res) {
+	    		if(res == undefined) {
+	    			return;
+	    		}
 	    		var data = res.resultStr;
 	    		alert('data=' + data);
 	    		$.post('/xxxx', { data : data }, function() {
