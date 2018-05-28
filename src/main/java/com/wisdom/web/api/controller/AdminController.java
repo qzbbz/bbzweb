@@ -423,7 +423,8 @@ public class AdminController {
 			String vice_accounter_id = request.getParameter("vice_accounter");
 			String taxpayer_type = request.getParameter("taxpayer_type");
 			String invoice_amount = request.getParameter("invoice_amount");
-			updateBoolean = companyService.updateAccounterForCompany(Long.parseLong(companyId), accounterId, taxpayer_type, invoice_amount, vice_accounter_id);
+			String reason = request.getParameter("reason");
+			updateBoolean = companyService.updateAccounterForCompany(Long.parseLong(companyId), accounterId, taxpayer_type, invoice_amount, vice_accounter_id, reason);
 		}catch(Exception e){
 			logger.debug("getAccounterIdInfo exception : {}", e.toString());
 		}

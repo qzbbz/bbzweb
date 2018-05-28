@@ -17,7 +17,7 @@ public interface ICompanyService {
 	
 	public int accounterAmountBelongToCompany(long companyId);
 	
-	public boolean updateAccounterForCompany(long companyId, String accounterId, String taxpayer_type, String invoice_amount, String vice_accounter_id);
+	public boolean updateAccounterForCompany(long companyId, String accounterId, String taxpayer_type, String invoice_amount, String vice_accounter_id, String reason);
 	
 	public boolean companySelectAccounter(long companyId, String userId);
 	
