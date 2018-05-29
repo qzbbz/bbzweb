@@ -3,8 +3,6 @@ package com.wisdom.company.service;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.http.HttpHeaders;
-
 import com.wisdom.common.model.Company;
 import com.wisdom.common.model.CompanyInfo;
 import com.wisdom.common.utils.Result;
