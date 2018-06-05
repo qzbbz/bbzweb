@@ -236,6 +236,13 @@
 					<span id="invoice_date" style="color:#8f8f94;">选择</span><span class="mui-icon mui-icon-arrowright" style="font-size: 20px;margin-top:0px;color:#8f8f94;display:inline-block"></span>
 				</div>
 			</div>
+			<div class="mui-card" style="margin:10px 5px;height:40px;line-height:40px;">
+				<div class="mui-pull-left"><p style="margin-left: 15px;">固定资产</p></div>
+				<div class="mui-pull-right">
+					<input type="radio" name="isFa" value='1'>是
+					<input type="radio" name="isFa" value='0' style="margin-left:10px">否
+				</div>
+			</div>
 			<div id="data_loading" class="mui-loading" style="margin-top:50%;">
 				<div class="mui-spinner"></div>
 				<div style="text-align: center;">正在加载数据</div>
@@ -269,7 +276,9 @@
 	});
 	document.querySelector('#scanQRCode1').onclick = function() {
 		var companyId = document.getElementById('userId').value;
+		var company = document.getElementById('companyName').innerText;
 		var date = document.getElementById('invoice_date').innerText;
+		var isFA = ($("input[name='isFa']:checked").val() == '1' ? '1' : '0');
 		if(companyId == '' || companyId == undefined) {
 			mui.createTipDialog('请选择公司!',null).show();
 		}
@@ -280,16 +289,31 @@
 			needResult: 1,
 	    	desc: 'scanQRCode desc',
 	    	success: function (res) {
-	    		if(res == undefined) {
+	    		if(res == undefined || res == null) {
+	    			alert('无法识别本张发票，请更换一张！');
 	    			return;
 	    		}
 	    		var data = res.resultStr;
-	    		alert('data=' + data);
-	    		$.post('/xxxx', { data : data }, function() {
-	    			alert('扫描已完成！');
-	    		});
+	    		var dataArr = data.split(',');
+	    		if((getNow()-parseInt(dataArr[5])) >= 10000) {
+	    			alert('只支持一年内的发票扫描！');
+	    			return;
+	    		}
+	    		var url = 'http://120.132.27.211:8080/uploadInvoiceQrcode?data='
+	    				+ data + companyId + ',' + date + ',' + isFA;
+	    		if(confirm('公司 ： ' + company + '\n开票日期 ： ' + date + '\n固定资产  ： ' + (isFA=='0'?'否':'是') + '\ndata ： ' + data)) {
+	    			$.post(url, function(data) {
+		    		});
+	    		}
 	    	}
 	    });
 	};
+	function getNow() {
+		var myDate = new Date();
+		var year = myDate.getFullYear();
+		var month = myDate.getMonth()+1 < 10 ? "0"+(myDate.getMonth()+1) : myDate.getMonth()+1;
+		var day = myDate.getDate() < 10 ? "0" + myDate.getDate() : myDate.getDate();
+		return parseInt(year+ month+day);
+	}
 </script>
 </html>

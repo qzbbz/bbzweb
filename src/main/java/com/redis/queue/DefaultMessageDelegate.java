@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Lock;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,15 +13,11 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wisdom.dispatch.service.IDispatcherService;
-import com.wisdom.invoice.service.IInvoiceApprovalService;
 import com.wisdom.invoice.service.IInvoiceService;
-import com.wisdom.invoice.service.impl.InvoiceServiceImpl;
-
 
 @Service
 public class DefaultMessageDelegate implements MessageDelegate {
@@ -33,9 +27,6 @@ public class DefaultMessageDelegate implements MessageDelegate {
 	@Autowired IInvoiceService invoiceService;
 	
 	@Autowired IDispatcherService dispatcherService;
-	
-
-
 
 	@Override
 	public synchronized void handleMessage(String message) throws JsonParseException, JsonMappingException, IOException {
@@ -67,7 +58,6 @@ public class DefaultMessageDelegate implements MessageDelegate {
         	fA = true;
         }
 		
-		
         long invoiceId = Long.parseLong((String) data.get("id"));
 	    JsonFactory factory2 = new JsonFactory();        
 	    ObjectMapper mapper2 = new ObjectMapper(factory2);
@@ -80,19 +70,15 @@ public class DefaultMessageDelegate implements MessageDelegate {
         invoiceService.setIsFAOfInvoice(invoiceId, fA, requestId);
 	    invoiceService.addInvoiceArtifact(invoiceId, content, requestId);
 	    dispatcherService.updateDispatcherStatus(invoiceId, 0);
-
-
-/*
-    HashMap<String,Object> o = mapper.readValue(message, typeRef); 
-	System.out.println(o);
-	String path = (String) o.get("path");
-	System.out.println(path);
-	String name = (String)o.get("name");
-	String company = (String)o.get("company");
-	Integer priority = 10;
-	Integer invoiceId = (Integer)o.get("invoice_id");
-	Integer companyId = (Integer)o.get("company_id");*/
-
+	
+	    /*HashMap<String,Object> o = mapper.readValue(message, typeRef); 
+		System.out.println(o);
+		String path = (String) o.get("path");
+		System.out.println(path);
+		String name = (String)o.get("name");
+		String company = (String)o.get("company");
+		Integer priority = 10;
+		Integer invoiceId = (Integer)o.get("invoice_id");
+		Integer companyId = (Integer)o.get("company_id");*/
 	}
-
 }

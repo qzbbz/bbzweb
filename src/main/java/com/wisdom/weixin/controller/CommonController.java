@@ -213,28 +213,35 @@ public class CommonController {
 				result.put("error_message", "您还没有绑定公司，<br/>请先在账号设置中绑定您的公司！");
 			} else {
 				for (UserOpenid uoi : openidList) {
-					int typeId = userService.getUserTypeIdByUserId(uoi.getUserId());
-					logger.debug("getUserOpenIdAndBindCompanys typeId : {}", typeId);
-					result.put("typeId", typeId);
-					if(typeId != 1) {
+					String user_id = uoi.getUserId();
+					String accounter_user_id = userService.getAccounterUserIdByEmployeeUserId(user_id);
+					if(accounter_user_id == null || accounter_user_id.isEmpty()) {
 						result.put("error_code", 100300);
 						result.put("error_message", "您不是会计，不能上传公司发票!");
 					} else {
-						List<Company> companyList = companyService.getCompanyListByAccounterId(uoi.getUserId());
-						if(companyList == null || companyList.size() == 0) {
-							result.put("error_code", 100500);
-							result.put("error_message", "抱歉，您暂时还未负责公司!");
+						int typeId = userService.getUserTypeIdByUserId(accounter_user_id);
+						logger.debug("getUserOpenIdAndBindCompanys typeId : {}", typeId);
+						result.put("typeId", typeId);
+						if(typeId != 1) {
+							result.put("error_code", 100300);
+							result.put("error_message", "您不是会计，不能上传公司发票!");
 						} else {
-							List<Map<String, Object>> companyBriefInfoList = new ArrayList<>();
-							for(Company company : companyList) {
-								Map<String, Object> item = new HashMap<>();
-								item.put("value", company.getId());
-								item.put("text", company.getName());
-								companyBriefInfoList.add(item);
+							List<Company> companyList = companyService.getCompanyListByAccounterId(accounter_user_id);
+							if(companyList == null || companyList.size() == 0) {
+								result.put("error_code", 100500);
+								result.put("error_message", "抱歉，您暂时还未负责公司!");
+							} else {
+								List<Map<String, Object>> companyBriefInfoList = new ArrayList<>();
+								for(Company company : companyList) {
+									Map<String, Object> item = new HashMap<>();
+									item.put("value", company.getId());
+									item.put("text", company.getName());
+									companyBriefInfoList.add(item);
+								}
+								result.put("companyBriefInfoList", companyBriefInfoList);
+								result.put("error_code", String.valueOf(WeixinJsonCode.NO_ERROR_CODE));
+								result.put("error_message", WeixinJsonCode.NO_ERROR_MESSAGE);
 							}
-							result.put("companyBriefInfoList", companyBriefInfoList);
-							result.put("error_code", String.valueOf(WeixinJsonCode.NO_ERROR_CODE));
-							result.put("error_message", WeixinJsonCode.NO_ERROR_MESSAGE);
 						}
 					}
 				}

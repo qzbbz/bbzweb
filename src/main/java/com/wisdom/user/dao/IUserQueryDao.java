@@ -43,5 +43,7 @@ public interface IUserQueryDao {
 	public UserPhoneType getUserPhoneTypeById(long id);
 	
 	public UserRole getUserRole(String userId);
+
+	public String getAccounterUserIdByEmployeeUserId(String user_id);
 	
 }

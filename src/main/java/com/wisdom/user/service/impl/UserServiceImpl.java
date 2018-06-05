@@ -313,5 +313,10 @@ public class UserServiceImpl implements IUserService {
 	public User getCompanyAdminUserByCompanyId(long companyId) {
 		return userQueryDao.getCompanyAdminUserByCompanyId(companyId);
 	}
+
+	@Override
+	public String getAccounterUserIdByEmployeeUserId(String user_id) {
+		return userQueryDao.getAccounterUserIdByEmployeeUserId(user_id);
+	}
 }
 

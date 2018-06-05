@@ -1,6 +1,8 @@
 package com.wisdom.user.dao.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -233,5 +235,17 @@ public class UserQueryDaoImpl implements IUserQueryDao {
 			}
 		}
 		return user;
+	}
+
+	@Override
+	public String getAccounterUserIdByEmployeeUserId(String user_id) {
+		Map<String, Object> resultMap = new HashMap<>();
+		String sql = "select * from accounter_employee where employee_user_id=?";
+		try {
+			resultMap = jdbcTemplate.queryForMap(sql, user_id);
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		return resultMap.isEmpty()?"":String.valueOf(resultMap.get("accounter_user_id"));
 	}
 }
