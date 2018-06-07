@@ -14,7 +14,15 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.httpclient.URI;
 import org.apache.commons.io.FileUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +39,10 @@ import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequ
 
 import com.wisdom.accounter.service.IAccounterService;
 import com.wisdom.common.model.Accounter;
+import com.wisdom.common.model.Company;
 import com.wisdom.common.model.CustomerTaoBao;
 import com.wisdom.common.model.SalarySocialSecurity;
+import com.wisdom.company.service.ICompanyService;
 import com.wisdom.invoice.service.IInvoiceService;
 import com.wisdom.user.service.IUserService;
 import com.wisdom.web.api.ICompanyBillApi;
@@ -48,6 +58,9 @@ public class AccounterController {
 
 	@Autowired
 	private IAccounterService accounterService;
+	
+	@Autowired
+	private ICompanyService companyService;
 	
 	@Autowired
 	private ICompanyBillApi companyBillApi;
@@ -499,6 +512,71 @@ public class AccounterController {
 		}catch(Exception e){
 			retMap.put("error_code", "1");
 		}
+		return retMap;
+	}
+	
+	@RequestMapping("/accounter/getAllCompany")
+	@ResponseBody
+	public Map<String, Object> getAllCompany(HttpServletRequest request) {
+		Map<String, Object> retMap = new HashMap<>();
+		String userId = (String) request.getSession().getAttribute(
+				SessionConstant.SESSION_USER_ID);
+		List<Company> companyList = companyService.getCompanyListByAccounterId(userId);
+		if(companyList == null || companyList.isEmpty()) {
+			retMap.put("error_code", "-1");
+			retMap.put("error_msg", "您还未负责任何公司财务！");
+			return retMap;
+		}
+		List<Map<String, Object>> data = new ArrayList<>();
+		for(Company c : companyList) {
+			Map<String, Object> cMap = new HashMap<>();
+			cMap.put("company_id", c.getId());
+			cMap.put("company_name", c.getName());
+			data.add(cMap);
+		}
+		retMap.put("data", data);
+		return retMap;
+	}
+	
+	@RequestMapping("/accounter/uploadCompanyBill")
+	@ResponseBody
+	public Map<String, String> uploadCompanyBill(DefaultMultipartHttpServletRequest multipartRequest,
+			HttpServletRequest request) {
+		String userId = (String) request.getSession().getAttribute("userId");
+		String companyId = request.getParameter("company_id");
+		String date = request.getParameter("bill_date");
+		String isFA = request.getParameter("isFA");
+		String realPath = "/home/files/company";
+		String url = "http://120.132.27.211:8080/pcUploadInvoiceInfo?data=";
+		if (multipartRequest != null) {
+			Iterator<String> iterator = multipartRequest.getFileNames();
+			while (iterator.hasNext()) {
+				MultipartFile multifile = multipartRequest.getFile((String) iterator.next());
+				String fileName = getGernarateFileName(multifile, userId);
+				try {
+					FileUtils.copyInputStreamToFile(multifile.getInputStream(), new File(
+							realPath, fileName));
+					url += (fileName + "," + companyId + "," + date + "," + isFA);
+				} catch (IOException e) {
+					logger.error("Failed in saving file, exception : {}", e.toString());
+				}
+			}
+		}
+		try {
+			CloseableHttpClient httpClient = HttpClients.createDefault();
+			HttpGet httpGet = new HttpGet(url);
+			CloseableHttpResponse response;
+			response = httpClient.execute(httpGet);
+			HttpEntity entity = response.getEntity();
+			String res = EntityUtils.toString(entity, "utf-8");
+			System.out.println("res : " + res);
+			EntityUtils.consume(entity);  
+			response.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+ 		Map<String, String> retMap = new HashMap<>();
+		retMap.put("url", "url");
 		return retMap;
 	}
 }

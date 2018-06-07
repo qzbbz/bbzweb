@@ -369,22 +369,15 @@ a {
 					expanded: false,
 					children: []
 				}, {
-					text: '销售记录',
-					id: '60',
-					href: "/views/salesviews/record.html",
-					leaf: false,
-					expanded: false,
-					children: []
-				}, {
 					text: '客户管理',
 					id: '70',
 					href: "/views/webviews/accounter/company_customer_management.html",
 					leaf: false,
 					expanded: false,
 					children: []
-				}]
+				},{text : '公司发票上传', id: '11', href:"/views/webviews/accounter/accounter_upload_invoice.html", leaf:false, expanded: false, children:[]}]
 			}, "menuTree");
-			defaultSelect("10");
+			defaultSelect("70");
 
 			function defaultSelect(id) {
 				$("#" + id).parent().addClass("bui-menu-item-selected")
