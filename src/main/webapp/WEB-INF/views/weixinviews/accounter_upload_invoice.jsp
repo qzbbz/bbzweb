@@ -223,11 +223,12 @@
 			<h1 class="mui-title">公司发票上传</h1>
 		</header>
 		<div class="mui-content">
-            <div class="mui-card" id="company_select" style="margin:10px 5px;height:40px;line-height:40px;">
-				<div class="mui-pull-left"><p style="margin-left: 15px;">公司名称</p></div>
+            <div class="mui-card" style="margin:10px 5px;height:40px;line-height:40px;">
+				<div class="mui-pull-left"><p style="margin-left: 15px;">公司ID</p></div>
 				<div class="mui-pull-right">
-					<span id="companyName" style="color:#8f8f94;"></span><span class="mui-icon mui-icon-arrowright" style="font-size: 20px;margin-top:0px;color:#8f8f94;display:inline-block"></span>
-					<input id="userId" type="hidden" class="mui-input-clear" value="">
+					<input id="company_id" type="text" style="border: 1px solid rgba(0, 0, 0, 0);"/>
+					<!-- <span id="companyName" style="color:#8f8f94;"></span><span class="mui-icon mui-icon-arrowright" style="font-size: 20px;margin-top:0px;color:#8f8f94;display:inline-block"></span> -->
+					<!-- <input id="userId" type="hidden" class="mui-input-clear" value=""> -->
 				</div>
 			</div>
 			<div class="mui-card" id="select_date" style="margin:10px 5px;height:40px;line-height:40px;">
@@ -243,10 +244,10 @@
 					<input type="radio" name="isFa" value='0' style="margin-left:10px">否
 				</div>
 			</div>
-			<div id="data_loading" class="mui-loading" style="margin-top:50%;">
+			<!-- <div id="data_loading" class="mui-loading" style="margin-top:50%;">
 				<div class="mui-spinner"></div>
 				<div style="text-align: center;">正在加载数据</div>
-			</div>
+			</div> -->
 			<div id="tips_info" style="display:none;margin-top:50%;">
 				<div style="text-align: center;" id="tips_info_detail">服务器暂时无法处理请求，<br/>请稍后重试！</div>
 			</div>
@@ -262,7 +263,7 @@
 	<script src="/js/weixinjs/mui.picker.min.js"></script>
 	<script src="/js/weixinjs/mui.poppicker.min.js"></script>
 	<script src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
-	<script src="/js/weixinjs/scan.js"></script>
+	<script src="/js/weixinjs/scan.js?201806081030"></script>
 	<script>
 	wx.config({
 		debug: false,
@@ -275,8 +276,19 @@
 		]
 	});
 	document.querySelector('#scanQRCode1').onclick = function() {
-		var companyId = document.getElementById('userId').value;
-		var company = document.getElementById('companyName').innerText;
+		/* var companyId = document.getElementById('userId').value; */
+		var companyId = document.getElementById('company_id').value;
+		/* var company = document.getElementById('companyName').innerText; */
+		var company;
+		for(var i in local_data) {
+			if(local_data[i].value == companyId) {
+				company = local_data[i].text;
+			}
+		}
+		if(company == undefined || company == '') {
+			alert('您所输入的公司ID不存在，请查询后重新输入！');
+			return;
+		}
 		var date = document.getElementById('invoice_date').innerText;
 		var isFA = ($("input[name='isFa']:checked").val() == '1' ? '1' : '0');
 		if(companyId == '' || companyId == undefined) {

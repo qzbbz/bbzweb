@@ -1,3 +1,4 @@
+var local_data;
 var companyPicker = new mui.PopPicker();
 Date.prototype.Format = function(formatStr) {
 	var str = formatStr;
@@ -105,31 +106,32 @@ function getImageDataURL(img) {
 
 var globalTypeId;
 var adminUserId;
-document.getElementById('company_select').addEventListener('tap', function() {
+/*document.getElementById('company_select').addEventListener('tap', function() {
 	companyPicker.show(function(rs) {
 		document.getElementById('companyName').innerHTML = rs[0].text;
 		document.getElementById('userId').value = rs[0].value;
     	document.getElementById("tips_info").style.display = "none";
 		document.getElementById("data_loading").style.display = "none";
 	});
-}, false);
+}, false);*/
 mui.ajax({
     type : "POST", 
     url  : "/getUserOpenIdAndBindCompanys",
     success : function(data) {
     	if (data.error_code != '0') {
-			mui.createTipDialog(data.error_message,null).show();
+			/*mui.createTipDialog(data.error_message,null).show();
 			document.getElementById("data_loading").style.display = "none";
 			document.getElementById("tips_info_detail").innerHTML = data.error_message;
-	    	document.getElementById("tips_info").style.display = "";
+	    	document.getElementById("tips_info").style.display = "";*/
 		} else {
+			local_data = data.companyBriefInfoList;
 			userOpenId = data.openId;
-			globalTypeId = data.type_id;
+			/*globalTypeId = data.type_id;
 			companyPicker.setData(data.companyBriefInfoList);
 			document.getElementById('companyName').innerHTML = data.companyBriefInfoList[0].text;
     		document.getElementById('userId').value = data.companyBriefInfoList[0].value;
 			document.getElementById("data_loading").style.display = "none";
-			document.getElementById("select_date").style.display = "";
+			document.getElementById("select_date").style.display = "";*/
 		}
     }, 
     error : function() {
