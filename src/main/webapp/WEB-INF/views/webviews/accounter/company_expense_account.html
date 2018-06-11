@@ -25,16 +25,17 @@
 		</div>
 		<div class="main">
 			<div class="menu" style="margin-bottom:20px;"><a href="#" class="active">公司已上传发票</a></div>
-			<!-- <div class="well mt20">
+			<div class="well mt20">
 				<div class="form-horizontal onlineTools">
 					<div class="row show-grid">
 						<label class="control-label control-label-small"></label>
-                        <div class="controls"><select name="condition" id="condition" class="input input-normal"><option value='0'>所有</option><option value='1'>按日期检索</option></select><input type="text" id="content" class="input input-normal ml10"><button id="searchData" class="button button-success ml10">搜索</button><button id="deleteData" class="button button-danger ml10">一键删除</button></div>
+                        <div class="controls"><button id="deleteData" class="button button-danger ml10">一键删除</button></div>
 					</div>
 				</div>
-			</div> -->
+			</div>
 			<table class="table center">
 	    		<colgroup>
+	    			<col style="width:2%;">
 	    			<col style="width:7%;">
 	    			<col style="width:9%;">
 	    			<col style="width:5%;">
@@ -49,6 +50,7 @@
 	    		</colgroup>
 	    		<thead>
 	    			<tr>
+	    				<th></th>
 	    				<th>发票上传日期</th>
 	    				<th>公司名称</th>
 	    				<th>会计期间</th>
@@ -238,6 +240,10 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 	BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){		
 		var deleteIdList = new Array();
 		$('#deleteData').click(function(){
+			$('input:checkbox:checked').each(function() {
+				deleteIdList.push($(this).val());
+			});
+			console.log(deleteIdList);
 			if(deleteIdList.length == 0) {
 				BUI.Message.Alert('请先勾选需要删除的记录！','warning');
 			} else {
@@ -332,7 +338,7 @@ BUI.use(['bui/imgview', 'bui/overlay'], function(Imgview, Overlay){
 			for(var i=0; i<data.length; i++) {
 				var container = $('#retData');
 				var trNode = $("<tr></tr>");
-			    var tdNode1 = $("<td>"+data[i].date+"</td><td>"+data[i].company_name+"</td><td>"+data[i].bill_date+"</td><td>"+(data[i].amount == null || data[i].amount == "" ? "0" : data[i].amount)+"</td><td>"+(data[i].number == null || data[i].number == "" ? "0" : data[i].number)+"</td><td>"+(data[i].tax == null || data[i].tax == "" ? "0" : data[i].tax)+"</td><td>"+(data[i].supplyName == null || data[i].supplyName == "" ? "未设定" : data[i].supplyName)+"</td><td>"+(data[i].isFixedAssets == null || data[i].isFixedAssets == "0" ? "否" : "是")+"</td><td>"+(data[i].expense_type == null || data[i].expense_type == "" ? "未设定" : data[i].expense_type)+"</td>");
+			    var tdNode1 = $("<td><input type='checkbox' name='items' value='"+data[i].id+"'/></td><td>"+data[i].date+"</td><td>"+data[i].company_name+"</td><td>"+data[i].bill_date+"</td><td>"+(data[i].amount == null || data[i].amount == "" ? "0" : data[i].amount)+"</td><td>"+(data[i].number == null || data[i].number == "" ? "0" : data[i].number)+"</td><td>"+(data[i].tax == null || data[i].tax == "" ? "0" : data[i].tax)+"</td><td>"+(data[i].supplyName == null || data[i].supplyName == "" ? "未设定" : data[i].supplyName)+"</td><td>"+(data[i].isFixedAssets == null || data[i].isFixedAssets == "0" ? "否" : "是")+"</td><td>"+(data[i].expense_type == null || data[i].expense_type == "" ? "未设定" : data[i].expense_type)+"</td>");
 			    var tdNode2 = $("<td></td>");
 			    var aNode = $("<a href='javascript:void(0)'>点击查看发票图片</a>");
 			    var tdNode3 = $("<td></td>");

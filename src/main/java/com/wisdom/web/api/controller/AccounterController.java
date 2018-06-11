@@ -43,6 +43,7 @@ import com.wisdom.common.model.Company;
 import com.wisdom.common.model.CustomerTaoBao;
 import com.wisdom.common.model.SalarySocialSecurity;
 import com.wisdom.company.service.ICompanyService;
+import com.wisdom.invoice.dao.IInvoiceDao;
 import com.wisdom.invoice.service.IInvoiceService;
 import com.wisdom.user.service.IUserService;
 import com.wisdom.web.api.ICompanyBillApi;
@@ -70,6 +71,9 @@ public class AccounterController {
 	
 	@Autowired
 	private IInvoiceService invoiceService;
+	
+	@Autowired
+	private IInvoiceDao invoiceDao;
 
 	@RequestMapping("/getAllAccounterCareer")
 	@ResponseBody
@@ -577,6 +581,21 @@ public class AccounterController {
 		} 
  		Map<String, String> retMap = new HashMap<>();
 		retMap.put("url", "url");
+		return retMap;
+	}
+	
+	@RequestMapping("/accounter/deleteCompanyBill")
+	@ResponseBody
+	public Map<String, Object> deleteCompanyBill(HttpServletRequest request) {
+		Map<String, Object> retMap = new HashMap<>();
+		String idList = (String) request.getParameter("deleteIdList");
+		String[] ids = idList.split(",");
+		for(String id : ids) {
+			long invoiceId = Long.valueOf(id);
+			invoiceDao.deleteTestInvoice(invoiceId);
+			invoiceDao.deleteInvoiceArtifactByInvoiceId(invoiceId);
+		}
+		retMap.put("error_code", "");
 		return retMap;
 	}
 }
