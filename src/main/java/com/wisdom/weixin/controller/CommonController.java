@@ -199,9 +199,9 @@ public class CommonController {
 	@RequestMapping("/getUserOpenIdAndBindCompanys")
 	@ResponseBody
 	public Map<String, Object> getUserOpenIdAndBindCompanys(HttpSession session, HttpServletRequest request) {
-		logger.debug("getUserOpenIdAndBindCompanys");
 		Map<String, Object> result = new HashMap<>();
 		String openId = (String)session.getAttribute("userOpenId");
+		logger.debug("getUserOpenIdAndBindCompanys openID : {}", openId);
 		result.put("openId", openId);
 		if (openId == null || openId.isEmpty()) {
 			result.put("error_code", String.valueOf(WeixinJsonCode.NO_OPENID_ERROR_CODE));
@@ -214,7 +214,9 @@ public class CommonController {
 			} else {
 				for (UserOpenid uoi : openidList) {
 					String user_id = uoi.getUserId();
+					logger.debug("getUserOpenIdAndBindCompanys user_id : {}", user_id);
 					String accounter_user_id = userService.getAccounterUserIdByEmployeeUserId(user_id);
+					logger.debug("getUserOpenIdAndBindCompanys accounter_user_id : {}", accounter_user_id);
 					if(accounter_user_id == null || accounter_user_id.isEmpty()) {
 						result.put("error_code", 100300);
 						result.put("error_message", "您不是会计，不能上传公司发票!");

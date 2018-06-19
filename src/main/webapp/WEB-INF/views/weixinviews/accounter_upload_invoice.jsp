@@ -226,7 +226,7 @@
             <div class="mui-card" style="margin:10px 5px;height:40px;line-height:40px;">
 				<div class="mui-pull-left"><p style="margin-left: 15px;">公司ID</p></div>
 				<div class="mui-pull-right">
-					<input id="company_id" type="text" style="border: 1px solid rgba(0, 0, 0, 0);"/>
+					<input id="company_id" type="text" style="border: 1px solid rgba(0, 0, 0, 0);text-align:right"/>
 					<!-- <span id="companyName" style="color:#8f8f94;"></span><span class="mui-icon mui-icon-arrowright" style="font-size: 20px;margin-top:0px;color:#8f8f94;display:inline-block"></span> -->
 					<!-- <input id="userId" type="hidden" class="mui-input-clear" value=""> -->
 				</div>
