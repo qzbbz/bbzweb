@@ -341,6 +341,7 @@
 				companyNode.attr('taxpayer_type', data[index].taxpayer_type);
 				companyNode.attr('invoice_amount', data[index].invoice_amount);
 				companyNode.attr('reason', data[index].reason);
+				companyNode.attr('user_name', data[index].user_name);
 				companyNode.click(function(event) {
 					if($(this).attr("accounter_id") == 'guoqibuxufei@bangbangzhang.com') {
 						$('#reason_div').css('display', 'block');
@@ -351,7 +352,12 @@
 					globalCompanyName = $(this).attr("company-name");
 					var companyName = $('#updateAccounterForm_companyName').html(globalCompanyName);
 					$('#updateAccounterForm_accounterSelect select').find('option[value=\"'+$(this).attr("accounter_id")+'\"]').prop('selected', true);
-					$('#reason').val($(this).attr('reason'));
+					if($(this).attr('reason') == null || $(this).attr('reason') == undefined || $(this).attr('reason') == '') {
+						$('#reason').val('前任会计：' + $(this).attr('user_name') + '; 过期不续费原因:');
+					} else {
+						$('#reason').val($(this).attr('reason'));
+					}
+					/* $('#reason').val($(this).attr('reason')); */
 					$('#vice_accounter_list select').find('option[value=\"'+$(this).attr("vice_accounter_id")+'\"]').prop('selected', true);
 					$('#taxpayer_type').find('option[value=\"'+$(this).attr("taxpayer_type")+'\"]').prop('selected', true);
 					$('#invoice_amount').find('option[value=\"'+$(this).attr("invoice_amount")+'\"]').prop('selected', true);
