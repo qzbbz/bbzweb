@@ -1,3 +1,21 @@
+<%@ page contentType="text/html; charset=UTF-8"%>
+<%@ page
+	import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@ page import="org.springframework.web.context.WebApplicationContext"%>
+<%@ page import="java.util.*"%>
+<%@ page import="com.wisdom.weixin.utils.WeixinTools"%>
+<%
+	WebApplicationContext wac = WebApplicationContextUtils
+			.getRequiredWebApplicationContext(this.getServletContext());
+	StringBuffer url = new StringBuffer();
+	if(request.getQueryString() != null) {
+		url.append('?');
+		url.append(request.getQueryString());
+	}
+	String jsUrl = url.toString();
+	Map<String, String> result = new HashMap<>();
+	result = WeixinTools.getSign("http://www.bangbangzhang.com/getOpenIdRedirect" + jsUrl);	
+%>
 <!DOCTYPE html>
 <html>
 
@@ -11,6 +29,7 @@
 		<link href="../../css/weixincss/circle-progress.css" rel="stylesheet" />
 		<link href="/css/weixincss/mui.picker.min.css" rel="stylesheet" />
 		<link href="/css/weixincss/mui.poppicker.css" rel="stylesheet" />
+		<link href="/css/weixincss/scan.css" rel="stylesheet" />
 		<style>
 			.mui-preview-image.mui-fullscreen {
 				position: fixed;
@@ -204,58 +223,37 @@
 			<h1 class="mui-title">公司发票上传</h1>
 		</header>
 		<div class="mui-content">
-			<!-- <div id="company_select" class="mui-input-row" style="background-color:white;width:96%;height:40px;margin-top:15px;margin-left:5px;margin-right:5px;">
-                <label style="width:25%;margin-top:3px;">公司:</label>
-                <input id="companyName" type="text" class="mui-input-clear" style="width:75%;" value="" placeholder="" readOnly>
-            	<input id="userId" type="hidden" class="mui-input-clear" value="">
-            </div> -->
-            <div class="mui-card" id="company_select" style="margin:10px 5px;height:40px;line-height:40px;">
-				<div class="mui-pull-left"><p style="margin-left: 15px;">公司名称</p></div>
+            <div class="mui-card" style="margin:10px 5px;height:40px;line-height:40px;">
+				<div class="mui-pull-left"><p style="margin-left: 15px;">公司ID</p></div>
 				<div class="mui-pull-right">
-					<span id="companyName" style="color:#8f8f94;"></span><span class="mui-icon mui-icon-arrowright" style="font-size: 20px;margin-top:0px;color:#8f8f94;display:inline-block"></span>
-					<input id="userId" type="hidden" class="mui-input-clear" value="">
+					<input id="company_id" type="text" style="border: 1px solid rgba(0, 0, 0, 0);text-align:right"/>
+					<!-- <span id="companyName" style="color:#8f8f94;"></span><span class="mui-icon mui-icon-arrowright" style="font-size: 20px;margin-top:0px;color:#8f8f94;display:inline-block"></span> -->
+					<!-- <input id="userId" type="hidden" class="mui-input-clear" value=""> -->
 				</div>
-			</div>	
-			<div id="data_loading" class="mui-loading" style="margin-top:50%;">
-				<div class="mui-spinner"></div>
-				<div style="text-align: center;">正在加载数据</div>
 			</div>
-			<div id="tips_info" style="display:none;margin-top:50%;">
-				<div style="text-align: center;" id="tips_info_detail">服务器暂时无法处理请求，<br/>请稍后重试！</div>
-			</div>	
-			<div class="mui-card" id="select_date" style="display:none;margin:10px 5px;height:40px;line-height:40px;">
+			<div class="mui-card" id="select_date" style="margin:10px 5px;height:40px;line-height:40px;">
 				<div class="mui-pull-left"><p style="margin-left: 15px;">发票日期</p></div>
 				<div class="mui-pull-right">
 					<span id="invoice_date" style="color:#8f8f94;">选择</span><span class="mui-icon mui-icon-arrowright" style="font-size: 20px;margin-top:0px;color:#8f8f94;display:inline-block"></span>
 				</div>
 			</div>
-			<div class="mui-card" id="add_invoice_page" style="display:none;margin:10px 5px;height:80px;line-height: 80px;">
-				<div style="background-color: white;height:70px;margin-top:5px;margin-left: 5px;" class="mui-pull-left">
-					<div style="background-color: white;height:70px;">
-						<p style="margin-top: -5px;margin-left: 10px;">添加发票图像</p>
-					</div>
-				</div>
-				<div class="mui-pull-right" style="margin-top:5px;">
-					<input id="fapiaoluru_addInvoiceImage" type="file" accept="image/*;capture=camera" multiple hidefocus='true' style="position: absolute;float:right;width:50px;height:50px;opacity: 0;">
-					<span class="mui-icon iconfont icon-tianjia" style="font-size: 70px;color:#C3C3C6;margin-top:-10px;margin-right:5px;"></span>
+			<div class="mui-card" style="margin:10px 5px;height:40px;line-height:40px;">
+				<div class="mui-pull-left"><p style="margin-left: 15px;">固定资产</p></div>
+				<div class="mui-pull-right">
+					<input type="radio" name="isFa" value='1'>是
+					<input type="radio" name="isFa" value='0' style="margin-left:10px">否
 				</div>
 			</div>
-			<div id="tips_image" class="mui-control-content mui-active" style="display:none;height:260px;">
-				<ul class="mui-table-view mui-grid-view">
-					<li class="mui-table-view-cell mui-media mui-col-xs-12">
-						<img class="mui-media-object" src="../../img/weixinimg/empty_invoice.png">
-					</li>
-				</ul>
-			</div>
-			<div id="invoice_img_list_root_div" class="mui-control-content mui-active" style="display:none;height:200px;display:none;">
-				<div id="scroll" class="mui-scroll-wrapper">
-					<div class="mui-scroll">
-						<ul class="mui-table-view mui-grid-view" id="invoice_img_list_ul"></ul>
-					</div>
-				</div>
+			<!-- <div id="data_loading" class="mui-loading" style="margin-top:50%;">
+				<div class="mui-spinner"></div>
+				<div style="text-align: center;">正在加载数据</div>
+			</div> -->
+			<div id="tips_info" style="display:none;margin-top:50%;">
+				<div style="text-align: center;" id="tips_info_detail">服务器暂时无法处理请求，<br/>请稍后重试！</div>
 			</div>
 		</div>
 		<footer id="fapiaoluru_submit" class="mui-bar mui-bar-footer" style="display:none;"><h1 class="mui-title">上传发票</h1></footer>
+		<button class="btn btn_primary" id="scanQRCode1">扫描发票二维码</button>
 	</body>
 	<script src="../../js/weixinjs/mui.min.js"></script>
 	<script src="../../js/weixinjs/mui.previewimage.js"></script>
@@ -264,5 +262,70 @@
 	<script src="../../js/weixinjs/circle-progress.js"></script>
 	<script src="/js/weixinjs/mui.picker.min.js"></script>
 	<script src="/js/weixinjs/mui.poppicker.min.js"></script>
-	<script src="../../js/weixinjs/accounter_upload_invoice.js?201601221426"></script>
+	<script src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+	<script src="/js/weixinjs/scan.js?201806081030"></script>
+	<script>
+	wx.config({
+		debug: false,
+		appId: 'wxb11ddcf3a43c859b',
+		timestamp: <%=result.get("timestamp")%>,
+		nonceStr: '<%=result.get("nonceStr")%>',
+		signature: '<%=result.get("signature")%>',
+		jsApiList: [
+			'scanQRCode'
+		]
+	});
+	document.querySelector('#scanQRCode1').onclick = function() {
+		/* var companyId = document.getElementById('userId').value; */
+		var companyId = document.getElementById('company_id').value;
+		/* var company = document.getElementById('companyName').innerText; */
+		var company;
+		for(var i in local_data) {
+			if(local_data[i].value == companyId) {
+				company = local_data[i].text;
+			}
+		}
+		if(company == undefined || company == '') {
+			alert('您所输入的公司ID不存在，请查询后重新输入！');
+			return;
+		}
+		var date = document.getElementById('invoice_date').innerText;
+		var isFA = ($("input[name='isFa']:checked").val() == '1' ? '1' : '0');
+		if(companyId == '' || companyId == undefined) {
+			mui.createTipDialog('请选择公司!',null).show();
+		}
+		if(date == '' || date == undefined) {
+			mui.createTipDialog('请选择日期!',null).show();
+		}
+	    wx.scanQRCode({
+			needResult: 1,
+	    	desc: 'scanQRCode desc',
+	    	success: function (res) {
+	    		if(res == undefined || res == null) {
+	    			alert('无法识别本张发票，请更换一张！');
+	    			return;
+	    		}
+	    		var data = res.resultStr;
+	    		var dataArr = data.split(',');
+	    		if((getNow()-parseInt(dataArr[5])) >= 10000) {
+	    			alert('只支持一年内的发票扫描！');
+	    			return;
+	    		}
+	    		var url = 'http://120.132.27.211:8080/uploadInvoiceQrcode?data='
+	    				+ data + companyId + ',' + date + ',' + isFA;
+	    		if(confirm('公司 ： ' + company + '\n开票日期 ： ' + date + '\n固定资产  ： ' + (isFA=='0'?'否':'是') + '\ndata ： ' + data)) {
+	    			$.post(url, function(data) {
+		    		});
+	    		}
+	    	}
+	    });
+	};
+	function getNow() {
+		var myDate = new Date();
+		var year = myDate.getFullYear();
+		var month = myDate.getMonth()+1 < 10 ? "0"+(myDate.getMonth()+1) : myDate.getMonth()+1;
+		var day = myDate.getDate() < 10 ? "0" + myDate.getDate() : myDate.getDate();
+		return parseInt(year+ month+day);
+	}
+</script>
 </html>

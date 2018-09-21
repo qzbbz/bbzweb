@@ -402,8 +402,17 @@ public class AdminController {
 	@ResponseBody
 	public List<Map<String, Object>> getAccounterIdInfo(HttpServletRequest request) {
 		List<Map<String, Object>> accounterList = new ArrayList<>();
+		String user_id = (String)request.getSession().getAttribute("userId");
 		try{
 			accounterList = accounterService.getAllAccounterListMap();
+			if("admin2@bbz.com".equals(user_id)) {
+				for(Map<String, Object> accounter : accounterList) {
+					if("guoqibuxufei@bangbangzhang.com".equals((String)accounter.get("user_id"))) {
+						accounterList.remove(accounter);
+						break;
+					}
+				}
+			}
 		}catch(Exception e){
 			logger.debug("getAccounterIdInfo exception : {}", e.toString());
 		}

@@ -241,6 +241,7 @@ public class CommonController {
 									companyBriefInfoList.add(item);
 								}
 								result.put("companyBriefInfoList", companyBriefInfoList);
+								result.put("accounter_user_id", accounter_user_id);
 								result.put("error_code", String.valueOf(WeixinJsonCode.NO_ERROR_CODE));
 								result.put("error_message", WeixinJsonCode.NO_ERROR_MESSAGE);
 							}
